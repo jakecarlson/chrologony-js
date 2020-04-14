@@ -5,13 +5,13 @@
         {{#if collectionNotEmpty privateCategories}}
             <optgroup label="Private">
                 {{#each category in privateCategories}}
-                    <option value="{{category._id}}">{{category.name}}</option>
+                    <option value="{{category._id}}" selected="{{selectedValue category._id}}">{{category.name}}</option>
                 {{/each}}
             </optgroup>
         {{/if}}
         <optgroup label="Public">
             {{#each category in publicCategories}}
-                <option value="{{category._id}}">{{category.name}}</option>
+                <option value="{{category._id}}" selected="{{selectedValue category._id}}">{{category.name}}</option>
             {{/each}}
         </optgroup>
     </select>

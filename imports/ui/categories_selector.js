@@ -19,6 +19,9 @@ Template.categories_selector.helpers({
     privateCategories() {
         return Categories.find({private: true, owner: Meteor.userId()}, {sort:{name: 1}});
     },
+    selectedValue(id) {
+        return (id == this.val);
+    },
 });
 
 Template.categories_selector.events({
