@@ -1,0 +1,25 @@
+<template name="events_manager">
+
+    <table id="events" class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Clue</th>
+                <th scope="col">Date</th>
+                <th scope="col">Category:
+                    {{> categories_selector val=null}}
+                </th>
+                <th scope="col">Hint</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each cardEvent in cardEvents}}
+                {{> event event=cardEvent}}
+            {{/each}}
+        </tbody>
+        <tfoot>
+            {{> event event=false}}
+        </tfoot>
+    </table>
+
+</template>

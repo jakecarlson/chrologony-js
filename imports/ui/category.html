@@ -1,0 +1,43 @@
+<template name="category">
+
+    <tr class="{{#if viewing}}d-none{{/if}} category editing">
+        <th scope="row"><input class="attr form-control" type="text" name="name" value="{{name}}" required></th>
+        <td><input class="attr form-check-input" type="checkbox" name="private" value="true" checked="{{private}}" data-toggle="toggle" data-on="Private" data-off="Public" data-onstyle="success" data-offstyle="secondary" data-size="small"></td>
+        <td><input class="attr form-check-input" type="checkbox" name="active" value="true" checked="{{active}}" data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="secondary" data-size="small"></td>
+        <td>
+            <form class="category-edit">
+                {{#if category}}
+                    <input class="attr" type="hidden" name="_id" value="{{id}}">
+                    <button type="submit" class="save btn btn-primary">Save</button>
+                    <button type="submit" class="cancel btn btn-light">Cancel</button>
+                {{else}}
+                    <button type="submit" class="add btn btn-primary">Add</button>
+                {{/if}}
+            </form>
+        </td>
+    </tr>
+
+    <tr class="{{#if editing}}d-none{{/if}} category viewing">
+        <th scope="row">{{name}}</th>
+        <td>
+            <span class="badge badge-{{#if private}}success{{else}}secondary{{/if}}">
+                {{#if private}}
+                    Private
+                {{else}}
+                    Public
+                {{/if}}
+            </span>
+        </td>
+        <td>
+            <span class="badge badge-{{#if active}}success{{else}}secondary{{/if}}">
+                {{#if active}}
+                    Active
+                {{else}}
+                    Disabled
+                {{/if}}
+            </span>
+        </td>
+        <td><button class="edit btn btn-light">Edit</button></td>
+    </tr>
+
+</template>
