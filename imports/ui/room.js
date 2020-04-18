@@ -5,6 +5,7 @@ import { Session } from "meteor/session";
 
 import './room.html';
 import './game.js';
+import './board.js';
 
 Template.room.onCreated(function roomOnCreated() {
     this.state = new ReactiveDict();
@@ -16,14 +17,7 @@ Template.room.helpers({
 });
 
 Template.room.events({
-    'click .game'(e, i) {
-
-    },
-    'click .draw'(e, i) {
-
-    },
     'click .leave'(e, i) {
         Session.set('room', undefined);
     },
-
 });

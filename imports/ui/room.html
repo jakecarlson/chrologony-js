@@ -2,33 +2,14 @@
 
     <section id="room">
 
+        <header class="clearfix">
+            <h1 class="float-left">{{room.name}}</h1>
+            <button class="btn btn-light float-right mt-2 leave">Leave Room</button>
+        </header>
+
+        {{> board}}
+
         {{> game}}
-
-        <div class="card">
-            <div class="card-body">
-
-                <header>
-                    <h1>{{room.name}}</h1>
-                </header>
-
-                <div class="body">
-
-        <!--            <ul class="cards">-->
-        <!--                {{#each cards}}-->
-        <!--                    {{> card}}-->
-        <!--                {{/each}}-->
-        <!--            </ul>-->
-
-                    <button class="btn btn-primary draw">Draw</button>
-
-
-
-                </div>
-
-            </div>
-        </div>
-
-        <button class="btn btn-light leave">Leave Room</button>
 
     </section>
 
