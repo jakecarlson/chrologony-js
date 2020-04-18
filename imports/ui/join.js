@@ -3,11 +3,9 @@ import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Session } from 'meteor/session';
 
-import { Rooms } from '../api/rooms';
-
 import './join.html';
 
-Template.join.onCreated(function bodyOnCreated() {
+Template.join.onCreated(function joinOnCreated() {
     this.state = new ReactiveDict();
 
 });
@@ -32,6 +30,7 @@ Template.join.events({
         Meteor.call('room.findOrCreate', attrs, function(error, id) {
             if (!error) {
                 Session.set('room', id);
+                console.log("Room Set: " + id);
             }
         });
 

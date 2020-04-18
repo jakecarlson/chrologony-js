@@ -2,25 +2,33 @@
 
     <section id="room">
 
-        <header>
-            <h1>{{room.name}}</h1>
-        </header>
+        {{> game}}
 
-        <div class="body">
+        <div class="card">
+            <div class="card-body">
 
-<!--            <ul class="cards">-->
-<!--                {{#each cards}}-->
-<!--                    {{> card}}-->
-<!--                {{/each}}-->
-<!--            </ul>-->
+                <header>
+                    <h1>{{room.name}}</h1>
+                </header>
 
-            <button class="btn btn-primary draw">New Game</button>
+                <div class="body">
 
-            <button class="btn btn-primary draw">Draw</button>
+        <!--            <ul class="cards">-->
+        <!--                {{#each cards}}-->
+        <!--                    {{> card}}-->
+        <!--                {{/each}}-->
+        <!--            </ul>-->
 
-            <button class="btn btn-light leave">Leave Room</button>
+                    <button class="btn btn-primary draw">Draw</button>
 
+
+
+                </div>
+
+            </div>
         </div>
+
+        <button class="btn btn-light leave">Leave Room</button>
 
     </section>
 

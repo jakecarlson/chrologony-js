@@ -31,12 +31,42 @@ Meteor.methods({
             roomId = Rooms.insert({
                 name: attrs.name,
                 password: attrs.password,
+                currentGameId: null,
                 createdAt: new Date(),
                 owner: Meteor.userId(),
             });
         }
 
         return roomId;
+
+    },
+
+    // Update
+    'room.update'(attrs) {
+
+        check(attrs._id, String);
+        check(attrs.currentGameId, String);
+
+        // Make sure the user is logged in before inserting a task
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        console.log('Update Room: ' + attrs._id);
+        console.log(attrs);
+
+        // If there is an ID, this is an update
+        return Rooms.update(
+            {
+                _id: attrs._id,
+            },
+            {
+                $set: {
+                    currentGameId: attrs.currentGameId,
+                    updatedAt: new Date(),
+                }
+            }
+        );
 
     },
 

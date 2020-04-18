@@ -32,6 +32,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
+        console.log('Create Event:');
         console.log(attrs);
 
         // If there is an ID, this is an update
@@ -62,6 +63,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
+        console.log('Update Event: ' + attrs._id);
         console.log(attrs);
 
         // If there is an ID, this is an update

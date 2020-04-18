@@ -26,6 +26,10 @@ function resetAttrs(i) {
     }
 }
 
+function capitalize(str) {
+    return str[0].toUpperCase() + str.slice(1);
+}
+
 export const ModelEvents = {
 
     edit: function(e, i) {
@@ -40,7 +44,7 @@ export const ModelEvents = {
 
         Meteor.call(getModelName(i) + '.insert', attrs, function(error, id) {
             if (!error) {
-                console.log('insert successful; new ID: ' + id);
+                console.log('Created ' + capitalize(getModelName(i)) + ': ' + id);
             }
         });
 
@@ -55,7 +59,7 @@ export const ModelEvents = {
 
         Meteor.call(getModelName(i) + '.update', attrs, function(error, updated) {
             if (!error) {
-                console.log('updated: ' + updated);
+                console.log('Updated ' + capitalize(getModelName(i)) + ': ' + updated);
             }
         });
 

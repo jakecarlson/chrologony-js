@@ -4,26 +4,81 @@ import { check } from 'meteor/check';
 
 export const Games = new Mongo.Collection('games');
 
+if (Meteor.isServer) {
+    Meteor.publish('games', function gamesPublication(id) {
+        return Games.find();
+    });
+}
+
 Meteor.methods({
 
     // Insert
     'game.insert'(attrs) {
 
+        check(attrs.categoryId, String);
         check(attrs.roomId, String);
-        check(attrs.streak, Boolean);
 
         // Make sure the user is logged in
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
-        Games.insert({
+        console.log('Create Game:');
+        console.log(attrs);
+
+        let gameId = Games.insert({
             roomId: attrs.roomId,
-            streak: attrs.streak,
+            categoryId: attrs.categoryId,
+            streak: false,
+            currentTurnId: null,
             createdAt: new Date(),
+            updatedAt: new Date(),
             endedAt: null,
             winner: null,
         });
+
+        Meteor.call('room.update', {_id: attrs.roomId, currentGameId: gameId}, function(error, updated) {
+            if (!error) {
+                console.log("Updated: " + updated);
+            }
+        });
+
+        Meteor.call('turn.next', gameId, function(error, id) {
+            if (!error) {
+                console.log("Started Turn: " + id);
+            }
+        });
+
+        return gameId;
+
+    },
+
+    // Update
+    'game.update'(attrs) {
+
+        check(attrs._id, String);
+        check(attrs.currentTurnId, String);
+
+        // Make sure the user is logged in before inserting a task
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        console.log('Update Game: ' + attrs._id);
+        console.log(attrs);
+
+        // If there is an ID, this is an update
+        return Game.update(
+            {
+                _id: attrs._id,
+            },
+            {
+                $set: {
+                    currentTurnId: attrs.currentTurnId,
+                    updatedAt: new Date(),
+                }
+            }
+        );
 
     },
 

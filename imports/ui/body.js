@@ -20,6 +20,9 @@ Template.body.helpers({
     currentRoom() {
         return Rooms.findOne(Session.get('room'));
     },
+    showCategoryManager() {
+        return (!Session.get('room') && Meteor.userId());
+    }
 });
 
 Template.body.events({

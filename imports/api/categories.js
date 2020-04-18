@@ -26,6 +26,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
+        console.log('Insert Category:');
         console.log(attrs);
 
         // If there is an ID, this is an update
@@ -53,6 +54,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
+        console.log('Update Category: ' + attrs._id);
         console.log(attrs);
 
         // If there is an ID, this is an update

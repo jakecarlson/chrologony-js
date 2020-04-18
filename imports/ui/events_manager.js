@@ -46,7 +46,9 @@ Template.events_manager.helpers({
             selector.categoryId = categoryId;
         }
 
+        console.log('Filter Events:');
         console.log(selector);
+
         return Events.find(selector, {sort:{date:-1}});
 
     },

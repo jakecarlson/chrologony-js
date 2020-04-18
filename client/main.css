@@ -21,3 +21,8 @@ html {
 #eventsFilter select {
     margin-left: .25rem;
 }
+
+#game select {
+    margin-left: .25rem;
+    margin-right: .75rem;
+}

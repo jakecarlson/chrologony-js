@@ -1,9 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-
-import './room.html';
 import { ReactiveDict } from "meteor/reactive-dict";
 import { Session } from "meteor/session";
+
+import './room.html';
+import './game.js';
 
 Template.room.onCreated(function roomOnCreated() {
     this.state = new ReactiveDict();
