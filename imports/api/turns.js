@@ -36,6 +36,12 @@ Meteor.methods({
             }
         });
 
+        Meteor.call('card.draw', {turnId: turnId, gameId: gameId}, function(error, id) {
+            if (!error) {
+                console.log("Created Card: " + id);
+            }
+        });
+
         return turnId;
 
     },

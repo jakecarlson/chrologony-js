@@ -1,50 +1,66 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { Categories } from "./categories";
+import { Games } from "./games";
+import { Turns } from "./turns";
+import { Events } from "./events";
 
 export const Cards = new Mongo.Collection('cards');
 
 if (Meteor.isServer) {
-    // This code only runs on the server
-    // Only publish tasks that are public or belong to the current user
-    Meteor.publish('cards', function cardsPublication() {
-        return Cards.find({
-            gameId: this.gameId,
-        });
+    Meteor.publish('cards', function cardsPublication(id) {
+        return Cards.find();
     });
 }
 
 Meteor.methods({
 
-    // Insert
-    'cards.insert'(attrs) {
+    // Draw Card
+    'card.draw'(attrs) {
 
-        check(attrs.templateId, String);
+        check(attrs.turnId, String);
         check(attrs.gameId, String);
 
-        // Make sure the user is logged in before inserting a task
+        // Make sure the user is logged in
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
-        Cards.insert({
-            templateId: attrs.templateId,
+        // Get a random card that hasn't been drawn this game
+        let game = Games.findOne(attrs.gameId);
+        let lockedEvents = Cards.find({gameId: attrs.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.eventId; });
+        let turnEvents = Cards.find({turnId: attrs.turnId}).map(function(i) { return i.eventId; });
+        let usedEvents = lockedEvents.concat(turnEvents);
+        console.log('Used Events:');
+        console.log(usedEvents);
+        let selector = {
+            active: true,
+            categoryId: game.categoryId,
+        };
+        if (usedEvents.length > 0) {
+            selector._id = {$nin: usedEvents};
+        }
+        // let unlockedEvent = Events.findOne(selector/*, {sort: {_id:Random.choice([1,-1])}}*/);
+        let randomEvent = Events.findOne(selector);
+
+        let cardId = Cards.insert({
+            turnId: attrs.turnId,
             gameId: attrs.gameId,
-            userId: Meteor.userId(),
-            createdAt: new Date(),
+            eventId: randomEvent._id,
             lockedAt: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
         });
 
-    },
+        Meteor.call('turn.update', {_id: attrs.turnId, currentCardId: cardId}, function(error, updated) {
+            if (!error) {
+                console.log("Updated Turn: " + updated);
+            }
+        });
 
-    // Lock
-    'cards.lock'(cardId) {
-        check(cardId, String);
-        const card = Cards.findOne(cardId);
-        if (card.userId !== Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
-        Cards.update(cardId, { $set: { lockedAt: new Date() } });
+        return cardId;
+
     },
 
 });
