@@ -15,10 +15,13 @@ Template.room.helpers({
 });
 
 Template.room.events({
-    'click .draw'(e) {
+    'click .game'(e, i) {
 
     },
-    'click .leave'(e) {
+    'click .draw'(e, i) {
+
+    },
+    'click .leave'(e, i) {
         Session.set('room', undefined);
     },
 
