@@ -1,12 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { Rooms } from '../api/rooms';
 
 export const Games = new Mongo.Collection('games');
 
 if (Meteor.isServer) {
-    Meteor.publish('games', function gamesPublication(id) {
-        return Games.find();
+    Meteor.publish('games', function gamesPublication(roomId) {
+        return Games.find({roomId: roomId});
     });
 }
 
@@ -68,7 +69,7 @@ Meteor.methods({
         console.log(attrs);
 
         // If there is an ID, this is an update
-        return Game.update(
+        return Games.update(
             {
                 _id: attrs._id,
             },
