@@ -17,3 +17,7 @@ html {
     font-size: .9rem;
     font-weight: normal;
 }
+
+#eventsFilter select {
+    margin-left: .25rem;
+}

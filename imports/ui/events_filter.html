@@ -1,0 +1,19 @@
+<template name="events_filter">
+
+    <form id="eventsFilter" class="card text-muted bg-light">
+        <div class="card-body form-inline mx-auto p-2">
+            <label class="sr-only">Search:</label>
+            <input type="text" name="keyword" value="{{keyword}}" placeholder="Search ...">
+            <div class="form-check form-check-inline ml-3">
+                <input type="checkbox" id="eventFilterOwned" name="owned" value="true" checked="{{owned}}" class="form-check-input form-check-inline">
+                <label for="eventFilterOwned">Mine Only</label>
+            </div>
+            <div class="form-check form-check-inline ml-1">
+                <input type="checkbox" id="eventFilterPrivate" name="private" value="true" checked="{{private}}" class="form-check-input form-check-inline">
+                <label for="eventFilterPrivate">Private Only</label>
+            </div>
+            <label>Category: {{> categories_selector val=categoryId}}</label>
+        </div>
+    </form>
+
+</template>

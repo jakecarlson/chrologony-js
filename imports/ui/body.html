@@ -1,9 +1,9 @@
 <body>
 
-    <div class="container">
-        <div class="pull-right">
+    <div class="container clearfix p-2">
+        <div class="float-right">
             {{#if currentUser}}
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#categoriesModal">Manage Private Categories</button>
+                <a href="#" data-toggle="modal" data-target="#categoriesModal">Your Categories</a>
             {{/if}}
             {{> loginButtons}}
         </div>

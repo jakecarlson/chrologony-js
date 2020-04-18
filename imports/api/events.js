@@ -41,6 +41,7 @@ Meteor.methods({
             categoryId: attrs.categoryId,
             hint: attrs.hint,
             active: true,
+            owner: Meteor.userId(),
             createdAt: new Date(),
             updatedAt: new Date(),
         });

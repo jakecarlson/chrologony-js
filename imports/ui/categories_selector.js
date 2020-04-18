@@ -14,10 +14,10 @@ Template.categories_selector.onCreated(function categories_selectorOnCreated() {
 
 Template.categories_selector.helpers({
     publicCategories() {
-        return Categories.find({private: false}, {sort:{name: 1}});
+        return Categories.find({private: false, active: true}, {sort:{name: 1}});
     },
     privateCategories() {
-        return Categories.find({private: true, owner: Meteor.userId()}, {sort:{name: 1}});
+        return Categories.find({private: true, owner: Meteor.userId(), active: true}, {sort:{name: 1}});
     },
     selectedValue(id) {
         return (id == this.val);
