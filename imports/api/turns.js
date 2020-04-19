@@ -5,8 +5,8 @@ import { check } from 'meteor/check';
 export const Turns = new Mongo.Collection('turns');
 
 if (Meteor.isServer) {
-    Meteor.publish('turns', function turnsPublication(id) {
-        return Turns.find();
+    Meteor.publish('turns', function turnsPublication(gameId) {
+        return Turns.find({gameId: gameId});
     });
 }
 
