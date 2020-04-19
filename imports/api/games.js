@@ -46,7 +46,7 @@ Meteor.methods({
 
         Meteor.call('turn.next', gameId, function(error, id) {
             if (!error) {
-                console.log("Started Turn: " + id);
+                console.log("First Turn: " + id);
             }
         });
 

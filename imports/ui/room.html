@@ -4,12 +4,24 @@
 
         <header class="clearfix">
             <h1 class="float-left">{{room.name}}</h1>
-            <button class="btn btn-light float-right mt-2 leave">Leave Room</button>
+            <button class="btn btn-secondary float-right mt-2 leave">Leave Room</button>
+            {{#if isOwner}}
+                <button class="btn btn-light float-right mt-2 mr-2 destroy">Destroy Room</button>
+            {{/if}}
         </header>
 
-        {{> board room=room game=currentGame}}
+        <div class="row">
 
-        {{> game}}
+            <div class="col-9" id="roomMain">
+                {{> board room=room game=currentGame turn=currentTurn}}
+            </div>
+
+            <div class="col-3" id="roomSide">
+                {{> players_list room=room turn=currentTurn}}
+                {{> game room=room}}
+            </div>
+
+        </div>
 
     </section>
 

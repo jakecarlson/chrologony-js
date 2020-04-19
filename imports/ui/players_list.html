@@ -1,0 +1,14 @@
+<template name="players_list">
+
+    <div id="players" class="card mb-4">
+        <div class="card-header">
+            <h2 class="card-subtitle">Players in this Room</h2>
+        </div>
+        <ul class="list-group list-group-flush">
+            {{#each currentPlayer in players}}
+                {{> player turn=turn player=currentPlayer}}
+            {{/each}}
+        </ul>
+    </div>
+
+</template>

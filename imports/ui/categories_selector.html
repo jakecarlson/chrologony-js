@@ -1,6 +1,6 @@
 <template name="categories_selector">
 
-    <select class="attr form-control" name="categoryId">
+    <select class="attr form-control" name="categoryId" id="{{id}}">
         <option value="">All</option>
         {{#if collectionNotEmpty privateCategories}}
             <optgroup label="Private">

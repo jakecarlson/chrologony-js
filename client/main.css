@@ -22,7 +22,10 @@ html {
     margin-left: .25rem;
 }
 
-#game select {
-    margin-left: .25rem;
-    margin-right: .75rem;
+#roomSide .card-subtitle {
+    font-size: large;
+}
+
+#players .current {
+    font-weight: bold;
 }

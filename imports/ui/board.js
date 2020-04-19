@@ -5,8 +5,6 @@ import { Session } from "meteor/session";
 
 import './board.html';
 import './card.js';
-import { Games } from "../api/games";
-import { Turns } from "../api/turns";
 
 Template.board.onCreated(function boardOnCreated() {
     this.state = new ReactiveDict();
@@ -16,44 +14,35 @@ Template.board.onCreated(function boardOnCreated() {
 
 Template.board.helpers({
 
-    turn() {
-        if (this.game) {
-            if (this.game.currentTurnId) {
-                return Turns.findOne(this.game.currentTurnId);
+    turnTitle() {
+        if (this.turn) {
+            let title = '';
+            if (this.turn.userId == Meteor.userId()) {
+                title += 'Your';
             } else {
-                return "no turn defined";
+                let user = Meteor.users.findOne(this.turn.userId);
+                title += user.username + "'s";
             }
+            title += ' Turn';
+            return title;
         } else {
-            return "no game defined";
+            return 'no turn defined';
         }
     },
-
-    turnTitle() {
-        if (this.game) {
-            let turn = Turns.findOne(this.game.currentTurnId);
-            console.log(turn);
-            if (turn) {
-                let title = '';
-                if (turn.userId == Meteor.userId()) {
-                    title += 'Your';
-                } else {
-                    let user = Meteor.users.findOne(turn.userId);
-                    title += user.username + "'s";
-                }
-                title += ' Turn';
-                return title;
-            } else {
-                return 'no turn defined';
-            }
-        } else {
-            return 'no game defined';
-        }
-    }
 
 });
 
 Template.board.events({
     'click .draw'(e, i) {
 
+    },
+    'click .turn'(e, i) {
+        e.preventDefault();
+        console.log('End Turn: ' + this.game.currentTurnId);
+        Meteor.call('turn.next', this.game._id, function(error, id) {
+            if (!error) {
+                console.log("Start Turn: " + id);
+            }
+        });
     },
 });

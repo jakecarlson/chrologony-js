@@ -7,7 +7,6 @@ import './game.html';
 
 Template.game.onCreated(function gameOnCreated() {
     this.state = new ReactiveDict();
-
 });
 
 Template.game.helpers({
@@ -24,7 +23,7 @@ Template.game.events({
         const target = e.target;
         const attrs = {
             categoryId: target.categoryId.options[target.categoryId.selectedIndex].value,
-            roomId: Meteor.user().currentRoomId,
+            roomId: this.room._id,
         };
 
         Meteor.call('game.insert', attrs, function(error, id) {

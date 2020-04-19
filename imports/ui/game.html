@@ -1,8 +1,16 @@
 <template name="game">
 
-    <form id="game" class="form-inline pt-2 pb-2 float-right">
-        <label>Category: {{> categories_selector}}</label>
-        <button type="submit" class="btn btn-secondary draw">Start New Game</button>
+    <form id="game" class="card">
+        <header class="card-header">
+            <h2 class="card-subtitle">Start a New Game</h2>
+        </header>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="gameCategoryId">Category:</label>
+                {{> categories_selector id="gameCategoryId"}}
+            </div>
+            <button type="submit" class="btn btn-secondary float-right draw">Start</button>
+        </div>
     </form>
 
 </template>
