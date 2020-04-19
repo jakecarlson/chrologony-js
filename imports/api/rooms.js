@@ -37,7 +37,36 @@ Meteor.methods({
             });
         }
 
+        /*let result = Meteor.users.update(this.userId, {
+            $set: {
+                currentRoomId: roomId,
+            }
+        });*/
+        Meteor.call('user.update', {_id: this.userId, currentRoomId: roomId}, function(error, updated) {
+            if (!error) {
+                // console.log("Updated User: " + updated);
+            }
+        });
+
         return roomId;
+
+    },
+
+    'room.leave'() {
+
+        // Make sure the user is logged in before inserting a task
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        let previousRoomId = Meteor.user().currentRoomId;
+        Meteor.users.update(this.userId, {
+            $set: {
+                currentRoomId: null,
+            }
+        });
+
+        return previousRoomId;
 
     },
 

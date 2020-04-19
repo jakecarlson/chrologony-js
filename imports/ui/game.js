@@ -24,7 +24,7 @@ Template.game.events({
         const target = e.target;
         const attrs = {
             categoryId: target.categoryId.options[target.categoryId.selectedIndex].value,
-            roomId: Session.get('room'),
+            roomId: Meteor.user().currentRoomId,
         };
 
         Meteor.call('game.insert', attrs, function(error, id) {

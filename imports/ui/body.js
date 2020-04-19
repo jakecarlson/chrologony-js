@@ -13,15 +13,16 @@ import './events_manager.js';
 
 Template.body.onCreated(function bodyOnCreated() {
     this.state = new ReactiveDict();
-    Meteor.subscribe('rooms', Session.get('room'));
+    Meteor.subscribe('rooms', Meteor.user() ? Meteor.user().currentRoomId : null);
+    Meteor.subscribe('userData');
 });
 
 Template.body.helpers({
     currentRoom() {
-        return Rooms.findOne(Session.get('room'));
+        return Rooms.findOne(Meteor.user().currentRoomId);
     },
     showCategoryManager() {
-        return (!Session.get('room') && Meteor.userId());
+        return (Meteor.user() && !Meteor.user().currentRoomId);
     }
 });
 

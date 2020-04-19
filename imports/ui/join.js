@@ -17,7 +17,7 @@ Template.join.helpers({
 Template.join.events({
 
     'submit #join'(e) {
-        // Prevent default browser form submit
+
         e.preventDefault();
 
         // Get value from form element
@@ -29,7 +29,6 @@ Template.join.events({
 
         Meteor.call('room.findOrCreate', attrs, function(error, id) {
             if (!error) {
-                Session.set('room', id);
                 console.log("Room Set: " + id);
             }
         });

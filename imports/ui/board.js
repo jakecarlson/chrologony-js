@@ -11,10 +11,11 @@ import { Turns } from "../api/turns";
 Template.board.onCreated(function boardOnCreated() {
     this.state = new ReactiveDict();
     Meteor.subscribe('turns', this.data.room.currentGameId);
-    Meteor.subscribe('cards', Session.get('room'));
+    Meteor.subscribe('cards', Meteor.user().currentRoomId);
 });
 
 Template.board.helpers({
+
     turn() {
         if (this.game) {
             if (this.game.currentTurnId) {
@@ -25,14 +26,28 @@ Template.board.helpers({
         } else {
             return "no game defined";
         }
-
-        // return (this.game) ? this.game.currentTurnId : 'nada';
-        // return this.game.currentTurnId;
     },
+
     turnTitle() {
-        let userId = Turns.findOne(this.game.currentTurnId).userId;
-        if (userId == Meteor.userId())
-        return ;
+        if (this.game) {
+            let turn = Turns.findOne(this.game.currentTurnId);
+            console.log(turn);
+            if (turn) {
+                let title = '';
+                if (turn.userId == Meteor.userId()) {
+                    title += 'Your';
+                } else {
+                    let user = Meteor.users.findOne(turn.userId);
+                    title += user.username + "'s";
+                }
+                title += ' Turn';
+                return title;
+            } else {
+                return 'no turn defined';
+            }
+        } else {
+            return 'no game defined';
+        }
     }
 
 });
