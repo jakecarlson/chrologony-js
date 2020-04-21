@@ -29,29 +29,18 @@ Meteor.methods({
         if (Meteor.isServer) {
 
             // Get turn counts for players who have had turns in the current game
+            const sorts = [-1, 1];
+            const randomSort = sorts[Math.floor(Math.random() * sorts.length)];
             const players = Promise.await(
                 Turns.rawCollection().aggregate(
                     [
-                        {
-                            $match: {
-                                gameId: gameId
-                            },
-                        },
-                        {
-                            $group: {
-                                _id: "$userId",
-                                turns: { $sum: 1 }
-                            }
-                        },
-                        {
-                            $sort: {
-                                turns: -1,
-                                userId: -1,
-                            }
-                        }
+                        {$match: {gameId: gameId}},
+                        {$group: {_id: "$userId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
+                        {$sort: {turns: -1, lastTurn: -1, userId: randomSort}}
                     ]
                 ).toArray()
             );
+            // console.log(players);
 
             // Create an array of users who have already had turns
             const alreadyPlayed = [];

@@ -39,9 +39,11 @@ Template.board.events({
     'click .turn'(e, i) {
         e.preventDefault();
         console.log('End Turn: ' + this.game.currentTurnId);
+        Session.set('loading', true);
         Meteor.call('turn.next', this.game._id, function(error, id) {
             if (!error) {
                 console.log("Start Turn: " + id);
+                Session.set('loading', false);
             }
         });
     },

@@ -11,8 +11,13 @@
                 <!--                {{/each}}-->
             <!--            </ul>-->
 
-            <button class="btn btn-primary draw">Draw</button>
-            <button class="btn btn-primary turn">Next Turn</button>
+            <button class="btn btn-primary draw" disabled="{{loading}}">Draw</button>
+            <button class="btn btn-primary turn" disabled="{{loading}}">
+                {{#if loading}}
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                {{/if}}
+                Next Turn
+            </button>
 
         </div>
     </div>
