@@ -7,6 +7,7 @@ import './game.html';
 
 Template.game.onCreated(function gameOnCreated() {
     this.state = new ReactiveDict();
+    Meteor.subscribe('turns', this.data.room.currentGameId);
 });
 
 Template.game.helpers({
@@ -26,9 +27,12 @@ Template.game.events({
             roomId: this.room._id,
         };
 
+        Session.set('loading', true);
         Meteor.call('game.insert', attrs, function(error, id) {
             if (!error) {
-                console.log("Created Game: " + id)
+                console.log("Created Game: " + id);
+                Meteor.subscribe('turns', id);
+                Session.set('loading', false);
             }
         });
 
