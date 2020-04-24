@@ -9,7 +9,7 @@ import './body.html';
 import './join.js';
 import './room.js';
 import './categories_manager.js';
-import './events_manager.js';
+import './clues_manager.js';
 
 Template.body.onCreated(function bodyOnCreated() {
     this.state = new ReactiveDict();

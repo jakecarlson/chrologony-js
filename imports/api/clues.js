@@ -3,19 +3,19 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { Categories } from '../api/categories';
 
-export const Events = new Mongo.Collection('events');
+export const Clues = new Mongo.Collection('clues');
 
 if (Meteor.isServer) {
-    Meteor.publish('events', function eventsPublication() {
+    Meteor.publish('clues', function cluesPublication() {
         if (this.userId) {
-            return Events.find({}, {sort: {date: -1}});
+            return Clues.find({}, {sort: {date: -1}});
         } else {
             return this.ready();
         }
     });
 }
 
-Events.helpers({
+Clues.helpers({
     category() {
         return Categories.findOne(this.categoryId);
     }
@@ -24,9 +24,9 @@ Events.helpers({
 Meteor.methods({
 
     // Insert
-    'event.insert'(attrs) {
+    'clue.insert'(attrs) {
 
-        check(attrs.clue, String);
+        check(attrs.description, String);
         check(attrs.date, String);
         check(attrs.categoryId, String);
         check(attrs.hint, String);
@@ -36,12 +36,12 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Create Event:');
+        console.log('Create Clue:');
         console.log(attrs);
 
         // If there is an ID, this is an update
-        return Events.insert({
-            clue: attrs.clue,
+        return Clues.insert({
+            description: attrs.description,
             date: attrs.date,
             categoryId: attrs.categoryId,
             hint: attrs.hint,
@@ -54,10 +54,10 @@ Meteor.methods({
     },
 
     // Update
-    'event.update'(attrs) {
+    'clue.update'(attrs) {
 
         check(attrs._id, String);
-        check(attrs.clue, String);
+        check(attrs.description, String);
         check(attrs.date, String);
         check(attrs.categoryId, String);
         check(attrs.hint, String);
@@ -67,17 +67,17 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Update Event: ' + attrs._id);
+        console.log('Update Clue: ' + attrs._id);
         console.log(attrs);
 
         // If there is an ID, this is an update
-        return Events.update(
+        return Clues.update(
             {
                 _id: attrs._id,
             },
             {
                 $set: {
-                    clue: attrs.clue,
+                    description: attrs.description,
                     date: attrs.date,
                     categoryId: attrs.categoryId,
                     hint: attrs.hint,

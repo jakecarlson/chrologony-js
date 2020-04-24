@@ -11,6 +11,7 @@ import './card.js';
 Template.board.onCreated(function boardOnCreated() {
     this.state = new ReactiveDict();
     this.autorun(() => {
+        this.subscribe('clues');
         this.subscribe('turns', this.data.room.currentGameId);
         this.subscribe('cards', this.data.room.currentGameId);
     });
@@ -36,16 +37,21 @@ Template.board.helpers({
     },
 
     lockedCards() {
-        return Cards.find({});
-        // return Cards.find({gameId: this.game._id, lockedAt: {$ne: null}});
+        // return Cards.find({});
+        if (this.game && this.turn) {
+            return Cards.find({gameId: this.game._id, lockedAt: {$ne: null}, turnId: {$ne: this.turn._id}});
+        } else {
+            return [];
+        }
     },
 
     turnCards() {
         // return Cards.find({});
         if (this.turn) {
             return Cards.find({turnId: this.turn._id});
+        } else {
+            return [];
         }
-        return [];
     },
 
     currentCard() {

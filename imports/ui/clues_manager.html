@@ -1,8 +1,8 @@
-<template name="events_manager">
+<template name="clues_manager">
 
-    {{> events_filter}}
+    {{> clues_filter}}
 
-    <table id="events" class="table table-striped table-hover">
+    <table id="clues" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th scope="col">Clue</th>
@@ -13,12 +13,12 @@
             </tr>
         </thead>
         <tbody>
-            {{#each cardEvent in cardEvents}}
-                {{> event event=cardEvent}}
+            {{#each clueCard in clueCards}}
+                {{> clue clue=clueCard}}
             {{/each}}
         </tbody>
         <tfoot>
-            {{> event event=false}}
+            {{> clue clue=false}}
         </tfoot>
     </table>
 

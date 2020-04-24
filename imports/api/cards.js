@@ -4,15 +4,15 @@ import { check } from 'meteor/check';
 import { Categories } from "./categories";
 import { Games } from "./games";
 import { Turns } from "./turns";
-import { Events } from "./events";
+import { Clues } from "./clues";
 
 export const Cards = new Mongo.Collection('cards');
 
 if (Meteor.isServer) {
 
-    Meteor.publish('cards', function cardsPublication(game) {
-        if (this.userId) {
-            return Cards.find({});
+    Meteor.publish('cards', function cardsPublication(gameId) {
+        if (this.userId && gameId) {
+            return Cards.find({gameId: gameId});
             /*
             if (game) {
                 let selector = {
@@ -47,32 +47,32 @@ Meteor.methods({
         check(attrs.gameId, String);
 
         // Make sure the user is logged in
-        if (! Meteor.userId()) {
+        if (!this.userId) {
             throw new Meteor.Error('not-authorized');
         }
 
         // Get a random card that hasn't been drawn this game
         let game = Games.findOne(attrs.gameId);
-        let lockedEvents = Cards.find({gameId: attrs.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.eventId; });
-        let turnEvents = Cards.find({turnId: attrs.turnId}).map(function(i) { return i.eventId; });
-        let usedEvents = lockedEvents.concat(turnEvents);
-        console.log('Used Events:');
-        console.log(usedEvents);
+        let lockedCards = Cards.find({gameId: attrs.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
+        let turnCards = Cards.find({turnId: attrs.turnId}).map(function(i) { return i.clueId; });
+        let usedCards = lockedCards.concat(turnCards);
+        console.log('Used Cards:');
+        console.log(usedCards);
         let selector = {
             active: true,
             categoryId: game.categoryId,
         };
-        if (usedEvents.length > 0) {
-            selector._id = {$nin: usedEvents};
+        if (usedCards.length > 0) {
+            selector._id = {$nin: usedCards};
         }
-        // let unlockedEvent = Events.findOne(selector/*, {sort: {_id:Random.choice([1,-1])}}*/);
-        let randomEvent = Events.findOne(selector);
+        // let unlockedClue = Clues.findOne(selector/*, {sort: {_id:Random.choice([1,-1])}}*/);
+        let randomClue = Clues.findOne(selector);
 
         let cardId = Cards.insert({
             turnId: attrs.turnId,
             gameId: attrs.gameId,
-            eventId: randomEvent._id,
-            event: randomEvent,
+            clueId: randomClue._id,
+            clue: randomClue,
             lockedAt: null,
             createdAt: new Date(),
             updatedAt: new Date(),

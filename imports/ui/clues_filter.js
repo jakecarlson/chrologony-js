@@ -3,17 +3,17 @@ import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Session } from 'meteor/session';
 
-import './events_filter.html';
+import './clues_filter.html';
 import './categories_selector.js';
 
-Template.events_filter.onCreated(function events_filterOnCreated() {
+Template.clues_filter.onCreated(function clues_filterOnCreated() {
     this.state = new ReactiveDict();
 });
 
-Template.events_filter.helpers({
+Template.clues_filter.helpers({
 
 });
 
-Template.events_filter.events({
+Template.clues_filter.events({
 
 });

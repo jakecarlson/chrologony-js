@@ -18,7 +18,7 @@ html {
     font-weight: normal;
 }
 
-#eventsFilter select {
+#cluesFilter select {
     margin-left: .25rem;
 }
 
@@ -35,10 +35,11 @@ html {
     margin-left: 0;
 }
 
-.event-card {
+.clue-card {
     width: 10rem;
+    display: inline-block;
 }
-.event-card .card-title {
+.clue-card .card-title {
     margin-bottom: 0;
     font-size: large;
 }

@@ -6,14 +6,14 @@ import { Session } from "meteor/session";
 import { Categories } from '../api/categories';
 import { ModelEvents } from "../startup/template-event";
 
-import './event.html';
+import './clue.html';
 
-Template.event.onCreated(function eventOnCreated() {
+Template.clue.onCreated(function clueOnCreated() {
     this.state = new ReactiveDict();
-    this.state.set('editing', (this.data.event === false));
+    this.state.set('editing', (this.data.clue === false));
 });
 
-Template.event.helpers({
+Template.clue.helpers({
 
     editing() {
         return Template.instance().state.get('editing');
@@ -24,36 +24,32 @@ Template.event.helpers({
     },
 
     id() {
-        return this.event._id;
+        return this.clue._id;
     },
 
-    clue() {
-        return this.event.clue;
+    description() {
+        return this.clue.description;
     },
 
     date() {
-        return moment.utc(this.event.date).format("YYYY-MM-DD");
+        return moment.utc(this.clue.date).format("YYYY-MM-DD");
     },
 
     categoryId() {
-        return this.event.categoryId;
+        return this.clue.categoryId;
     },
 
     category() {
-        return Categories.findOne(this.event.categoryId);
+        return Categories.findOne(this.clue.categoryId);
     },
 
     hint() {
-        return this.event.hint;
-    },
-
-    matches(val1, val2) {
-        return (val1 == val2);
+        return this.clue.hint;
     },
 
 });
 
-Template.event.events({
+Template.clue.events({
     'click .edit': ModelEvents.edit,
     'click .add': ModelEvents.add,
     'click .save': ModelEvents.save,

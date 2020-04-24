@@ -6,24 +6,20 @@ import './card.html';
 Template.card.helpers({
 
     categoryId: function() {
-        return (this.card) ? this.card.event.categoryId : null;
+        return (this.card) ? this.card.clue.categoryId : null;
     },
 
     date: function() {
-        return (this.card) ? this.card.event.date : null;
+        return (this.card) ? this.card.clue.date : null;
     },
 
-    clue: function() {
-        return (this.card) ? this.card.event.clue : null;
+    description: function() {
+        return (this.card) ? this.card.clue.description : null;
     },
 
     hint: function() {
-        return (this.card) ? this.card.event.hint : null;
+        return (this.card) ? this.card.clue.hint : null;
     },
-
-
-
-
 
 });
 

@@ -3,25 +3,25 @@ import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Session } from 'meteor/session';
 
-import './events_manager.html';
-import './event.js';
-import './events_filter.js';
-import { Events } from "../api/events";
+import './clues_manager.html';
+import './clue.js';
+import './clues_filter.js';
+import { Clues } from "../api/clues";
 
-Template.events_manager.onCreated(function events_managerOnCreated() {
+Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state = new ReactiveDict();
     this.state.set('keyword', '');
     this.state.set('owned', false);
     this.state.set('private', false);
     this.state.set('categoryId', false);
     this.autorun(() => {
-        this.subscribe('events');
+        this.subscribe('clues');
     });
 
 });
 
-Template.events_manager.helpers({
-    cardEvents() {
+Template.clues_manager.helpers({
+    clueCards() {
         
         let selector = {};
 
@@ -29,7 +29,7 @@ Template.events_manager.helpers({
         let keyword = Template.instance().state.get('keyword');
         if (keyword.length > 2) {
             selector.$or = [
-                {clue: {$regex: keyword, $options: 'i'}},
+                {description: {$regex: keyword, $options: 'i'}},
                 {date: {$regex: keyword, $options: 'i'}},
                 {hint: {$regex: keyword, $options: 'i'}},
             ];
@@ -49,30 +49,30 @@ Template.events_manager.helpers({
             selector.categoryId = categoryId;
         }
 
-        console.log('Filter Events:');
+        console.log('Filter Clues:');
         console.log(selector);
 
-        return Events.find(selector, {sort:{date:-1}});
+        return Clues.find(selector, {sort:{date:-1}});
 
     },
 });
 
-Template.events_manager.events({
+Template.clues_manager.events({
 
-    'keyup #eventsFilter [name="keyword"]'(e, i) {
+    'keyup #cluesFilter [name="keyword"]'(e, i) {
         i.state.set('keyword', e.target.value);
     },
 
-    'change #eventsFilter [name="categoryId"]'(e, i) {
+    'change #cluesFilter [name="categoryId"]'(e, i) {
         let categoryId = e.target.options[e.target.selectedIndex].value;
         i.state.set('categoryId', categoryId);
     },
 
-    'change #eventsFilter [name="owned"]'(e, i) {
+    'change #cluesFilter [name="owned"]'(e, i) {
         i.state.set('owned', e.target.checked);
     },
 
-    'change #eventsFilter [name="private"]'(e, i) {
+    'change #cluesFilter [name="private"]'(e, i) {
         i.state.set('private', e.target.checked);
     },
 
