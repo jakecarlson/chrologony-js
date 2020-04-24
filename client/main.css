@@ -29,3 +29,16 @@ html {
 #players .current {
     font-weight: bold;
 }
+
+.cards {
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.event-card {
+    width: 10rem;
+}
+.event-card .card-title {
+    margin-bottom: 0;
+    font-size: large;
+}

@@ -6,8 +6,12 @@ export const Categories = new Mongo.Collection('categories');
 
 if (Meteor.isServer) {
     Meteor.publish('categories', function categoriesPublication() {
-        // return Categories.find({/*owner: {$in: [ Meteor.userId(), null ]}*/}, {sort:{name:1}});
-        return Categories.find({});
+        if (this.userId) {
+            // return Categories.find({/*owner: {$in: [ Meteor.userId(), null ]}*/}, {sort:{name:1}});
+            return Categories.find({});
+        } else {
+            return this.ready();
+        }
     });
 }
 

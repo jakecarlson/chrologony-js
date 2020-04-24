@@ -5,8 +5,12 @@ import { check } from 'meteor/check';
 export const Rooms = new Mongo.Collection('rooms');
 
 if (Meteor.isServer) {
-    Meteor.publish('rooms', function roomsPublication(id) {
-        return Rooms.find();
+    Meteor.publish('rooms', function roomsPublication() {
+        if (this.userId) {
+            return Rooms.find();
+        } else {
+            return this.ready();
+        }
     });
 }
 

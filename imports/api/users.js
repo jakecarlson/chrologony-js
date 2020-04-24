@@ -18,7 +18,11 @@ if (Meteor.isServer) {
 
     // Get the players in the room
     Meteor.publish('players', function playersPublication(roomId) {
-        return Meteor.users.find({currentRoomId: roomId});
+        if (this.userId) {
+            return Meteor.users.find({currentRoomId: roomId});
+        } else {
+            return this.ready();
+        }
     });
 
 }

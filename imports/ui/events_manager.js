@@ -14,7 +14,10 @@ Template.events_manager.onCreated(function events_managerOnCreated() {
     this.state.set('owned', false);
     this.state.set('private', false);
     this.state.set('categoryId', false);
-    Meteor.subscribe('events');
+    this.autorun(() => {
+        this.subscribe('events');
+    });
+
 });
 
 Template.events_manager.helpers({

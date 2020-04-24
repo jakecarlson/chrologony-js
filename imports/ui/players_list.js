@@ -8,7 +8,10 @@ import './player.js';
 
 Template.players_list.onCreated(function players_listOnCreated() {
     this.state = new ReactiveDict();
-    Meteor.subscribe('players', this.data.room._id);
+    this.autorun(() => {
+        this.subscribe('players', this.data.room._id);
+    });
+
 });
 
 Template.players_list.helpers({

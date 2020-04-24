@@ -9,7 +9,10 @@ import { Categories } from "../api/categories";
 
 Template.categories_manager.onCreated(function categories_managerOnCreated() {
     this.state = new ReactiveDict();
-    Meteor.subscribe('categories');
+    this.autorun(() => {
+        this.subscribe('categories');
+    });
+
 });
 
 Template.categories_manager.helpers({

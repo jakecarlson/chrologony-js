@@ -7,7 +7,10 @@ import './game.html';
 
 Template.game.onCreated(function gameOnCreated() {
     this.state = new ReactiveDict();
-    Meteor.subscribe('turns', this.data.room.currentGameId);
+    this.autorun(() => {
+        this.subscribe('turns', this.data.room.currentGameId);
+    });
+
 });
 
 Template.game.helpers({

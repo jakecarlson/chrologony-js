@@ -13,9 +13,11 @@ import './game.js';
 
 Template.room.onCreated(function roomOnCreated() {
     this.state = new ReactiveDict();
-    Meteor.subscribe('games', Meteor.user().currentRoomId);
-    Meteor.subscribe('turns', this.data.room.currentGameId);
-    Meteor.subscribe('players', this.data.room._id);
+    this.autorun(() => {
+        this.subscribe('games', Meteor.user().currentRoomId);
+        this.subscribe('turns', this.data.room.currentGameId);
+        this.subscribe('players', this.data.room._id);
+    });
 });
 
 Template.room.helpers({

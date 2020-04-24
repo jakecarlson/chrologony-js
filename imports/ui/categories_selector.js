@@ -9,7 +9,10 @@ import './categories_selector.html';
 
 Template.categories_selector.onCreated(function categories_selectorOnCreated() {
     this.state = new ReactiveDict();
-    Meteor.subscribe('categories');
+    this.autorun(() => {
+        this.subscribe('categories');
+    });
+
 });
 
 Template.categories_selector.helpers({

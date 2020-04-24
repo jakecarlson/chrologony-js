@@ -9,7 +9,11 @@ export const Turns = new Mongo.Collection('turns');
 
 if (Meteor.isServer) {
     Meteor.publish('turns', function turnsPublication(gameId) {
-        return Turns.find({gameId: gameId});
+        if (this.userId && gameId) {
+            return Turns.find({gameId: gameId});
+        } else {
+            return this.ready();
+        }
     });
 }
 
@@ -97,6 +101,34 @@ Meteor.methods({
             return turnId;
 
         }
+
+    },
+
+    // Update
+    'turn.update'(attrs) {
+
+        check(attrs._id, String);
+        check(attrs.currentCardId, String);
+
+        // Make sure the user is logged in before inserting a task
+        if (!Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        console.log('Update Turn: ' + attrs._id);
+        console.log(attrs);
+
+        return Turns.update(
+            {
+                _id: attrs._id,
+            },
+            {
+                $set: {
+                    currentCardId: attrs.currentCardId,
+                    updatedAt: new Date(),
+                }
+            }
+        );
 
     },
 

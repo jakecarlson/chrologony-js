@@ -7,7 +7,11 @@ export const Events = new Mongo.Collection('events');
 
 if (Meteor.isServer) {
     Meteor.publish('events', function eventsPublication() {
-        return Events.find({}, {sort:{date:-1}});
+        if (this.userId) {
+            return Events.find({}, {sort: {date: -1}});
+        } else {
+            return this.ready();
+        }
     });
 }
 

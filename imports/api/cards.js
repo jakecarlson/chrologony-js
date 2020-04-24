@@ -9,9 +9,33 @@ import { Events } from "./events";
 export const Cards = new Mongo.Collection('cards');
 
 if (Meteor.isServer) {
-    Meteor.publish('cards', function cardsPublication(id) {
-        return Cards.find();
+
+    Meteor.publish('cards', function cardsPublication(game) {
+        if (this.userId) {
+            return Cards.find({});
+            /*
+            if (game) {
+                let selector = {
+                    gameId: game._id,
+                };
+                if (game.currentTurnId) {
+                    selector.$or = [
+                        {turnId: turnId},
+                        {lockedAt: {$ne: null}}
+                    ];
+                } else {
+                    selector.lockedAt = {$ne: null};
+                }
+                return Cards.find(selector);
+            } else {
+                return [];
+            }
+            */
+        } else {
+            return this.ready();
+        }
     });
+
 }
 
 Meteor.methods({
@@ -48,6 +72,7 @@ Meteor.methods({
             turnId: attrs.turnId,
             gameId: attrs.gameId,
             eventId: randomEvent._id,
+            event: randomEvent,
             lockedAt: null,
             createdAt: new Date(),
             updatedAt: new Date(),

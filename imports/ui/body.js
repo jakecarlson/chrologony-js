@@ -13,8 +13,10 @@ import './events_manager.js';
 
 Template.body.onCreated(function bodyOnCreated() {
     this.state = new ReactiveDict();
-    Meteor.subscribe('rooms', Meteor.user() ? Meteor.user().currentRoomId : null);
-    Meteor.subscribe('userData');
+    this.autorun(() => {
+        Meteor.subscribe('rooms', Meteor.user() ? Meteor.user().currentRoomId : null);
+        Meteor.subscribe('userData');
+    });
 });
 
 Template.body.helpers({

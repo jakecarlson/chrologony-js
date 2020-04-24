@@ -3,15 +3,30 @@ import { Template } from 'meteor/templating';
 
 import './card.html';
 
-Template.room.helpers({
+Template.card.helpers({
+
+    categoryId: function() {
+        return (this.card) ? this.card.event.categoryId : null;
+    },
+
+    date: function() {
+        return (this.card) ? this.card.event.date : null;
+    },
+
+    clue: function() {
+        return (this.card) ? this.card.event.clue : null;
+    },
+
+    hint: function() {
+        return (this.card) ? this.card.event.hint : null;
+    },
+
+
+
+
 
 });
 
 Template.card.events({
-    /*'click .delete'() {
-        Meteor.call('rooms.remove', this._id);
-    },
-    'click .toggle-private'() {
-        Meteor.call('rooms.setPrivate', this._id, !this.private);
-    },*/
+
 });

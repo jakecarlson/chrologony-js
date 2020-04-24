@@ -7,7 +7,11 @@ export const Games = new Mongo.Collection('games');
 
 if (Meteor.isServer) {
     Meteor.publish('games', function gamesPublication(roomId) {
-        return Games.find({roomId: roomId});
+        if (this.userId && roomId) {
+            return Games.find({roomId: roomId});
+        } else {
+            return this.ready();
+        }
     });
 }
 

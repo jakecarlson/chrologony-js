@@ -5,11 +5,18 @@
 
             <h2 class="card-title">{{turnTitle}}</h2>
 
-            <!--            <ul class="cards">-->
-                <!--                {{#each cards}}-->
-            <!--                    {{> card}}-->
-                <!--                {{/each}}-->
-            <!--            </ul>-->
+            <h3>Current Card</h3>
+
+
+            <h3 class="card-subtitle">Locked Cards</h3>
+            <ul class="cards">
+                {{#each lockedCard in lockedCards}}
+                    {{> card card=lockedCard}}
+                {{/each}}
+                {{#each turnCard in turnCards}}
+                    {{> card card=turnCard}}
+                {{/each}}
+            </ul>
 
             <button class="btn btn-primary draw" disabled="{{loading}}">Draw</button>
             <button class="btn btn-primary turn" disabled="{{loading}}">
