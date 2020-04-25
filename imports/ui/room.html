@@ -3,7 +3,7 @@
     <section id="room">
 
         <header class="clearfix">
-            <h1 class="float-left">{{room.name}}</h1>
+            <h1 class="float-left">Room: {{room.name}}</h1>
             <button class="btn btn-secondary float-right mt-2 leave" disabled="{{loading}}">Leave Room</button>
             {{#if isOwner}}
                 <button class="btn btn-light float-right mt-2 mr-2 destroy" disabled="{{loading}}">Destroy Room</button>

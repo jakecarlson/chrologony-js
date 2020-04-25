@@ -9,11 +9,38 @@ import './board.html';
 import './card.js';
 
 Template.board.onCreated(function boardOnCreated() {
+
     this.state = new ReactiveDict();
+
     this.autorun(() => {
+
         this.subscribe('clues');
         this.subscribe('turns', this.data.room.currentGameId);
         this.subscribe('cards', this.data.room.currentGameId);
+
+        if (this.subscriptionsReady()) {
+            Tracker.afterFlush(() => {
+                $("#myCards").sortable({
+                    items: ".clue-col",
+                    axis: "x",
+                    cancel: ".clue-card:not(.current)",
+                    handle: ".clue-card",
+                    // tolerance: "pointer",
+                    containment: "#board",
+                    delay: 100,
+                    revert: 100,
+                    helper: "clone",
+                    scroll: false,
+                    start: function(event, ui) {
+                        $(ui.helper).addClass("dragging");
+                    },
+                    stop: function(event, ui) {
+                        $(ui.item).removeClass("dragging");
+                    },
+                });
+            });
+        }
+
     });
 
 });
@@ -36,6 +63,27 @@ Template.board.helpers({
         }
     },
 
+    myCards() {
+        if (this.game && this.turn) {
+            return Cards.find({gameId: this.game._id, userId: Meteor.userId()});
+        } else {
+            return [];
+        }
+    },
+
+    isCurrentCard(cardId) {
+        return (this.turn && (this.turn.currentCardId == cardId));
+    },
+
+    cannotDrawCard() {
+        return (Session.get('loading') || (this.turn && this.turn.currentCardId));
+    },
+
+    cannotEndTurn() {
+        return (Session.get('loading') || (this.turn && this.turn.currentCardId));
+    },
+
+    /*
     lockedCards() {
         // return Cards.find({});
         if (this.game && this.turn) {
@@ -68,12 +116,29 @@ Template.board.helpers({
         return null;
     },
 
+     */
+
 });
 
 Template.board.events({
 
-    'click .draw'(e, i) {
-        e.preventDefault();
+    'click .submit-guess'(e, i) {
+        let pos = null;
+        const cardId = this.turn.currentCardId;
+        $(i.findAll('.clue-card')).each(function(n, card) {
+            if ($(card).attr('data-id') === cardId) {
+                pos = n;
+            }
+        });
+        Meteor.call('card.submit', {gameId: this.game._id, turnId: this.turn._id, cardId: cardId, pos: pos}, function(error, updated) {
+            if (!error) {
+                console.log("Card Updated: " + updated);
+            }
+        });
+    },
+
+    'click .draw-card'(e, i) {
+        // e.preventDefault();
         console.log(this.game);
         let gameId = this.game._id;
         let turnId = this.game.currentTurnId;
@@ -85,8 +150,8 @@ Template.board.events({
         });
     },
 
-    'click .turn'(e, i) {
-        e.preventDefault();
+    'click .end-turn'(e, i) {
+        // e.preventDefault();
         console.log('End Turn: ' + this.game.currentTurnId);
         Session.set('loading', true);
         console.log(this.game);

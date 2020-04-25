@@ -4,6 +4,7 @@ import { check } from 'meteor/check';
 import { Promise } from 'meteor/promise';
 
 import { Games } from '../api/games';
+import { Cards } from '../api/cards';
 
 export const Turns = new Mongo.Collection('turns');
 
@@ -29,6 +30,17 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
+        // Lock all current turn cards
+        const game = Games.findOne(gameId);
+        const cards = Cards.find({turnId: game.currentTurnId});
+        cards.forEach(function(card) {
+            Meteor.call('card.lock', card._id, function(error, updated) {
+                if (!error) {
+                    console.log("Locked Card: " + updated);
+                }
+            });
+        });
+
         // Find the player in this room with the least amount of turns for this game
         if (Meteor.isServer) {
 
@@ -53,7 +65,6 @@ Meteor.methods({
             });
 
             // Get all players in the room that haven't had turns yet
-            const game = Games.findOne(gameId);
             const users = Meteor.users.find(
                 {
                     currentRoomId: game.roomId,
@@ -107,8 +118,9 @@ Meteor.methods({
     // Update
     'turn.update'(attrs) {
 
+        console.log(attrs);
         check(attrs._id, String);
-        check(attrs.currentCardId, String);
+        check(attrs.currentCardId, Match.Maybe(String));
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {

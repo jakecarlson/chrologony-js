@@ -1,31 +1,23 @@
 <template name="board">
 
     <div id="board" class="card">
-        <div class="card-body">
-
-            <h2 class="card-title">{{turnTitle}}</h2>
-
-            <h3>Current Card</h3>
-
-
-            <h3 class="card-subtitle">Locked Cards</h3>
-            <ul class="cards">
-                {{#each lockedCard in lockedCards}}
-                    {{> card card=lockedCard}}
-                {{/each}}
-                {{#each turnCard in turnCards}}
-                    {{> card card=turnCard}}
-                {{/each}}
-            </ul>
-
-            <button class="btn btn-primary draw" disabled="{{loading}}">Draw</button>
-            <button class="btn btn-primary turn" disabled="{{loading}}">
+        <header class="card-header">
+            <h2 class="card-title float-left">{{turnTitle}}</h2>
+            <button class="btn {{#if cannotEndTurn}}btn-secondary{{else}}btn-primary{{/if}} float-right ml-2 end-turn" disabled="{{cannotEndTurn}}">
                 {{#if loading}}
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 {{/if}}
-                Next Turn
+                End Turn
             </button>
-
+            <button class="btn {{#if cannotDrawCard}}btn-secondary{{else}}btn-primary{{/if}} float-right ml-2 draw-card" disabled="{{cannotDrawCard}}">Draw Card</button>
+            <button class="btn {{#if cannotSubmitGuess}}btn-secondary{{else}}btn-primary{{/if}} float-right submit-guess" disabled="{{cannotSubmitGuess}}">Submit Guess</button>
+        </header>
+        <div class="card-body">
+            <ol class="clue-cards clearfix" id="myCards">
+                {{#each myCard in myCards}}
+                    <li class="clue-col {{#if isCurrentCard myCard._id}}current-col{{/if}}">{{> card card=myCard turn=turn}}</li>
+                {{/each}}
+            </ol>
         </div>
     </div>
 

@@ -1,9 +1,35 @@
 <template name="card">
 
-    <li class="card clue-card category-{{categoryId}}">
+    <div
+        class="
+            card
+            clue-card
+            text-white
+            category-{{categoryId}}
+            {{#if isLocked}}
+                locked bg-success
+            {{else}}
+                {{#if isTurn}}
+                    turn
+                    {{#if isCurrent}}
+                        current bg-primary
+                    {{else}}
+                        bg-warning
+                    {{/if}}
+                {{/if}}
+            {{/if}}
+        "
+        data-id="{{id}}"
+    >
 
         <header class="card-header">
-            <h3 class="card-title date">{{date}}</h3>
+            <h3 class="card-title date">
+                {{#if isCurrent}}
+                    ???
+                {{else}}
+                    {{date}}
+                {{/if}}
+            </h3>
         </header>
 
         <div class="card-body">
@@ -11,6 +37,6 @@
             <p class="hint">{{hint}}</p>
         </div>
 
-    </li>
+    </div>
 
 </template>

@@ -30,14 +30,54 @@ html {
     font-weight: bold;
 }
 
-.cards {
-    padding-left: 0;
-    margin-left: 0;
+#board .card-title {
+    margin-bottom: 0;
+}
+#board > .card-body {
+    padding-bottom: 0;
+}
+
+#myCards {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    height: 12rem;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+}
+
+.clue-col {
+    width: 5rem;
+    top: 0;
+    height: 100%;
+    float: left;
+    position: relative;
+}
+.clue-col.current-col,
+.clue-col:hover
+{
+    width: 10rem;
 }
 
 .clue-card {
+    position: absolute;
+    top: 9rem;
     width: 10rem;
-    display: inline-block;
+    min-height: 12rem;
+    text-align: left;
+}
+.clue-col:hover .clue-card,
+.clue-card.current
+{
+    bottom: 0;
+    top: auto;
+}
+.clue-card.current {
+    cursor: grab;
+}
+.clue-card.dragging {
+    cursor: grabbing;
 }
 .clue-card .card-title {
     margin-bottom: 0;
