@@ -9,11 +9,16 @@ Template.game.onCreated(function gameOnCreated() {
     this.state = new ReactiveDict();
     this.autorun(() => {
         this.subscribe('turns', this.data.room.currentGameId);
+        this.subscribe('cards', this.data.room.currentGameId);
     });
 
 });
 
 Template.game.helpers({
+
+    gameInProgress() {
+        return (this.room && this.room.currentGameId);
+    },
 
 });
 
@@ -35,6 +40,7 @@ Template.game.events({
             if (!error) {
                 console.log("Created Game: " + id);
                 Meteor.subscribe('turns', id);
+                Meteor.subscribe('cards', id);
                 Session.set('loading', false);
             }
         });

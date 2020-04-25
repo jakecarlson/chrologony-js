@@ -44,7 +44,7 @@ Meteor.methods({
 
         Meteor.call('room.update', {_id: attrs.roomId, currentGameId: gameId}, function(error, updated) {
             if (!error) {
-                console.log("Updated: " + updated);
+                console.log("Updated Room: " + updated);
             }
         });
 

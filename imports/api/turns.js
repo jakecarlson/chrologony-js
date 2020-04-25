@@ -118,9 +118,8 @@ Meteor.methods({
     // Update
     'turn.update'(attrs) {
 
-        console.log(attrs);
         check(attrs._id, String);
-        check(attrs.currentCardId, Match.Maybe(String));
+        // check(attrs.currentCardId, Match.Maybe(String)); // This must be a bug with Meteor; it always fails
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {

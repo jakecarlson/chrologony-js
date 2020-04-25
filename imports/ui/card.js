@@ -14,6 +14,10 @@ Template.card.helpers({
     },
 
     date() {
+        return (this.card) ? moment.utc(this.card.clue.date).format("YYYY-MM-DD") : null;
+    },
+
+    year() {
         return (this.card) ? moment.utc(this.card.clue.date).format("YYYY") : null;
     },
 
@@ -35,6 +39,10 @@ Template.card.helpers({
 
     isCurrent() {
         return (this.card) ? (this.turn.currentCardId == this.card._id) : false;
+    },
+
+    isCorrect() {
+        return (this.card && this.card.correct);
     },
 
 

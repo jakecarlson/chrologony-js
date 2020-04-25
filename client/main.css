@@ -73,6 +73,18 @@ html {
     bottom: 0;
     top: auto;
 }
+.clue-col .clue-card .date {
+    display: none;
+}
+.clue-col .clue-card .year {
+    display: inline;
+}
+.clue-col:hover .clue-card .date {
+    display: inline;
+}
+.clue-col:hover .clue-card .year {
+    display: none;
+}
 .clue-card.current {
     cursor: grab;
 }

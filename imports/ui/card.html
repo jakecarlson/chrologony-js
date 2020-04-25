@@ -14,7 +14,11 @@
                     {{#if isCurrent}}
                         current bg-primary
                     {{else}}
-                        bg-warning
+                        {{#if isCorrect}}
+                            correct bg-warning
+                        {{else}}
+                            incorrect bg-danger
+                        {{/if}}
                     {{/if}}
                 {{/if}}
             {{/if}}
@@ -23,11 +27,12 @@
     >
 
         <header class="card-header">
-            <h3 class="card-title date">
+            <h3 class="card-title">
                 {{#if isCurrent}}
                     ???
                 {{else}}
-                    {{date}}
+                    <span class="date">{{date}}</span>
+                    <span class="year">{{year}}</span>
                 {{/if}}
             </h3>
         </header>

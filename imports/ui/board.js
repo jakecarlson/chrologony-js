@@ -59,7 +59,7 @@ Template.board.helpers({
             title += ' Turn';
             return title;
         } else {
-            return 'no turn defined';
+            return 'No Game in Progress';
         }
     },
 
@@ -75,12 +75,16 @@ Template.board.helpers({
         return (this.turn && (this.turn.currentCardId == cardId));
     },
 
+    cannotSubmitGuess() {
+        return (Session.get('loading') || !this.game || (this.turn && !this.turn.currentCardId));
+    },
+
     cannotDrawCard() {
-        return (Session.get('loading') || (this.turn && this.turn.currentCardId));
+        return (Session.get('loading') || !this.game || (this.turn && this.turn.currentCardId));
     },
 
     cannotEndTurn() {
-        return (Session.get('loading') || (this.turn && this.turn.currentCardId));
+        return (Session.get('loading') || !this.game || (this.turn && this.turn.currentCardId));
     },
 
     /*

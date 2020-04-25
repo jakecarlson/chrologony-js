@@ -50,67 +50,15 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        // Get a random card that hasn't been drawn this game
-        let game = Games.findOne(attrs.gameId);
-        let lockedCards = Cards.find({gameId: attrs.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
-        let turnCards = Cards.find({turnId: attrs.turnId}).map(function(i) { return i.clueId; });
-        let usedCards = lockedCards.concat(turnCards);
+        // Draw the card -- defer this to a helper defined below because it's recursive
+        let cardId = drawCard(attrs.gameId, attrs.turnId);
+        console.log("Card ID: " + cardId);
 
-        console.log('Used Cards:');
-        console.log(usedCards);
-
-        let selector = {
-            active: true,
-            categoryId: game.categoryId,
-        };
-        if (usedCards.length > 0) {
-            selector._id = {$nin: usedCards};
-        }
-        // let unlockedClue = Clues.findOne(selector/*, {sort: {_id:Random.choice([1,-1])}}*/);
-        let randomClue = Clues.findOne(selector);
-
-        // Set the card doc
-        let card = {
-            turnId: attrs.turnId,
-            gameId: attrs.gameId,
-            clueId: randomClue._id,
-            clue: randomClue,
-            userId: this.userId,
-            correct: null,
-            lockedAt: null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        };
-
-        // Figure out whether this is the first card
-        const userCards = Cards.find({gameId: attrs.gameId, userId: this.userId}).fetch();
-        const firstCard = (userCards.length == 0);
-
-        // If it's the first card, automatically mark it correct
-        if (firstCard) {
-            card.correct = true;
-            card.lockedAt = new Date();
-        }
-
-        // Add the card
-        let cardId = Cards.insert(card);
-
-        if (firstCard) {
-            Meteor.call('card.draw', attrs, function(error, id) {
-                if (!error) {
-                    console.log("Created Card: " + id);
-                }
-            });
-        } else {
-            console.log("UPDATE TURN");
-            console.log(attrs.turnId);
-            console.log(cardId);
-            Meteor.call('turn.update', {_id: attrs.turnId, currentCardId: cardId}, function(error, updated) {
-                if (!error) {
-                    console.log("Updated Turn: " + updated);
-                }
-            });
-        }
+        Meteor.call('turn.update', {_id: attrs.turnId, currentCardId: cardId}, function(error, updated) {
+            if (!error) {
+                console.log("Updated Turn: " + updated);
+            }
+        });
 
         return cardId;
 
@@ -181,7 +129,7 @@ Meteor.methods({
         console.log("Card Guess Correct: " + correct.toString());
 
         // Null out the current card ID
-        Meteor.call('turn.update', {_id: args.turnId, currentTurnId: null}, function(error, updated) {
+        Meteor.call('turn.update', {_id: args.turnId, currentCardId: null}, function(error, updated) {
             if (!error) {
                 console.log("Updated Turn: " + updated);
             }
@@ -203,3 +151,66 @@ Meteor.methods({
     },
 
 });
+
+// Helpers
+function drawCard(gameId, turnId) {
+
+    // Get a random card that hasn't been drawn this game
+    let game = Games.findOne(gameId);
+    let lockedCards = Cards.find({gameId: gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
+    let turnCards = Cards.find({turnId: turnId}).map(function(i) { return i.clueId; });
+    let usedCards = lockedCards.concat(turnCards);
+
+    console.log('Used Cards:');
+    console.log(usedCards);
+
+    let selector = {
+        active: true,
+        categoryId: game.categoryId,
+    };
+    if (usedCards.length > 0) {
+        selector._id = {$nin: usedCards};
+    }
+    // let unlockedClue = Clues.findOne(selector/*, {sort: {_id:Random.choice([1,-1])}}*/);
+    let randomClue = Clues.findOne(selector);
+
+    // If there are no more eligible cards to draw, alert the user and exit
+    if (!randomClue) {
+        alert("No more cards to draw!!!");
+        return false;
+    }
+
+    // Set the card doc
+    let card = {
+        turnId: turnId,
+        gameId: gameId,
+        clueId: randomClue._id,
+        clue: randomClue,
+        userId: Meteor.userId(),
+        correct: null,
+        lockedAt: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    };
+
+    // Figure out whether this is the first card
+    const userCards = Cards.find({gameId: gameId, userId: Meteor.userId()}).fetch();
+    const firstCard = (userCards.length == 0);
+
+    // If it's the first card, automatically mark it correct
+    if (firstCard) {
+        card.correct = true;
+        card.lockedAt = new Date();
+    }
+
+    // Add the card
+    let cardId = Cards.insert(card);
+
+    // If it's the first card, draw another
+    if (firstCard) {
+        return drawCard(gameId, turnId);
+    } else {
+        return cardId;
+    }
+
+}
