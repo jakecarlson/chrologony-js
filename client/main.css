@@ -106,3 +106,9 @@ html {
     margin-bottom: 0;
     font-size: large;
 }
+
+#login-dropdown-list .login-text-and-button,
+#login-dropdown-list .or
+{
+    display: none;
+}
