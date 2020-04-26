@@ -6,6 +6,9 @@
             clue-card
             text-white
             category-{{categoryId}}
+            {{#if isOwned}}
+                owned
+            {{/if}}
             {{#if isLocked}}
                 locked bg-success
             {{else}}

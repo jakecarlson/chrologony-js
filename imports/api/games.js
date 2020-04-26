@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import { Rooms } from '../api/rooms';
+import { Turns } from '../api/turns';
 
 export const Games = new Mongo.Collection('games');
 
@@ -94,7 +94,9 @@ Meteor.methods({
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
-        Games.update(gameId, { $set: { endedAt: new Date(), winner: Meteor.userId() } });
+        let game = Games.findOne(gameId);
+        let turn = Turns.findOne(game.currentTurnId);
+        Games.update(gameId, { $set: { endedAt: new Date(), winner: turn.userId } });
     },
 
 });

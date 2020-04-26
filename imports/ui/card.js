@@ -45,7 +45,9 @@ Template.card.helpers({
         return (this.card && this.card.correct);
     },
 
-
+    isOwned() {
+        return (this.card && (this.turn.userId == Meteor.userId()));
+    },
 
 });
 

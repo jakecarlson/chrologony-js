@@ -3,7 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { Games } from "./games";
 import { Clues } from "./clues";
-import {Turns} from "./turns";
+import { Turns } from "./turns";
 
 export const Cards = new Mongo.Collection('cards');
 
@@ -28,7 +28,7 @@ Meteor.methods({
         check(attrs.gameId, String);
 
         // Make sure the user is logged in
-        if (!this.userId) {
+        if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
@@ -52,7 +52,7 @@ Meteor.methods({
         check(id, String);
 
         // Make sure the user is logged in before inserting a task
-        if (!Meteor.userId()) {
+        if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
@@ -88,15 +88,16 @@ Meteor.methods({
         check(args.pos, Number);
 
         // Make sure the user is logged in before inserting a task
-        if (!Meteor.userId()) {
+        if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
         // Get the previously correct cards + the current card in the correct order
+        let turn = Turns.findOne(args.turnId);
         let card = Cards.find(
             {
                 gameId: args.gameId,
-                userId: this.userId,
+                userId: turn.userId,
                 $or: [
                     {lockedAt: {$ne: null}},
                     {turnId: args.turnId, correct: true},
@@ -173,12 +174,13 @@ function drawCard(gameId, turnId) {
     let randomClue = possibleClues[Math.floor(Math.random() * possibleClues.length)];
 
     // Set the card doc
+    let turn = Turns.findOne(turnId);
     let card = {
         turnId: turnId,
         gameId: gameId,
         clueId: randomClue._id,
         clue: randomClue,
-        userId: Meteor.userId(),
+        userId: turn.userId,
         correct: null,
         lockedAt: null,
         createdAt: new Date(),
@@ -186,7 +188,7 @@ function drawCard(gameId, turnId) {
     };
 
     // Figure out whether this is the first card
-    const userCards = Cards.find({gameId: gameId, userId: Meteor.userId()}).fetch();
+    const userCards = Cards.find({gameId: gameId, userId: turn.userId}).fetch();
     const firstCard = (userCards.length == 0);
 
     // If it's the first card, automatically mark it correct

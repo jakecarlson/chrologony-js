@@ -21,7 +21,7 @@ Template.board.onCreated(function boardOnCreated() {
                 $("#currentPlayerCards").sortable({
                     items: ".clue-col",
                     axis: "x",
-                    cancel: ".clue-card:not(.current)",
+                    cancel: ".clue-card:not(.current), .clue-card:not(.owned)",
                     handle: ".clue-card",
                     tolerance: "pointer",
                     containment: "#board",
@@ -66,7 +66,7 @@ Template.board.helpers({
             return Cards.find(
                 {
                     gameId: this.game._id,
-                    userId: Meteor.userId(),
+                    userId: this.turn.userId,
                     $or: [
                         {turnId: this.turn._id},
                         {lockedAt: {$ne: null}},
@@ -89,15 +89,15 @@ Template.board.helpers({
     },
 
     cannotSubmitGuess() {
-        return (Session.get('loading') || ['waiting', 'correct', 'incorrect'].includes(getStatus(this.turn)));
+        return (Session.get('loading') || !isCurrentPlayer(this.turn) || ['waiting', 'correct', 'incorrect'].includes(getStatus(this.turn)));
     },
 
     cannotDrawCard() {
-        return (Session.get('loading') || ['waiting', 'guessing', 'incorrect'].includes(getStatus(this.turn)));
+        return (Session.get('loading') || !isCurrentPlayer(this.turn) || ['waiting', 'guessing', 'incorrect'].includes(getStatus(this.turn)));
     },
 
     cannotEndTurn() {
-        return (Session.get('loading') || ['waiting', 'guessing'].includes(getStatus(this.turn)));
+        return (Session.get('loading') || !isCurrentPlayer(this.turn) || ['waiting', 'guessing'].includes(getStatus(this.turn)));
     },
 
     prompt() {
@@ -177,4 +177,8 @@ function getStatus(turn) {
     } else {
         return 'waiting';
     }
+}
+
+function isCurrentPlayer(turn) {
+    return (turn && (turn.userId == Meteor.userId()));
 }
