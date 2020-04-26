@@ -22,20 +22,24 @@ html {
     margin-left: .25rem;
 }
 
-#roomSide .card-subtitle {
-    font-size: large;
+#roomSide .card-title {
+    font-size: medium;
+    margin-bottom: 0;
 }
 
 #players .current {
     font-weight: bold;
 }
 
+
+/* board */
 #board .card-title {
     margin-bottom: 0;
 }
 #board .card-subtitle {
     font-size: x-large;
     text-align: center;
+    min-height: 3.5rem;
 }
 #board .card-subtitle span {
     display: block;

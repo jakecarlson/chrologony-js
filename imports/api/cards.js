@@ -96,10 +96,12 @@ Meteor.methods({
         let card = Cards.find(
             {
                 gameId: args.gameId,
-                /*$or: [
-                    {correct: true},
+                userId: this.userId,
+                $or: [
+                    {lockedAt: {$ne: null}},
+                    {turnId: args.turnId, correct: true},
                     {_id: args.cardId},
-                ],*/
+                ],
             },
             {
                 sort: {

@@ -71,6 +71,12 @@ Template.board.helpers({
                         {turnId: this.turn._id},
                         {lockedAt: {$ne: null}},
                     ]
+                },
+                {
+                    sort: {
+                        correct: -1,
+                        'clue.date': 1,
+                    }
                 }
             );
         } else {
@@ -134,8 +140,6 @@ Template.board.events({
     },
 
     'click .draw-card'(e, i) {
-        // e.preventDefault();
-        console.log(this.game);
         let gameId = this.game._id;
         Meteor.call('card.draw', {turnId: this.game.currentTurnId, gameId: gameId}, function(error, id) {
             if (!error) {
@@ -146,10 +150,8 @@ Template.board.events({
     },
 
     'click .end-turn'(e, i) {
-        // e.preventDefault();
         console.log('End Turn: ' + this.game.currentTurnId);
         Session.set('loading', true);
-        console.log(this.game);
         let gameId = this.game._id;
         Meteor.call('turn.next', gameId, function(error, id) {
             if (!error) {
