@@ -7,9 +7,13 @@
         <td>
             <form class="category-edit">
                 {{#if category}}
+
                     <input class="attr" type="hidden" name="_id" value="{{id}}">
-                    <button type="submit" class="save btn btn-primary">Save</button>
+
+                    <button type="submit" class="save btn btn-primary mr-2">Save</button>
                     <button type="submit" class="cancel btn btn-light">Cancel</button>
+                    <button type="button" class="btn btn-outline-danger float-right" data-toggle="modal" data-target="#removeCategory" data-id="{{id}}">Remove</button>
+
                 {{else}}
                     <button type="submit" class="add btn btn-primary">Add</button>
                 {{/if}}

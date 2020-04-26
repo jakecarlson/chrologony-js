@@ -2,7 +2,7 @@ import { Template } from 'meteor/templating';
 import {ReactiveDict} from "meteor/reactive-dict";
 
 import './category.html';
-import { ModelEvents } from "../startup/template-event";
+import { ModelEvents } from "../startup/template-events";
 
 Template.category.onCreated(function categoryOnCreated() {
     this.state = new ReactiveDict();
@@ -10,7 +10,7 @@ Template.category.onCreated(function categoryOnCreated() {
 });
 
 Template.category.onRendered(function categoryOnRendered() {
-    this.$('[data-toggle]').bootstrapToggle();
+    this.$('[data-toggle="toggle"]').bootstrapToggle();
 });
 
 Template.category.helpers({

@@ -88,4 +88,21 @@ Meteor.methods({
 
     },
 
+    // Delete
+    'clue.delete'(id) {
+
+        check(id, String);
+
+        // Make sure the user is logged in before inserting a task
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        console.log('Delete Clue: ' + id);
+
+        // Remove the item
+        return Clues.remove({_id: id});
+
+    },
+
 });

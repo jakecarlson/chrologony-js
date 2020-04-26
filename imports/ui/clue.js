@@ -4,7 +4,7 @@ import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
 import { Session } from "meteor/session";
 import { Categories } from '../api/categories';
-import { ModelEvents } from "../startup/template-event";
+import { ModelEvents } from "../startup/template-events";
 
 import './clue.html';
 
@@ -48,7 +48,11 @@ Template.clue.helpers({
     },
 
     canEdit() {
-        return (!this.clue || (this.clue.owner == Meteor.userId()));
+        return (
+            !this.clue ||
+            (this.clue.owner == Meteor.userId()) ||
+            (this.clue.categoryId && (Categories.findOne(this.clue.categoryId).owner == Meteor.userId()))
+        );
     },
 
 });
@@ -58,5 +62,4 @@ Template.clue.events({
     'click .add': ModelEvents.add,
     'click .save': ModelEvents.save,
     'click .cancel': ModelEvents.cancel,
-    'click .remove': ModelEvents.remove,
 });

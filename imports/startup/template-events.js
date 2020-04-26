@@ -73,7 +73,15 @@ export const ModelEvents = {
     },
 
     remove: function(e, i) {
-        console.log('remove');
+        e.preventDefault();
+        let button = $(e.target);
+        let id = button.data('id');
+        let modelName = button.data('model');
+        Meteor.call(modelName + '.delete', id, function(error, deleted) {
+            if (!error) {
+                console.log('Deleted ' + capitalize(modelName) + ': ' + deleted);
+            }
+        });
     },
 
 };

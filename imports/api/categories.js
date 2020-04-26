@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import {Clues} from "./clues";
 
 export const Categories = new Mongo.Collection('categories');
 
@@ -74,6 +75,23 @@ Meteor.methods({
                 }
             }
         );
+
+    },
+
+    // Delete
+    'category.delete'(id) {
+
+        check(id, String);
+
+        // Make sure the user is logged in before inserting a task
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        console.log('Delete Category: ' + id);
+
+        // Remove the item
+        return Categories.remove({_id: id});
 
     },
 

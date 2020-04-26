@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Session } from 'meteor/session';
+import { ModelEvents } from "../startup/template-events";
 
 import './clues_manager.html';
 import './clue.js';
@@ -9,12 +10,25 @@ import './clues_filter.js';
 import { Clues } from "../api/clues";
 
 Template.clues_manager.onCreated(function clues_managerOnCreated() {
+
     this.state = new ReactiveDict();
     this.state.set('keyword', '');
     this.state.set('owned', false);
     this.state.set('private', false);
     this.state.set('categoryId', false);
+
     this.autorun(() => {
+
+        if (this.subscriptionsReady()) {
+            Tracker.afterFlush(() => {
+                $('#removeClue').on('show.bs.modal', function (event) {
+                    let button = $(event.relatedTarget);
+                    let id = button.data('id');
+                    let modal = $(this)
+                    modal.find('.remove').attr('data-id', id);
+                });
+            });
+        }
 
     });
 
@@ -75,5 +89,7 @@ Template.clues_manager.events({
     'change #cluesFilter [name="private"]'(e, i) {
         i.state.set('private', e.target.checked);
     },
+
+    'click .remove': ModelEvents.remove,
 
 });
