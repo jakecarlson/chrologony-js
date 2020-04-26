@@ -6,7 +6,7 @@ import { Session } from "meteor/session";
 import './player.html';
 
 Template.player.onCreated(function playerOnCreated() {
-    this.state = new ReactiveDict();
+
 });
 
 Template.player.helpers({

@@ -12,10 +12,10 @@ import './categories_manager.js';
 import './clues_manager.js';
 
 Template.body.onCreated(function bodyOnCreated() {
-    this.state = new ReactiveDict();
     this.autorun(() => {
-        Meteor.subscribe('rooms', Meteor.user() ? Meteor.user().currentRoomId : null);
-        Meteor.subscribe('userData');
+        this.subscribe('rooms', Meteor.user() ? Meteor.user().currentRoomId : null);
+        this.subscribe('userData');
+        this.subscribe('clues');
     });
 });
 

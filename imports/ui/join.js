@@ -6,7 +6,6 @@ import { Session } from 'meteor/session';
 import './join.html';
 
 Template.join.onCreated(function joinOnCreated() {
-    this.state = new ReactiveDict();
 
 });
 

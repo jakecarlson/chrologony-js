@@ -10,22 +10,19 @@ import './card.js';
 
 Template.board.onCreated(function boardOnCreated() {
 
-    this.state = new ReactiveDict();
-
     this.autorun(() => {
 
-        this.subscribe('clues');
         this.subscribe('turns', this.data.room.currentGameId);
         this.subscribe('cards', this.data.room.currentGameId);
 
         if (this.subscriptionsReady()) {
             Tracker.afterFlush(() => {
-                $("#myCards").sortable({
+                $("#currentPlayerCards").sortable({
                     items: ".clue-col",
                     axis: "x",
                     cancel: ".clue-card:not(.current)",
                     handle: ".clue-card",
-                    // tolerance: "pointer",
+                    tolerance: "pointer",
                     containment: "#board",
                     delay: 100,
                     revert: 100,
@@ -63,9 +60,18 @@ Template.board.helpers({
         }
     },
 
-    myCards() {
+    currentPlayerCards() {
         if (this.game && this.turn) {
-            return Cards.find({gameId: this.game._id, userId: Meteor.userId()});
+            return Cards.find(
+                {
+                    gameId: this.game._id,
+                    userId: Meteor.userId(),
+                    $or: [
+                        {turnId: this.turn._id},
+                        {lockedAt: {$ne: null}},
+                    ]
+                }
+            );
         } else {
             return [];
         }
@@ -76,51 +82,35 @@ Template.board.helpers({
     },
 
     cannotSubmitGuess() {
-        return (Session.get('loading') || !this.game || (this.turn && !this.turn.currentCardId));
+        return (Session.get('loading') || ['waiting', 'correct', 'incorrect'].includes(getStatus(this.turn)));
     },
 
     cannotDrawCard() {
-        return (Session.get('loading') || !this.game || (this.turn && this.turn.currentCardId));
+        return (Session.get('loading') || ['waiting', 'guessing', 'incorrect'].includes(getStatus(this.turn)));
     },
 
     cannotEndTurn() {
-        return (Session.get('loading') || !this.game || (this.turn && this.turn.currentCardId));
+        return (Session.get('loading') || ['waiting', 'guessing'].includes(getStatus(this.turn)));
     },
 
-    /*
-    lockedCards() {
-        // return Cards.find({});
-        if (this.game && this.turn) {
-            return Cards.find({gameId: this.game._id, lockedAt: {$ne: null}, turnId: {$ne: this.turn._id}});
-        } else {
-            return [];
+    prompt() {
+        switch(getStatus(this.turn)) {
+            case 'waiting':
+                return "Waiting for a game to start ...";
+                break;
+            case 'guessing':
+                return "Move the blue card into the correct spot on the timeline.";
+                break;
+            case 'correct':
+                return "Correct! Draw another card if you're feeling lucky, or end your turn to lock in your cards.";
+                break;
+            case 'incorrect':
+                return "Wrong! Wallow in your defeat, then end your turn.";
+                break;
+            default:
+                return "Unknown state.";
         }
     },
-
-    turnCards() {
-        // return Cards.find({});
-        if (this.turn) {
-            return Cards.find({turnId: this.turn._id});
-        } else {
-            return [];
-        }
-    },
-
-    currentCard() {
-        if (this.turn) {
-            console.log("Card ID: " + this.turn.currentCardId);
-            if (this.turn.currentCardId) {
-                let card = Cards.findOne(this.turn.currentCardId);
-                console.log(Cards.find({}).fetch());
-                console.log("Current Card:");
-                console.log(card);
-                return card;
-            }
-        }
-        return null;
-    },
-
-     */
 
 });
 
@@ -134,9 +124,9 @@ Template.board.events({
                 pos = n;
             }
         });
-        Meteor.call('card.submit', {gameId: this.game._id, turnId: this.turn._id, cardId: cardId, pos: pos}, function(error, updated) {
+        Meteor.call('card.submit', {gameId: this.game._id, turnId: this.turn._id, cardId: cardId, pos: pos}, function(error, correct) {
             if (!error) {
-                console.log("Card Updated: " + updated);
+                console.log("Guess Correct?: " + correct);
             }
         });
     },
@@ -145,8 +135,7 @@ Template.board.events({
         // e.preventDefault();
         console.log(this.game);
         let gameId = this.game._id;
-        let turnId = this.game.currentTurnId;
-        Meteor.call('card.draw', {turnId: turnId, gameId: gameId}, function(error, id) {
+        Meteor.call('card.draw', {turnId: this.game.currentTurnId, gameId: gameId}, function(error, id) {
             if (!error) {
                 console.log("Created Card: " + id);
                 Meteor.subscribe('cards', gameId);
@@ -163,6 +152,7 @@ Template.board.events({
         Meteor.call('turn.next', gameId, function(error, id) {
             if (!error) {
                 console.log("Start Turn: " + id);
+                Meteor.subscribe('turns', gameId);
                 Meteor.subscribe('cards', gameId);
                 Session.set('loading', false);
             }
@@ -170,3 +160,17 @@ Template.board.events({
     },
 
 });
+
+function getStatus(turn) {
+    if (turn) {
+        if (turn.currentCardId) {
+            return 'guessing';
+        } else if (turn.lastCardCorrect) {
+            return 'correct';
+        } else {
+            return 'incorrect';
+        }
+    } else {
+        return 'waiting';
+    }
+}

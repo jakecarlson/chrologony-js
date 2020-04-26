@@ -7,7 +7,6 @@ import './players_list.html';
 import './player.js';
 
 Template.players_list.onCreated(function players_listOnCreated() {
-    this.state = new ReactiveDict();
     this.autorun(() => {
         this.subscribe('players', this.data.room._id);
     });

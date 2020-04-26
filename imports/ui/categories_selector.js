@@ -8,7 +8,6 @@ import { Categories } from '../api/categories';
 import './categories_selector.html';
 
 Template.categories_selector.onCreated(function categories_selectorOnCreated() {
-    this.state = new ReactiveDict();
     this.autorun(() => {
         this.subscribe('categories');
     });

@@ -33,16 +33,23 @@ html {
 #board .card-title {
     margin-bottom: 0;
 }
+#board .card-subtitle {
+    font-size: x-large;
+    text-align: center;
+}
+#board .card-subtitle span {
+    display: block;
+}
 #board > .card-body {
     padding-bottom: 0;
+    overflow: hidden;
 }
 
-#myCards {
+#currentPlayerCards {
     padding: 0;
     margin: 0;
     list-style: none;
     height: 12rem;
-    overflow: hidden;
     text-align: center;
     position: relative;
 }

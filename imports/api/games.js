@@ -90,12 +90,11 @@ Meteor.methods({
     // End
     'game.end'(gameId) {
         check(gameId, String);
-        const game = Games.findOne(gameId);
         // Make sure the user is logged in
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
-        Cards.update(gameId, { $set: { endedAt: new Date(), winner: Meteor.userId() } });
+        Games.update(gameId, { $set: { endedAt: new Date(), winner: Meteor.userId() } });
     },
 
 });

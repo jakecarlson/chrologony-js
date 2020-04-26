@@ -15,7 +15,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('private', false);
     this.state.set('categoryId', false);
     this.autorun(() => {
-        this.subscribe('clues');
+
     });
 
 });

@@ -12,24 +12,6 @@ if (Meteor.isServer) {
     Meteor.publish('cards', function cardsPublication(gameId) {
         if (this.userId && gameId) {
             return Cards.find({gameId: gameId});
-            /*
-            if (game) {
-                let selector = {
-                    gameId: game._id,
-                };
-                if (game.currentTurnId) {
-                    selector.$or = [
-                        {turnId: turnId},
-                        {lockedAt: {$ne: null}}
-                    ];
-                } else {
-                    selector.lockedAt = {$ne: null};
-                }
-                return Cards.find(selector);
-            } else {
-                return [];
-            }
-            */
         } else {
             return this.ready();
         }
@@ -54,7 +36,7 @@ Meteor.methods({
         let cardId = drawCard(attrs.gameId, attrs.turnId);
         console.log("Card ID: " + cardId);
 
-        Meteor.call('turn.update', {_id: attrs.turnId, currentCardId: cardId}, function(error, updated) {
+        Meteor.call('turn.update', {_id: attrs.turnId, currentCardId: cardId, lastCardCorrect: null}, function(error, updated) {
             if (!error) {
                 console.log("Updated Turn: " + updated);
             }
@@ -71,6 +53,12 @@ Meteor.methods({
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        // Double check that the card was correct before locking
+        const card = Cards.findOne(id);
+        if (!card.correct) {
             throw new Meteor.Error('not-authorized');
         }
 
@@ -121,22 +109,24 @@ Meteor.methods({
                 limit: 1,
             }
         ).fetch()[0];
-        console.log(card);
 
         // Validate that the card is in the correct position
         let correct = (args.cardId === card._id);
 
-        console.log("Card Guess Correct: " + correct.toString());
+        console.log("Card Guess Correct?: " + correct.toString());
 
         // Null out the current card ID
-        Meteor.call('turn.update', {_id: args.turnId, currentCardId: null}, function(error, updated) {
+        Meteor.call('turn.update', {_id: args.turnId, currentCardId: null, lastCardCorrect: correct}, function(error, updated) {
             if (!error) {
                 console.log("Updated Turn: " + updated);
             }
         });
 
+        console.log('Update Card: ' + args.cardId);
+        console.log({correct: correct});
+
         // Update the card
-        return Cards.update(
+        Cards.update(
             {
                 _id: args.cardId,
             },
@@ -147,6 +137,8 @@ Meteor.methods({
                 }
             }
         );
+
+        return correct;
 
     },
 

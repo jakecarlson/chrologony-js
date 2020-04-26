@@ -32,14 +32,17 @@ Meteor.methods({
 
         // Lock all current turn cards
         const game = Games.findOne(gameId);
-        const cards = Cards.find({turnId: game.currentTurnId});
-        cards.forEach(function(card) {
-            Meteor.call('card.lock', card._id, function(error, updated) {
-                if (!error) {
-                    console.log("Locked Card: " + updated);
-                }
+        const turnCards = Cards.find({turnId: game.currentTurnId});
+        const correctCards = Cards.find({turnId: game.currentTurnId, correct: true});
+        if (turnCards.count() === correctCards.count()) {
+            correctCards.forEach(function(card) {
+                Meteor.call('card.lock', card._id, function(error, updated) {
+                    if (!error) {
+                        console.log("Locked Card: " + updated);
+                    }
+                });
             });
-        });
+        }
 
         // Find the player in this room with the least amount of turns for this game
         if (Meteor.isServer) {
@@ -120,6 +123,7 @@ Meteor.methods({
 
         check(attrs._id, String);
         // check(attrs.currentCardId, Match.Maybe(String)); // This must be a bug with Meteor; it always fails
+        // check(attrs.lastCardCorrect, Match.Maybe(Boolean)); // ditto
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {
@@ -136,6 +140,7 @@ Meteor.methods({
             {
                 $set: {
                     currentCardId: attrs.currentCardId,
+                    lastCardCorrect: attrs.lastCardCorrect,
                     updatedAt: new Date(),
                 }
             }

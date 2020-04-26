@@ -12,9 +12,8 @@ import './board.js';
 import './game.js';
 
 Template.room.onCreated(function roomOnCreated() {
-    this.state = new ReactiveDict();
     this.autorun(() => {
-        this.subscribe('games', Meteor.user().currentRoomId);
+        this.subscribe('games', this.data.room._id);
         this.subscribe('turns', this.data.room.currentGameId);
         this.subscribe('players', this.data.room._id);
     });
@@ -25,6 +24,7 @@ Template.room.helpers({
         return (this.room.owner == Meteor.userId());
     },
     currentGame() {
+        console.log(Games.findOne(this.room.currentGameId));
         return (this.room.currentGameId) ? Games.findOne(this.room.currentGameId) : null;
     },
     currentTurn() {
