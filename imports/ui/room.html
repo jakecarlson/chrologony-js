@@ -18,7 +18,9 @@
 
             <div class="col-3" id="roomSide">
                 {{> players_list room=room turn=currentTurn}}
-                {{> game room=room}}
+                {{#if isOwner}}
+                    {{> game room=room}}
+                {{/if}}
             </div>
 
         </div>
