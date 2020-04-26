@@ -163,14 +163,12 @@ function drawCard(gameId, turnId) {
     if (usedCards.length > 0) {
         selector._id = {$nin: usedCards};
     }
-    // let unlockedClue = Clues.findOne(selector/*, {sort: {_id:Random.choice([1,-1])}}*/);
-    let randomClue = Clues.findOne(selector);
-
-    // If there are no more eligible cards to draw, alert the user and exit
-    if (!randomClue) {
+    let possibleClues = Clues.find(selector).fetch();
+    if (possibleClues.length == 0) {
         alert("No more cards to draw!!!");
         return false;
     }
+    let randomClue = possibleClues[Math.floor(Math.random() * possibleClues.length)];
 
     // Set the card doc
     let card = {
