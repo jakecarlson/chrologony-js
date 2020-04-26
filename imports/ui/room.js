@@ -24,7 +24,6 @@ Template.room.helpers({
         return (this.room.owner == Meteor.userId());
     },
     currentGame() {
-        console.log(Games.findOne(this.room.currentGameId));
         return (this.room.currentGameId) ? Games.findOne(this.room.currentGameId) : null;
     },
     currentTurn() {

@@ -41,14 +41,9 @@ Meteor.methods({
             });
         }
 
-        /*let result = Meteor.users.update(this.userId, {
-            $set: {
-                currentRoomId: roomId,
-            }
-        });*/
         Meteor.call('user.update', {_id: this.userId, currentRoomId: roomId}, function(error, updated) {
             if (!error) {
-                // console.log("Updated User: " + updated);
+                console.log("Updated User: " + updated);
             }
         });
 

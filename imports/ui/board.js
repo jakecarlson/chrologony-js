@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
 import { Session } from "meteor/session";
+// import { Insult } from "insult";
 
 import { Cards } from '../api/cards';
 
@@ -105,6 +106,7 @@ Template.board.helpers({
                 return "Correct! Draw another card if you're feeling lucky, or end your turn to lock in your cards.";
                 break;
             case 'incorrect':
+                // return "Wrong! " + Insult() + " End your turn.";
                 return "Wrong! Wallow in your defeat, then end your turn.";
                 break;
             default:

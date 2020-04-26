@@ -11,6 +11,7 @@
     "@babel/runtime": "^7.8.3",
     "bootstrap": "^4.4.1",
     "bootstrap4-toggle": "^3.6.1",
+    "insult": "0.0.3",
     "jquery": "^3.5.0",
     "meteor-node-stubs": "^1.0.0",
     "popper.js": "^1.16.1"
