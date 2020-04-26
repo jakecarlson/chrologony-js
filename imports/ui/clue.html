@@ -1,29 +1,31 @@
 <template name="clue">
 
-    <tr class="clue {{#if viewing}}d-none{{/if}}">
-        <th scope="row"><input class="attr form-control" type="text" name="description" value="{{description}}" required></th>
-        <td><input class="attr form-control" type="date" name="date" value="{{date}}" required></td>
-        <td>{{> categories_selector val=categoryId}}</td>
-        <td><input class="attr form-control" type="text" name="hint" value="{{hint}}"></td>
-        <td>
-            <form class="clue-edit">
-                {{#if clue}}
-                    <input class="attr" type="hidden" name="_id" value="{{id}}">
-                    <button type="submit" class="save btn btn-primary">Save</button>
-                    <button type="submit" class="cancel btn btn-light">Cancel</button>
-                {{else}}
-                    <button type="submit" class="add btn btn-primary">Add</button>
-                {{/if}}
-            </form>
-        </td>
-    </tr>
+    {{#if canEdit}}
+        <tr class="clue {{#if viewing}}d-none{{/if}}">
+            <th scope="row"><input class="attr form-control" type="text" name="description" value="{{description}}" required></th>
+            <td><input class="attr form-control" type="date" name="date" value="{{date}}" required></td>
+            <td>{{> categories_selector val=categoryId}}</td>
+            <td><input class="attr form-control" type="text" name="hint" value="{{hint}}"></td>
+            <td>
+                <form class="clue-edit">
+                    {{#if clue}}
+                        <input class="attr" type="hidden" name="_id" value="{{id}}">
+                        <button type="submit" class="save btn btn-primary">Save</button>
+                        <button type="submit" class="cancel btn btn-light">Cancel</button>
+                    {{else}}
+                        <button type="submit" class="add btn btn-primary">Add</button>
+                    {{/if}}
+                </form>
+            </td>
+        </tr>
+    {{/if}}
 
     <tr class="clue {{#if editing}}d-none{{/if}}">
         <th scope="row">{{description}}</th>
         <td>{{date}}</td>
         <td>{{category.name}}</td>
         <td>{{hint}}</td>
-        <td><button class="edit btn btn-light">Edit</button></td>
+        <td>{{#if canEdit}}<button class="edit btn btn-light">Edit</button>{{/if}}</td>
     </tr>
 
 </template>

@@ -47,6 +47,10 @@ Template.clue.helpers({
         return this.clue.hint;
     },
 
+    canEdit() {
+        return (!this.clue || (this.clue.owner == Meteor.userId()));
+    },
+
 });
 
 Template.clue.events({
