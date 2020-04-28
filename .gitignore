@@ -1,9 +1,6 @@
 # IDE
 .idea
 
-# Framework
-.meteor
-
 # Logs
 logs
 *.log
