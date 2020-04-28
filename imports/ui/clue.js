@@ -1,8 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-
 import { ReactiveDict } from "meteor/reactive-dict";
-import { Session } from "meteor/session";
+
 import { Categories } from '../api/categories';
 import { ModelEvents } from "../startup/template-events";
 

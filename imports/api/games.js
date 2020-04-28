@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+
 import { Turns } from '../api/turns';
 
 export const Games = new Mongo.Collection('games');

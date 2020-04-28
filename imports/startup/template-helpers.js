@@ -5,3 +5,7 @@ Template.registerHelper('collectionNotEmpty', function(collection) {
 Template.registerHelper('loading', function() {
     return Session.get('loading');
 });
+
+Template.registerHelper('selectedValue', function(id) {
+    return (id == this.val);
+});

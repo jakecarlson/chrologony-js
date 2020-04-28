@@ -1,0 +1,12 @@
+<template name="themes_selector">
+
+    <select class="attr form-control" name="theme" id="{{id}}">
+        {{#if showAll}}
+            <option value="">All</option>
+        {{/if}}
+        {{#each theme in themes}}
+            <option value="{{theme}}" selected="{{selectedValue theme}}">{{theme}}</option>
+        {{/each}}
+    </select>
+
+</template>

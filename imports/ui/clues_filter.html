@@ -12,7 +12,8 @@
                 <input type="checkbox" id="clueFilterPrivate" name="private" value="true" checked="{{private}}" class="form-check-input form-check-inline">
                 <label for="clueFilterPrivate">Private Only</label>
             </div>
-            <label>Category: {{> categories_selector val=categoryId showAll=true}}</label>
+            <label class="mr-2">Category: {{> categories_selector val=categoryId showAll=true}}</label>
+            <label>Theme: {{> themes_selector val=theme showAll=true}}</label>
         </div>
     </form>
 

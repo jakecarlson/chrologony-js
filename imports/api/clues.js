@@ -1,11 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+
 import { Categories } from '../api/categories';
 
 export const Clues = new Mongo.Collection('clues');
 
 if (Meteor.isServer) {
+
     Meteor.publish('clues', function cluesPublication() {
         if (this.userId) {
             return Clues.find({}, {sort: {date: -1}});
@@ -13,6 +15,7 @@ if (Meteor.isServer) {
             return this.ready();
         }
     });
+
 }
 
 Clues.helpers({
@@ -36,6 +39,9 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
+        // Add the theme
+        attrs.theme = getTheme(attrs.categoryId);
+
         console.log('Create Clue:');
         console.log(attrs);
 
@@ -44,6 +50,7 @@ Meteor.methods({
             description: attrs.description,
             date: attrs.date,
             categoryId: attrs.categoryId,
+            theme: attrs.theme,
             hint: attrs.hint,
             active: true,
             owner: Meteor.userId(),
@@ -67,6 +74,9 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
+        // Add the theme
+        attrs.theme = getTheme(attrs.categoryId);
+
         console.log('Update Clue: ' + attrs._id);
         console.log(attrs);
 
@@ -80,6 +90,7 @@ Meteor.methods({
                     description: attrs.description,
                     date: attrs.date,
                     categoryId: attrs.categoryId,
+                    theme: attrs.theme,
                     hint: attrs.hint,
                     updatedAt: new Date(),
                 }
@@ -106,3 +117,7 @@ Meteor.methods({
     },
 
 });
+
+function getTheme(categoryId) {
+    return Categories.findOne(categoryId).theme;
+}

@@ -1,8 +1,10 @@
 import { Template } from 'meteor/templating';
-import {ReactiveDict} from "meteor/reactive-dict";
+import { ReactiveDict } from "meteor/reactive-dict";
+
+import { ModelEvents } from "../startup/template-events";
 
 import './category.html';
-import { ModelEvents } from "../startup/template-events";
+import './themes_selector.js';
 
 Template.category.onCreated(function categoryOnCreated() {
     this.state = new ReactiveDict();
@@ -37,6 +39,14 @@ Template.category.helpers({
 
     active() {
         return this.category.active;
+    },
+
+    theme() {
+        return this.category.theme;
+    },
+
+    categoryThemes() {
+        return Meteor.settings.public.themes;
     },
 
 });

@@ -1,6 +1,9 @@
 # IDE
 .idea
 
+# Deployment
+production.json
+
 # Logs
 logs
 *.log

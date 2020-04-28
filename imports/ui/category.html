@@ -2,6 +2,7 @@
 
     <tr class="{{#if viewing}}d-none{{/if}} category editing">
         <th scope="row"><input class="attr form-control" type="text" name="name" value="{{name}}" required></th>
+        <td>{{> themes_selector val=theme}}</td>
         <td><input class="attr form-check-input" type="checkbox" name="private" value="true" checked="{{private}}" data-toggle="toggle" data-on="Private" data-off="Public" data-onstyle="success" data-offstyle="secondary" data-size="small"></td>
         <td><input class="attr form-check-input" type="checkbox" name="active" value="true" checked="{{active}}" data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="secondary" data-size="small"></td>
         <td>
@@ -23,6 +24,7 @@
 
     <tr class="{{#if editing}}d-none{{/if}} category viewing">
         <th scope="row">{{name}}</th>
+        <td>{{theme}}</td>
         <td>
             <span class="badge badge-{{#if private}}success{{else}}secondary{{/if}}">
                 {{#if private}}

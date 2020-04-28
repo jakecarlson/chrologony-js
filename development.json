@@ -1,0 +1,24 @@
+{
+  "public": {
+    "themes": [
+      "Arts",
+      "Company",
+      "Culture",
+      "Entertainment",
+      "Event",
+      "Family",
+      "Food",
+      "History",
+      "Literature",
+      "Music",
+      "Politics",
+      "Religion",
+      "Science",
+      "Sports",
+      "Technology"
+    ],
+    "analyticsSettings": {
+      "Google Analytics" : {"trackingId": false}
+    }
+  }
+}

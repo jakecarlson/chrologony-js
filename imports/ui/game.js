@@ -1,18 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { ReactiveDict } from 'meteor/reactive-dict';
 import { Session } from 'meteor/session';
-
-import { Games } from '../api/games';
 
 import './game.html';
 
 Template.game.onCreated(function gameOnCreated() {
     this.autorun(() => {
-        // this.subscribe('turns', this.data.room.currentGameId);
-        // this.subscribe('cards', this.data.room.currentGameId);
-    });
 
+    });
 });
 
 Template.game.helpers({
@@ -43,7 +38,6 @@ Template.game.events({
                 Meteor.subscribe('games', id);
                 Meteor.subscribe('turns', id);
                 Meteor.subscribe('cards', id);
-                // console.log(i.parentData());
                 Session.set('loading', false);
             }
         });

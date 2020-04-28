@@ -1,7 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import {Clues} from "./clues";
+
+import { Clues } from '../api/clues';
 
 export const Categories = new Mongo.Collection('categories');
 
@@ -50,6 +51,7 @@ Meteor.methods({
 
         check(attrs._id, String);
         check(attrs.name, String);
+        check(attrs.theme, String);
         check(attrs.private, Boolean);
         check(attrs.active, Boolean);
 
@@ -61,6 +63,26 @@ Meteor.methods({
         console.log('Update Category: ' + attrs._id);
         console.log(attrs);
 
+        // Update any clues with this category to the new theme
+        let category = Categories.findOne(attrs._id);
+        if (attrs.theme != category.theme) {
+            let updatedClues = Clues.update(
+                {
+                    categoryId: attrs._id
+                },
+                {
+                    $set: {
+                        theme: attrs.theme,
+                        updatedAt: new Date(),
+                    }
+                },
+                {
+                    multi: true,
+                }
+            );
+            console.log("Updated Clues to New Theme: " + updatedClues);
+        }
+
         // If there is an ID, this is an update
         return Categories.update(
             {
@@ -69,6 +91,7 @@ Meteor.methods({
             {
                 $set: {
                     name: attrs.name,
+                    theme: attrs.theme,
                     private: attrs.private,
                     active: attrs.active,
                     updatedAt: new Date(),

@@ -1,13 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
-import { Session } from 'meteor/session';
+
+import { Clues } from "../api/clues";
 import { ModelEvents } from "../startup/template-events";
 
 import './clues_manager.html';
 import './clue.js';
 import './clues_filter.js';
-import { Clues } from "../api/clues";
 
 Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
@@ -16,6 +16,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('owned', false);
     this.state.set('private', false);
     this.state.set('categoryId', false);
+    this.state.set('theme', false);
 
     this.autorun(() => {
 
@@ -63,6 +64,12 @@ Template.clues_manager.helpers({
             selector.categoryId = categoryId;
         }
 
+        // theme
+        let theme = Template.instance().state.get('theme');
+        if (theme) {
+            selector.theme = theme;
+        }
+
         console.log('Filter Clues:');
         console.log(selector);
 
@@ -80,6 +87,11 @@ Template.clues_manager.events({
     'change #cluesFilter [name="categoryId"]'(e, i) {
         let categoryId = e.target.options[e.target.selectedIndex].value;
         i.state.set('categoryId', categoryId);
+    },
+
+    'change #cluesFilter [name="theme"]'(e, i) {
+        let theme = e.target.options[e.target.selectedIndex].value;
+        i.state.set('theme', theme);
     },
 
     'change #cluesFilter [name="owned"]'(e, i) {

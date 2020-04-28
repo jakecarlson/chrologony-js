@@ -1,7 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { ReactiveDict } from 'meteor/reactive-dict';
-import { Session } from 'meteor/session';
 
 import { Categories } from '../api/categories';
 
@@ -20,9 +18,6 @@ Template.categories_selector.helpers({
     },
     privateCategories() {
         return Categories.find({private: true, owner: Meteor.userId(), active: true}, {sort:{name: 1}});
-    },
-    selectedValue(id) {
-        return (id == this.val);
     },
 });
 
