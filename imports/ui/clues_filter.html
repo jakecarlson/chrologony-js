@@ -3,16 +3,16 @@
     <form id="cluesFilter" class="card text-muted bg-light">
         <div class="card-body form-inline mx-auto p-2">
             <label class="sr-only">Search:</label>
-            <input type="text" name="keyword" value="{{keyword}}" placeholder="Search ...">
-            <div class="form-check form-check-inline ml-3">
+            <input type="text" name="keyword" value="{{keyword}}" placeholder="Search ..." class="form-control">
+            <div class="form-check form-check-inline ml-4">
                 <input type="checkbox" id="clueFilterOwned" name="owned" value="true" checked="{{owned}}" class="form-check-input form-check-inline">
                 <label for="clueFilterOwned">Mine Only</label>
             </div>
-            <div class="form-check form-check-inline ml-1">
+            <div class="form-check form-check-inline ml-4 mr-4">
                 <input type="checkbox" id="clueFilterPrivate" name="private" value="true" checked="{{private}}" class="form-check-input form-check-inline">
                 <label for="clueFilterPrivate">Private Only</label>
             </div>
-            <label class="mr-2">Category: {{> categories_selector val=categoryId showAll=true}}</label>
+            <label class="mr-4">Category: {{> categories_selector val=categoryId showAll=true}}</label>
             <label>Theme: {{> themes_selector val=theme showAll=true}}</label>
         </div>
     </form>

@@ -13,7 +13,11 @@ Template.game.onCreated(function gameOnCreated() {
 Template.game.helpers({
 
     gameInProgress() {
-        return (this.room && this.room.currentGameId);
+        return this.game;
+    },
+
+    categoryId() {
+        return (this.game) ? this.game.categoryId : null;
     },
 
 });

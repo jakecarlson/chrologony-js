@@ -3,6 +3,8 @@
     <select class="attr form-control" name="theme" id="{{id}}">
         {{#if showAll}}
             <option value="">All</option>
+        {{else}}
+            <option disabled selected="{{selectedValue null}}">Select One ...</option>
         {{/if}}
         {{#each theme in themes}}
             <option value="{{theme}}" selected="{{selectedValue theme}}">{{theme}}</option>

@@ -7,7 +7,7 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="gameCategoryId">Category:</label>
-                {{> categories_selector id="gameCategoryId"}}
+                {{> categories_selector id="gameCategoryId" val=categoryId}}
             </div>
             <button type="submit" class="btn {{#if gameInProgress}}btn-secondary{{else}}btn-primary{{/if}} float-right draw" disabled="{{loading}}">Start</button>
         </div>

@@ -20,6 +20,7 @@ html {
 
 #cluesFilter select {
     margin-left: .25rem;
+    width: 10rem;
 }
 
 #roomSide .card-title {
