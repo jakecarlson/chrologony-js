@@ -29,6 +29,18 @@ Template.board.onCreated(function boardOnCreated() {
                     helper: "clone",
                     scroll: false,
                     cursor: 'grabbing',
+                    update: function(event, ui) {
+                        var cards = $(event.target).find('.clue-card');
+                        var pos = {};
+                        cards.each(function(n, card) {
+                            pos[$(card).attr('data-id')] = n;
+                        });
+                        Meteor.call('card.pos', pos, function(error, updated) {
+                            if (!error) {
+                                console.log("Card Positions Updated: " + updated);
+                            }
+                        });
+                    },
                 });
             });
         }
@@ -68,8 +80,9 @@ Template.board.helpers({
                 },
                 {
                     sort: {
-                        correct: -1,
-                        'clue.date': 1,
+                        pos: 1,
+                        /*correct: -1,
+                        'clue.date': 1,*/
                     }
                 }
             );
@@ -119,14 +132,22 @@ Template.board.helpers({
 Template.board.events({
 
     'click .submit-guess'(e, i) {
-        let pos = null;
-        const cardId = this.turn.currentCardId;
+        let pos = {};
+        let currentCardPos = null;
+        const currentCardId = this.turn.currentCardId;
         $(i.findAll('.clue-card')).each(function(n, card) {
-            if ($(card).attr('data-id') === cardId) {
-                pos = n;
+            let id = $(card).attr('data-id');
+            pos[id] = n;
+            if (id === currentCardId) {
+                currentCardPos = n;
             }
         });
-        Meteor.call('card.submit', {gameId: this.game._id, turnId: this.turn._id, cardId: cardId, pos: pos}, function(error, correct) {
+        Meteor.call('card.pos', pos, function(error, updated) {
+            if (!error) {
+                console.log("Card Positions Updated: " + updated);
+            }
+        });
+        Meteor.call('card.submit', {gameId: this.game._id, turnId: this.turn._id, cardId: currentCardId, pos: currentCardPos}, function(error, correct) {
             if (!error) {
                 console.log("Guess Correct?: " + correct);
             }

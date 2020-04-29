@@ -47,6 +47,37 @@ Meteor.methods({
 
     },
 
+    'card.pos'(cards) {
+
+        check(cards, Object);
+
+        // Make sure the user is logged in before inserting a task
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        console.log("Card Positions:");
+        console.log(cards);
+
+        let numUpdated = 0;
+        for (const [id, pos] of Object.entries(cards)) {
+            numUpdated += Cards.update(
+                {
+                    _id: id,
+                },
+                {
+                    $set: {
+                        pos: pos,
+                        updatedAt: new Date(),
+                    }
+                }
+            );
+        }
+
+        return numUpdated;
+
+    },
+
     // Lock
     'card.lock'(id) {
 
@@ -195,6 +226,7 @@ function drawCard(gameId, turnId) {
     // If it's the first card, automatically mark it correct
     if (firstCard) {
         card.correct = true;
+        card.pos = 0;
         card.lockedAt = new Date();
     }
 
