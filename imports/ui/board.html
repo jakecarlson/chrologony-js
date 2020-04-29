@@ -14,11 +14,13 @@
         </header>
         <div class="card-body">
             <h3 class="card-subtitle text-secondary mb-2 prompt">{{prompt}}</h3>
-            <ol class="clue-cards clearfix" id="currentPlayerCards">
-                {{#each playerCard in currentPlayerCards}}
-                    <li class="clue-col {{#if isCurrentCard playerCard._id}}current-col{{/if}}">{{> card card=playerCard turn=turn}}</li>
-                {{/each}}
-            </ol>
+            <div class="clue-cards clearfix" id="currentPlayerCards">
+                <ol>
+                    {{#each playerCard in currentPlayerCards}}
+                        <li class="clue-col {{#if isCurrentCard playerCard._id}}current-col{{/if}}">{{> card card=playerCard turn=turn}}</li>
+                    {{/each}}
+                </ol>
+            </div>
         </div>
     </div>
 

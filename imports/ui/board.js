@@ -28,12 +28,7 @@ Template.board.onCreated(function boardOnCreated() {
                     revert: 100,
                     helper: "clone",
                     scroll: false,
-                    start: function(event, ui) {
-                        $(ui.helper).addClass("dragging");
-                    },
-                    stop: function(event, ui) {
-                        $(ui.item).removeClass("dragging");
-                    },
+                    cursor: 'grabbing',
                 });
             });
         }

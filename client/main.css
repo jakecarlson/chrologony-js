@@ -41,67 +41,76 @@ html {
     font-size: x-large;
     text-align: center;
     min-height: 3.5rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
 }
 #board .card-subtitle span {
     display: block;
 }
 #board > .card-body {
-    padding-bottom: 0;
+    padding: 0;
+    padding-top: 1.25rem;
     overflow: hidden;
 }
 
 #currentPlayerCards {
-    padding: 0;
-    margin: 0;
-    list-style: none;
     height: 12rem;
     text-align: center;
     position: relative;
+    overflow: auto;
+}
+#currentPlayerCards ol {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    margin: 0;
+    list-style: none;
+    height: 100%;
+    width: 200%;
 }
 
 .clue-col {
-    width: 5rem;
+    width: 5.25rem;
     top: 0;
     height: 100%;
     float: left;
-    position: relative;
 }
 .clue-col.current-col,
 .clue-col:hover
 {
-    width: 10rem;
+    width: 15rem;
 }
 
 .clue-card {
     position: absolute;
     top: 9rem;
-    width: 10rem;
-    min-height: 12rem;
+    width: 15rem;
+    min-height: 13rem;
     text-align: left;
+    transition: top .25s ease-in-out;
 }
 .clue-col:hover .clue-card,
 .clue-card.current
 {
-    bottom: 0;
-    top: auto;
+    top: 0;
+}
+.clue-card.current .card-title {
+    text-align: center;
 }
 .clue-col .clue-card .date {
     display: none;
 }
 .clue-col .clue-card .year {
-    display: inline;
+    display: block;
 }
 .clue-col:hover .clue-card .date {
-    display: inline;
+    display: block;
+    text-align: center;
 }
 .clue-col:hover .clue-card .year {
     display: none;
 }
 .clue-card.current {
     cursor: grab;
-}
-.clue-card.dragging {
-    cursor: grabbing;
 }
 .clue-card .card-title {
     margin-bottom: 0;
