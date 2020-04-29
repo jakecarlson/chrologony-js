@@ -68,27 +68,7 @@ Template.board.helpers({
     },
 
     currentPlayerCards() {
-        if (this.game && this.turn) {
-            return Cards.find(
-                {
-                    gameId: this.game._id,
-                    userId: this.turn.userId,
-                    $or: [
-                        {turnId: this.turn._id},
-                        {lockedAt: {$ne: null}},
-                    ]
-                },
-                {
-                    sort: {
-                        pos: 1,
-                        /*correct: -1,
-                        'clue.date': 1,*/
-                    }
-                }
-            );
-        } else {
-            return [];
-        }
+        return getTurnCards(this.game, this.turn);
     },
 
     isCurrentCard(cardId) {
@@ -124,6 +104,16 @@ Template.board.helpers({
                 break;
             default:
                 return "Unknown state.";
+        }
+    },
+
+    timelineWidth() {
+        let cards = getTurnCards(this.game, this.turn);
+        if (cards.count) {
+            let numCards = cards.count()-2;
+            return ((numCards * 5.25) + 45) + 'rem';
+        } else {
+            return '100%';
         }
     },
 
@@ -196,4 +186,28 @@ function getStatus(turn) {
 
 function isCurrentPlayer(turn) {
     return (turn && (turn.userId == Meteor.userId()));
+}
+
+function getTurnCards(game, turn) {
+    if (game && turn) {
+        return Cards.find(
+            {
+                gameId: game._id,
+                userId: turn.userId,
+                $or: [
+                    {turnId: turn._id},
+                    {lockedAt: {$ne: null}},
+                ]
+            },
+            {
+                sort: {
+                    pos: 1,
+                    /*correct: -1,
+                    'clue.date': 1,*/
+                }
+            }
+        );
+    } else {
+        return [];
+    }
 }
