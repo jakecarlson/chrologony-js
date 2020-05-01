@@ -1,7 +1,7 @@
 <template name="clue">
 
     {{#if canEdit}}
-        <tr class="clue {{#if viewing}}d-none{{/if}} {{#if id}}{{#if error}}table-danger{{else}}table-warning{{/if}}{{else}}table-success{{/if}} editing">
+        <tr class="clue {{#if viewing}}d-none{{/if}} {{#if error}}table-danger{{else}}{{#if id}}table-warning{{else}}table-success{{/if}}{{/if}} editing">
             <th scope="row"><input class="attr form-control" type="text" name="description" value="{{description}}" required maxlength="240"></th>
             <td><input class="attr form-control" type="date" name="date" value="{{date}}" required maxlength="10"></td>
             <td>{{> categories_selector val=categoryId}}</td>

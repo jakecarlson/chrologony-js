@@ -11,7 +11,7 @@ Template.login.onCreated(function loginOnCreated() {
 });
 
 Template.login.helpers({
-    failed() {
+    error() {
         return Session.get('loginError');
     },
     logout() {

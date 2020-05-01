@@ -34,6 +34,10 @@ Template.body.helpers({
         return Rooms.findOne(Meteor.user().currentRoomId);
     },
 
+    username() {
+        return Meteor.user().username;
+    },
+
     copyright() {
         const firstYear = 2020;
         const currentYear = moment.utc(new Date()).format('YYYY');

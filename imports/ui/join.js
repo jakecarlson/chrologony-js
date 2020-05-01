@@ -2,18 +2,24 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 import './join.html';
+import {ReactiveDict} from "meteor/reactive-dict";
 
 Template.join.onCreated(function joinOnCreated() {
+
+    this.state = new ReactiveDict();
+    this.state.set('error', false);
 
 });
 
 Template.join.helpers({
-
+    error() {
+        return Template.instance().state.get('error');
+    },
 });
 
 Template.join.events({
 
-    'submit #join'(e) {
+    'submit #join'(e, i) {
 
         e.preventDefault();
 
@@ -25,15 +31,16 @@ Template.join.events({
         };
 
         Meteor.call('room.findOrCreate', attrs, function(error, id) {
-            if (!error) {
+            if (error) {
+                i.state.set('error', true);
+            } else {
                 console.log("Room Set: " + id);
-                Session.set('registrationSuccess', false);
+                Accounts.resetAuthMessages();
+                target.name.value = '';
+                target.password.value = '';
+                i.state.set('error', false);
             }
         });
-
-        // Clear form
-        target.name.value = '';
-        target.password.value = '';
 
     },
 

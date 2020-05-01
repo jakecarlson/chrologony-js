@@ -2,16 +2,16 @@
 
     <form class="mx-auto clearfix" id="register" novalidate="novalidate">
         <div class="form-group">
-            <label for="registerUsername">Username</label>
-            <input type="text" class="form-control" name="username" id="registerUsername" aria-describedby="usernameHelp" required>
+            <label class="sr-only" for="registerUsername">Username</label>
+            <input type="text" class="form-control" name="username" id="registerUsername" aria-describedby="usernameHelp" required placeholder="Username">
         </div>
         <div class="form-group">
-            <label for="registerPassword">Password</label>
-            <input type="password" class="form-control" name="password" id="registerPassword" required>
+            <label class="sr-only" for="registerPassword">Password</label>
+            <input type="password" class="form-control" name="password" id="registerPassword" required placeholder="Password">
         </div>
         <div class="form-group">
-            <label for="registerConfirmPassword">Confirm Password</label>
-            <input type="password" class="form-control" name="password_confirm" id="registerConfirmPassword" required>
+            <label class="sr-only" for="registerConfirmPassword">Confirm Password</label>
+            <input type="password" class="form-control" name="password_confirm" id="registerConfirmPassword" required placeholder="Confirm Password">
         </div>
         {{#if error}}
             <p class="text-danger mb-2 mb-2">{{error}} Please try again.</p>

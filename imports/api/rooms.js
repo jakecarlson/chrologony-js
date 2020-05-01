@@ -29,9 +29,13 @@ Meteor.methods({
 
         let roomId = false;
 
-        let rooms = Rooms.find(attrs, {limit: 1, sort:{createdAt:-1}});
-        if (rooms.count() > 0) {
-            roomId = rooms.fetch()[0]._id;
+        // If the room exists, validate the password
+        let room = Rooms.findOne({name: attrs.name}, {limit: 1, sort:{createdAt:-1}});
+        if (room) {
+            if (room.password !== attrs.password) {
+                throw new Meteor.Error('not-authorized');
+            }
+            roomId = room._id;
         } else {
             roomId = Rooms.insert({
                 name: attrs.name,
