@@ -18,12 +18,7 @@ Template.body.onCreated(function bodyOnCreated() {
     this.state = new ReactiveDict();
     this.state.set('signup', false);
 
-    Session.set('registrationError', false);
-    Session.set('registrationSuccess', false);
-    Session.set('loginSuccess', false);
-    Session.set('loginError', false);
-    Session.set('logoutSuccess', false);
-    Session.set('loading', false);
+    Accounts.resetAuthMessages();
 
     this.autorun(() => {
         this.subscribe('rooms', Meteor.user() ? Meteor.user().currentRoomId : null);
@@ -37,10 +32,6 @@ Template.body.helpers({
 
     currentRoom() {
         return Rooms.findOne(Meteor.user().currentRoomId);
-    },
-
-    showCategoryManager() {
-        return (Meteor.user() && !Meteor.user().currentRoomId);
     },
 
     copyright() {

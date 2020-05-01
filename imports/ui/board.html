@@ -1,8 +1,8 @@
 <template name="board">
 
-    <div id="board" class="card">
+    <div id="board" class="card mb-4">
         <header class="card-header">
-            <h2 class="card-title float-left">{{turnTitle}}</h2>
+            <h2 class="card-title float-left turn-title text-secondary">{{turnTitle}}</h2>
             <button class="btn {{#if cannotEndTurn}}btn-light{{else}}btn-primary{{/if}} float-right ml-2 end-turn" disabled="{{cannotEndTurn}}">
                 {{#if loading}}
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

@@ -10,6 +10,7 @@ import './clue.html';
 Template.clue.onCreated(function clueOnCreated() {
     this.state = new ReactiveDict();
     this.state.set('editing', (this.data.clue === false));
+    this.state.set('error', false);
 });
 
 Template.clue.helpers({
@@ -47,11 +48,15 @@ Template.clue.helpers({
     },
 
     canEdit() {
-        let category = Categories.findOne(this.clue.categoryId);
-        return (
-            (this.clue.owner == Meteor.userId()) ||
-            (category && (category.owner == Meteor.userId()))
-        );
+        if (!this.clue) {
+            return true;
+        } else {
+            let category = Categories.findOne(this.clue.categoryId);
+            return (
+                (this.clue.owner == Meteor.userId()) ||
+                (category && (category.owner == Meteor.userId()))
+            );
+        }
     },
 
 });

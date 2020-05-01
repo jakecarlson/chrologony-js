@@ -119,5 +119,9 @@ Meteor.methods({
 });
 
 function getTheme(categoryId) {
-    return Categories.findOne(categoryId).theme;
+    let category = Categories.findOne(categoryId);
+    if (category) {
+        return category.theme;
+    }
+    return null;
 }

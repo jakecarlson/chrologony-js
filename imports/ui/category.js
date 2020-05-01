@@ -9,6 +9,7 @@ import './themes_selector.js';
 Template.category.onCreated(function categoryOnCreated() {
     this.state = new ReactiveDict();
     this.state.set('editing', (this.data.category === false));
+    this.state.set('error', false);
 });
 
 Template.category.onRendered(function categoryOnRendered() {

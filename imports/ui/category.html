@@ -1,6 +1,6 @@
 <template name="category">
 
-    <tr class="{{#if viewing}}d-none{{/if}} category editing">
+    <tr class="{{#if viewing}}d-none{{/if}} {{#if id}}table-warning{{else}}table-success{{/if}} {{#if error}}error{{/if}} category editing">
         <th scope="row"><input class="attr form-control" type="text" name="name" value="{{name}}" required></th>
         <td>{{> themes_selector val=theme}}</td>
         <td><input class="attr form-check-input" type="checkbox" name="private" value="true" checked="{{private}}" data-toggle="toggle" data-on="Private" data-off="Public" data-onstyle="success" data-offstyle="secondary" data-size="small"></td>

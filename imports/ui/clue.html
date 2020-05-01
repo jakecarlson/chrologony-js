@@ -1,7 +1,7 @@
 <template name="clue">
 
     {{#if canEdit}}
-        <tr class="clue {{#if viewing}}d-none{{/if}}">
+        <tr class="clue {{#if viewing}}d-none{{/if}} {{#if id}}table-warning{{else}}table-success{{/if}} {{#if error}}error{{/if}} editing">
             <th scope="row"><input class="attr form-control" type="text" name="description" value="{{description}}" required></th>
             <td><input class="attr form-control" type="date" name="date" value="{{date}}" required></td>
             <td>{{> categories_selector val=categoryId}}</td>

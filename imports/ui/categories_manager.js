@@ -23,7 +23,6 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
             });
         }
 
-
     });
 
 });

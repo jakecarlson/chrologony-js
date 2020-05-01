@@ -32,6 +32,10 @@ html {
 #login .signup {
     font-size: larger;
 }
+#login .logout-success {
+    max-width: 30rem;
+    margin: 0 auto;
+}
 
 #register {
     max-width: 18.9rem;
@@ -63,11 +67,18 @@ html {
     font-weight: normal;
 }
 
+#cluesFilter {
+
+}
 #cluesFilter select {
     margin-left: .25rem;
-    width: 10rem;
+    max-width: 10rem;
 }
 
+.room-title {
+    font-size: xx-large;
+    margin-bottom: 0;
+}
 #roomSide .card-title {
     font-size: medium;
     margin-bottom: 0;
@@ -77,10 +88,12 @@ html {
     font-weight: bold;
 }
 
-
 /* board */
 #board .card-title {
     margin-bottom: 0;
+}
+.turn-title {
+    font-size: xx-large;
 }
 #board .card-subtitle {
     font-size: x-large;

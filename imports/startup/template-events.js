@@ -45,6 +45,9 @@ export const ModelEvents = {
         Meteor.call(getModelName(i) + '.insert', attrs, function(error, id) {
             if (!error) {
                 console.log('Created ' + capitalize(getModelName(i)) + ': ' + id);
+                i.state.set('error', false);
+            } else {
+                i.state.set('error', true);
             }
         });
 
@@ -60,16 +63,19 @@ export const ModelEvents = {
         Meteor.call(getModelName(i) + '.update', attrs, function(error, updated) {
             if (!error) {
                 console.log('Updated ' + capitalize(getModelName(i)) + ': ' + updated);
+                i.state.set('editing', false);
+                i.state.set('error', false);
+            } else {
+                i.state.set('error', true);
             }
         });
-
-        i.state.set('editing', false);
 
     },
 
     cancel: function(e, i) {
         e.preventDefault();
         i.state.set('editing', false);
+        i.state.set('error', false);
     },
 
     remove: function(e, i) {
@@ -82,6 +88,7 @@ export const ModelEvents = {
                 console.log('Deleted ' + capitalize(modelName) + ': ' + deleted);
             }
         });
+        i.state.set('error', false);
     },
 
 };
