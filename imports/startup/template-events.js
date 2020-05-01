@@ -46,12 +46,11 @@ export const ModelEvents = {
             if (!error) {
                 console.log('Created ' + capitalize(getModelName(i)) + ': ' + id);
                 i.state.set('error', false);
+                resetAttrs(i);
             } else {
                 i.state.set('error', true);
             }
         });
-
-        resetAttrs(i);
 
     },
 
@@ -67,6 +66,7 @@ export const ModelEvents = {
                 i.state.set('error', false);
             } else {
                 i.state.set('error', true);
+                console.log(i.state.get('error'));
             }
         });
 

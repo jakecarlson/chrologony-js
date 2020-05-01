@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import {NonEmptyString} from "../startup/validations";
 
 export const Rooms = new Mongo.Collection('rooms');
 
@@ -18,8 +19,8 @@ Meteor.methods({
 
     'room.findOrCreate'(attrs) {
 
-        check(attrs.name, String);
-        check(attrs.password, String);
+        check(attrs.name, NonEmptyString);
+        check(attrs.password, NonEmptyString);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -72,8 +73,8 @@ Meteor.methods({
     // Update
     'room.update'(attrs) {
 
-        check(attrs._id, String);
-        check(attrs.currentGameId, String);
+        check(attrs._id, NonEmptyString);
+        check(attrs.currentGameId, NonEmptyString);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {

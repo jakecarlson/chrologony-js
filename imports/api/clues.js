@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { NonEmptyString } from "../startup/validations";
 
 import { Categories } from '../api/categories';
 
@@ -29,9 +30,9 @@ Meteor.methods({
     // Insert
     'clue.insert'(attrs) {
 
-        check(attrs.description, String);
-        check(attrs.date, String);
-        check(attrs.categoryId, String);
+        check(attrs.description, NonEmptyString);
+        check(attrs.date, NonEmptyString);
+        check(attrs.categoryId, NonEmptyString);
         // check(attrs.hint, String);
 
         // Make sure the user is logged in before inserting a task
@@ -63,10 +64,10 @@ Meteor.methods({
     // Update
     'clue.update'(attrs) {
 
-        check(attrs._id, String);
-        check(attrs.description, String);
-        check(attrs.date, String);
-        check(attrs.categoryId, String);
+        check(attrs._id, NonEmptyString);
+        check(attrs.description, NonEmptyString);
+        check(attrs.date, NonEmptyString);
+        check(attrs.categoryId, NonEmptyString);
         // check(attrs.hint, String);
 
         // Make sure the user is logged in before inserting a task

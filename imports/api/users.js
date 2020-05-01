@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
+import {NonEmptyString} from "../startup/validations";
 
 if (Meteor.isServer) {
 
@@ -30,8 +31,8 @@ Meteor.methods({
     // Update
     'user.update'(attrs) {
 
-        check(attrs._id, String);
-        check(attrs.currentRoomId, String);
+        check(attrs._id, NonEmptyString);
+        check(attrs.currentRoomId, NonEmptyString);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {

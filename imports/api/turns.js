@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { Promise } from 'meteor/promise';
+import { NonEmptyString } from "../startup/validations";
 
 import { Games } from '../api/games';
 import { Cards } from '../api/cards';
@@ -23,7 +24,7 @@ Meteor.methods({
     // Next Turn
     'turn.next'(gameId) {
 
-        check(gameId, String);
+        check(gameId, NonEmptyString);
 
         // Make sure the user is logged in
         if (! Meteor.userId()) {
@@ -121,7 +122,7 @@ Meteor.methods({
     // Update
     'turn.update'(attrs) {
 
-        check(attrs._id, String);
+        check(attrs._id, NonEmptyString);
         // check(attrs.currentCardId, Match.Maybe(String)); // This must be a bug with Meteor; it always fails
         // check(attrs.lastCardCorrect, Match.Maybe(Boolean)); // ditto
 

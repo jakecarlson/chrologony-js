@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { NonEmptyString } from "../startup/validations";
 
 import { Clues } from '../api/clues';
 
@@ -22,7 +23,7 @@ Meteor.methods({
     // Insert
     'category.insert'(attrs) {
 
-        check(attrs.name, String);
+        check(attrs.name, NonEmptyString);
         check(attrs.private, Boolean);
         check(attrs.active, Boolean);
 
@@ -49,9 +50,9 @@ Meteor.methods({
     // Update
     'category.update'(attrs) {
 
-        check(attrs._id, String);
-        check(attrs.name, String);
-        check(attrs.theme, String);
+        check(attrs._id, NonEmptyString);
+        check(attrs.name, NonEmptyString);
+        check(attrs.theme, NonEmptyString);
         check(attrs.private, Boolean);
         check(attrs.active, Boolean);
 
@@ -104,7 +105,7 @@ Meteor.methods({
     // Delete
     'category.delete'(id) {
 
-        check(id, String);
+        check(id, NonEmptyString);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {

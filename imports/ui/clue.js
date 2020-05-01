@@ -19,6 +19,10 @@ Template.clue.helpers({
         return Template.instance().state.get('editing');
     },
 
+    error() {
+        return Template.instance().state.get('error');
+    },
+
     viewing() {
         return !Template.instance().state.get('editing');
     },

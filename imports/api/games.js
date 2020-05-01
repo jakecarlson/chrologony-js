@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { NonEmptyString } from "../startup/validations";
 
 import { Turns } from '../api/turns';
 
@@ -21,8 +22,8 @@ Meteor.methods({
     // Insert
     'game.insert'(attrs) {
 
-        check(attrs.categoryId, String);
-        check(attrs.roomId, String);
+        check(attrs.categoryId, NonEmptyString);
+        check(attrs.roomId, NonEmptyString);
 
         // Make sure the user is logged in
         if (! Meteor.userId()) {
@@ -62,8 +63,8 @@ Meteor.methods({
     // Update
     'game.update'(attrs) {
 
-        check(attrs._id, String);
-        check(attrs.currentTurnId, String);
+        check(attrs._id, NonEmptyString);
+        check(attrs.currentTurnId, NonEmptyString);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -90,7 +91,9 @@ Meteor.methods({
 
     // End
     'game.end'(gameId) {
-        check(gameId, String);
+
+        check(gameId, NonEmptyString);
+
         // Make sure the user is logged in
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
@@ -98,6 +101,7 @@ Meteor.methods({
         let game = Games.findOne(gameId);
         let turn = Turns.findOne(game.currentTurnId);
         Games.update(gameId, { $set: { endedAt: new Date(), winner: turn.userId } });
+
     },
 
 });

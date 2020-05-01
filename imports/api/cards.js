@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { NonEmptyString } from "../startup/validations";
 
 import { Games } from "./games";
 import { Clues } from "./clues";
@@ -25,8 +26,8 @@ Meteor.methods({
     // Draw Card
     'card.draw'(attrs) {
 
-        check(attrs.turnId, String);
-        check(attrs.gameId, String);
+        check(attrs.turnId, NonEmptyString);
+        check(attrs.gameId, NonEmptyString);
 
         // Make sure the user is logged in
         if (! Meteor.userId()) {
@@ -81,7 +82,7 @@ Meteor.methods({
     // Lock
     'card.lock'(id) {
 
-        check(id, String);
+        check(id, NonEmptyString);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
