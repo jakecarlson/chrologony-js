@@ -1,6 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
+import { Cards } from '../api/cards';
+
 import './players_list.html';
 import './player.js';
 
@@ -17,7 +19,7 @@ Template.players_list.helpers({
     },
     isTurnOwner(userId) {
         return (this.turn && (this.turn.userId == userId));
-    }
+    },
 });
 
 Template.players_list.events({

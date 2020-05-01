@@ -92,6 +92,9 @@ html {
 #players .current {
     font-weight: bold;
 }
+#players .player .badge {
+    margin-top: .2rem;
+}
 
 /* board */
 #board .card-title {

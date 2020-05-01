@@ -1,5 +1,8 @@
 <template name="player">
 
-    <li class="list-group-item {{#if isTurnOwner}}current{{/if}}">{{username}}</li>
+    <li class="list-group-item player {{#if isTurnOwner}}current{{/if}}">
+        {{username}}
+        <span class="badge {{#if isTurnOwner}}badge-secondary{{else}}badge-light{{/if}} float-right">{{numLockedCards}}</span>
+    </li>
 
 </template>
