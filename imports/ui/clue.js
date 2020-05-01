@@ -47,10 +47,10 @@ Template.clue.helpers({
     },
 
     canEdit() {
+        let category = Categories.findOne(this.clue.categoryId);
         return (
-            !this.clue ||
             (this.clue.owner == Meteor.userId()) ||
-            (this.clue.categoryId && (Categories.findOne(this.clue.categoryId).owner == Meteor.userId()))
+            (category && (category.owner == Meteor.userId()))
         );
     },
 

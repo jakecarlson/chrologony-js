@@ -1,0 +1,31 @@
+<template name="login">
+
+    <form class="clearfix text-center" id="login" novalidate="novalidate">
+
+        {{#if logout}}
+            <div class="alert alert-success alert-dismissible mb-4 logout-success" role="alert">
+                You have successfully logged out.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {{/if}}
+
+        <div class="form-inline mx-auto">
+            <label class="sr-only" for="loginUsername">Username:</label>
+            <input type="text" name="username" class="form-control" placeholder="Username" id="loginUsername" required>
+            <label class="sr-only" for="loginPassword">Password:</label>
+            <input type="password" name="password" class="form-control ml-2 mr-2" placeholder="Password" id="loginPassword" required>
+            <button type="submit" class="btn btn-primary login mr-2">Log In</button>
+        </div>
+
+        {{#if failed}}
+            <p class="text-danger mt-2">Login failed. Please try again.</p>
+        {{/if}}
+
+        <p class="text-dark mt-4 mb-0 signup">Don't have an account? <a href="#signup">Sign up now.</a></p>
+        <p class="text-dark">It's free. No email address required.</p>
+
+    </form>
+
+</template>

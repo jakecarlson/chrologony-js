@@ -36,3 +36,6 @@ dburles:collection-helpers
 mrt:jquery-ui-sortable
 okgrow:analytics
 dsyko:jquery-ui-touch-punch
+altapp:recaptcha
+underscore
+ejson

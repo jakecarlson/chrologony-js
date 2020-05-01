@@ -57,3 +57,21 @@ Meteor.methods({
     },
 
 });
+
+if (Meteor.isServer) {
+
+    Meteor.methods({
+
+        // Validate CAPTCHA
+        'user.validateCaptcha'(captcha) {
+            let captchaResult = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captcha);
+            if (!captchaResult.success) {
+                console.log('reCAPTCHA check failed!', captchaResult);
+                throw new Meteor.Error(422, 'reCAPTCHA Failed: ' + captchaResult.error);
+            }
+            return captchaResult;
+        },
+
+    });
+
+}

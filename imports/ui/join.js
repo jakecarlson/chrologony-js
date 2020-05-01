@@ -27,6 +27,7 @@ Template.join.events({
         Meteor.call('room.findOrCreate', attrs, function(error, id) {
             if (!error) {
                 console.log("Room Set: " + id);
+                Session.set('registrationSuccess', false);
             }
         });
 

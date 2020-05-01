@@ -1,18 +1,29 @@
 <body>
 
-    <div class="container-fluid clearfix">
-        <div class="float-right pt-2 pb-2">
-            {{#if showCategoryManager}}
-                <a href="#" data-toggle="modal" data-target="#categoriesModal">Your Categories</a>
-            {{/if}}
-            {{> loginButtons}}
-            <span class="ml-2 text-secondary">&copy; 2020 Jake Carlson.</span>
+    {{#if currentUser}}
+
+        <div class="container-fluid clearfix">
+            <div class="float-left">
+                <h1 id="title">Chrologony</h1>
+            </div>
+            <div class="float-right pt-2 pb-2">
+                {{#if showCategoryManager}}
+                    <a href="#" data-toggle="modal" data-target="#categoriesModal">Your Categories</a>
+                {{/if}}
+                <a href="#logout" class="logout">Log Out</a>
+            </div>
         </div>
-    </div>
 
-    <div class="container-fluid">
+        <div class="container-fluid">
 
-        {{#if currentUser}}
+            {{#if registrationSuccess}}
+                <div class="alert alert-success alert-dismissible mb-4" role="alert">
+                    You have successfully registered. Create or join a room to play.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {{/if}}
 
             {{#if currentRoom}}
 
@@ -30,7 +41,21 @@
 
             {{/if}}
 
-        {{/if}}
+        </div>
 
-    </div>
+    {{else}}
+
+        <section id="home" class="container {{#if signup}}signup-container{{/if}}">
+            <h1 id="title">Chrologony</h1>
+            {{#if signup}}
+                {{> register}}
+            {{else}}
+                {{> login}}
+            {{/if}}
+        </section>
+
+    {{/if}}
+
+    <p class="mt-4 text-secondary text-center">Made with &#9889; by <a href="https://jakecarlson.com" class="text-secondary">Jake Carlson</a>. &copy; {{copyright}}.</p>
+
 </body>
