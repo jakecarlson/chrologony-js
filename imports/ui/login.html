@@ -16,7 +16,7 @@
             <input type="text" name="username" class="form-control mt-4 mt-sm-0" placeholder="Username" id="loginUsername" required>
             <label class="sr-only" for="loginPassword">Password:</label>
             <input type="password" name="password" class="form-control mt-3 mt-sm-0 ml-sm-2 mr-sm-2" placeholder="Password" id="loginPassword" required>
-            <button type="submit" class="btn btn-primary mt-3 mt-sm-0 login">Log In</button>
+            <button type="submit" class="btn btn-primary mt-3 mt-sm-0 login" disabled="{{loading}}">Log In</button>
         </div>
 
         {{#if error}}

@@ -1,7 +1,7 @@
 <template name="categories_manager">
 
     <table id="categoriesManager" class="table table-hover">
-        <thead>
+        <thead class="table-borderless">
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Theme</th>
@@ -34,7 +34,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="remove btn btn-danger" data-dismiss="modal" data-id="" data-model="category">Confirm</button>
+                    <button type="button" class="remove btn btn-danger" data-dismiss="modal" data-id="" data-model="category" disabled="{{loading}}">Confirm</button>
                 </div>
             </div>
         </div>

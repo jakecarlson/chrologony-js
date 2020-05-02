@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
+import { Promise } from "meteor/promise";
 
 import { Games } from "./games";
 import { Clues } from "./clues";
@@ -18,6 +19,23 @@ if (Meteor.isServer) {
             return this.ready();
         }
     });
+
+    /*
+    Meteor.publish('playerCardCounts', function playerCardsCountPublication(gameId) {
+        if (this.userId && gameId) {
+            return Promise.await(
+                Cards.rawCollection().aggregate(
+                    [
+                        {$match: {gameId: gameId, lockedAt: {$ne: null}}},
+                        {$group: {_id: "$userId", cards: {$sum: 1}}}
+                    ]
+                ).toArray()
+            );
+        } else {
+            return this.ready();
+        }
+    });
+    */
 
 }
 

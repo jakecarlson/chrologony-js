@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Session } from "meteor/session";
+import { LoadingState } from '../startup/LoadingState';
 // import { Insult } from "insult";
 
 import { Cards } from '../api/cards';
@@ -76,15 +76,15 @@ Template.board.helpers({
     },
 
     cannotSubmitGuess() {
-        return (Session.get('loading') || !isCurrentPlayer(this.turn) || ['waiting', 'correct', 'incorrect'].includes(getStatus(this.turn)));
+        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'correct', 'incorrect'].includes(getStatus(this.turn)));
     },
 
     cannotDrawCard() {
-        return (Session.get('loading') || !isCurrentPlayer(this.turn) || ['waiting', 'guessing', 'incorrect'].includes(getStatus(this.turn)));
+        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'guessing', 'incorrect'].includes(getStatus(this.turn)));
     },
 
     cannotEndTurn() {
-        return (Session.get('loading') || !isCurrentPlayer(this.turn) || ['waiting', 'guessing'].includes(getStatus(this.turn)));
+        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'guessing'].includes(getStatus(this.turn)));
     },
 
     prompt() {
@@ -141,6 +141,7 @@ Template.board.events({
             if (!error) {
                 console.log("Guess Correct?: " + correct);
             }
+            LoadingState.stop();
         });
     },
 
@@ -151,20 +152,21 @@ Template.board.events({
                 console.log("Created Card: " + id);
                 Meteor.subscribe('cards', gameId);
             }
+            LoadingState.stop();
         });
     },
 
     'click .end-turn'(e, i) {
         console.log('End Turn: ' + this.game.currentTurnId);
-        Session.set('loading', true);
+        LoadingState.start(e);
         let gameId = this.game._id;
         Meteor.call('turn.next', gameId, function(error, id) {
             if (!error) {
                 console.log("Start Turn: " + id);
                 Meteor.subscribe('turns', gameId);
                 Meteor.subscribe('cards', gameId);
-                Session.set('loading', false);
             }
+            LoadingState.stop();
         });
     },
 

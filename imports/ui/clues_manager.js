@@ -3,7 +3,7 @@ import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
 import { Clues } from "../api/clues";
-import { ModelEvents } from "../startup/template-events";
+import { ModelEvents } from "../startup/ModelEvents";
 
 import './clues_manager.html';
 import './clue.js';

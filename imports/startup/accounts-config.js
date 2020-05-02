@@ -1,5 +1,6 @@
 import { Accounts } from 'meteor/accounts-base';
 import { Session } from 'meteor/session';
+import { LoadingState } from './LoadingState';
 
 Accounts.config({
     defaultFieldSelector: {
@@ -19,6 +20,7 @@ Accounts.onLogout(function(error) {
     } else {
         Session.set('logoutSuccess', true);
     }
+    LoadingState.stop();
 });
 
 Accounts.onLogin(function(auth) {
@@ -26,12 +28,14 @@ Accounts.onLogin(function(auth) {
     console.log(auth);
     Accounts.resetAuthMessages();
     Session.set('loginSuccess', false);
+    LoadingState.stop();
 });
 
 Accounts.onLoginFailure(function(res) {
     console.log(res);
     Accounts.resetAuthMessages();
     Session.set('loginError', true);
+    LoadingState.stop();
 });
 
 if (Meteor.isServer) {

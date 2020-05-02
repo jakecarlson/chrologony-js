@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
+import { LoadingState } from '../startup/LoadingState';
 
 import './register.html';
 
@@ -20,7 +21,7 @@ Template.register.events({
 
     'submit form': function(e){
 
-        e.preventDefault();
+        LoadingState.start(e);
 
         // Validate the CAPTCHA
         let captcha = grecaptcha.getResponse();
@@ -71,6 +72,8 @@ Template.register.events({
                     );
 
                 }
+
+                LoadingState.stop();
 
             }
 

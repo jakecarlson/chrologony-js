@@ -13,12 +13,12 @@
                         <input class="attr" type="hidden" name="_id" value="{{id}}">
                         <input class="attr" type="hidden" name="hint" value="">
 
-                        <button type="submit" class="save btn btn-primary mr-2">Save</button>
+                        <button type="submit" class="save btn btn-primary mr-2" disabled="{{loading}}">Save</button>
                         <button type="submit" class="cancel btn btn-light mr-4">Cancel</button>
                         <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#removeClue" data-id="{{id}}">Remove</button>
 
                     {{else}}
-                        <button type="submit" class="add btn btn-primary">Add</button>
+                        <button type="submit" class="add btn btn-primary" disabled="{{loading}}">Add</button>
                     {{/if}}
 
                 </form>
@@ -33,7 +33,7 @@
 <!--        <td>{{hint}}</td>-->
         <td>
             {{#if canEdit}}
-                <button class="edit btn btn-light">Edit</button>
+                <button class="edit btn btn-light btn-sm">Edit</button>
             {{/if}}
         </td>
     </tr>

@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
+import { LoadingState } from '../startup/LoadingState';
 
 import './login.html';
 
@@ -22,10 +23,11 @@ Template.login.helpers({
 Template.login.events({
 
     'submit form': function(e) {
-        e.preventDefault();
+        LoadingState.start(e);
         let username = e.target.username.value;
         let password = e.target.password.value;
         Meteor.loginWithPassword(username, password);
+        LoadingState.stop();
     }
 
 });

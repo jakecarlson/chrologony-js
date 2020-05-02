@@ -1,8 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-import { Cards } from '../api/cards';
-
 import './players_list.html';
 import './player.js';
 
@@ -10,7 +8,6 @@ Template.players_list.onCreated(function players_listOnCreated() {
     this.autorun(() => {
         this.subscribe('players', this.data.room._id);
     });
-
 });
 
 Template.players_list.helpers({

@@ -11,12 +11,12 @@
 
                     <input class="attr" type="hidden" name="_id" value="{{id}}">
 
-                    <button type="submit" class="save btn btn-primary mr-2">Save</button>
+                    <button type="submit" class="save btn btn-primary mr-2" disabled="{{loading}}">Save</button>
                     <button type="submit" class="cancel btn btn-light">Cancel</button>
                     <button type="button" class="btn btn-outline-danger float-right" data-toggle="modal" data-target="#removeCategory" data-id="{{id}}">Remove</button>
 
                 {{else}}
-                    <button type="submit" class="add btn btn-primary">Add</button>
+                    <button type="submit" class="add btn btn-primary" disabled="{{loading}}">Add</button>
                 {{/if}}
 
             </form>
@@ -44,7 +44,7 @@
                 {{/if}}
             </span>
         </td>
-        <td><button class="edit btn btn-light">Edit</button></td>
+        <td><button class="edit btn btn-light btn-sm">Edit</button></td>
     </tr>
 
 </template>

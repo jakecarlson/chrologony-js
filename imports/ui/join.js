@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { LoadingState } from '../startup/LoadingState';
 
 import './join.html';
 import {ReactiveDict} from "meteor/reactive-dict";
@@ -21,7 +22,7 @@ Template.join.events({
 
     'submit #join'(e, i) {
 
-        e.preventDefault();
+        LoadingState.start(e);
 
         // Get value from form element
         const target = e.target;
@@ -40,6 +41,7 @@ Template.join.events({
                 target.password.value = '';
                 i.state.set('error', false);
             }
+            LoadingState.stop();
         });
 
     },

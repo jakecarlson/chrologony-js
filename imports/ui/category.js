@@ -1,7 +1,7 @@
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
 
-import { ModelEvents } from "../startup/template-events";
+import { ModelEvents } from "../startup/ModelEvents";
 
 import './category.html';
 import './themes_selector.js';

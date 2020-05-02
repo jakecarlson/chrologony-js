@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Session } from 'meteor/session';
+import { LoadingState } from '../startup/LoadingState';
 
 import './game.html';
 
@@ -26,7 +26,7 @@ Template.game.events({
 
     'submit #game'(e, i) {
 
-        e.preventDefault();
+        LoadingState.start(e);
 
         // Get value from form element
         const target = e.target;
@@ -35,15 +35,14 @@ Template.game.events({
             roomId: this.room._id,
         };
 
-        Session.set('loading', true);
         Meteor.call('game.insert', attrs, function(error, id) {
             if (!error) {
                 console.log("Created Game: " + id);
                 Meteor.subscribe('games', id);
                 Meteor.subscribe('turns', id);
                 Meteor.subscribe('cards', id);
-                Session.set('loading', false);
             }
+            LoadingState.stop();
         });
 
     },

@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 import { Categories } from "../api/categories";
-import { ModelEvents } from "../startup/template-events";
+import { ModelEvents } from "../startup/ModelEvents";
 
 import './categories_manager.html';
 import './category.js';

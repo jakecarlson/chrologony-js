@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { LoadingState } from '../startup/LoadingState';
 
 import { Games } from '../api/games';
 import { Turns } from '../api/turns';
@@ -43,6 +44,7 @@ Template.room.events({
         Meteor.call('room.leave', {}, function(error, id) {
             if (!error) {
                 console.log("Room Left: " + id);
+                LoadingState.stop();
             }
         });
     },
