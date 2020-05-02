@@ -19,12 +19,15 @@ Template.room.onCreated(function roomOnCreated() {
 });
 
 Template.room.helpers({
+
     isOwner() {
         return (this.room.owner == Meteor.userId());
     },
+
     currentGame() {
         return (this.room.currentGameId) ? Games.findOne(this.room.currentGameId) : null;
     },
+
     currentTurn() {
         if (this.room.currentGameId) {
             let game = Games.findOne(this.room.currentGameId);
@@ -34,9 +37,15 @@ Template.room.helpers({
         }
         return null;
     },
+
     players() {
         return Meteor.users.find({currentRoomId: this.room._id});
     },
+
+    password() {
+        return this.room.password;
+    },
+
 });
 
 Template.room.events({

@@ -3,7 +3,7 @@
     <section id="room">
 
         <header class="clearfix mb-2">
-            <h1 class="room-title float-left">Room: {{room.name}}</h1>
+            <h1 class="room-title float-left" data-toggle="popover" data-trigger="hover" data-content="Password: {{password}}">{{room.name}}</h1>
             <button class="btn btn-secondary float-right mb-2 leave" disabled="{{loading}}">Leave Room</button>
             {{#if isOwner}}
                 <button class="btn btn-light float-right mr-2 destroy" disabled="{{loading}}">Destroy Room</button>

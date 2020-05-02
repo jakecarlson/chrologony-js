@@ -1,12 +1,18 @@
 <template name="clues_filter">
 
     <form id="cluesFilter" class="form-inline mb-2 mt-3 justify-content-center text-muted">
-        <label class="sr-only">Search:</label>
-        <input type="text" name="keyword" value="{{keyword}}" placeholder="Search ..." class="form-control">
-        <label class="sr-only" for="cluesFilterCategory">Category:</label>
-        {{> categories_selector val=categoryId showAll=true id="cluesFilterCategory"}}
-        <label class="sr-only" for="cluesFilterTheme">Theme:</label>
-        {{> themes_selector val=theme showAll=true id="cluesFilterTheme"}}
+        <div class="form-group">
+            <label class="sr-only">Search:</label>
+            <input type="text" name="keyword" value="{{keyword}}" placeholder="Search ..." class="form-control">
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="cluesFilterCategory">Category:</label>
+            {{> categories_selector val=categoryId showAll=true id="cluesFilterCategory"}}
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="cluesFilterTheme">Theme:</label>
+            {{> themes_selector val=theme showAll=true id="cluesFilterTheme"}}
+        </div>
         <div class="form-check ml-2">
             <input type="checkbox" id="clueFilterOwned" name="owned" value="true" checked="{{owned}}" class="form-check-input form-check-inline">
             <label for="clueFilterOwned">Mine</label>

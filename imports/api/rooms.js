@@ -32,7 +32,7 @@ Meteor.methods({
         // If the room exists, validate the password
         let room = Rooms.findOne({name: attrs.name}, {limit: 1, sort:{createdAt:-1}});
         if (room) {
-            if (room.password !== attrs.password) {
+            if ((room.owner != this.userId) && (room.password !== attrs.password)) {
                 throw new Meteor.Error('not-authorized');
             }
             roomId = room._id;

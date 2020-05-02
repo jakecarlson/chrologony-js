@@ -21,9 +21,19 @@ Template.body.onCreated(function bodyOnCreated() {
     Accounts.resetAuthMessages();
 
     this.autorun(() => {
+
         this.subscribe('rooms', Meteor.user() ? Meteor.user().currentRoomId : null);
         this.subscribe('userData');
         this.subscribe('clues');
+
+        if (this.subscriptionsReady()) {
+            Tracker.afterFlush(() => {
+                $(function () {
+                    $('[data-toggle="popover"]').popover();
+                });
+            });
+        }
+
     });
 
 });
