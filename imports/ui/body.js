@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
+import { Flasher } from './flasher';
 import { Session } from 'meteor/session';
 
 import { Rooms } from '../api/rooms';
@@ -12,6 +13,7 @@ import './categories_manager.js';
 import './clues_manager.js';
 import './register.js';
 import './login.js';
+import './flasher.js';
 
 Template.body.onCreated(function bodyOnCreated() {
 
@@ -62,14 +64,6 @@ Template.body.helpers({
         return Template.instance().state.get('signup');
     },
 
-    registrationSuccess() {
-        return Session.get('registrationSuccess');
-    },
-
-    roomDeleted() {
-        return Session.get('roomDeleted');
-    },
-
 });
 
 Template.body.events({
@@ -85,6 +79,11 @@ Template.body.events({
     },
 
     'click .back-to-login': function(e, i){
+        e.preventDefault();
+        i.state.set('signup', false);
+    },
+
+    'submit #registration': function(e, i){
         e.preventDefault();
         i.state.set('signup', false);
     },

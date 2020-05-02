@@ -27,6 +27,11 @@ html {
     background-position: center center;
     margin-bottom: 1rem;
 }
+#home .alert {
+    max-width: 30rem;
+    margin: 0 auto;
+}
+
 #login .form-inline,
 #register .form-inline
 {
@@ -34,10 +39,6 @@ html {
 }
 #login .signup {
     font-size: larger;
-}
-#login .logout-success {
-    max-width: 30rem;
-    margin: 0 auto;
 }
 
 #register {

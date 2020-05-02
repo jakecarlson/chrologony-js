@@ -1,5 +1,6 @@
 import { Accounts } from 'meteor/accounts-base';
 import { Session } from 'meteor/session';
+import { Flasher } from '../ui/flasher';
 import { LoadingState } from './LoadingState';
 
 Accounts.config({
@@ -18,7 +19,7 @@ Accounts.onLogout(function(error) {
     if (error) {
         console.log(error);
     } else {
-        Session.set('logoutSuccess', true);
+        Flasher.set('success', "You have successfully logged out.");
     }
     LoadingState.stop();
 });
@@ -27,7 +28,7 @@ Accounts.onLogin(function(auth) {
     console.log('Authentication Status:');
     console.log(auth);
     Accounts.resetAuthMessages();
-    Session.set('loginSuccess', false);
+    Flasher.set('success', "You have successfully logged in.");
     LoadingState.stop();
 });
 

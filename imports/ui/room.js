@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Session } from 'meteor/session';
+import { Flasher } from './flasher';
 import { LoadingState } from '../startup/LoadingState';
 
 import { Games } from '../api/games';
@@ -47,8 +47,9 @@ Template.room.helpers({
         return this.room.password;
     },
 
-    created() {
-        return Session.get('roomCreated');
+    owner() {
+        const user = Meteor.users.findOne(this.room.owner);
+        return (user) ? user.username : null;
     },
 
 });
@@ -70,8 +71,7 @@ Template.room.events({
             LoadingState.start();
             if (!error) {
                 console.log("Room Deleted: " + id);
-                Session.set('roomCreated', false);
-                Session.set('roomDeleted', true);
+                Flasher.set('success', "You have successfully deleted the room. You can join or create a new one below.");
             }
             LoadingState.stop();
         });

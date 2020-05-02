@@ -1,21 +1,19 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { ReactiveDict } from "meteor/reactive-dict";
+import { Flasher } from './flasher';
 import { LoadingState } from '../startup/LoadingState';
 
+import { Rooms } from '../api/rooms';
+
 import './join.html';
-import {ReactiveDict} from "meteor/reactive-dict";
 
 Template.join.onCreated(function joinOnCreated() {
-
-    this.state = new ReactiveDict();
-    this.state.set('error', false);
 
 });
 
 Template.join.helpers({
-    error() {
-        return Template.instance().state.get('error');
-    },
+
 });
 
 Template.join.events({
@@ -39,9 +37,8 @@ Template.join.events({
                 Accounts.resetAuthMessages();
                 target.name.value = '';
                 target.password.value = '';
-                i.state.set('error', false);
-                Session.set('roomDeleted', false);
-                Session.set('roomCreated', true);
+                const room = Rooms.findOne(id);
+                Flasher.set('success', "Success! Invite others to join with the password <strong>" + room.password + "</strong>.");
             }
             LoadingState.stop();
         });

@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Session } from 'meteor/session';
+import { Flasher } from './flasher';
 import { LoadingState } from '../startup/LoadingState';
 
 import './register.html';
@@ -12,9 +12,7 @@ Template.register.onCreated(function registerOnCreated() {
 });
 
 Template.register.helpers({
-    error() {
-        return Session.get('registrationError');
-    },
+
 });
 
 Template.register.events({
@@ -30,11 +28,11 @@ Template.register.events({
 
             // Throw an error if the user hasn't checked the CAPTCHA box at all
             if (!result) {
-                Session.set('registrationError', "You must check the box below to continue.");
+                Flasher.set('danger', "You must check the box below to continue.");
 
             // If there was a problem with the CAPTCHA, display the error
             } else if (error) {
-                Session.set('registrationError', result.error);
+                Flasher.set('danger', result.error);
 
             // Otherwise continue to validate
             } else {
@@ -46,7 +44,8 @@ Template.register.events({
 
                 // Validate that the passwords match
                 if (password !== confirmPassword) {
-                    Session.set('registrationError', "Passwords do not match.");
+                    Flasher.set('danger', "Passwords do not match.")
+                    LoadingState.stop();
 
                 // If so, continue on to attempt to register the user
                 } else {
@@ -63,19 +62,20 @@ Template.register.events({
                                     errorReason += '.';
                                 }
                                 Accounts.resetAuthMessages();
-                                Session.set('registrationError', errorReason);
+                                Flasher.set('danger', errorReason);
                             } else {
                                 Accounts.resetAuthMessages();
-                                Session.set('registrationSuccess', true);
+                                Flasher.set('success', "You have successfully registered. Create or join a room below.");
                             }
+                            LoadingState.stop();
                         }
                     );
 
                 }
 
-                LoadingState.stop();
-
             }
+
+            LoadingState.stop();
 
         });
 

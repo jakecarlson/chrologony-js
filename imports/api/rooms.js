@@ -9,11 +9,11 @@ if (Meteor.isServer) {
     Meteor.publish('rooms', function roomsPublication() {
         if (this.userId) {
             return Rooms.find({
-                $or: [
+                /*$or: [
                     {owner: this.userId},
                     {_id: Meteor.user().currentRoomId},
                 ],
-                deletedAt: null,
+                deletedAt: null,*/
             });
         } else {
             return this.ready();

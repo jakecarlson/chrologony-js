@@ -12,12 +12,7 @@ Template.login.onCreated(function loginOnCreated() {
 });
 
 Template.login.helpers({
-    error() {
-        return Session.get('loginError');
-    },
-    logout() {
-        return Session.get('logoutSuccess');
-    },
+
 });
 
 Template.login.events({

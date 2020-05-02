@@ -1,15 +1,15 @@
 <template name="board">
 
-    <div id="board" class="card mb-4">
+    <div id="board" class="card {{#if isTurnOwner}}bg-{{color}}{{/if}} mb-4">
         <header class="card-header">
-            <h2 class="card-title float-left turn-title text-secondary">{{turnTitle}}</h2>
-            <button class="btn {{#if cannotEndTurn}}btn-light{{else}}btn-primary{{/if}} float-right ml-2 end-turn" disabled="{{cannotEndTurn}}">
+            <h2 class="card-title float-left turn-title {{#if isTurnOwner}}text-white{{else}}text-muted{{/if}}">{{turnTitle}}</h2>
+            <button class="btn {{#if isTurnOwner}}{{#if cannotEndTurn}}btn-{{color}}{{else}}btn-light{{/if}}{{else}}btn-light{{/if}} float-right ml-2 end-turn" disabled="{{cannotEndTurn}}">
                 End Turn
             </button>
-            <button class="btn {{#if cannotDrawCard}}btn-light{{else}}btn-primary{{/if}} float-right ml-2 draw-card" disabled="{{cannotDrawCard}}">Draw Card</button>
-            <button class="btn {{#if cannotSubmitGuess}}btn-light{{else}}btn-primary{{/if}} float-right submit-guess" disabled="{{cannotSubmitGuess}}">Submit Guess</button>
+            <button class="btn {{#if isTurnOwner}}{{#if cannotDrawCard}}btn-{{color}}{{else}}btn-light{{/if}}{{else}}btn-light{{/if}} float-right ml-2 draw-card" disabled="{{cannotDrawCard}}">Draw Card</button>
+            <button class="btn {{#if isTurnOwner}}{{#if cannotSubmitGuess}}btn-{{color}}{{else}}btn-light{{/if}}{{else}}btn-light{{/if}} float-right submit-guess" disabled="{{cannotSubmitGuess}}">Submit Guess</button>
         </header>
-        <div class="card-body">
+        <div class="card-body bg-white">
             <h3 class="card-subtitle text-secondary mb-2 prompt">{{prompt}}</h3>
             <div class="clue-cards clearfix" id="currentPlayerCards">
                 <ol style="width: {{timelineWidth}}">

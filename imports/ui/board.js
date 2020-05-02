@@ -107,6 +107,22 @@ Template.board.helpers({
         }
     },
 
+    color() {
+        switch(getStatus(this.turn)) {
+            case 'guessing':
+                return "primary";
+                break;
+            case 'correct':
+                return "success";
+                break;
+            case 'incorrect':
+                return "danger";
+                break;
+            default:
+                return "light";
+        }
+    },
+
     timelineWidth() {
         let cards = getTurnCards(this.game, this.turn);
         if (cards.count) {
@@ -115,6 +131,10 @@ Template.board.helpers({
         } else {
             return '100%';
         }
+    },
+
+    isTurnOwner() {
+        return isCurrentPlayer(this.turn);
     },
 
 });
@@ -204,8 +224,6 @@ function getTurnCards(game, turn) {
             {
                 sort: {
                     pos: 1,
-                    /*correct: -1,
-                    'clue.date': 1,*/
                 }
             }
         );
