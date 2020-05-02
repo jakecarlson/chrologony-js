@@ -11,7 +11,19 @@ if (Meteor.isServer) {
 
     Meteor.publish('clues', function cluesPublication() {
         if (this.userId) {
-            return Clues.find({}, {sort: {date: -1}});
+            let categories = Categories.find({
+                active: true,
+                source: 'user',
+                $or: [
+                    {private: false},
+                    {owner: this.userId},
+                ]
+            }).fetch();
+            let ids = [];
+            categories.forEach(function(category) {
+                ids.push(category._id);
+            });
+            return Clues.find({categoryId: {$in: ids}}, {sort: {date: -1}});
         } else {
             return this.ready();
         }
@@ -42,6 +54,9 @@ Meteor.methods({
 
         // Add the theme
         attrs.theme = getTheme(attrs.categoryId);
+
+        // Convert date to ISODate
+        attrs.date = new Date(attrs.date).toISOString();
 
         console.log('Create Clue:');
         console.log(attrs);
@@ -77,6 +92,9 @@ Meteor.methods({
 
         // Add the theme
         attrs.theme = getTheme(attrs.categoryId);
+
+        // Convert date to ISODate
+        attrs.date = new Date(attrs.date).toISOString();
 
         console.log('Update Clue: ' + attrs._id);
         console.log(attrs);
