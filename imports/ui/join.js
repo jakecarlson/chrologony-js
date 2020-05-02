@@ -40,6 +40,8 @@ Template.join.events({
                 target.name.value = '';
                 target.password.value = '';
                 i.state.set('error', false);
+                Session.set('roomDeleted', false);
+                Session.set('roomCreated', true);
             }
             LoadingState.stop();
         });

@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
 import { LoadingState } from '../startup/LoadingState';
 
 import { Games } from '../api/games';
@@ -46,15 +47,34 @@ Template.room.helpers({
         return this.room.password;
     },
 
+    created() {
+        return Session.get('roomCreated');
+    },
+
 });
 
 Template.room.events({
+
     'click .leave'(e, i) {
         Meteor.call('room.leave', {}, function(error, id) {
+            LoadingState.start();
             if (!error) {
                 console.log("Room Left: " + id);
-                LoadingState.stop();
             }
+            LoadingState.stop();
         });
     },
+
+    'click .destroy'(e, i) {
+        Meteor.call('room.delete', this.room._id, function(error, id) {
+            LoadingState.start();
+            if (!error) {
+                console.log("Room Deleted: " + id);
+                Session.set('roomCreated', false);
+                Session.set('roomDeleted', true);
+            }
+            LoadingState.stop();
+        });
+    },
+
 });

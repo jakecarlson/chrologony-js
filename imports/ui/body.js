@@ -41,7 +41,7 @@ Template.body.onCreated(function bodyOnCreated() {
 Template.body.helpers({
 
     currentRoom() {
-        return Rooms.findOne(Meteor.user().currentRoomId);
+        return Rooms.findOne({_id: Meteor.user().currentRoomId, deletedAt: null});
     },
 
     username() {
@@ -64,6 +64,10 @@ Template.body.helpers({
 
     registrationSuccess() {
         return Session.get('registrationSuccess');
+    },
+
+    roomDeleted() {
+        return Session.get('roomDeleted');
     },
 
 });

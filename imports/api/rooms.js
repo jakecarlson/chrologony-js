@@ -8,7 +8,13 @@ export const Rooms = new Mongo.Collection('rooms');
 if (Meteor.isServer) {
     Meteor.publish('rooms', function roomsPublication() {
         if (this.userId) {
-            return Rooms.find();
+            return Rooms.find({
+                $or: [
+                    {owner: this.userId},
+                    {_id: Meteor.user().currentRoomId},
+                ],
+                deletedAt: null,
+            });
         } else {
             return this.ready();
         }
@@ -30,7 +36,7 @@ Meteor.methods({
         let roomId = false;
 
         // If the room exists, validate the password
-        let room = Rooms.findOne({name: attrs.name}, {limit: 1, sort:{createdAt:-1}});
+        let room = Rooms.findOne({name: attrs.name, deletedAt: null}, {limit: 1, sort:{createdAt:-1}});
         if (room) {
             if ((room.owner != this.userId) && (room.password !== attrs.password)) {
                 throw new Meteor.Error('not-authorized');
@@ -41,8 +47,10 @@ Meteor.methods({
                 name: attrs.name,
                 password: attrs.password,
                 currentGameId: null,
-                createdAt: new Date(),
                 owner: Meteor.userId(),
+                createdAt: new Date(),
+                updateAt: new Date(),
+                deletedAt: null,
             });
         }
 
@@ -97,6 +105,33 @@ Meteor.methods({
                 $set: {
                     currentGameId: attrs.currentGameId,
                     updatedAt: new Date(),
+                }
+            }
+        );
+
+    },
+
+    // Delete
+    'room.delete'(id) {
+
+        check(id, NonEmptyString);
+
+        // Make sure the user is logged in before inserting a task
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        console.log('Delete Room: ' + id);
+
+        // If there is an ID, this is an update
+        return Rooms.update(
+            {
+                _id: id,
+            },
+            {
+                $set: {
+                    updatedAt: new Date(),
+                    deletedAt: new Date(),
                 }
             }
         );
