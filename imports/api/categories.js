@@ -38,9 +38,11 @@ Meteor.methods({
         // If there is an ID, this is an update
         return Categories.insert({
             name: attrs.name,
+            theme: attrs.theme,
             private: attrs.private,
             active: attrs.active,
             owner: Meteor.userId(),
+            source: 'user',
             createdAt: new Date(),
             updatedAt: new Date(),
         });
