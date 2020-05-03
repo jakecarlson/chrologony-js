@@ -9,11 +9,11 @@ if (Meteor.isServer) {
     Meteor.publish('rooms', function roomsPublication() {
         if (this.userId) {
             return Rooms.find({
-                /*$or: [
+                $or: [
                     {owner: this.userId},
                     {_id: Meteor.user().currentRoomId},
                 ],
-                deletedAt: null,*/
+                deletedAt: null,
             });
         } else {
             return this.ready();
@@ -22,47 +22,6 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-
-    'room.findOrCreate'(attrs) {
-
-        check(attrs.name, NonEmptyString);
-        check(attrs.password, NonEmptyString);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
-
-        let roomId = false;
-
-        // If the room exists, validate the password
-        let room = Rooms.findOne({name: attrs.name, deletedAt: null}, {limit: 1, sort:{createdAt:-1}});
-        if (room) {
-            if ((room.owner != this.userId) && (room.password !== attrs.password)) {
-                throw new Meteor.Error('not-authorized');
-            }
-            roomId = room._id;
-        } else {
-            roomId = Rooms.insert({
-                name: attrs.name,
-                password: attrs.password,
-                currentGameId: null,
-                owner: Meteor.userId(),
-                createdAt: new Date(),
-                updateAt: new Date(),
-                deletedAt: null,
-            });
-        }
-
-        Meteor.call('user.update', {_id: this.userId, currentRoomId: roomId}, function(error, updated) {
-            if (!error) {
-                console.log("Updated User: " + updated);
-            }
-        });
-
-        return roomId;
-
-    },
 
     'room.leave'() {
 
@@ -130,7 +89,6 @@ Meteor.methods({
             },
             {
                 $set: {
-                    updatedAt: new Date(),
                     deletedAt: new Date(),
                 }
             }
@@ -139,3 +97,64 @@ Meteor.methods({
     },
 
 });
+
+if (Meteor.isServer) {
+
+    Meteor.methods({
+
+        'room.findOrCreate'(attrs) {
+
+            check(attrs.name, NonEmptyString);
+            check(attrs.password, NonEmptyString);
+
+            // Make sure the user is logged in before inserting a task
+            if (! Meteor.userId()) {
+                throw new Meteor.Error('not-authorized');
+            }
+
+            let roomId = false;
+
+            // If the room exists, validate the password
+            let room = Rooms.findOne(
+                {
+                    deletedAt: null,
+                    name: {
+                        $regex: new RegExp(`^${attrs.name}$`),
+                        $options: 'i'
+                    },
+                 },
+                {
+                    limit: 1,
+                    sort: {createdAt: -1}
+                }
+            );
+            if (room) {
+                if ((room.owner != this.userId) && (room.password !== attrs.password)) {
+                    throw new Meteor.Error('not-authorized');
+                }
+                roomId = room._id;
+            } else {
+                roomId = Rooms.insert({
+                    name: attrs.name,
+                    password: attrs.password,
+                    currentGameId: null,
+                    owner: Meteor.userId(),
+                    createdAt: new Date(),
+                    updateAt: new Date(),
+                    deletedAt: null,
+                });
+            }
+
+            Meteor.call('user.update', {_id: this.userId, currentRoomId: roomId}, function(error, updated) {
+                if (!error) {
+                    console.log("Updated User: " + updated);
+                }
+            });
+
+            return roomId;
+
+        },
+
+    });
+
+}

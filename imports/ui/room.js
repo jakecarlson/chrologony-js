@@ -63,6 +63,7 @@ Template.room.events({
             if (!error) {
                 console.log("Room Left: " + id);
             }
+            Flasher.clear();
             LoadingState.stop();
         });
     },
