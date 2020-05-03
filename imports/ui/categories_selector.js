@@ -13,12 +13,19 @@ Template.categories_selector.onCreated(function categories_selectorOnCreated() {
 });
 
 Template.categories_selector.helpers({
+
     publicCategories() {
         return Categories.find(getCategoriesSelector(false, this.game), {sort: {name: 1}});
     },
+
     privateCategories() {
         return Categories.find(getCategoriesSelector(true, this.game), {sort: {name: 1}});
     },
+
+    isUserSource(source) {
+        return (source == 'user');
+    },
+
 });
 
 Template.categories_selector.events({

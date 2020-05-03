@@ -80,8 +80,7 @@ Template.body.events({
         i.state.set('signup', false);
     },
 
-    'submit #registration': function(e, i){
-        e.preventDefault();
+    'submit #register': function(e, i){
         i.state.set('signup', false);
     },
 

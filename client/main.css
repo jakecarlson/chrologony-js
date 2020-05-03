@@ -77,13 +77,16 @@ html {
 }
 
 #cluesManager .description {
-    width: 50%;
+    width: 60%;
 }
 #cluesManager .date {
-    width: 20%;
+    width: 10%;
 }
 #cluesManager .actions {
     width: 30%;
+}
+#cluesManager tbody th {
+    font-weight: normal;
 }
 
 .room-title {
