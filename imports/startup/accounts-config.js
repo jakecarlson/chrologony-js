@@ -15,7 +15,6 @@ Accounts.config({
 });
 
 Accounts.onLogout(function(error) {
-    Accounts.resetAuthMessages();
     if (error) {
         console.log(error);
     } else {
@@ -27,15 +26,13 @@ Accounts.onLogout(function(error) {
 Accounts.onLogin(function(auth) {
     console.log('Authentication Status:');
     console.log(auth);
-    Accounts.resetAuthMessages();
-    Flasher.set('success', "You have successfully logged in.");
+    // Flasher.set('success', "You have successfully logged in.");
     LoadingState.stop();
 });
 
 Accounts.onLoginFailure(function(res) {
     console.log(res);
-    Accounts.resetAuthMessages();
-    Session.set('loginError', true);
+    // Flasher.set('danger', "Login failed. Please try again.");
     LoadingState.stop();
 });
 
@@ -43,7 +40,6 @@ if (Meteor.isServer) {
 
     Accounts.validateNewUser(function(res) {
         if (res.error) {
-            Session.set('registrationError', res.error.message);
             console.log(res.error);
         }
     });
@@ -58,12 +54,4 @@ if (Meteor.isServer) {
         console.log("validate login");
     });
 
-}
-
-Accounts.resetAuthMessages = function() {
-    Session.set('registrationSuccess', false);
-    Session.set('registrationError', false);
-    Session.set('loginSuccess', false);
-    Session.set('loginError', false);
-    Session.set('logoutSuccess', false);
 }

@@ -14,8 +14,9 @@ import './game.js';
 Template.room.onCreated(function roomOnCreated() {
     this.autorun(() => {
         this.subscribe('games', this.data.room._id);
-        this.subscribe('turns', this.data.room.currentGameId);
         this.subscribe('players', this.data.room._id);
+        this.subscribe('turns', this.data.room.currentGameId);
+        this.subscribe('cards', this.data.room.currentGameId);
     });
 });
 
@@ -57,8 +58,8 @@ Template.room.helpers({
 Template.room.events({
 
     'click .leave'(e, i) {
+        LoadingState.start();
         Meteor.call('room.leave', {}, function(error, id) {
-            LoadingState.start();
             if (!error) {
                 console.log("Room Left: " + id);
             }
@@ -67,8 +68,8 @@ Template.room.events({
     },
 
     'click .destroy'(e, i) {
+        LoadingState.start();
         Meteor.call('room.delete', this.room._id, function(error, id) {
-            LoadingState.start();
             if (!error) {
                 console.log("Room Deleted: " + id);
                 Flasher.set('success', "You have successfully deleted the room. You can join or create a new one below.");

@@ -10,8 +10,17 @@ export const Categories = new Mongo.Collection('categories');
 if (Meteor.isServer) {
     Meteor.publish('categories', function categoriesPublication() {
         if (this.userId) {
-            // return Categories.find({/*owner: {$in: [ Meteor.userId(), null ]}*/}, {sort:{name:1}});
-            return Categories.find({});
+            return Categories.find(
+                {
+                    $or: [
+                        {private: false},
+                        {owner: this.userId},
+                    ],
+                },
+                {
+                    sort: {name: 1}
+                }
+            );
         } else {
             return this.ready();
         }

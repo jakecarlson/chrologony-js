@@ -17,7 +17,7 @@ if (Meteor.isServer) {
                 $or: [
                     {private: false},
                     {owner: this.userId},
-                ]
+                ],
             }).fetch();
             let ids = [];
             categories.forEach(function(category) {
@@ -56,7 +56,7 @@ Meteor.methods({
         attrs.theme = getTheme(attrs.categoryId);
 
         // Convert date to ISODate
-        attrs.date = new Date(attrs.date).toISOString();
+        attrs.date = new Date(attrs.date);
 
         console.log('Create Clue:');
         console.log(attrs);
@@ -94,7 +94,7 @@ Meteor.methods({
         attrs.theme = getTheme(attrs.categoryId);
 
         // Convert date to ISODate
-        attrs.date = new Date(attrs.date).toISOString();
+        attrs.date = new Date(attrs.date);
 
         console.log('Update Clue: ' + attrs._id);
         console.log(attrs);

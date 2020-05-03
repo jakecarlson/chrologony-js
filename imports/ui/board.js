@@ -12,9 +12,6 @@ Template.board.onCreated(function boardOnCreated() {
 
     this.autorun(() => {
 
-        this.subscribe('turns', this.data.room.currentGameId);
-        this.subscribe('cards', this.data.room.currentGameId);
-
         if (this.subscriptionsReady()) {
             Tracker.afterFlush(() => {
                 $("#currentPlayerCards").sortable({
@@ -22,14 +19,14 @@ Template.board.onCreated(function boardOnCreated() {
                     axis: "x",
                     cancel: ".clue-card:not(.current), .clue-card:not(.owned)",
                     handle: ".clue-card",
-                    tolerance: "pointer",
-                    containment: "#board",
+                    // tolerance: "pointer",
+                    // containment: "#board",
                     delay: 100,
                     revert: 100,
                     helper: "clone",
                     scroll: false,
                     cursor: 'grabbing',
-                    update: function(event, ui) {
+                    stop: function(event, ui) {
                         var cards = $(event.target).find('.clue-card');
                         var pos = {};
                         cards.each(function(n, card) {
@@ -76,11 +73,11 @@ Template.board.helpers({
     },
 
     cannotSubmitGuess() {
-        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'correct', 'incorrect'].includes(getStatus(this.turn)));
+        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'correct', 'incorrect', 'empty'].includes(getStatus(this.turn)));
     },
 
     cannotDrawCard() {
-        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'guessing', 'incorrect'].includes(getStatus(this.turn)));
+        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'guessing', 'incorrect', 'empty'].includes(getStatus(this.turn)));
     },
 
     cannotEndTurn() {
@@ -102,6 +99,8 @@ Template.board.helpers({
                 // return "Wrong! " + Insult() + " End your turn.";
                 return "Wrong! Wallow in your defeat, then end your turn.";
                 break;
+            case 'empty':
+                return "There are no more cards to draw. Start a new game.";
             default:
                 return "Unknown state.";
         }
@@ -117,6 +116,9 @@ Template.board.helpers({
                 break;
             case 'incorrect':
                 return "danger";
+                break;
+            case 'empty':
+                return "dark";
                 break;
             default:
                 return "light";
@@ -142,6 +144,7 @@ Template.board.helpers({
 Template.board.events({
 
     'click .submit-guess'(e, i) {
+        LoadingState.start();
         let pos = {};
         let currentCardPos = null;
         const currentCardId = this.turn.currentCardId;
@@ -166,25 +169,28 @@ Template.board.events({
     },
 
     'click .draw-card'(e, i) {
+        LoadingState.start();
         let gameId = this.game._id;
         Meteor.call('card.draw', {turnId: this.game.currentTurnId, gameId: gameId}, function(error, id) {
             if (!error) {
                 console.log("Created Card: " + id);
                 Meteor.subscribe('cards', gameId);
+                $("#currentPlayerCards").sortable('refresh');
             }
             LoadingState.stop();
         });
     },
 
     'click .end-turn'(e, i) {
-        console.log('End Turn: ' + this.game.currentTurnId);
         LoadingState.start(e);
+        console.log('End Turn: ' + this.game.currentTurnId);
         let gameId = this.game._id;
         Meteor.call('turn.next', gameId, function(error, id) {
             if (!error) {
                 console.log("Start Turn: " + id);
                 Meteor.subscribe('turns', gameId);
                 Meteor.subscribe('cards', gameId);
+                $("#currentPlayerCards").sortable('refresh');
             }
             LoadingState.stop();
         });
@@ -196,10 +202,14 @@ function getStatus(turn) {
     if (turn) {
         if (turn.currentCardId) {
             return 'guessing';
-        } else if (turn.lastCardCorrect) {
-            return 'correct';
         } else {
-            return 'incorrect';
+            if (turn.lastCardCorrect === true) {
+                return 'correct';
+            } else if (turn.lastCardCorrect === false) {
+                return 'incorrect';
+            } else {
+                return 'empty';
+            }
         }
     } else {
         return 'waiting';

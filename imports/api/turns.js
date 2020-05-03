@@ -21,32 +21,65 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    // Next Turn
-    'turn.next'(gameId) {
+    // Update
+    'turn.update'(attrs) {
 
-        check(gameId, NonEmptyString);
+        check(attrs._id, NonEmptyString);
+        // check(attrs.currentCardId, Match.Maybe(String)); // This must be a bug with Meteor; it always fails
+        // check(attrs.lastCardCorrect, Match.Maybe(Boolean)); // ditto
 
-        // Make sure the user is logged in
-        if (! Meteor.userId()) {
+        // Make sure the user is logged in before inserting a task
+        if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
-        // Lock all current turn cards
-        const game = Games.findOne(gameId);
-        const turnCards = Cards.find({turnId: game.currentTurnId});
-        const correctCards = Cards.find({turnId: game.currentTurnId, correct: true});
-        if (turnCards.count() === correctCards.count()) {
-            correctCards.forEach(function(card) {
-                Meteor.call('card.lock', card._id, function(error, updated) {
-                    if (!error) {
-                        console.log("Locked Card: " + updated);
-                    }
-                });
-            });
-        }
+        console.log('Update Turn: ' + attrs._id);
+        console.log(attrs);
 
-        // Find the player in this room with the least amount of turns for this game
-        if (Meteor.isServer) {
+        return Turns.update(
+            {
+                _id: attrs._id,
+            },
+            {
+                $set: {
+                    currentCardId: attrs.currentCardId,
+                    lastCardCorrect: attrs.lastCardCorrect,
+                    updatedAt: new Date(),
+                }
+            }
+        );
+
+    },
+
+});
+
+if (Meteor.isServer) {
+
+    Meteor.methods({
+
+        // Next Turn
+        'turn.next'(gameId) {
+
+            check(gameId, NonEmptyString);
+
+            // Make sure the user is logged in
+            if (! Meteor.userId()) {
+                throw new Meteor.Error('not-authorized');
+            }
+
+            // Lock all current turn cards
+            const game = Games.findOne(gameId);
+            const turnCards = Cards.find({turnId: game.currentTurnId});
+            const correctCards = Cards.find({turnId: game.currentTurnId, correct: true});
+            if (turnCards.count() === correctCards.count()) {
+                correctCards.forEach(function(card) {
+                    Meteor.call('card.lock', card._id, function(error, updated) {
+                        if (!error) {
+                            console.log("Locked Card: " + updated);
+                        }
+                    });
+                });
+            }
 
             // Get turn counts for players who have had turns in the current game
             const sorts = [-1, 1];
@@ -65,7 +98,7 @@ Meteor.methods({
             // Create an array of users who have already had turns
             const alreadyPlayed = [];
             players.forEach(function(player) {
-               alreadyPlayed.push(player._id);
+                alreadyPlayed.push(player._id);
             });
 
             // Get all players in the room that haven't had turns yet
@@ -115,38 +148,9 @@ Meteor.methods({
 
             return turnId;
 
-        }
 
-    },
+        },
 
-    // Update
-    'turn.update'(attrs) {
+    });
 
-        check(attrs._id, NonEmptyString);
-        // check(attrs.currentCardId, Match.Maybe(String)); // This must be a bug with Meteor; it always fails
-        // check(attrs.lastCardCorrect, Match.Maybe(Boolean)); // ditto
-
-        // Make sure the user is logged in before inserting a task
-        if (!Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
-
-        console.log('Update Turn: ' + attrs._id);
-        console.log(attrs);
-
-        return Turns.update(
-            {
-                _id: attrs._id,
-            },
-            {
-                $set: {
-                    currentCardId: attrs.currentCardId,
-                    lastCardCorrect: attrs.lastCardCorrect,
-                    updatedAt: new Date(),
-                }
-            }
-        );
-
-    },
-
-});
+}

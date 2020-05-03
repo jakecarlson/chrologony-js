@@ -20,6 +20,8 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
     this.autorun(() => {
 
+        this.subscribe('clues');
+
         if (this.subscriptionsReady()) {
             Tracker.afterFlush(() => {
                 $('#removeClue').on('show.bs.modal', function (event) {
@@ -36,6 +38,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 });
 
 Template.clues_manager.helpers({
+
     clueCards() {
         
         let selector = {};
@@ -76,6 +79,7 @@ Template.clues_manager.helpers({
         return Clues.find(selector, {sort:{date:-1}});
 
     },
+
 });
 
 Template.clues_manager.events({

@@ -41,31 +41,7 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    // Draw Card
-    'card.draw'(attrs) {
-
-        check(attrs.turnId, NonEmptyString);
-        check(attrs.gameId, NonEmptyString);
-
-        // Make sure the user is logged in
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
-
-        // Draw the card -- defer this to a helper defined below because it's recursive
-        let cardId = drawCard(attrs.gameId, attrs.turnId);
-        console.log("Card ID: " + cardId);
-
-        Meteor.call('turn.update', {_id: attrs.turnId, currentCardId: cardId, lastCardCorrect: null}, function(error, updated) {
-            if (!error) {
-                console.log("Updated Turn: " + updated);
-            }
-        });
-
-        return cardId;
-
-    },
-
+    // Set the card positions
     'card.pos'(cards) {
 
         check(cards, Object);
@@ -198,6 +174,39 @@ Meteor.methods({
 
 });
 
+if (Meteor.isServer) {
+
+    Meteor.methods({
+
+        // Draw Card
+        'card.draw'(attrs) {
+
+            check(attrs.turnId, NonEmptyString);
+            check(attrs.gameId, NonEmptyString);
+
+            // Make sure the user is logged in
+            if (! Meteor.userId()) {
+                throw new Meteor.Error('not-authorized');
+            }
+
+            // Draw the card -- defer this to a helper defined below because it's recursive
+            let cardId = drawCard(attrs.gameId, attrs.turnId);
+            console.log("Card ID: " + cardId);
+
+            Meteor.call('turn.update', {_id: attrs.turnId, currentCardId: cardId, lastCardCorrect: null}, function(error, updated) {
+                if (!error) {
+                    console.log("Updated Turn: " + updated);
+                }
+            });
+
+            return cardId;
+
+        },
+
+    });
+
+}
+
 // Helpers
 function drawCard(gameId, turnId) {
 
@@ -219,8 +228,8 @@ function drawCard(gameId, turnId) {
     }
     let possibleClues = Clues.find(selector).fetch();
     if (possibleClues.length == 0) {
-        alert("No more cards to draw!!!");
-        return false;
+        console.log("No more cards to draw!!!");
+        return null;
     }
     let randomClue = possibleClues[Math.floor(Math.random() * possibleClues.length)];
 

@@ -34,7 +34,6 @@ Template.join.events({
                 i.state.set('error', true);
             } else {
                 console.log("Room Set: " + id);
-                Accounts.resetAuthMessages();
                 target.name.value = '';
                 target.password.value = '';
                 const room = Rooms.findOne(id);

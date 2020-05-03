@@ -1,8 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
-import { Flasher } from './flasher';
-import { Session } from 'meteor/session';
+import { LoadingState } from "../startup/LoadingState";
 
 import { Rooms } from '../api/rooms';
 
@@ -15,18 +14,16 @@ import './register.js';
 import './login.js';
 import './flasher.js';
 
+
 Template.body.onCreated(function bodyOnCreated() {
 
     this.state = new ReactiveDict();
     this.state.set('signup', false);
 
-    Accounts.resetAuthMessages();
-
     this.autorun(() => {
 
         this.subscribe('rooms', Meteor.user() ? Meteor.user().currentRoomId : null);
-        this.subscribe('userData');
-        this.subscribe('clues');
+        this.subscribe('userData')
 
         if (this.subscriptionsReady()) {
             Tracker.afterFlush(() => {
@@ -69,22 +66,22 @@ Template.body.helpers({
 Template.body.events({
 
     'click .logout': function(e, i){
-        e.preventDefault();
+        LoadingState.start(e);
         Meteor.logout();
     },
 
     'click .signup a': function(e, i){
-        e.preventDefault();
+        LoadingState.start(e);
         i.state.set('signup', true);
     },
 
     'click .back-to-login': function(e, i){
-        e.preventDefault();
+        LoadingState.start(e);
         i.state.set('signup', false);
     },
 
     'submit #registration': function(e, i){
-        e.preventDefault();
+        LoadingState.start(e);
         i.state.set('signup', false);
     },
 
