@@ -226,12 +226,19 @@ function drawCard(gameId, turnId) {
     if (usedCards.length > 0) {
         selector._id = {$nin: usedCards};
     }
-    let possibleClues = Clues.find(selector).fetch();
+    let possibleClues = Promise.await(
+        Clues.rawCollection().aggregate(
+            [
+                {$match: selector},
+                {$sample: {size: 1 }},
+            ]
+        ).toArray()
+    );
     if (possibleClues.length == 0) {
         console.log("No more cards to draw!!!");
         return null;
     }
-    let randomClue = possibleClues[Math.floor(Math.random() * possibleClues.length)];
+    let randomClue = possibleClues[0];
 
     // Set the card doc
     let turn = Turns.findOne(turnId);

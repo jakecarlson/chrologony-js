@@ -1,4 +1,4 @@
-db.clues_import.find().forEach(function (document) {
+db.clues_import.find({}).sort({date: 1}).skip(10000).forEach(function (document) {
     document._id = document._id + '';
     var parts = document.date.split("-");
     var i = (parts.length > 3) ? 1 : 0;
