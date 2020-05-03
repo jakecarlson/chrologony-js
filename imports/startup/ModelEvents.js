@@ -88,7 +88,7 @@ function resetAttrs(i) {
     for (input of inputs) {
         if (input.type == 'checkbox') {
             input.checked = false;
-        } else {
+        } else if (input.type != 'hidden') {
             input.value = '';
         }
     }
