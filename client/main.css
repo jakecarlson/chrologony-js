@@ -76,9 +76,14 @@ html {
     font-weight: normal;
 }
 
-#cluesFilter select {
-    margin-left: .5rem;
-    max-width: 10rem;
+#cluesManager .description {
+    width: 50%;
+}
+#cluesManager .date {
+    width: 20%;
+}
+#cluesManager .actions {
+    width: 30%;
 }
 
 .room-title {

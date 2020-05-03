@@ -1,26 +1,23 @@
 <template name="clues_filter">
 
     <form id="cluesFilter" class="form-inline mb-2 mt-3 justify-content-center text-muted">
-        <div class="form-group">
-            <label class="sr-only">Search:</label>
-            <input type="text" name="keyword" value="{{keyword}}" placeholder="Search ..." class="form-control">
-        </div>
+
         <div class="form-group">
             <label class="sr-only" for="cluesFilterCategory">Category:</label>
-            {{> categories_selector val=categoryId showAll=true id="cluesFilterCategory"}}
+            {{> categories_selector val=categoryId id="cluesFilterCategory"}}
         </div>
-        <div class="form-group">
-            <label class="sr-only" for="cluesFilterTheme">Theme:</label>
-            {{> themes_selector val=theme showAll=true id="cluesFilterTheme"}}
-        </div>
-        <div class="form-check ml-2">
-            <input type="checkbox" id="clueFilterOwned" name="owned" value="true" checked="{{owned}}" class="form-check-input form-check-inline">
-            <label for="clueFilterOwned">Mine</label>
-        </div>
-        <div class="form-check ml-2">
-            <input type="checkbox" id="clueFilterPrivate" name="private" value="true" checked="{{private}}" class="form-check-input form-check-inline">
-            <label for="clueFilterPrivate">Private</label>
-        </div>
+
+        {{#if categoryId}}
+            <div class="form-group ml-2 mr-2">
+                <label class="sr-only">Search:</label>
+                <input type="text" name="keyword" value="{{keyword}}" placeholder="Filter by Keyword ..." class="form-control">
+            </div>
+            <div class="form-check">
+                <input type="checkbox" id="clueFilterOwned" name="owned" value="true" checked="{{owned}}" class="form-check-input form-check-inline">
+                <label for="clueFilterOwned">Mine Only</label>
+            </div>
+        {{/if}}
+
     </form>
 
 </template>

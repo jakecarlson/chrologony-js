@@ -1,11 +1,7 @@
 <template name="categories_selector">
 
     <select class="attr form-control" name="categoryId" id="{{id}}" required>
-        {{#if showAll}}
-            <option value="" selected>All Categories</option>
-        {{else}}
-            <option disabled selected="{{selectedValue null}}">Select One ...</option>
-        {{/if}}
+        <option disabled selected="{{selectedValue null}}">Select a Category ...</option>
         {{#if collectionNotEmpty privateCategories}}
             <optgroup label="Private">
                 {{#each category in privateCategories}}

@@ -2,44 +2,49 @@
 
     {{> clues_filter}}
 
-    <table id="cluesManager" class="table table-hover">
-        <thead class="table-borderless">
-            <tr>
-                <th scope="col">Clue</th>
-                <th scope="col">Date</th>
-                <th scope="col">Category</th>
-<!--                <th scope="col">Hint</th>-->
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each clueCard in clueCards}}
-                {{> clue clue=clueCard}}
-            {{/each}}
-        </tbody>
-        <tfoot>
-            {{> clue clue=false}}
-        </tfoot>
-    </table>
+    {{#if categoryId}}
+        <table id="cluesManager" class="table table-hover">
+            <colgroup>
+                <col class="description">
+                <col class="date">
+                <col class="actions">
+            </colgroup>
+            <thead class="table-borderless">
+                <tr>
+                    <th scope="col">Clue</th>
+                    <th scope="col">Date</th>
+    <!--                <th scope="col">Hint</th>-->
+                    <th scope="col"></th>
+                </tr>
+                {{> clue clue=false categoryId=categoryId}}
+            </thead>
+            <tbody>
+                {{#each clueCard in clueCards}}
+                    {{> clue clue=clueCard categoryId=categoryId}}
+                {{/each}}
+            </tbody>
+        </table>
 
-    <div class="modal fade" id="removeClue" tabindex="-1" role="dialog" aria-labelledby="removeClueTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeClueTitle">Are you sure?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p class="mb-0">The clue will be permanently deleted.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="remove btn btn-danger" data-dismiss="modal" data-id="" data-model="clue" disabled="{{loading}}">Confirm</button>
+        <div class="modal fade" id="removeClue" tabindex="-1" role="dialog" aria-labelledby="removeClueTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="removeClueTitle">Are you sure?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0">The clue will be permanently deleted.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="remove btn btn-danger" data-dismiss="modal" data-id="" data-model="clue" disabled="{{loading}}">Confirm</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+
+    {{/if}}
 
 </template>

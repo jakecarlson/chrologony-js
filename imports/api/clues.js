@@ -9,21 +9,9 @@ export const Clues = new Mongo.Collection('clues');
 
 if (Meteor.isServer) {
 
-    Meteor.publish('clues', function cluesPublication() {
-        if (this.userId) {
-            let categories = Categories.find({
-                active: true,
-                source: 'user',
-                $or: [
-                    {private: false},
-                    {owner: this.userId},
-                ],
-            }).fetch();
-            let ids = [];
-            categories.forEach(function(category) {
-                ids.push(category._id);
-            });
-            return Clues.find({categoryId: {$in: ids}}, {sort: {date: -1}});
+    Meteor.publish('clues', function cluesPublication(categoryId) {
+        if (this.userId && categoryId) {
+            return Clues.find({categoryId: categoryId}, {sort: {date: -1}});
         } else {
             return this.ready();
         }

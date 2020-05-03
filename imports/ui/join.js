@@ -36,8 +36,7 @@ Template.join.events({
                 console.log("Room Set: " + id);
                 target.name.value = '';
                 target.password.value = '';
-                const room = Rooms.findOne(id);
-                Flasher.set('success', "Success! Invite others to join with the password <strong>" + room.password + "</strong>.");
+                Flasher.set('success', "Success! Invite others to join.");
             }
             LoadingState.stop();
         });

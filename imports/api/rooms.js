@@ -9,10 +9,7 @@ if (Meteor.isServer) {
     Meteor.publish('rooms', function roomsPublication() {
         if (this.userId) {
             return Rooms.find({
-                $or: [
-                    {owner: this.userId},
-                    {_id: Meteor.user().currentRoomId},
-                ],
+                _id: Meteor.user().currentRoomId,
                 deletedAt: null,
             });
         } else {
@@ -120,7 +117,7 @@ if (Meteor.isServer) {
                     deletedAt: null,
                     name: {
                         $regex: new RegExp(`^${attrs.name}$`),
-                        $options: 'i'
+                        $options: 'i',
                     },
                  },
                 {

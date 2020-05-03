@@ -14,13 +14,11 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state = new ReactiveDict();
     this.state.set('keyword', '');
     this.state.set('owned', false);
-    this.state.set('private', false);
-    this.state.set('categoryId', false);
-    this.state.set('theme', false);
+    this.state.set('categoryId', null);
 
     this.autorun(() => {
 
-        this.subscribe('clues');
+        this.subscribe('clues', this.state.get('categoryId'));
 
         if (this.subscriptionsReady()) {
             Tracker.afterFlush(() => {
@@ -58,19 +56,10 @@ Template.clues_manager.helpers({
             selector.owner = Meteor.userId();
         }
 
-        // private
-        let isPrivate = Template.instance().state.get('private');
-
         // category
         let categoryId = Template.instance().state.get('categoryId');
         if (categoryId) {
             selector.categoryId = categoryId;
-        }
-
-        // theme
-        let theme = Template.instance().state.get('theme');
-        if (theme) {
-            selector.theme = theme;
         }
 
         console.log('Filter Clues:');
@@ -78,6 +67,10 @@ Template.clues_manager.helpers({
 
         return Clues.find(selector, {sort:{date:-1}});
 
+    },
+
+    categoryId() {
+        return Template.instance().state.get('categoryId');
     },
 
 });
@@ -93,17 +86,8 @@ Template.clues_manager.events({
         i.state.set('categoryId', categoryId);
     },
 
-    'change #cluesFilter [name="theme"]'(e, i) {
-        let theme = e.target.options[e.target.selectedIndex].value;
-        i.state.set('theme', theme);
-    },
-
     'change #cluesFilter [name="owned"]'(e, i) {
         i.state.set('owned', e.target.checked);
-    },
-
-    'change #cluesFilter [name="private"]'(e, i) {
-        i.state.set('private', e.target.checked);
     },
 
     'click .remove': ModelEvents.remove,
