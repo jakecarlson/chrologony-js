@@ -121,7 +121,7 @@ html {
 }
 
 #currentPlayerCards {
-    height: 12rem;
+    height: 18rem;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -150,9 +150,9 @@ html {
 
 .clue-card {
     position: absolute;
-    top: 9rem;
+    top: 15rem;
     width: 15rem;
-    min-height: 13rem;
+    min-height: 19rem;
     text-align: left;
     transition: top .25s ease-in-out;
 }
