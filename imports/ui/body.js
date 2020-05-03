@@ -66,22 +66,22 @@ Template.body.helpers({
 Template.body.events({
 
     'click .logout': function(e, i){
-        LoadingState.start(e);
+        e.preventDefault();
         Meteor.logout();
     },
 
     'click .signup a': function(e, i){
-        LoadingState.start(e);
+        e.preventDefault();
         i.state.set('signup', true);
     },
 
     'click .back-to-login': function(e, i){
-        LoadingState.start(e);
+        e.preventDefault();
         i.state.set('signup', false);
     },
 
     'submit #registration': function(e, i){
-        LoadingState.start(e);
+        e.preventDefault();
         i.state.set('signup', false);
     },
 
