@@ -139,6 +139,7 @@ Meteor.methods({
                 limit: 1,
             }
         ).fetch()[0];
+        // console.log(card);
 
         // Validate that the card is in the correct position
         let correct = (args.cardId === card._id);

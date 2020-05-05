@@ -17,7 +17,7 @@ Template.board.onCreated(function boardOnCreated() {
                 $("#currentPlayerCards").sortable({
                     items: ".clue-col",
                     axis: "x",
-                    cancel: ".clue-card:not(.current), .clue-card:not(.owned)",
+                    cancel: ".clue-card:not(.current), .clue-card:not(.owned), .clue-card .move",
                     handle: ".clue-card",
                     // tolerance: "pointer",
                     // containment: "#board",
@@ -26,18 +26,7 @@ Template.board.onCreated(function boardOnCreated() {
                     helper: "clone",
                     scroll: false,
                     cursor: 'grabbing',
-                    stop: function(event, ui) {
-                        var cards = $(event.target).find('.clue-card');
-                        var pos = {};
-                        cards.each(function(n, card) {
-                            pos[$(card).attr('data-id')] = n;
-                        });
-                        Meteor.call('card.pos', pos, function(error, updated) {
-                            if (!error) {
-                                console.log("Card Positions Updated: " + updated);
-                            }
-                        });
-                    },
+                    stop: saveCardPos,
                 });
             });
         }
@@ -144,10 +133,12 @@ Template.board.helpers({
 Template.board.events({
 
     'click .submit-guess'(e, i) {
+
         LoadingState.start();
         let pos = {};
         let currentCardPos = null;
         const currentCardId = this.turn.currentCardId;
+
         $(i.findAll('.clue-card')).each(function(n, card) {
             let id = $(card).attr('data-id');
             pos[id] = n;
@@ -155,17 +146,20 @@ Template.board.events({
                 currentCardPos = n;
             }
         });
-        Meteor.call('card.pos', pos, function(error, updated) {
+
+        /*Meteor.call('card.pos', pos, function(error, updated) {
             if (!error) {
                 console.log("Card Positions Updated: " + updated);
             }
-        });
+        });*/
+
         Meteor.call('card.submit', {gameId: this.game._id, turnId: this.turn._id, cardId: currentCardId, pos: currentCardPos}, function(error, correct) {
             if (!error) {
                 console.log("Guess Correct?: " + correct);
             }
             LoadingState.stop();
         });
+
     },
 
     'click .draw-card'(e, i) {
@@ -194,6 +188,24 @@ Template.board.events({
             }
             LoadingState.stop();
         });
+    },
+
+    'click .move-left'(e, i) {
+        const currentCol = $(e.target).closest('.clue-col');
+        const destinationCol = currentCol.prev();
+        if (destinationCol) {
+            currentCol.insertBefore(destinationCol);
+            saveCardPos();
+        }
+    },
+
+    'click .move-right'(e, i) {
+        const currentCol = $(e.target).closest('.clue-col');
+        const destinationCol = currentCol.next();
+        if (destinationCol) {
+            currentCol.insertAfter(destinationCol);
+            saveCardPos();
+        }
     },
 
 });
@@ -240,4 +252,20 @@ function getTurnCards(game, turn) {
     } else {
         return [];
     }
+}
+
+function saveCardPos() {
+
+    const cards = $('#currentPlayerCards').find('.clue-card');
+    let pos = {};
+    cards.each(function(n, card) {
+        pos[$(card).attr('data-id')] = n;
+    });
+
+    Meteor.call('card.pos', pos, function(error, updated) {
+        if (!error) {
+            console.log("Card Positions Updated: " + updated);
+        }
+    });
+
 }

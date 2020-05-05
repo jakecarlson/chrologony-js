@@ -188,9 +188,26 @@ html {
 .clue-card.current {
     cursor: grab;
 }
+.clue-card .card-header {
+    position: relative;
+}
 .clue-card .card-title {
     margin-bottom: 0;
     font-size: large;
+}
+.clue-card .move {
+    top: 0;
+    font-size: 1.5rem;
+    position: absolute;
+    line-height: 2.75rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+.clue-card .move-left {
+    left: 0;
+}
+.clue-card .move-right {
+    right: 0;
 }
 
 #login-dropdown-list .login-text-and-button,
