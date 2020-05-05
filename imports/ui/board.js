@@ -193,7 +193,7 @@ Template.board.events({
     'click .move-left'(e, i) {
         const currentCol = $(e.target).closest('.clue-col');
         const destinationCol = currentCol.prev();
-        if (destinationCol) {
+        if (destinationCol.length > 0) {
             currentCol.insertBefore(destinationCol);
             saveCardPos();
         }
@@ -202,7 +202,7 @@ Template.board.events({
     'click .move-right'(e, i) {
         const currentCol = $(e.target).closest('.clue-col');
         const destinationCol = currentCol.next();
-        if (destinationCol) {
+        if (destinationCol.length > 0) {
             currentCol.insertAfter(destinationCol);
             saveCardPos();
         }
