@@ -192,6 +192,7 @@ Template.board.events({
     },
 
     'click .move-left'(e, i) {
+        e.preventDefault();
         const currentCol = $(e.target).closest('.clue-col');
         const destinationCol = currentCol.prev();
         if (destinationCol.length > 0) {
@@ -201,6 +202,7 @@ Template.board.events({
     },
 
     'click .move-right'(e, i) {
+        e.preventDefault();
         const currentCol = $(e.target).closest('.clue-col');
         const destinationCol = currentCol.next();
         if (destinationCol.length > 0) {
