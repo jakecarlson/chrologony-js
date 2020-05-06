@@ -24,7 +24,8 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
             Tracker.afterFlush(() => {
                 $('#removeClue').on('show.bs.modal', function (event) {
                     let button = $(event.relatedTarget);
-                    let id = button.data('id');
+                    let id = button.attr('data-id');
+                    console.log(id);
                     let modal = $(this)
                     modal.find('.remove').attr('data-id', id);
                 });

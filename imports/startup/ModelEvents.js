@@ -53,8 +53,9 @@ export const ModelEvents = {
     remove: function(e, i) {
         LoadingState.start(e);
         let button = $(e.target);
-        let id = button.data('id');
-        let modelName = button.data('model');
+        let id = button.attr('data-id');
+        console.log(id);
+        let modelName = button.attr('data-model');
         Meteor.call(modelName + '.delete', id, function(error, deleted) {
             if (!error) {
                 console.log('Deleted ' + capitalize(modelName) + ': ' + deleted);
