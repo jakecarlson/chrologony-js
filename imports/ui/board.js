@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { Sortable } from 'sortablejs';
 import { LoadingState } from '../startup/LoadingState';
 // import { Insult } from "insult";
 
@@ -14,20 +15,22 @@ Template.board.onCreated(function boardOnCreated() {
 
         if (this.subscriptionsReady()) {
             Tracker.afterFlush(() => {
-                $("#currentPlayerCards").sortable({
-                    items: ".clue-col",
-                    axis: "x",
-                    cancel: ".clue-card:not(.current), .clue-card:not(.owned), .clue-card .move",
-                    handle: ".clue-card",
-                    // tolerance: "pointer",
-                    // containment: "#board",
-                    delay: 100,
-                    revert: 100,
-                    helper: "clone",
-                    scroll: false,
-                    cursor: 'grabbing',
-                    stop: saveCardPos,
-                });
+                const cardsSortable = new Sortable(
+                    document.getElementById('playerCards'),
+                    {
+                        handle: '.clue-card',
+                        direction: 'horizontal',
+                        filter: '.clue-card:not(.current), .clue-card:not(.owned), .clue-card .move',
+                        forceFallback: true,
+                        onStart: function (e) {
+                            $('#playerCards').removeClass('inactive');
+                        },
+                        onEnd: function (e) {
+                            $('#playerCards').addClass('inactive');
+                            saveCardPos();
+                        },
+                    }
+                );
             });
         }
 
@@ -169,7 +172,6 @@ Template.board.events({
             if (!error) {
                 console.log("Created Card: " + id);
                 Meteor.subscribe('cards', gameId);
-                $("#currentPlayerCards").sortable('refresh');
             }
             LoadingState.stop();
         });
@@ -184,7 +186,6 @@ Template.board.events({
                 console.log("Start Turn: " + id);
                 Meteor.subscribe('turns', gameId);
                 Meteor.subscribe('cards', gameId);
-                $("#currentPlayerCards").sortable('refresh');
             }
             LoadingState.stop();
         });
@@ -256,7 +257,7 @@ function getTurnCards(game, turn) {
 
 function saveCardPos() {
 
-    const cards = $('#currentPlayerCards').find('.clue-card');
+    const cards = $('#playerCards').find('.clue-card');
     let pos = {};
     cards.each(function(n, card) {
         pos[$(card).attr('data-id')] = n;

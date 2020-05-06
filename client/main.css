@@ -128,20 +128,33 @@ html {
     overflow: hidden;
 }
 
-#currentPlayerCards {
+#playerCardsWrapper {
     height: 18rem;
     text-align: center;
     position: relative;
     overflow: hidden;
     overflow-x: auto;
 }
-#currentPlayerCards ol {
+#playerCards {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
     margin: 0;
     list-style: none;
     height: 100%;
     width: 100%;
+}
+
+.sortable-chosen,
+.sortable-ghost,
+.sortable-fallback
+{
+    cursor: grabbing;
+}
+.sortable-fallback {
+    opacity: 0 !important;
+}
+.sortable-ghost {
+    opacity: 1 !important;
 }
 
 .clue-col {
@@ -151,7 +164,7 @@ html {
     float: left;
 }
 .clue-col.current-col,
-.clue-col:hover
+.inactive .clue-col:hover
 {
     width: 15rem;
 }
@@ -164,7 +177,7 @@ html {
     text-align: left;
     transition: top .25s ease-in-out;
 }
-.clue-col:hover .clue-card,
+.inactive .clue-col:hover .clue-card,
 .clue-card.current
 {
     top: 0;
@@ -178,11 +191,11 @@ html {
 .clue-col .clue-card .year {
     display: block;
 }
-.clue-col:hover .clue-card .date {
+.inactive .clue-col:hover .clue-card .date {
     display: block;
     text-align: center;
 }
-.clue-col:hover .clue-card .year {
+.inactive .clue-col:hover .clue-card .year {
     display: none;
 }
 .clue-card.current {

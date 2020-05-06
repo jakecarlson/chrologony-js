@@ -33,9 +33,7 @@ facebook-config-ui@1.0.2
 google-config-ui@1.0.1
 twitter-config-ui@1.0.0
 dburles:collection-helpers
-mrt:jquery-ui-sortable
 okgrow:analytics
-dsyko:jquery-ui-touch-punch
 altapp:recaptcha
 underscore
 ejson
