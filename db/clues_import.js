@@ -1,4 +1,4 @@
-db.clues_import.find({}).sort({date: 1}).skip(10000).forEach(function (document) {
+db.clues_import.find({}).sort({date: 1}).forEach(function (document) {
     document._id = document._id + '';
     var parts = document.date.split("-");
     var i = (parts.length > 3) ? 1 : 0;
@@ -8,6 +8,7 @@ db.clues_import.find({}).sort({date: 1}).skip(10000).forEach(function (document)
         parseInt(parts[i+1]) - 1,
         parseInt(parts[i+2])
     );
+    document.active = true;
     document.createdAt = new Date();
     document.updatedAt = new Date();
     db.clues.insert(document);
