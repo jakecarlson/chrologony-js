@@ -1,10 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { ReactiveDict } from "meteor/reactive-dict";
 import { Flasher } from './flasher';
 import { LoadingState } from '../startup/LoadingState';
-
-import { Rooms } from '../api/rooms';
 
 import './join.html';
 
@@ -33,7 +30,7 @@ Template.join.events({
             if (error) {
                 i.state.set('error', true);
             } else {
-                console.log("Room Set: " + id);
+                Logger.log("Room Set: " + id);
                 target.name.value = '';
                 target.password.value = '';
                 Flasher.set('success', "Success! Invite others to join.");

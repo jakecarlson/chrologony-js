@@ -1,3 +1,4 @@
+import './Logger';
 import { LoadingState } from './LoadingState';
 
 export const ModelEvents = {
@@ -14,7 +15,7 @@ export const ModelEvents = {
 
         Meteor.call(getModelName(i) + '.insert', attrs, function(error, id) {
             if (!error) {
-                console.log('Created ' + capitalize(getModelName(i)) + ': ' + id);
+                Logger.log('Created ' + capitalize(getModelName(i)) + ': ' + id);
                 i.state.set('error', false);
                 resetAttrs(i);
             } else {
@@ -32,12 +33,12 @@ export const ModelEvents = {
 
         Meteor.call(getModelName(i) + '.update', attrs, function(error, updated) {
             if (!error) {
-                console.log('Updated ' + capitalize(getModelName(i)) + ': ' + updated);
+                Logger.log('Updated ' + capitalize(getModelName(i)) + ': ' + updated);
                 i.state.set('editing', false);
                 i.state.set('error', false);
             } else {
                 i.state.set('error', true);
-                console.log(i.state.get('error'));
+                Logger.log(i.state.get('error'));
             }
             LoadingState.stop();
         });
@@ -54,11 +55,11 @@ export const ModelEvents = {
         LoadingState.start(e);
         let button = $(e.target);
         let id = button.attr('data-id');
-        console.log(id);
+        Logger.log(id);
         let modelName = button.attr('data-model');
         Meteor.call(modelName + '.delete', id, function(error, deleted) {
             if (!error) {
-                console.log('Deleted ' + capitalize(modelName) + ': ' + deleted);
+                Logger.log('Deleted ' + capitalize(modelName) + ': ' + deleted);
             }
             LoadingState.stop();
         });

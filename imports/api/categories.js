@@ -41,8 +41,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Insert Category:');
-        console.log(attrs);
+        Logger.log('Insert Category: ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
         return Categories.insert({
@@ -72,8 +71,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Update Category: ' + attrs._id);
-        console.log(attrs);
+        Logger.log('Update Category: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // Update any clues with this category to the new theme
         let category = Categories.findOne(attrs._id);
@@ -92,7 +90,7 @@ Meteor.methods({
                     multi: true,
                 }
             );
-            console.log("Updated Clues to New Theme: " + updatedClues);
+            Logger.log("Updated Clues to New Theme: " + updatedClues);
         }
 
         // If there is an ID, this is an update
@@ -123,7 +121,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Delete Category: ' + id);
+        Logger.log('Delete Category: ' + id);
 
         // Remove the item
         return Categories.remove({_id: id});

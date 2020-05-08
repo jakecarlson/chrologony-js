@@ -1,4 +1,6 @@
 import { Meteor } from 'meteor/meteor';
+import '../imports/startup/Logger';
+
 import '../imports/api/users.js';
 import '../imports/api/cards.js';
 import '../imports/api/games.js';
@@ -11,4 +13,5 @@ Meteor.startup(() => {
     reCAPTCHA.config({
         privatekey: Meteor.settings.recaptcha.key,
     });
+    Logger.init();
 });

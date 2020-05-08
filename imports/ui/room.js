@@ -68,7 +68,7 @@ Template.room.events({
         LoadingState.start();
         Meteor.call('room.leave', {}, function(error, id) {
             if (!error) {
-                console.log("Room Left: " + id);
+                Logger.log("Room Left: " + id);
             }
             Flasher.clear();
             LoadingState.stop();
@@ -79,7 +79,7 @@ Template.room.events({
         LoadingState.start();
         Meteor.call('room.delete', this.room._id, function(error, id) {
             if (!error) {
-                console.log("Room Deleted: " + id);
+                Logger.log("Room Deleted: " + id);
                 Flasher.set('success', "You have successfully deleted the room. You can join or create a new one below.");
             }
             LoadingState.stop();

@@ -27,7 +27,6 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                 $('#removeClue').on('show.bs.modal', function (event) {
                     let button = $(event.relatedTarget);
                     let id = button.attr('data-id');
-                    console.log(id);
                     let modal = $(this)
                     modal.find('.remove').attr('data-id', id);
                 });
@@ -66,8 +65,7 @@ Template.clues_manager.helpers({
             selector.categoryId = categoryId;
         }
 
-        console.log('Filter Clues:');
-        console.log(selector);
+        Logger.log('Filter Clues: ' + JSON.stringify(selector));
 
         return Clues.find(selector, {sort:{date:-1}});
 

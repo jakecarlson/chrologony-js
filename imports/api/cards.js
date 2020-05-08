@@ -51,8 +51,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log("Card Positions:");
-        console.log(cards);
+        Logger.log("Card Positions: " + JSON.stringify(cards));
 
         let numUpdated = 0;
         for (const [id, pos] of Object.entries(cards)) {
@@ -89,7 +88,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Lock Card: ' + id);
+        Logger.log('Lock Card: ' + id);
 
         // If there is an ID, this is an update
         return Cards.update(
@@ -139,22 +138,20 @@ Meteor.methods({
                 limit: 1,
             }
         ).fetch()[0];
-        // console.log(card);
 
         // Validate that the card is in the correct position
         let correct = (args.cardId === card._id);
 
-        console.log("Card Guess Correct?: " + correct.toString());
+        Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
 
         // Null out the current card ID
         Meteor.call('turn.update', {_id: args.turnId, currentCardId: null, lastCardCorrect: correct}, function(error, updated) {
             if (!error) {
-                console.log("Updated Turn: " + updated);
+                Logger.log("Updated Turn: " + updated);
             }
         });
 
-        console.log('Update Card: ' + args.cardId);
-        console.log({correct: correct});
+        Logger.log('Update Card: ' + args.cardId + ' ' + JSON.stringify({correct: correct}));
 
         // Update the card
         Cards.update(
@@ -192,11 +189,11 @@ if (Meteor.isServer) {
 
             // Draw the card -- defer this to a helper defined below because it's recursive
             let cardId = drawCard(attrs.gameId, attrs.turnId);
-            console.log("Card ID: " + cardId);
+            Logger.log("Card ID: " + cardId);
 
             Meteor.call('turn.update', {_id: attrs.turnId, currentCardId: cardId, lastCardCorrect: null}, function(error, updated) {
                 if (!error) {
-                    console.log("Updated Turn: " + updated);
+                    Logger.log("Updated Turn: " + updated);
                 }
             });
 
@@ -217,8 +214,7 @@ function drawCard(gameId, turnId) {
     let turnCards = Cards.find({turnId: turnId}).map(function(i) { return i.clueId; });
     let usedCards = lockedCards.concat(turnCards);
 
-    console.log('Used Cards:');
-    console.log(usedCards);
+    Logger.log('Used Cards: ' + JSON.stringify(usedCards));
 
     let selector = {
         active: true,
@@ -236,7 +232,7 @@ function drawCard(gameId, turnId) {
         ).toArray()
     );
     if (possibleClues.length == 0) {
-        console.log("No more cards to draw!!!");
+        Logger.log("No more cards to draw!!!");
         return null;
     }
     let randomClue = possibleClues[0];

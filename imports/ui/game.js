@@ -38,7 +38,7 @@ Template.game.events({
         let roomId = this.room._id;
         Meteor.call('game.insert', attrs, function(error, id) {
             if (!error) {
-                console.log("Created Game: " + id);
+                Logger.log("Created Game: " + id);
                 Meteor.subscribe('games', id);
                 Meteor.subscribe('turns', id);
                 Meteor.subscribe('cards', id);

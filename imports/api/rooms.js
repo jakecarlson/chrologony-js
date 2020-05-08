@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import {NonEmptyString} from "../startup/validations";
+import { NonEmptyString } from "../startup/validations";
 
 export const Rooms = new Mongo.Collection('rooms');
 
@@ -49,8 +49,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Update Room: ' + attrs._id);
-        console.log(attrs);
+        Logger.log('Update Room: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
         return Rooms.update(
@@ -77,7 +76,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Delete Room: ' + id);
+        Logger.log('Delete Room: ' + id);
 
         // If there is an ID, this is an update
         return Rooms.update(
@@ -144,7 +143,7 @@ if (Meteor.isServer) {
 
             Meteor.call('user.update', {_id: this.userId, currentRoomId: roomId}, function(error, updated) {
                 if (!error) {
-                    console.log("Updated User: " + updated);
+                    Logger.log("Updated User: " + updated);
                 }
             });
 

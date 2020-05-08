@@ -33,8 +33,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Update Turn: ' + attrs._id);
-        console.log(attrs);
+        Logger.log('Update Turn: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         return Turns.update(
             {
@@ -75,7 +74,7 @@ if (Meteor.isServer) {
                 correctCards.forEach(function(card) {
                     Meteor.call('card.lock', card._id, function(error, updated) {
                         if (!error) {
-                            console.log("Locked Card: " + updated);
+                            Logger.log("Locked Card: " + updated);
                         }
                     });
                 });
@@ -93,7 +92,6 @@ if (Meteor.isServer) {
                     ]
                 ).toArray()
             );
-            // console.log(players);
 
             // Create an array of users who have already had turns
             const alreadyPlayed = [];
@@ -121,11 +119,10 @@ if (Meteor.isServer) {
             });
 
             // Sort the object by turn counts
-            console.log("Player Turn Counts:");
-            console.log(players);
+            Logger.log('Player Turn Counts: ' + JSON.stringify(players));
 
             const lastPlayer = players[players.length-1];
-            console.log("Next Turn Belongs To: " + lastPlayer._id);
+            Logger.log("Next Turn Belongs To: " + lastPlayer._id);
             const turnId = Turns.insert({
                 gameId: gameId,
                 userId: lastPlayer._id,
@@ -136,13 +133,13 @@ if (Meteor.isServer) {
 
             Meteor.call('game.update', {_id: gameId, currentTurnId: turnId}, function(error, updated) {
                 if (!error) {
-                    console.log("Updated Game: " + updated);
+                    Logger.log("Updated Game: " + updated);
                 }
             });
 
             Meteor.call('card.draw', {turnId: turnId, gameId: gameId}, function(error, id) {
                 if (!error) {
-                    console.log("Created Card: " + id);
+                    Logger.log("Created Card: " + id);
                 }
             });
 

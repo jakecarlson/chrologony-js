@@ -1,5 +1,4 @@
 import { Accounts } from 'meteor/accounts-base';
-import { Session } from 'meteor/session';
 import { Flasher } from '../ui/flasher';
 import { LoadingState } from './LoadingState';
 
@@ -16,7 +15,7 @@ Accounts.config({
 
 Accounts.onLogout(function(error) {
     if (error) {
-        console.log(error);
+        Logger.log(error, 2);
     } else {
         Flasher.set('success', "You have successfully logged out.");
     }
@@ -24,15 +23,13 @@ Accounts.onLogout(function(error) {
 });
 
 Accounts.onLogin(function(auth) {
-    console.log('Authentication Status:');
-    console.log(auth);
-    // Flasher.set('success', "You have successfully logged in.");
+    Logger.log('Authentication Status: ' + JSON.stringify(auth));
     LoadingState.stop();
 });
 
 Accounts.onLoginFailure(function(res) {
-    console.log(res);
-    // Flasher.set('danger', "Login failed. Please try again.");
+    Logger.log(res, 2);
+    Flasher.set('danger', "Login failed. Please try again.");
     LoadingState.stop();
 });
 
@@ -40,18 +37,16 @@ if (Meteor.isServer) {
 
     Accounts.validateNewUser(function(res) {
         if (res.error) {
-            console.log(res.error);
+            Logger.log(res.error, 2);
         }
     });
 
     Accounts.onCreateUser(function(user) {
-        console.log(user);
-        console.log("user created");
+        Logger.log('User Created: ' + JSON.stringify(user));
     });
 
     Accounts.validateLoginAttempt(function(res) {
-        console.log(res);
-        console.log("validate login");
+        Logger.log('Validate Login: ' + JSON.stringify(res));
     });
 
 }

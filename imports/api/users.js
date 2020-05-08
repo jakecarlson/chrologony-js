@@ -39,8 +39,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Update User: ' + attrs._id);
-        console.log(attrs);
+        Logger.log('Update User: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
         return Meteor.users.update(
@@ -67,7 +66,7 @@ if (Meteor.isServer) {
         'user.validateCaptcha'(captcha) {
             let captchaResult = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captcha);
             if (!captchaResult.success) {
-                console.log('reCAPTCHA check failed!', captchaResult);
+                Logger.log('reCAPTCHA check failed!', captchaResult);
                 throw new Meteor.Error(422, 'reCAPTCHA Failed: ' + captchaResult.error);
             }
             return captchaResult;

@@ -152,13 +152,13 @@ Template.board.events({
 
         /*Meteor.call('card.pos', pos, function(error, updated) {
             if (!error) {
-                console.log("Card Positions Updated: " + updated);
+                Logger.log("Card Positions Updated: " + updated);
             }
         });*/
 
         Meteor.call('card.submit', {gameId: this.game._id, turnId: this.turn._id, cardId: currentCardId, pos: currentCardPos}, function(error, correct) {
             if (!error) {
-                console.log("Guess Correct?: " + correct);
+                Logger.log('Guess Correct for: ' + currentCardId + ': ' + correct);
             }
             LoadingState.stop();
         });
@@ -170,7 +170,7 @@ Template.board.events({
         let gameId = this.game._id;
         Meteor.call('card.draw', {turnId: this.game.currentTurnId, gameId: gameId}, function(error, id) {
             if (!error) {
-                console.log("Created Card: " + id);
+                Logger.log("Created Card: " + id);
                 Meteor.subscribe('cards', gameId);
             }
             LoadingState.stop();
@@ -179,11 +179,11 @@ Template.board.events({
 
     'click .end-turn'(e, i) {
         LoadingState.start(e);
-        console.log('End Turn: ' + this.game.currentTurnId);
+        Logger.log('End Turn: ' + this.game.currentTurnId);
         let gameId = this.game._id;
         Meteor.call('turn.next', gameId, function(error, id) {
             if (!error) {
-                console.log("Start Turn: " + id);
+                Logger.log("Start Turn: " + id);
                 Meteor.subscribe('turns', gameId);
                 Meteor.subscribe('cards', gameId);
             }
@@ -267,7 +267,7 @@ function saveCardPos() {
 
     Meteor.call('card.pos', pos, function(error, updated) {
         if (!error) {
-            console.log("Card Positions Updated: " + updated);
+            Logger.log("Card Positions Updated: " + updated);
         }
     });
 

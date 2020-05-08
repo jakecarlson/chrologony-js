@@ -46,8 +46,7 @@ Meteor.methods({
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
 
-        console.log('Create Clue:');
-        console.log(attrs);
+        Logger.log('Create Clue: ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
         return Clues.insert({
@@ -84,8 +83,7 @@ Meteor.methods({
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
 
-        console.log('Update Clue: ' + attrs._id);
-        console.log(attrs);
+        Logger.log('Update Clue: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
         return Clues.update(
@@ -116,7 +114,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Delete Clue: ' + id);
+        Logger.log('Delete Clue: ' + id);
 
         // Remove the item
         return Clues.remove({_id: id});

@@ -30,8 +30,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Create Game:');
-        console.log(attrs);
+        Logger.log('Create Game: ' + JSON.stringify(attrs));
 
         let gameId = Games.insert({
             roomId: attrs.roomId,
@@ -46,13 +45,13 @@ Meteor.methods({
 
         Meteor.call('room.update', {_id: attrs.roomId, currentGameId: gameId}, function(error, updated) {
             if (!error) {
-                console.log("Updated Room: " + updated);
+                Logger.log("Updated Room: " + updated);
             }
         });
 
         Meteor.call('turn.next', gameId, function(error, id) {
             if (!error) {
-                console.log("First Turn: " + id);
+                Logger.log("First Turn: " + id);
             }
         });
 
@@ -71,8 +70,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        console.log('Update Game: ' + attrs._id);
-        console.log(attrs);
+        Logger.log('Update Game: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
         return Games.update(
