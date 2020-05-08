@@ -1,0 +1,13 @@
+<template name="auth">
+
+    <section id="home" class="container mb-4 {{#if signup}}signup-container{{/if}}">
+        <h1 id="title">Chrologony</h1>
+        {{> flasher}}
+        {{#if signup}}
+            {{> register}}
+        {{else}}
+            {{> login}}
+        {{/if}}
+    </section>
+
+</template>

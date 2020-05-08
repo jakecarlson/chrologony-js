@@ -13,7 +13,6 @@
                 <button type="submit" class="btn btn-primary mt-3 mt-sm-0" disabled="{{loading}}">Go</button>
             </div>
             {{#if error}}
-                <p class="text-danger mt-2 mb-0">That room exists, but the password is wrong.</p>
                 <small class="text-danger mt-0 mb-0">Enter the correct room password to enter, or change the room name to create a new room.</small>
             {{else}}
                 <small id="roomNameHelp" class="form-text text-muted mt-2">If the room doesn't exist, it will be created.</small>

@@ -28,7 +28,8 @@ Template.join.events({
 
         Meteor.call('room.findOrCreate', attrs, function(error, id) {
             if (error) {
-                i.state.set('error', true);
+                Logger.log(error);
+                Flasher.set('danger', "That room exists, but the password is wrong.");
             } else {
                 Logger.log("Room Set: " + id);
                 target.name.value = '';
