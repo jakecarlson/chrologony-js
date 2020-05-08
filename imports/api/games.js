@@ -8,9 +8,9 @@ import { Turns } from '../api/turns';
 export const Games = new Mongo.Collection('games');
 
 if (Meteor.isServer) {
-    Meteor.publish('games', function gamesPublication(roomId) {
-        if (this.userId && roomId) {
-            return Games.find({roomId: roomId});
+    Meteor.publish('games', function gamesPublication(id) {
+        if (this.userId && id) {
+            return Games.find({_id: id});
         } else {
             return this.ready();
         }

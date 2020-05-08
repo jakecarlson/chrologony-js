@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { LoadingState } from "../startup/LoadingState";
 
 import { Categories } from "../api/categories";
 import { ModelEvents } from "../startup/ModelEvents";
@@ -10,6 +11,7 @@ import './category.js';
 Template.categories_manager.onCreated(function categories_managerOnCreated() {
     this.autorun(() => {
 
+        LoadingState.start();
         this.subscribe('categories');
 
         if (this.subscriptionsReady()) {
@@ -21,6 +23,7 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
                     modal.find('.remove').attr('data-id', id);
                 });
             });
+            LoadingState.stop();
         }
 
     });

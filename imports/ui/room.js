@@ -13,10 +13,17 @@ import './game.js';
 
 Template.room.onCreated(function roomOnCreated() {
     this.autorun(() => {
-        this.subscribe('games', this.data.room._id);
+
+        LoadingState.start();
+        this.subscribe('games', this.data.room.currentGameId);
         this.subscribe('players', this.data.room._id);
         this.subscribe('turns', this.data.room.currentGameId);
         this.subscribe('cards', this.data.room.currentGameId);
+
+        if (this.subscriptionsReady()) {
+            LoadingState.stop();
+        }
+
     });
 });
 

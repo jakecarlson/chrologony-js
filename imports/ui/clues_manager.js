@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { LoadingState } from "../startup/LoadingState";
 
 import { Clues } from "../api/clues";
 import { ModelEvents } from "../startup/ModelEvents";
@@ -18,6 +19,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
     this.autorun(() => {
 
+        LoadingState.start();
         this.subscribe('clues', this.state.get('categoryId'));
 
         if (this.subscriptionsReady()) {
@@ -30,6 +32,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                     modal.find('.remove').attr('data-id', id);
                 });
             });
+            LoadingState.stop();
         }
 
     });

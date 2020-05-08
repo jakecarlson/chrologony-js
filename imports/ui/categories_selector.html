@@ -1,6 +1,6 @@
 <template name="categories_selector">
 
-    <select class="attr form-control" name="categoryId" id="{{id}}" required>
+    <select class="attr form-control" name="categoryId" id="{{id}}" required disabled="{{unready}}">
         <option disabled selected="{{selectedValue null}}">Select a Category ...</option>
         {{#if collectionNotEmpty privateCategories}}
             <optgroup label="Private">

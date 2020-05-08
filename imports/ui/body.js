@@ -22,7 +22,8 @@ Template.body.onCreated(function bodyOnCreated() {
 
     this.autorun(() => {
 
-        this.subscribe('rooms', Meteor.user() ? Meteor.user().currentRoomId : null);
+        LoadingState.start();
+        this.subscribe('rooms');
         this.subscribe('userData')
 
         if (this.subscriptionsReady()) {
@@ -31,6 +32,7 @@ Template.body.onCreated(function bodyOnCreated() {
                     $('[data-toggle="popover"]').popover();
                 });
             });
+            LoadingState.stop();
         }
 
     });

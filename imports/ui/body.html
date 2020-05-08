@@ -60,4 +60,12 @@
 
     <p class="text-secondary text-center mt-4">Made with &#9889; by <a href="https://jakecarlson.com" class="text-secondary">Jake Carlson</a>. &copy; {{copyright}}.</p>
 
+    {{#if loading}}
+        <div class="row text-center" id="loader">
+            <div class="spinner spinner-border text-primary my-auto mx-auto" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    {{/if}}
+
 </body>
