@@ -1,38 +1,54 @@
 <template name="clue">
 
-    {{#if canEdit}}
-        <tr class="clue {{#if viewing}}d-none{{/if}} {{#if error}}table-danger{{else}}{{#if id}}table-warning{{else}}table-success{{/if}}{{/if}} editing">
-            <th scope="row"><input class="attr form-control" type="text" name="description" value="{{description}}" required maxlength="240"></th>
-            <td><input class="attr form-control" type="date" name="date" value="{{date}}" required maxlength="10"></td>
-<!--            <td><input class="attr form-control" type="text" name="hint" value="{{hint}}"></td>-->
-            <td>
-                <form class="clue-edit">
-
-                    <input class="attr" type="hidden" name="categoryId" value="{{categoryId}}">
-                    <input class="attr" type="hidden" name="hint" value="">
-
-                    {{#if clue}}
-                        <input class="attr" type="hidden" name="_id" value="{{id}}">
-                        <button type="submit" class="save btn btn-primary mr-0 mb-2 mr-md-2 mb-md-0" disabled="{{loading}}">Save</button>
-                        <button type="submit" class="cancel btn btn-light mr-0 mb-2 mr-md-2 mb-md-0">Cancel</button>
-                        <button type="button" class="btn btn-outline-danger ml-0 ml-md-2 float-md-right" data-toggle="modal" data-target="#removeClue" data-id="{{id}}">Remove</button>
+    <tr
+        class="
+            clue
+            {{#if editing}}
+                editing
+                {{#if error}}
+                    table-danger
+                {{else}}
+                    {{#if id}}
+                        table-warning
                     {{else}}
-                        <button type="submit" class="add btn btn-primary" disabled="{{loading}}">Add</button>
+                        table-success
                     {{/if}}
-
-                </form>
-            </td>
-        </tr>
-    {{/if}}
-
-    <tr class="clue {{#if editing}}d-none{{/if}}">
-        <th scope="row">{{description}}</th>
-        <td>{{date}}</td>
-<!--        <td>{{hint}}</td>-->
-        <td>
-            {{#if canEdit}}
-                <button class="edit btn btn-light btn-sm">Edit</button>
+                {{/if}}
+            {{else}}
+                viewing
             {{/if}}
+        "
+    >
+
+        <th scope="row">
+            <input class="attr form-control {{#if viewing}}d-none{{/if}}" type="text" name="description" value="{{description}}" required maxlength="240">
+            <span class="{{#if editing}}d-none{{/if}}">{{description}}</span>
+        </th>
+
+        <td>
+            <input class="attr form-control {{#if viewing}}d-none{{/if}}" type="date" name="date" value="{{date}}" required maxlength="10">
+            <span class="{{#if editing}}d-none{{/if}}">{{date}}</span>
+        </td>
+
+<!--        <td>-->
+<!--            <input class="attr form-control {{#if viewing}}d-none{{/if}}" type="text" name="hint" value="{{hint}}">-->
+<!--            <span class="{{#if editing}}d-none{{/if}}">{{hint}}</span>-->
+<!--        </td>-->
+
+        <td>
+            <form class="clue-edit {{#if viewing}}d-none{{/if}}">
+                <input class="attr" type="hidden" name="categoryId" value="{{categoryId}}">
+                <input class="attr" type="hidden" name="hint" value="">
+                {{#if clue}}
+                    <input class="attr" type="hidden" name="_id" value="{{id}}">
+                    <button type="submit" class="save btn btn-primary mr-0 mb-2 mr-md-2 mb-md-0" disabled="{{loading}}">Save</button>
+                    <button type="submit" class="cancel btn btn-light mr-0 mb-2 mr-md-2 mb-md-0">Cancel</button>
+                    <button type="button" class="btn btn-outline-danger ml-0 ml-md-2 float-md-right" data-toggle="modal" data-target="#removeClue" data-id="{{id}}">Remove</button>
+                {{else}}
+                    <button type="submit" class="add btn btn-primary" disabled="{{loading}}">Add</button>
+                {{/if}}
+            </form>
+            <button class="edit btn btn-light btn-sm {{#if editing}}d-none{{/if}}">Edit</button>
         </td>
     </tr>
 

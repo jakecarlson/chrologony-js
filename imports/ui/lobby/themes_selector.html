@@ -1,6 +1,6 @@
 <template name="themes_selector">
 
-    <select class="attr form-control" name="theme" id="{{id}}">
+    <select class="attr form-control {{#if hide}}d-none{{/if}}" name="theme">
         {{#if showAll}}
             <option value="" selected>All Themes</option>
         {{else}}

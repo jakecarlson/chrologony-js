@@ -1,33 +1,40 @@
 <template name="category">
 
-    <tr class="{{#if viewing}}d-none{{/if}} {{#if error}}table-danger{{else}}{{#if id}}table-warning{{else}}table-success{{/if}}{{/if}} category editing">
-        <th scope="row"><input class="attr form-control" type="text" name="name" value="{{name}}" required maxlength="80"></th>
-        <td>{{> themes_selector val=theme}}</td>
-        <td><input class="attr form-check-input" type="checkbox" name="private" value="true" checked="{{private}}" data-toggle="toggle" data-on="Private" data-off="Public" data-onstyle="success" data-offstyle="secondary" data-size="small"></td>
-        <td><input class="attr form-check-input" type="checkbox" name="active" value="true" checked="{{active}}" data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="secondary" data-size="small"></td>
-        <td>
-            <form class="category-edit">
-                {{#if category}}
-
-                    <input class="attr" type="hidden" name="_id" value="{{id}}">
-
-                    <button type="submit" class="save btn btn-primary mr-2" disabled="{{loading}}">Save</button>
-                    <button type="submit" class="cancel btn btn-light">Cancel</button>
-                    <button type="button" class="btn btn-outline-danger float-right" data-toggle="modal" data-target="#removeCategory" data-id="{{id}}">Remove</button>
-
+    <tr
+        class="
+            category
+            {{#if editing}}
+                editing
+                {{#if error}}
+                    table-danger
                 {{else}}
-                    <button type="submit" class="add btn btn-primary" disabled="{{loading}}">Add</button>
+                    {{#if id}}
+                        table-warning
+                    {{else}}
+                        table-success
+                    {{/if}}
                 {{/if}}
+            {{else}}
+                viewing
+            {{/if}}
+        "
+    >
 
-            </form>
-        </td>
-    </tr>
+        <th scope="row">
+            <input class="attr form-control {{#if viewing}}d-none{{/if}}" type="text" name="name" value="{{name}}" required maxlength="80">
+            <span class="{{#if editing}}d-none{{/if}}">{{name}}</span>
+        </th>
 
-    <tr class="{{#if editing}}d-none{{/if}} category viewing">
-        <th scope="row">{{name}}</th>
-        <td>{{theme}}</td>
         <td>
-            <span class="badge badge-{{#if private}}success{{else}}secondary{{/if}}">
+            {{> themes_selector val=theme hide=viewing}}
+            <span class="{{#if editing}}d-none{{/if}}">{{theme}}</span>
+        </td>
+
+        <td>
+            <span class="{{#if viewing}}d-none{{/if}}">
+                <input class="attr form-check-input {{#if viewing}}d-none{{/if}}" type="checkbox" name="private" value="true" checked="{{private}}" data-toggle="toggle" data-on="Private" data-off="Public" data-onstyle="success" data-offstyle="secondary" data-size="small">
+            </span>
+            <span class="badge badge-{{#if private}}success{{else}}secondary{{/if}} {{#if editing}}d-none{{/if}}">
                 {{#if private}}
                     Private
                 {{else}}
@@ -35,8 +42,12 @@
                 {{/if}}
             </span>
         </td>
+
         <td>
-            <span class="badge badge-{{#if active}}success{{else}}secondary{{/if}}">
+            <span class="{{#if viewing}}d-none{{/if}}">
+                <input class="attr form-check-input" type="checkbox" name="active" value="true" checked="{{active}}" data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="secondary" data-size="small">
+            </span>
+            <span class="badge badge-{{#if active}}success{{else}}secondary{{/if}} {{#if editing}}d-none{{/if}}">
                 {{#if active}}
                     Active
                 {{else}}
@@ -44,7 +55,21 @@
                 {{/if}}
             </span>
         </td>
-        <td><button class="edit btn btn-light btn-sm">Edit</button></td>
+
+        <td>
+            <form class="category-edit {{#if viewing}}d-none{{/if}}">
+                {{#if category}}
+                    <input class="attr" type="hidden" name="_id" value="{{id}}">
+                    <button type="submit" class="save btn btn-primary mr-2" disabled="{{loading}}">Save</button>
+                    <button type="submit" class="cancel btn btn-light">Cancel</button>
+                    <button type="button" class="btn btn-outline-danger float-right" data-toggle="modal" data-target="#removeCategory" data-id="{{id}}">Remove</button>
+                {{else}}
+                    <button type="submit" class="add btn btn-primary" disabled="{{loading}}">Add</button>
+                {{/if}}
+            </form>
+            <button class="edit btn btn-light btn-sm {{#if editing}}d-none{{/if}}">Edit</button>
+        </td>
+
     </tr>
 
 </template>
