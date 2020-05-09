@@ -32,8 +32,7 @@ Template.join.events({
                 Flasher.set('danger', "That room exists, but the password is wrong.");
             } else {
                 Logger.log("Room Set: " + id);
-                let sub = Meteor.subscribe('rooms');
-                while (!sub.ready()) {}
+                Meteor.subscribe('rooms');
                 Session.set('currentRoomId', id);
                 target.name.value = '';
                 target.password.value = '';
