@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Flasher } from './flasher';
-import { LoadingState } from '../startup/LoadingState';
+import { Flasher } from '../flasher';
+import { LoadingState } from '../../startup/LoadingState';
 
-import { Games } from '../api/games';
-import { Turns } from '../api/turns';
+import { Games } from '../../api/games';
+import { Turns } from '../../api/turns';
 
 import './room.html';
 import './players_list.js';
@@ -12,6 +12,7 @@ import './board.js';
 import './game.js';
 
 Template.room.onCreated(function roomOnCreated() {
+
     this.autorun(() => {
 
         LoadingState.start();
@@ -25,6 +26,7 @@ Template.room.onCreated(function roomOnCreated() {
         }
 
     });
+
 });
 
 Template.room.helpers({

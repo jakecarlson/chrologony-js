@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Flasher } from './flasher';
-import { LoadingState } from '../startup/LoadingState';
+import { Flasher } from '../flasher';
+import { LoadingState } from '../../startup/LoadingState';
 
 import './login.html';
 

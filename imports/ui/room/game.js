@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { LoadingState } from '../startup/LoadingState';
+import { LoadingState } from '../../startup/LoadingState';
 
 import './game.html';
 

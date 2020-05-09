@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Sortable } from 'sortablejs';
-import { LoadingState } from '../startup/LoadingState';
+import { LoadingState } from '../../startup/LoadingState';
 // import { Insult } from "insult";
 
-import { Cards } from '../api/cards';
+import { Cards } from '../../api/cards';
 
 import './board.html';
 import './card.js';
@@ -12,6 +12,16 @@ import './card.js';
 Template.board.onCreated(function boardOnCreated() {
 
     this.autorun(() => {
+
+        // Make sure the current turn isn't for a user who isn't in the room anymore
+        Logger.log(this.data);
+        if (this.data.turn && (this.data.turn.userId != Meteor.userId())) {
+
+            let turnUser = Meteor.users.findOne(this.data.turn.userId);
+            if (!turnUser || (turnUser.currentRoomId != this.data.room._id)) {
+                endTurn(this.data.game);
+            }
+        }
 
         if (this.subscriptionsReady()) {
             Tracker.afterFlush(() => {
@@ -47,7 +57,11 @@ Template.board.helpers({
                 title += 'Your';
             } else {
                 let user = Meteor.users.findOne(this.turn.userId);
-                title += user.username + "'s";
+                if (user) {
+                    title += user.username + "'s";
+                } else {
+                    title += "Unknown's";
+                }
             }
             title += ' Turn';
             return title;
@@ -179,16 +193,7 @@ Template.board.events({
 
     'click .end-turn'(e, i) {
         LoadingState.start(e);
-        Logger.log('End Turn: ' + this.game.currentTurnId);
-        let gameId = this.game._id;
-        Meteor.call('turn.next', gameId, function(error, id) {
-            if (!error) {
-                Logger.log("Start Turn: " + id);
-                Meteor.subscribe('turns', gameId);
-                Meteor.subscribe('cards', gameId);
-            }
-            LoadingState.stop();
-        });
+        endTurn(this.game);
     },
 
     'click .move-left'(e, i) {
@@ -271,4 +276,17 @@ function saveCardPos() {
         }
     });
 
+}
+
+function endTurn(game) {
+    Logger.log('End Turn: ' + game.currentTurnId);
+    let gameId = game._id;
+    Meteor.call('turn.next', gameId, function(error, id) {
+        if (!error) {
+            Logger.log("Start Turn: " + id);
+            Meteor.subscribe('turns', gameId);
+            Meteor.subscribe('cards', gameId);
+        }
+        LoadingState.stop();
+    });
 }

@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { LoadingState } from "../startup/LoadingState";
+import { LoadingState } from "../../startup/LoadingState";
 
-import { Categories } from "../api/categories";
-import { ModelEvents } from "../startup/ModelEvents";
+import { Categories } from "../../api/categories";
+import { ModelEvents } from "../../startup/ModelEvents";
 
 import './categories_manager.html';
 import './category.js';

@@ -1,7 +1,8 @@
 import { Template } from 'meteor/templating';
 
+import {Cards} from "../../api/cards";
+
 import './player.html';
-import {Cards} from "../api/cards";
 
 Template.player.onCreated(function playerOnCreated() {
 

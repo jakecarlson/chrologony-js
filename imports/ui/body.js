@@ -6,9 +6,9 @@ import { Rooms } from '../api/rooms';
 
 import './body.html';
 import './header.js';
-import './auth.js';
-import './room.js';
-import './lobby.js';
+import './auth/auth.js';
+import './room/room.js';
+import './lobby/lobby.js';
 import './footer.js';
 import './flasher.js';
 
