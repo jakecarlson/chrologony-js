@@ -21,12 +21,21 @@ Template.body.onCreated(function bodyOnCreated() {
         this.subscribe('userData')
 
         if (this.subscriptionsReady()) {
+
+            if (Meteor.user()) {
+                Session.set('currentRoomId', Meteor.user().currentRoomId);
+            } else {
+                Session.set('currentRoomId', null);
+            }
+
             Tracker.afterFlush(() => {
                 $(function () {
                     $('[data-toggle="popover"]').popover();
                 });
             });
+
             LoadingState.stop();
+
         }
 
     });
@@ -36,7 +45,13 @@ Template.body.onCreated(function bodyOnCreated() {
 Template.body.helpers({
 
     currentRoom() {
-        return Rooms.findOne({_id: Meteor.user().currentRoomId, deletedAt: null});
+        if (Session.get('currentRoomId')) {
+            let room = Rooms.findOne({_id: Session.get('currentRoomId'), deletedAt: null});
+            if (room) {
+                return room;
+            }
+        }
+        return null;
     },
 
 });

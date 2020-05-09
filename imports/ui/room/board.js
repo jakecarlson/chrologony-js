@@ -254,6 +254,7 @@ function getTurnCards(game, turn) {
             {
                 sort: {
                     pos: 1,
+                    createdAt: 1,
                 }
             }
         );

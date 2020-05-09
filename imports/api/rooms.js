@@ -141,11 +141,24 @@ if (Meteor.isServer) {
                 });
             }
 
+            /*
             Meteor.call('user.update', {_id: this.userId, currentRoomId: roomId}, function(error, updated) {
                 if (!error) {
                     Logger.log("Updated User: " + updated);
                 }
             });
+             */
+            Meteor.users.update(
+                {
+                    _id: Meteor.userId(),
+                },
+                {
+                    $set: {
+                        currentRoomId: roomId,
+                        updatedAt: new Date(),
+                    }
+                }
+            );
 
             return roomId;
 
