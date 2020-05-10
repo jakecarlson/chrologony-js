@@ -16,7 +16,7 @@ Template.room.onCreated(function roomOnCreated() {
     this.autorun(() => {
 
         LoadingState.start();
-        this.subscribe('games', this.data.room.currentGameId);
+        this.subscribe('games', this.data.room._id);
         this.subscribe('players', this.data.room._id);
         this.subscribe('turns', this.data.room.currentGameId);
         this.subscribe('cards', this.data.room.currentGameId);

@@ -8,7 +8,7 @@ Template.footer.helpers({
 
     copyright() {
         const firstYear = 2020;
-        const currentYear = moment.utc(new Date()).format('YYYY');
+        const currentYear = moment.utc(new Date()).format('Y');
         if (currentYear > firstYear) {
             return firstYear + ' - ' + currentYear;
         } else {

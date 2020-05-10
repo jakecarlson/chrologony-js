@@ -17,7 +17,7 @@ if (Meteor.isServer) {
 
     // Get the players in the room
     Meteor.publish('players', function playersPublication(roomId) {
-        if (this.userId) {
+        if (this.userId && roomId) {
             return Meteor.users.find({currentRoomId: roomId});
         } else {
             return this.ready();

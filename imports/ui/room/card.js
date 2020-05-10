@@ -2,6 +2,19 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 import './card.html';
+import {Sortable} from "sortablejs";
+
+Template.card.onCreated(function boardOnCreated() {
+
+    this.autorun(() => {
+
+        if (this.subscriptionsReady()) {
+
+        }
+
+    });
+
+});
 
 Template.card.helpers({
 
@@ -14,11 +27,11 @@ Template.card.helpers({
     },
 
     date() {
-        return (this.card) ? moment.utc(this.card.clue.date).format("YYYY-MM-DD") : null;
+        return (this.card) ? moment.utc(this.card.clue.date).format("Y-MM-DD") : null;
     },
 
     year() {
-        return (this.card) ? moment.utc(this.card.clue.date).format("YYYY") : null;
+        return (this.card) ? moment.utc(this.card.clue.date).format("Y") : null;
     },
 
     description() {
@@ -38,7 +51,7 @@ Template.card.helpers({
     },
 
     isCurrent() {
-        return isCurrent();
+        return isCurrent(this.turn, this.card);
     },
 
     isCorrect() {

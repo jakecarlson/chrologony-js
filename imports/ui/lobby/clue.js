@@ -36,7 +36,7 @@ Template.clue.helpers({
     },
 
     date() {
-        return moment.utc(this.clue.date).format("YYYY-MM-DD");
+        return moment.utc(this.clue.date).format("Y-MM-DD");
     },
 
     categoryId() {

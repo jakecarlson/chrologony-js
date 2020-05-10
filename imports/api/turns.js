@@ -154,6 +154,7 @@ if (Meteor.isServer) {
                 createdAt: new Date(),
                 updatedAt: new Date(),
             });
+            console.log(turnId);
 
             Meteor.call('game.update', {_id: gameId, currentTurnId: turnId}, function(error, updated) {
                 if (!error) {
@@ -168,7 +169,6 @@ if (Meteor.isServer) {
             });
 
             return turnId;
-
 
         },
 
