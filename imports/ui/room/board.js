@@ -282,7 +282,7 @@ function saveCardPos() {
 function endTurn(game) {
     Logger.log('End Turn: ' + game.currentTurnId);
     let gameId = game._id;
-    Meteor.call('turn.next', gameId, function(error, id) {
+    Meteor.call('turn.end', gameId, function(error, id) {
         if (!error) {
             Logger.log("Start Turn: " + id);
             Meteor.subscribe('turns', gameId);
