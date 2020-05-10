@@ -10,9 +10,9 @@ import { Cards } from '../api/cards';
 export const Turns = new Mongo.Collection('turns');
 
 if (Meteor.isServer) {
-    Meteor.publish('turns', function turnsPublication(gameId) {
+    Meteor.publish('turns', function turnPublication(gameId) {
         if (this.userId && gameId) {
-            return Turns.find({gameId: gameId});
+            return Turns.find({gameId: gameId}, {sort: {createdAt: -1}, limit: 2});
         } else {
             return this.ready();
         }
@@ -57,7 +57,7 @@ if (Meteor.isServer) {
     Meteor.methods({
 
         // Next Turn
-        'turn.next'(gameId) {
+        'turn.end'(gameId) {
 
             check(gameId, NonEmptyString);
 
@@ -66,8 +66,30 @@ if (Meteor.isServer) {
                 throw new Meteor.Error('not-authorized');
             }
 
-            // Lock all current turn cards
+            // Set the game
             const game = Games.findOne(gameId);
+
+            // End the current turn
+            if (game.currentTurnId) {
+                let updated = Turns.update(
+                    {
+                        _id: game.currentTurnId
+                    },
+                    {
+                        $set: {
+                            endedAt: new Date(),
+                            updatedAt: new Date(),
+                        }
+                    }
+                );
+                if (updated) {
+                    Logger.log('Ended Turn: ' + game.currentTurnId)
+                } else {
+                    Logger.log('Error Ending Turn: ' + game.currentTurnId, 3);
+                }
+            }
+
+            // Lock all current turn cards
             const turnCards = Cards.find({turnId: game.currentTurnId});
             const correctCards = Cards.find({turnId: game.currentTurnId, correct: true});
             if (turnCards.count() === correctCards.count()) {
@@ -127,6 +149,8 @@ if (Meteor.isServer) {
                 gameId: gameId,
                 userId: lastPlayer._id,
                 currentCardId: null,
+                startedAt: new Date(),
+                endedAt: null,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             });
