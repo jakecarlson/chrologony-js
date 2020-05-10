@@ -23,21 +23,26 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    'room.leave'() {
+    'room.leave'(userId = false) {
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
+        // If no userID was provided, use the current user
+        if (!userId) {
+            userId = Meteor.userId();
+        }
+
         // Check to see if it's this users turn currently and end it if so
-        let roomId = Meteor.user().currentRoomId;
+        let roomId = Meteor.users.findOne(userId).currentRoomId;
         let room = Rooms.findOne(roomId);
         if (room.currentGameId) {
             let game = Games.findOne(room.currentGameId);
             if (game.currentTurnId) {
                 let turn = Turns.findOne(game.currentTurnId);
-                if (turn.userId == this.userId) {
+                if (turn.userId == userId) {
                     Meteor.call('turn.end', game._id, function(error, id) {
                         if (!error) {
                             Logger.log("Start Turn: " + id);
@@ -47,13 +52,13 @@ Meteor.methods({
             }
         }
 
-        Meteor.users.update(this.userId, {
+        Meteor.users.update(userId, {
             $set: {
                 currentRoomId: null,
             }
         });
 
-        return roomId;
+        return userId;
 
     },
 

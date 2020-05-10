@@ -3,6 +3,8 @@ import { Template } from 'meteor/templating';
 import {Cards} from "../../api/cards";
 
 import './player.html';
+import {LoadingState} from "../../startup/LoadingState";
+import {Flasher} from "../flasher";
 
 Template.player.onCreated(function playerOnCreated() {
 
@@ -26,8 +28,25 @@ Template.player.helpers({
         return Cards.find({userId: this.player._id, lockedAt: {$ne: null}}).count();
     },
 
+    gameInProgress() {
+        return this.turn;
+    },
+
+    canEject() {
+        return ((this.room.owner == Meteor.userId()) && (this.player._id != Meteor.userId()));
+    },
+
 });
 
 Template.player.events({
+
+    'click .eject'(e, i) {
+        e.preventDefault();
+        Meteor.call('room.leave', this.player._id, function(error, id) {
+            if (!error) {
+                Logger.log("Player Left Room: " + id);
+            }
+        });
+    },
 
 });

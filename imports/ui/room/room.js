@@ -68,10 +68,9 @@ Template.room.events({
 
     'click .leave'(e, i) {
         LoadingState.start();
-        Session.set('currentRoomId', null);
-        Meteor.call('room.leave', {}, function(error, id) {
+        Meteor.call('room.leave', false, function(error, id) {
             if (!error) {
-                Logger.log("Room Left: " + id);
+                Logger.log("Player Left Room: " + id);
             }
             Flasher.clear();
             LoadingState.stop();
@@ -80,7 +79,6 @@ Template.room.events({
 
     'click .destroy'(e, i) {
         LoadingState.start();
-        Session.set('currentRoomId', null);
         Meteor.call('room.delete', this.room._id, function(error, id) {
             if (!error) {
                 Logger.log("Room Deleted: " + id);

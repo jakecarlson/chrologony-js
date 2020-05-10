@@ -11,12 +11,15 @@ Template.players_list.onCreated(function players_listOnCreated() {
 });
 
 Template.players_list.helpers({
+
     players() {
         return Meteor.users.find({currentRoomId: this.room._id});
     },
+
     isTurnOwner(userId) {
         return (this.turn && (this.turn.userId == userId));
     },
+
 });
 
 Template.players_list.events({

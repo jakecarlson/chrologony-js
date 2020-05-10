@@ -6,7 +6,7 @@
         </div>
         <ul class="list-group list-group-flush">
             {{#each currentPlayer in players}}
-                {{> player turn=turn player=currentPlayer}}
+                {{> player room=room game=game turn=turn player=currentPlayer}}
             {{/each}}
         </ul>
     </div>
