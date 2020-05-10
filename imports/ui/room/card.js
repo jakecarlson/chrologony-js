@@ -38,7 +38,7 @@ Template.card.helpers({
     },
 
     isCurrent() {
-        return (this.card) ? (this.turn.currentCardId == this.card._id) : false;
+        return isCurrent();
     },
 
     isCorrect() {
@@ -46,7 +46,11 @@ Template.card.helpers({
     },
 
     isOwned() {
-        return (this.card && (this.turn.userId == Meteor.userId()));
+        return isOwned(this.card, this.turn);
+    },
+
+    canMoveCard() {
+        return (isOwned(this.turn, this.card) && isCurrent(this.turn, this.card));
     },
 
 });
@@ -54,3 +58,11 @@ Template.card.helpers({
 Template.card.events({
 
 });
+
+function isOwned(turn, card) {
+    return (turn && card && (turn.userId == Meteor.userId()));
+}
+
+function isCurrent(turn, card) {
+    return (turn && card) ? (turn.currentCardId == card._id) : false;
+}
