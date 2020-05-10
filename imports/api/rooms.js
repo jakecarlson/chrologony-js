@@ -40,9 +40,9 @@ Meteor.methods({
         let room = Rooms.findOne(roomId);
         if (room.currentGameId) {
             let game = Games.findOne(room.currentGameId);
-            if (game.currentTurnId) {
+            if (game && game.currentTurnId) {
                 let turn = Turns.findOne(game.currentTurnId);
-                if (turn.userId == userId) {
+                if (turn && (turn.userId == userId)) {
                     Meteor.call('turn.end', game._id, function(error, id) {
                         if (!error) {
                             Logger.log("Start Turn: " + id);
