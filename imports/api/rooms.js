@@ -3,6 +3,9 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
 
+import { Games } from '../api/games';
+import { Turns } from '../api/turns';
+
 export const Rooms = new Mongo.Collection('rooms');
 
 if (Meteor.isServer) {
@@ -27,14 +30,30 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        let previousRoomId = Meteor.user().currentRoomId;
+        // Check to see if it's this users turn currently and end it if so
+        let roomId = Meteor.user().currentRoomId;
+        let room = Rooms.findOne(roomId);
+        if (room.currentGameId) {
+            let game = Games.findOne(room.currentGameId);
+            if (game.currentTurnId) {
+                let turn = Turns.findOne(game.currentTurnId);
+                if (turn.userId == this.userId) {
+                    Meteor.call('turn.end', game._id, function(error, id) {
+                        if (!error) {
+                            Logger.log("Start Turn: " + id);
+                        }
+                    });
+                }
+            }
+        }
+
         Meteor.users.update(this.userId, {
             $set: {
                 currentRoomId: null,
             }
         });
 
-        return previousRoomId;
+        return roomId;
 
     },
 
