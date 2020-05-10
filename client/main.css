@@ -76,6 +76,9 @@ html {
     font-weight: normal;
 }
 
+#clues .results-count {
+    font-size: medium !important;
+}
 #cluesManager .description {
     width: 60%;
 }

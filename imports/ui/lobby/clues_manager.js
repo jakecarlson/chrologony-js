@@ -16,6 +16,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('keyword', '');
     this.state.set('owned', false);
     this.state.set('categoryId', null);
+    this.state.set('numResults', 0);
 
     this.autorun(() => {
 
@@ -23,6 +24,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
         this.subscribe('clues', this.state.get('categoryId'));
 
         if (this.subscriptionsReady()) {
+            this.state.set('numResults', Clues.find().count());
             Tracker.afterFlush(() => {
                 $('#removeClue').on('show.bs.modal', function (event) {
                     let button = $(event.relatedTarget);
@@ -67,12 +69,22 @@ Template.clues_manager.helpers({
 
         Logger.log('Filter Clues: ' + JSON.stringify(selector));
 
-        return Clues.find(selector, {sort:{date:-1}});
+        const clues = Clues.find(selector, {sort:{date:-1}});
+        Template.instance().state.set('numResults', clues.count());
+        return clues;
 
     },
 
     categoryId() {
         return Template.instance().state.get('categoryId');
+    },
+
+    numResults() {
+        let suffix = 'Results';
+        if (Template.instance().state.get('numResults') == 1) {
+            suffix = 'Result';
+        }
+        return Template.instance().state.get('numResults') + ' ' + suffix;
     },
 
 });

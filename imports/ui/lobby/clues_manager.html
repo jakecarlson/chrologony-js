@@ -3,6 +3,9 @@
     {{> clues_filter categoryId=categoryId}}
 
     {{#if categoryId}}
+
+        <h3 class="text-center text-muted mt-4 mb-0 results-count">{{numResults}}</h3>
+
         <table id="cluesManager" class="table table-hover table-striped">
             <colgroup>
                 <col class="description">
