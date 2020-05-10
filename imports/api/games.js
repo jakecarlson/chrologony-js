@@ -3,14 +3,15 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
 
+import { Rooms } from '../api/rooms';
 import { Turns } from '../api/turns';
 
 export const Games = new Mongo.Collection('games');
 
 if (Meteor.isServer) {
-    Meteor.publish('games', function gamesPublication(id) {
-        if (this.userId && id) {
-            return Games.find({_id: id});
+    Meteor.publish('games', function gamePublication(roomId) {
+        if (this.userId && roomId) {
+            return Games.find({roomId: roomId}, {sort: {createdAt: -1}, limit: 2});
         } else {
             return this.ready();
         }
@@ -30,17 +31,40 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
+        // End the previous game
+        let room = Rooms.findOne(attrs.roomId);
+        if (room.currentGameId) {
+            let updated = Games.update(
+                {
+                    _id: room.currentGameId,
+                },
+                {
+                    $set: {
+                        endedAt: new Date(),
+                        updatedAt: new Date(),
+                    }
+                }
+            );
+            if (updated) {
+                Logger.log('Ended Game: ' + room.currentGameId)
+            } else {
+                Logger.log('Error Ending Game: ' + room.currentGameId, 3);
+            }
+        }
+
         Logger.log('Create Game: ' + JSON.stringify(attrs));
 
+        // Create the new game
         let gameId = Games.insert({
             roomId: attrs.roomId,
             categoryId: attrs.categoryId,
             streak: false,
             currentTurnId: null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            startedAt: new Date(),
             endedAt: null,
             winner: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
         });
 
         Meteor.call('room.update', {_id: attrs.roomId, currentGameId: gameId}, function(error, updated) {
@@ -49,7 +73,7 @@ Meteor.methods({
             }
         });
 
-        Meteor.call('turn.next', gameId, function(error, id) {
+        Meteor.call('turn.end', gameId, function(error, id) {
             if (!error) {
                 Logger.log("First Turn: " + id);
             }
