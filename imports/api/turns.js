@@ -102,13 +102,20 @@ if (Meteor.isServer) {
                 });
             }
 
-            // Get turn counts for players who have had turns in the current game
+            // Create an array of user IDs of players currently in the room
+            const roomUsers = Meteor.users.find({currentRoomId: game.roomId}).fetch();
+            let playerPool = [];
+            roomUsers.forEach(function(user) {
+                playerPool.push(user._id);
+            });
+
+            // Get turn counts for players who have had turns in the current game and are still in the room
             const sorts = [-1, 1];
             const randomSort = sorts[Math.floor(Math.random() * sorts.length)];
             const players = Promise.await(
                 Turns.rawCollection().aggregate(
                     [
-                        {$match: {gameId: gameId}},
+                        {$match: {gameId: gameId, userId: {$in: playerPool}}},
                         {$group: {_id: "$userId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
                         {$sort: {turns: -1, lastTurn: -1, userId: randomSort}}
                     ]

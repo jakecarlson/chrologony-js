@@ -87,7 +87,7 @@ Template.board.helpers({
     },
 
     cannotEndTurn() {
-        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'guessing'].includes(getStatus(this.turn)));
+        return (!isRoomOwner(this.room) && (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'guessing'].includes(getStatus(this.turn))));
     },
 
     prompt() {
@@ -238,6 +238,10 @@ function getStatus(turn) {
 
 function isCurrentPlayer(turn) {
     return (turn && (turn.userId == Meteor.userId()));
+}
+
+function isRoomOwner(room) {
+    return (room.owner == Meteor.userId());
 }
 
 function getTurnCards(game, turn) {
