@@ -41,11 +41,12 @@ Template.player.helpers({
 Template.player.events({
 
     'click .eject'(e, i) {
-        e.preventDefault();
+        LoadingState.start(e);
         Meteor.call('room.leave', this.player._id, function(error, id) {
             if (!error) {
                 Logger.log("Player Left Room: " + id);
             }
+            LoadingState.stop();
         });
     },
 

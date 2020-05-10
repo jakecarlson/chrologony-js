@@ -2,11 +2,11 @@
 
     <li class="list-group-item player {{#if isTurnOwner}}current{{/if}}">
         {{username}}
-        {{#if canEject}}
-            <a href="#" class="float-right text-dark ml-2 eject" title="Eject Player">&times;</a>
-        {{/if}}
         {{#if gameInProgress}}
             <span class="badge {{#if isTurnOwner}}badge-secondary{{else}}badge-light{{/if}} float-right ml-2">{{numLockedCards}}</span>
+        {{/if}}
+        {{#if canEject}}
+            <a href="#" class="float-right text-dark ml-2 eject" title="Eject Player">&times;</a>
         {{/if}}
     </li>
 
