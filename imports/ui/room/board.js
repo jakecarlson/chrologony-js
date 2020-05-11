@@ -14,9 +14,7 @@ Template.board.onCreated(function boardOnCreated() {
     this.autorun(() => {
 
         // Make sure the current turn isn't for a user who isn't in the room anymore
-        Logger.log(this.data);
         if (this.data.turn && (this.data.turn.userId != Meteor.userId())) {
-
             let turnUser = Meteor.users.findOne(this.data.turn.userId);
             if (!turnUser || (turnUser.currentRoomId != this.data.room._id)) {
                 endTurn(this.data.game);
