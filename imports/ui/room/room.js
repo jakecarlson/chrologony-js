@@ -27,6 +27,15 @@ Template.room.onCreated(function roomOnCreated() {
 
     });
 
+    Games.find().observeChanges({
+        added: function(gameId, fields) {
+            const newGame = Games.findOne(gameId);
+            Meteor.subscribe('games', newGame.roomId);
+            Meteor.subscribe('turns', gameId);
+            Meteor.subscribe('cards', gameId);
+        }
+    });
+
 });
 
 Template.room.helpers({

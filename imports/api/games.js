@@ -20,69 +20,6 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    // Insert
-    'game.insert'(attrs) {
-
-        check(attrs.categoryId, NonEmptyString);
-        check(attrs.roomId, NonEmptyString);
-
-        // Make sure the user is logged in
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
-
-        // End the previous game
-        let room = Rooms.findOne(attrs.roomId);
-        if (room.currentGameId) {
-            let updated = Games.update(
-                {
-                    _id: room.currentGameId,
-                },
-                {
-                    $set: {
-                        endedAt: new Date(),
-                        updatedAt: new Date(),
-                    }
-                }
-            );
-            if (updated) {
-                Logger.log('Ended Game: ' + room.currentGameId)
-            } else {
-                Logger.log('Error Ending Game: ' + room.currentGameId, 3);
-            }
-        }
-
-        Logger.log('Create Game: ' + JSON.stringify(attrs));
-
-        // Create the new game
-        let gameId = Games.insert({
-            roomId: attrs.roomId,
-            categoryId: attrs.categoryId,
-            streak: false,
-            currentTurnId: null,
-            startedAt: new Date(),
-            endedAt: null,
-            winner: null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        });
-
-        Meteor.call('room.update', {_id: attrs.roomId, currentGameId: gameId}, function(error, updated) {
-            if (!error) {
-                Logger.log("Updated Room: " + updated);
-            }
-        });
-
-        Meteor.call('turn.end', gameId, function(error, id) {
-            if (!error) {
-                Logger.log("First Turn: " + id);
-            }
-        });
-
-        return gameId;
-
-    },
-
     // Update
     'game.update'(attrs) {
 
@@ -127,3 +64,75 @@ Meteor.methods({
     },
 
 });
+
+if (Meteor.isServer) {
+
+
+    Meteor.methods({
+
+        // Insert
+        'game.insert'(attrs) {
+
+            check(attrs.categoryId, NonEmptyString);
+            check(attrs.roomId, NonEmptyString);
+
+            // Make sure the user is logged in
+            if (!Meteor.userId()) {
+                throw new Meteor.Error('not-authorized');
+            }
+
+            // End the previous game
+            let room = Rooms.findOne(attrs.roomId);
+            if (room.currentGameId) {
+                let updated = Games.update(
+                    {
+                        _id: room.currentGameId,
+                    },
+                    {
+                        $set: {
+                            endedAt: new Date(),
+                            updatedAt: new Date(),
+                        }
+                    }
+                );
+                if (updated) {
+                    Logger.log('Ended Game: ' + room.currentGameId)
+                } else {
+                    Logger.log('Error Ending Game: ' + room.currentGameId, 3);
+                }
+            }
+
+            Logger.log('Create Game: ' + JSON.stringify(attrs));
+
+            // Create the new game
+            let gameId = Games.insert({
+                roomId: attrs.roomId,
+                categoryId: attrs.categoryId,
+                streak: false,
+                currentTurnId: null,
+                startedAt: new Date(),
+                endedAt: null,
+                winner: null,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
+
+            Meteor.call('room.update', {_id: attrs.roomId, currentGameId: gameId}, function (error, updated) {
+                if (!error) {
+                    Logger.log("Updated Room: " + updated);
+                }
+            });
+
+            Meteor.call('turn.end', gameId, function (error, id) {
+                if (!error) {
+                    Logger.log("First Turn: " + id);
+                }
+            });
+
+            return gameId;
+
+        },
+
+    });
+
+}

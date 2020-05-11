@@ -39,9 +39,6 @@ Template.game.events({
         Meteor.call('game.insert', attrs, function(error, id) {
             if (!error) {
                 Logger.log("Created Game: " + id);
-                Meteor.subscribe('games', id);
-                Meteor.subscribe('turns', id);
-                Meteor.subscribe('cards', id);
             }
             LoadingState.stop();
         });
