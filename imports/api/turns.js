@@ -117,7 +117,7 @@ if (Meteor.isServer) {
                     [
                         {$match: {gameId: gameId, userId: {$in: playerPool}}},
                         {$group: {_id: "$userId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
-                        {$sort: {turns: -1, lastTurn: -1, userId: randomSort}}
+                        {$sort: {turns: -1, lastTurn: 1, userId: randomSort}}
                     ]
                 ).toArray()
             );
