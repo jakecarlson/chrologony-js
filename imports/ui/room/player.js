@@ -25,7 +25,7 @@ Template.player.helpers({
     },
 
     numLockedCards() {
-        return Cards.find({userId: this.player._id, lockedAt: {$ne: null}}).count();
+        return Cards.find({userId: this.player._id, gameId: this.room.currentGameId, lockedAt: {$ne: null}}).count();
     },
 
     gameInProgress() {
