@@ -3,12 +3,13 @@ import { LoadingState } from './LoadingState';
 
 export const ModelEvents = {
 
-    edit: function(e, i) {
+    edit(e, i) {
         e.preventDefault();
         i.state.set('editing', true);
+        Meteor.typeahead.inject();
     },
 
-    add: function(e, i) {
+    add(e, i) {
 
         LoadingState.start(e);
         let attrs = getAttrs(i);
@@ -26,7 +27,7 @@ export const ModelEvents = {
 
     },
 
-    save: function(e, i) {
+    save(e, i) {
 
         LoadingState.start(e);
         let attrs = getAttrs(i);
@@ -45,13 +46,13 @@ export const ModelEvents = {
 
     },
 
-    cancel: function(e, i) {
+    cancel(e, i) {
         e.preventDefault();
         i.state.set('editing', false);
         i.state.set('error', false);
     },
 
-    remove: function(e, i) {
+    remove(e, i) {
         LoadingState.start(e);
         let button = $(e.target);
         let id = button.attr('data-id');

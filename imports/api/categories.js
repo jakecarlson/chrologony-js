@@ -15,6 +15,7 @@ if (Meteor.isServer) {
                     $or: [
                         {private: false},
                         {owner: this.userId},
+                        {collaborators: this.userId},
                     ],
                 },
                 {
@@ -105,6 +106,33 @@ Meteor.methods({
                     private: attrs.private,
                     active: attrs.active,
                     updatedAt: new Date(),
+                }
+            }
+        );
+
+    },
+
+    // Collaborators
+    'category.collaborators'(attrs) {
+
+        check(attrs._id, NonEmptyString);
+        check(attrs.collaborators, Array);
+
+        // Make sure the user is logged in before inserting a task
+        if (!Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        Logger.log('Update Category Collaborators: ' + attrs._id + ' ' + JSON.stringify(attrs.collaborators));
+
+        // Update the category collaborators
+        return Categories.update(
+            {
+                _id: attrs._id,
+            },
+            {
+                $set: {
+                    collaborators: attrs.collaborators,
                 }
             }
         );

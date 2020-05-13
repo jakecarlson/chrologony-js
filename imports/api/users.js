@@ -72,6 +72,38 @@ if (Meteor.isServer) {
             return captchaResult;
         },
 
+        // Search
+        'user.search'(query, excludeIds = []) {
+            if (typeof(excludeIds) != 'object') {
+                excludeIds = [excludeIds];
+            }
+            const regex = new RegExp("^" + query, 'i');
+            return Meteor.users.find(
+                {
+                    username: {$regex: regex},
+                    _id: {$nin: excludeIds},
+                },
+                {
+                    sort: {username: 1},
+                }
+            ).fetch();
+        },
+
+        // Get
+        'user.get'(ids) {
+            if (typeof(ids) != 'object') {
+                ids = [ids];
+            }
+            return Meteor.users.find(
+                {
+                        _id: {$in: ids},
+                    },
+                {
+                    sort: {username: 1},
+                }
+            ).fetch();
+        },
+
     });
 
 }
