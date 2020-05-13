@@ -126,7 +126,7 @@ Meteor.methods({
         Logger.log('Update Category Collaborators: ' + attrs._id + ' ' + JSON.stringify(attrs.collaborators));
 
         // Update the category collaborators
-        return Categories.update(
+        Categories.update(
             {
                 _id: attrs._id,
             },
@@ -136,6 +136,8 @@ Meteor.methods({
                 }
             }
         );
+
+        return attrs.collaborators.length;
 
     },
 
