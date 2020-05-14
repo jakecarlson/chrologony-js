@@ -69,6 +69,10 @@ Template.categories_manager.helpers({
         return Meteor.userId();
     },
 
+    userMapper() {
+        return (function(user){ return {id: user._id, value: user.username} });
+    },
+
 });
 
 Template.categories_manager.events({

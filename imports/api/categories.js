@@ -74,26 +74,6 @@ Meteor.methods({
 
         Logger.log('Update Category: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
-        // Update any clues with this category to the new theme
-        let category = Categories.findOne(attrs._id);
-        if (attrs.theme != category.theme) {
-            let updatedClues = Clues.update(
-                {
-                    categoryId: attrs._id
-                },
-                {
-                    $set: {
-                        theme: attrs.theme,
-                        updatedAt: new Date(),
-                    }
-                },
-                {
-                    multi: true,
-                }
-            );
-            Logger.log("Updated Clues to New Theme: " + updatedClues);
-        }
-
         // If there is an ID, this is an update
         return Categories.update(
             {
@@ -159,3 +139,43 @@ Meteor.methods({
     },
 
 });
+
+if (Meteor.isServer) {
+
+    Meteor.methods({
+
+        // Search
+        'category.search'(query, excludeIds = []) {
+            if (typeof(excludeIds) != 'object') {
+                excludeIds = [excludeIds];
+            }
+            const regex = new RegExp("^" + query, 'i');
+            return Categories.find(
+                {
+                    name: {$regex: regex},
+                    _id: {$nin: excludeIds},
+                },
+                {
+                    sort: {name: 1},
+                }
+            ).fetch();
+        },
+
+        // Get
+        'category.get'(ids) {
+            if (typeof(ids) != 'object') {
+                ids = [ids];
+            }
+            return Categories.find(
+                {
+                    _id: {$in: ids},
+                },
+                {
+                    sort: {name: 1},
+                }
+            ).fetch();
+        },
+
+    });
+
+}

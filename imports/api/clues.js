@@ -11,19 +11,13 @@ if (Meteor.isServer) {
 
     Meteor.publish('clues', function cluesPublication(categoryId) {
         if (this.userId && categoryId) {
-            return Clues.find({categoryId: categoryId}, {sort: {date: -1}});
+            return Clues.find({categories: categoryId}, {sort: {date: -1}});
         } else {
             return this.ready();
         }
     });
 
 }
-
-Clues.helpers({
-    category() {
-        return Categories.findOne(this.categoryId);
-    }
-});
 
 Meteor.methods({
 
@@ -40,9 +34,6 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        // Add the theme
-        attrs.theme = getTheme(attrs.categoryId);
-
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
 
@@ -52,8 +43,7 @@ Meteor.methods({
         return Clues.insert({
             description: attrs.description,
             date: attrs.date,
-            categoryId: attrs.categoryId,
-            theme: attrs.theme,
+            categories: [attrs.categoryId],
             hint: attrs.hint,
             active: true,
             owner: Meteor.userId(),
@@ -77,9 +67,6 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        // Add the theme
-        attrs.theme = getTheme(attrs.categoryId);
-
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
 
@@ -95,12 +82,40 @@ Meteor.methods({
                     description: attrs.description,
                     date: attrs.date,
                     categoryId: attrs.categoryId,
-                    theme: attrs.theme,
                     hint: attrs.hint,
                     updatedAt: new Date(),
                 }
             }
         );
+
+    },
+
+    // Categories
+    'clue.categories'(attrs) {
+
+        check(attrs._id, NonEmptyString);
+        check(attrs.categories, Array);
+
+        // Make sure the user is logged in before inserting a task
+        if (!Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        Logger.log('Update Clue Categories: ' + attrs._id + ' ' + JSON.stringify(attrs.categories));
+
+        // Update the clue categories
+        Clues.update(
+            {
+                _id: attrs._id,
+            },
+            {
+                $set: {
+                    categories: attrs.categories,
+                }
+            }
+        );
+
+        return attrs.categories.length;
 
     },
 
@@ -122,11 +137,3 @@ Meteor.methods({
     },
 
 });
-
-function getTheme(categoryId) {
-    let category = Categories.findOne(categoryId);
-    if (category) {
-        return category.theme;
-    }
-    return null;
-}

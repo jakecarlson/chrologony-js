@@ -10,12 +10,14 @@
             <colgroup>
                 <col class="description">
                 <col class="date">
+                <col class="categories">
                 <col class="actions">
             </colgroup>
             <thead class="table-borderless">
                 <tr>
                     <th scope="col">Clue</th>
                     <th scope="col">Date</th>
+                    <th scope="col">Categories</th>
     <!--                <th scope="col">Hint</th>-->
                     <th scope="col"></th>
                 </tr>
@@ -47,6 +49,17 @@
                 </div>
             </div>
         </div>
+
+        {{> child_manager
+            childrenName="Categories"
+            childType="category"
+            childMapper=categoryMapper
+            childItems=categories
+            parent=currentClue
+            parentName=currentClueName
+            parentType="Clue"
+            required=true
+        }}
 
     {{/if}}
 

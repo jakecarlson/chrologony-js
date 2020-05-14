@@ -84,6 +84,8 @@ html {
 }
 .category .collaborators {
     font-size: small;
+    display: block;
+    line-height: 1;
 }
 
 #clues .results-count {
@@ -100,6 +102,12 @@ html {
 }
 #cluesManager tbody th {
     font-weight: normal;
+}
+.clue .categories {
+    line-height: 2;
+}
+.clue.table-success .categories {
+    line-height: 2.5;
 }
 
 .room-title {

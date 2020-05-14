@@ -33,10 +33,6 @@
         <td>
             <span class="{{#if viewing}}d-none{{/if}}">
                 <input class="attr form-check-input {{#if viewing}}d-none{{/if}}" type="checkbox" name="private" value="true" checked="{{private}}" data-toggle="toggle" data-on="Private" data-off="Public" data-onstyle="success" data-offstyle="secondary" data-size="small">
-                {{#if private}}
-                    <br>
-                    <a href="#" class="collaborators" data-id="{{id}}">Collaborators</a>
-                {{/if}}
             </span>
             <span class="badge badge-{{#if private}}success{{else}}secondary{{/if}} {{#if editing}}d-none{{/if}}">
                 {{#if private}}
@@ -45,6 +41,9 @@
                     Public
                 {{/if}}
             </span>
+            {{#if private}}
+                <a href="#" class="collaborators" data-id="{{id}}">Collaborators</a>
+            {{/if}}
         </td>
 
         <td>

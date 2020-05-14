@@ -22,10 +22,6 @@ Template.card.helpers({
         return (this.card) ? this.card._id : null;
     },
 
-    categoryId() {
-        return (this.card) ? this.card.clue.categoryId : null;
-    },
-
     date() {
         return (this.card) ? moment.utc(this.card.clue.date).format("Y-MM-DD") : null;
     },

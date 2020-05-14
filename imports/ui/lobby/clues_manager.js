@@ -17,6 +17,8 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('owned', false);
     this.state.set('categoryId', null);
     this.state.set('numResults', 0);
+    this.state.set('currentClue', null);
+    this.state.set('categories', []);
 
     this.autorun(() => {
 
@@ -24,15 +26,25 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
         this.subscribe('clues', this.state.get('categoryId'));
 
         if (this.subscriptionsReady()) {
+
             this.state.set('numResults', Clues.find().count());
+
+            let instance = this;
             Tracker.afterFlush(() => {
+
                 $('#removeClue').on('show.bs.modal', function (event) {
                     let button = $(event.relatedTarget);
                     let id = button.attr('data-id');
                     let modal = $(this)
                     modal.find('.remove').attr('data-id', id);
                 });
+
+                $('#manageChildCategories').on('hide.bs.modal', function(e) {
+                    instance.state.set('currentClue', null);
+                });
+
             });
+
             LoadingState.stop();
         }
 
@@ -64,7 +76,7 @@ Template.clues_manager.helpers({
         // category
         let categoryId = Template.instance().state.get('categoryId');
         if (categoryId) {
-            selector.categoryId = categoryId;
+            selector.categories = categoryId;
         }
 
         Logger.log('Filter Clues: ' + JSON.stringify(selector));
@@ -87,6 +99,22 @@ Template.clues_manager.helpers({
         return Template.instance().state.get('numResults') + ' ' + suffix;
     },
 
+    currentClue() {
+        return Template.instance().state.get('currentClue');
+    },
+
+    currentClueName() {
+        return (Template.instance().state.get('currentClue')) ? moment.utc(Template.instance().state.get('currentClue').date).format("Y-MM-DD") : null;
+    },
+
+    categories() {
+        return Template.instance().state.get('categories');
+    },
+
+    categoryMapper() {
+        return (function(category){ return {id: category._id, value: category.theme + ': ' + category.name} });
+    },
+
 });
 
 Template.clues_manager.events({
@@ -106,4 +134,29 @@ Template.clues_manager.events({
 
     'click .remove': ModelEvents.remove,
 
+    'click .categories'(e, i) {
+        LoadingState.start(e);
+        let link = $(e.target);
+        let id = link.attr('data-id');
+        const clue = Clues.findOne(id);
+        i.state.set('currentClue', clue);
+        if (clue && clue.categories) {
+            Meteor.call('category.get', clue.categories, function(err, res) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                launchCategoriesModal(i, res.map(function(category){ return {id: category._id, name: category.theme + ': ' + category.name} }));
+            });
+        } else {
+            launchCategoriesModal(i, []);
+        }
+    },
+
 });
+
+function launchCategoriesModal(i, categories) {
+    i.state.set('categories', categories);
+    LoadingState.stop();
+    $('#manageChildCategories').modal('show');
+}

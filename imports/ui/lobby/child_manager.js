@@ -8,18 +8,11 @@ import './child_manager.html';
 Template.child_manager.onCreated(function child_managerOnCreated() {
 
     this.state = new ReactiveDict();
+    this.state.set('error', false);
 
     this.autorun(() => {
 
         this.state.set('children', this.view.templateInstance().data.childItems); // Hacky? Why does this re-evaluate but this.data.childItems doesn't?
-
-        let instance = this;
-        Tracker.afterFlush(() => {
-            // $('#manageChild' + this.data.childrenName).on('hide.bs.modal', function(e) {
-            //     instance.state.set('parent', null);
-            // });
-
-        });
 
         if (this.view.isRendered) {
             Meteor.typeahead.inject();
@@ -36,14 +29,17 @@ Template.child_manager.helpers({
         Template.instance().state.get('children').forEach(function(child) {
             children.push(child.id);
         });
-        children.push(this.excludeId);
-        let childNameKey = this.childNameKey;
+        if (this.excludeId) {
+            children.push(this.excludeId);
+        }
+        let childMapper = this.childMapper;
+        console.log(childMapper);
         Meteor.call(this.childType + '.search', query, children, function(err, res) {
             if (err) {
                 console.log(err);
                 return;
             }
-            callback(res.map(function(child){ return {id: child._id, value: child[childNameKey]} }));
+            callback(res.map(childMapper));
         });
     },
 
@@ -51,11 +47,16 @@ Template.child_manager.helpers({
         let children = Template.instance().state.get('children');
         children.push({id: child.id, name: child.value});
         setChildren(Template.instance(), children);
+        Template.instance().state.set('error', false);
         $('#' + this.childType + 'Search').typeahead('val', '');
     },
 
     children() {
         return Template.instance().state.get('children');
+    },
+
+    error() {
+        return Template.instance().state.get('error');
     },
 
 });
@@ -89,6 +90,10 @@ Template.child_manager.events({
         let link = $(e.target);
         let id = link.attr('data-id');
         let children = i.state.get('children');
+        if (this.required && children.length < 2) {
+            i.state.set('error', true);
+            return;
+        }
         let removeKey = -1;
         children.forEach(function(child, i) {
             if (child.id == id) {

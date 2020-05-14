@@ -47,6 +47,10 @@ Template.clue.helpers({
         return this.clue.hint;
     },
 
+    newClue() {
+        return !this.clue;
+    },
+
     canEdit() {
         if (!this.clue) {
             return true;

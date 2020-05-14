@@ -218,7 +218,7 @@ function drawCard(gameId, turnId) {
 
     let selector = {
         active: true,
-        categoryId: game.categoryId,
+        categories: game.categoryId,
     };
     if (usedCards.length > 0) {
         selector._id = {$nin: usedCards};

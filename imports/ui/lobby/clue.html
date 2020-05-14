@@ -30,6 +30,12 @@
             <span class="{{#if editing}}d-none{{/if}}">{{date}}</span>
         </td>
 
+        <td>
+            {{#if clue}}
+                <a href="#" class="categories" data-id="{{id}}">Categories</a>
+            {{/if}}
+        </td>
+
 <!--        <td>-->
 <!--            <input class="attr form-control {{#if viewing}}d-none{{/if}}" type="text" name="hint" value="{{hint}}">-->
 <!--            <span class="{{#if editing}}d-none{{/if}}">{{hint}}</span>-->
@@ -37,7 +43,9 @@
 
         <td>
             <form class="clue-edit {{#if viewing}}d-none{{/if}}">
-                <input class="attr" type="hidden" name="categoryId" value="{{categoryId}}">
+                {{#if newClue}}
+                    <input class="attr" type="hidden" name="categoryId" value="{{categoryId}}">
+                {{/if}}
                 <input class="attr" type="hidden" name="hint" value="">
                 {{#if clue}}
                     <input class="attr" type="hidden" name="_id" value="{{id}}">

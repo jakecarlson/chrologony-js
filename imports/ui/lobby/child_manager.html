@@ -10,7 +10,17 @@
                     </button>
                 </div>
                 <ul class="modal-body list-group list-group-flush p-0">
-                    <li class="list-group-item"><input id="{{childType}}Search" class="form-control typeahead" name="{{childNameKey}}" type="text" placeholder="Search for {{childrenName}} ..." autocomplete="off" spellcheck="off" data-source="searchChildren" data-select="addChild"></li>
+                    <li class="list-group-item">
+                        {{#if error}}
+                            <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                                At least 1 {{childType}} is required.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {{/if}}
+                        <input id="{{childType}}Search" class="form-control typeahead" name="{{childNameKey}}" type="text" placeholder="Search for {{childrenName}} ..." autocomplete="off" spellcheck="off" data-source="searchChildren" data-select="addChild">
+                    </li>
                     {{#each child in children}}
                         <li class="list-group-item">
                             {{child.name}}
