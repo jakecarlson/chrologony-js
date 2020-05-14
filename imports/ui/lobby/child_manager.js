@@ -33,7 +33,6 @@ Template.child_manager.helpers({
             children.push(this.excludeId);
         }
         let childMapper = this.childMapper;
-        console.log(childMapper);
         Meteor.call(this.childType + '.search', query, children, function(err, res) {
             if (err) {
                 console.log(err);
@@ -45,7 +44,7 @@ Template.child_manager.helpers({
 
     addChild(e, child, source) {
         let children = Template.instance().state.get('children');
-        children.push({id: child.id, name: child.value});
+        children.push(child);
         setChildren(Template.instance(), children);
         Template.instance().state.set('error', false);
         $('#' + this.childType + 'Search').typeahead('val', '');
@@ -110,6 +109,6 @@ Template.child_manager.events({
 });
 
 function setChildren(i, children) {
-    children.sort((a, b) => (a.name > b.name) ? 1 : -1);
+    children.sort((a, b) => (a.value > b.value) ? 1 : -1);
     i.state.set('children', children);
 }

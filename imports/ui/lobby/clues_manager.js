@@ -112,7 +112,7 @@ Template.clues_manager.helpers({
     },
 
     categoryMapper() {
-        return (function(category){ return {id: category._id, value: category.theme + ': ' + category.name} });
+        return getCategoryMapper();
     },
 
 });
@@ -146,7 +146,7 @@ Template.clues_manager.events({
                     console.log(err);
                     return;
                 }
-                launchCategoriesModal(i, res.map(function(category){ return {id: category._id, name: category.theme + ': ' + category.name} }));
+                launchCategoriesModal(i, res.map(getCategoryMapper()));
             });
         } else {
             launchCategoriesModal(i, []);
@@ -159,4 +159,8 @@ function launchCategoriesModal(i, categories) {
     i.state.set('categories', categories);
     LoadingState.stop();
     $('#manageChildCategories').modal('show');
+}
+
+function getCategoryMapper() {
+    return (function(category){ return {id: category._id, value: category.theme + ': ' + category.name} });
 }

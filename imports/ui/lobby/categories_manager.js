@@ -70,7 +70,7 @@ Template.categories_manager.helpers({
     },
 
     userMapper() {
-        return (function(user){ return {id: user._id, value: user.username} });
+        return getUserMapper();
     },
 
 });
@@ -91,7 +91,7 @@ Template.categories_manager.events({
                     console.log(err);
                     return;
                 }
-                launchCollaboratorsModal(i, res.map(function(user){ return {id: user._id, name: user.username} }));
+                launchCollaboratorsModal(i, res.map(getUserMapper()));
             });
         } else {
             launchCollaboratorsModal(i, []);
@@ -104,4 +104,8 @@ function launchCollaboratorsModal(i, collaborators) {
     i.state.set('collaborators', collaborators);
     LoadingState.stop();
     $('#manageChildCollaborators').modal('show');
+}
+
+function getUserMapper() {
+    return (function(user){ return {id: user._id, value: user.username} });
 }

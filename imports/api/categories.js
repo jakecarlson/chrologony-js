@@ -12,14 +12,10 @@ if (Meteor.isServer) {
         if (this.userId) {
             return Categories.find(
                 {
-                    $or: [
-                        {private: false},
-                        {owner: this.userId},
-                        {collaborators: this.userId},
-                    ],
+                    $or: getAllowedConditions(),
                 },
                 {
-                    sort: {name: 1}
+                    sort: getSort(),
                 }
             );
         } else {
@@ -152,11 +148,14 @@ if (Meteor.isServer) {
             const regex = new RegExp("^" + query, 'i');
             return Categories.find(
                 {
-                    name: {$regex: regex},
-                    _id: {$nin: excludeIds},
+                    $and: [
+                        {$or: [{theme: {$regex: regex}}, {name: {$regex: regex}}]},
+                        {$or: getAllowedConditions()},
+                        {_id: {$nin: excludeIds}},
+                    ],
                 },
                 {
-                    sort: {name: 1},
+                    sort: getSort(),
                 }
             ).fetch();
         },
@@ -169,13 +168,26 @@ if (Meteor.isServer) {
             return Categories.find(
                 {
                     _id: {$in: ids},
+                    $or: getAllowedConditions(),
                 },
                 {
-                    sort: {name: 1},
+                    sort: getSort(),
                 }
             ).fetch();
         },
 
     });
 
+}
+
+function getAllowedConditions() {
+    return [
+        {private: false},
+        {owner: Meteor.userId()},
+        {collaborators: Meteor.userId()},
+    ];
+}
+
+function getSort() {
+    return {theme: 1, name: 1};
 }

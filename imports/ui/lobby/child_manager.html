@@ -19,11 +19,11 @@
                                 </button>
                             </div>
                         {{/if}}
-                        <input id="{{childType}}Search" class="form-control typeahead" name="{{childNameKey}}" type="text" placeholder="Search for {{childrenName}} ..." autocomplete="off" spellcheck="off" data-source="searchChildren" data-select="addChild">
+                        <input id="{{childType}}Search" class="form-control typeahead" name="child" type="text" placeholder="Search for {{childrenName}} ..." autocomplete="off" spellcheck="off" data-source="searchChildren" data-select="addChild">
                     </li>
                     {{#each child in children}}
                         <li class="list-group-item">
-                            {{child.name}}
+                            {{child.value}}
                             <a href="#" data-id="{{child.id}}" class="float-right text-dark ml-2 remove">&times;</a>
                         </li>
                     {{/each}}
