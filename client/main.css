@@ -64,10 +64,10 @@ html {
     margin-top: 0;
 }
 
-#manageCategoryCollaborators .list-group-item:last-child {
+.child-manager .list-group-item:last-child {
     border-bottom: none;
 }
-#manageCategoryCollaborators .twitter-typeahead {
+.child-manager .twitter-typeahead {
     width: 100%;
 }
 
@@ -325,4 +325,9 @@ span.twitter-typeahead {
 }
 .input-group span.twitter-typeahead .tt-menu {
     top: 2.375rem !important;
+}
+
+/* Hacky but necessary? */
+.twitter-typeahead > .twitter-typeahead {
+    display: none !important;
 }

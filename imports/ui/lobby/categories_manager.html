@@ -45,30 +45,15 @@
         </div>
     </div>
 
-    <div class="modal fade" id="manageCategoryCollaborators" tabindex="-1" role="dialog" aria-labelledby="manageCategoryCollaboratorsTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="manageCategoryCollaboratorsTitle">{{currentCategoryName}}: Manage Collaborators</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <ul class="modal-body list-group list-group-flush p-0">
-                    <li class="list-group-item"><input id="userSearch" class="form-control typeahead" name="username" type="text" placeholder="Search by Username to Add a Collaborator ..." autocomplete="off" spellcheck="off" data-source="searchCollaborators" data-select="addCollaborator"></li>
-                    {{#each collaborator in collaborators}}
-                        <li class="list-group-item">
-                            {{collaborator.name}}
-                            <a href="#" data-id="{{collaborator.id}}" class="float-right text-dark ml-2 remove">&times;</a>
-                        </li>
-                    {{/each}}
-                </ul>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary save" disabled="{{loading}}">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{> child_manager
+        childrenName="Collaborators"
+        childType="user"
+        childNameKey="username"
+        childItems=collaborators
+        parent=currentCategory
+        parentName=currentCategoryName
+        parentType="Category"
+        excludeId=currentUserId
+    }}
 
 </template>

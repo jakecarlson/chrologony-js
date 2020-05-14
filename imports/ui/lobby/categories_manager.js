@@ -8,6 +8,7 @@ import { ModelEvents } from "../../startup/ModelEvents";
 
 import './categories_manager.html';
 import './category.js';
+import './child_manager.js';
 
 Template.categories_manager.onCreated(function categories_managerOnCreated() {
 
@@ -32,13 +33,11 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
                     modal.find('.remove').attr('data-id', id);
                 });
 
-                $('#manageCategoryCollaborators').on('hide.bs.modal', function(e) {
+                $('#manageChildCollaborators').on('hide.bs.modal', function(e) {
                     instance.state.set('currentCategory', null);
                 });
 
             });
-
-            Meteor.typeahead.inject();
 
             LoadingState.stop();
 
@@ -62,30 +61,12 @@ Template.categories_manager.helpers({
         return (Template.instance().state.get('currentCategory')) ? Template.instance().state.get('currentCategory').name : null;
     },
 
-    searchCollaborators(query, sync, callback) {
-        let collaborators = [];
-        Template.instance().state.get('collaborators').forEach(function(user) {
-            collaborators.push(user.id);
-        });
-        collaborators.push(Meteor.userId());
-        Meteor.call('user.search', query, collaborators, function(err, res) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            callback(res.map(function(user){ return {id: user._id, value: user.username} }));
-        });
-    },
-
-    addCollaborator(e, user, source) {
-        let collaborators = Template.instance().state.get('collaborators');
-        collaborators.push({id: user.id, name: user.value});
-        setCollaborators(Template.instance(), collaborators);
-        $('#userSearch').typeahead('val', '');
-    },
-
     collaborators() {
         return Template.instance().state.get('collaborators');
+    },
+
+    currentUserId() {
+        return Meteor.userId();
     },
 
 });
@@ -113,50 +94,10 @@ Template.categories_manager.events({
         }
     },
 
-    'click #manageCategoryCollaborators .save'(e, i) {
-        LoadingState.start(e);
-        let collaborators = [];
-        i.state.get('collaborators').forEach(function(user) {
-            collaborators.push(user.id);
-        });
-        Meteor.call('category.collaborators', {_id: i.state.get('currentCategory')._id, collaborators: collaborators}, function(err, numSaved) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            Logger.log('Collaborators Saved: ' + numSaved);
-            LoadingState.stop();
-            $('#manageCategoryCollaborators').modal('hide');
-        });
-    },
-
-    'click #manageCategoryCollaborators .remove'(e, i) {
-        e.preventDefault();
-        let link = $(e.target);
-        let id = link.attr('data-id');
-        let collaborators = i.state.get('collaborators');
-        let removeKey = -1;
-        collaborators.forEach(function(user, i) {
-            if (user.id == id) {
-                removeKey = i;
-                return;
-            }
-        });
-        if (removeKey > -1) {
-            collaborators.splice(removeKey, 1);
-        }
-        setCollaborators(i, collaborators);
-    },
-
 });
 
 function launchCollaboratorsModal(i, collaborators) {
     i.state.set('collaborators', collaborators);
     LoadingState.stop();
-    $('#manageCategoryCollaborators').modal('show');
-}
-
-function setCollaborators(i, collaborators) {
-    collaborators.sort((a, b) => (a.name > b.name) ? 1 : -1);
-    i.state.set('collaborators', collaborators);
+    $('#manageChildCollaborators').modal('show');
 }
