@@ -15,6 +15,7 @@
     "jquery": "^3.5.0",
     "meteor-node-stubs": "^1.0.0",
     "popper.js": "^1.16.1",
+    "simpl-schema": "^1.7.1",
     "sortablejs": "^1.10.2"
   },
   "meteor": {

@@ -3,9 +3,46 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
 
-import { Clues } from '../api/clues';
+import SimpleSchema from "simpl-schema";
 
 export const Categories = new Mongo.Collection('categories');
+
+Categories.schema = new SimpleSchema({
+    name: {type: String, max: 80},
+    active: {type: Boolean, defaultValue: false},
+    private: {type: Boolean, defaultValue: true},
+    theme: {type: String, max: 40},
+    source: {type: String, max: 40, defaultValue: 'user'},
+    owner: {
+        type: String,
+        regEx: SimpleSchema.RegEx.Id,
+        autoValue() {
+            if (this.isInsert) {
+                return this.userId;
+            }
+            return undefined;
+        },
+    },
+    collaborators: {type: Array},
+    'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
+    createdAt: {
+        type: Date,
+        autoValue() {
+            if (this.isInsert) {
+                return new Date();
+            }
+            return undefined;
+        },
+    },
+    updatedAt: {
+        type: Date,
+        autoValue() {
+            return new Date();
+        },
+    },
+});
+
+Categories.attachSchema(Categories.schema);
 
 if (Meteor.isServer) {
     Meteor.publish('categories', function categoriesPublication() {
@@ -46,10 +83,6 @@ Meteor.methods({
             theme: attrs.theme,
             private: attrs.private,
             active: attrs.active,
-            owner: Meteor.userId(),
-            source: 'user',
-            createdAt: new Date(),
-            updatedAt: new Date(),
         });
 
     },
@@ -81,7 +114,6 @@ Meteor.methods({
                     theme: attrs.theme,
                     private: attrs.private,
                     active: attrs.active,
-                    updatedAt: new Date(),
                 }
             }
         );

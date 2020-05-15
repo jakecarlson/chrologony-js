@@ -2,11 +2,46 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
+import SimpleSchema from "simpl-schema";
 
 import { Games } from '../api/games';
 import { Turns } from '../api/turns';
 
 export const Rooms = new Mongo.Collection('rooms');
+
+Rooms.schema = new SimpleSchema({
+    name: {type: String, max: 40},
+    password: {type: String, max: 40},
+    currentGameId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
+    owner: {
+        type: String,
+        regEx: SimpleSchema.RegEx.Id,
+        autoValue() {
+            if (this.isInsert) {
+                return this.userId;
+            }
+            return undefined;
+        },
+    },
+    createdAt: {
+        type: Date,
+        autoValue() {
+            if (this.isInsert) {
+                return new Date();
+            }
+            return undefined;
+        },
+    },
+    updatedAt: {
+        type: Date,
+        autoValue() {
+            return new Date();
+        },
+    },
+    deletedAt: {type: Date, defaultValue: null, optional: true},
+});
+
+Rooms.attachSchema(Rooms.schema);
 
 if (Meteor.isServer) {
     Meteor.publish('rooms', function roomsPublication() {
@@ -83,7 +118,6 @@ Meteor.methods({
             {
                 $set: {
                     currentGameId: attrs.currentGameId,
-                    updatedAt: new Date(),
                 }
             }
         );
@@ -157,11 +191,6 @@ if (Meteor.isServer) {
                 roomId = Rooms.insert({
                     name: attrs.name,
                     password: attrs.password,
-                    currentGameId: null,
-                    owner: Meteor.userId(),
-                    createdAt: new Date(),
-                    updateAt: new Date(),
-                    deletedAt: null,
                 });
             }
 
@@ -179,7 +208,6 @@ if (Meteor.isServer) {
                 {
                     $set: {
                         currentRoomId: roomId,
-                        updatedAt: new Date(),
                     }
                 }
             );

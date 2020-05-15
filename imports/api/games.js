@@ -2,11 +2,39 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
+import SimpleSchema from "simpl-schema";
 
 import { Rooms } from '../api/rooms';
 import { Turns } from '../api/turns';
 
 export const Games = new Mongo.Collection('games');
+
+Games.schema = new SimpleSchema({
+    roomId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    categoryId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    streak: {type: Boolean, defaultValue: false},
+    currentTurnId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
+    winner: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
+    startedAt: {type: Date, defaultValue: new Date(), optional: true},
+    endedAt: {type: Date, defaultValue: null, optional: true},
+    createdAt: {
+        type: Date,
+        autoValue() {
+            if (this.isInsert) {
+                return new Date();
+            }
+            return undefined;
+        },
+    },
+    updatedAt: {
+        type: Date,
+        autoValue() {
+            return new Date();
+        },
+    },
+});
+
+Games.attachSchema(Games.schema);
 
 if (Meteor.isServer) {
     Meteor.publish('games', function gamePublication(roomId) {
@@ -41,7 +69,6 @@ Meteor.methods({
             {
                 $set: {
                     currentTurnId: attrs.currentTurnId,
-                    updatedAt: new Date(),
                 }
             }
         );
@@ -91,7 +118,6 @@ if (Meteor.isServer) {
                     {
                         $set: {
                             endedAt: new Date(),
-                            updatedAt: new Date(),
                         }
                     }
                 );
@@ -108,13 +134,6 @@ if (Meteor.isServer) {
             let gameId = Games.insert({
                 roomId: attrs.roomId,
                 categoryId: attrs.categoryId,
-                streak: false,
-                currentTurnId: null,
-                startedAt: new Date(),
-                endedAt: null,
-                winner: null,
-                createdAt: new Date(),
-                updatedAt: new Date(),
             });
 
             Meteor.call('room.update', {_id: attrs.roomId, currentGameId: gameId}, function (error, updated) {

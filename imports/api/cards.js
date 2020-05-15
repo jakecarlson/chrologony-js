@@ -3,12 +3,41 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
 import { Promise } from "meteor/promise";
+import SimpleSchema from 'simpl-schema';
 
 import { Games } from "./games";
 import { Clues } from "./clues";
 import { Turns } from "./turns";
 
 export const Cards = new Mongo.Collection('cards');
+
+Cards.schema = new SimpleSchema({
+    turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    clue: {type: Clues.schema},
+    userId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    correct: {type: Boolean, defaultValue: null, optional: true},
+    lockedAt: {type: Date, defaultValue: null, optional: true},
+    pos: {type: SimpleSchema.Integer, defaultValue: 0},
+    createdAt: {
+        type: Date,
+        autoValue() {
+            if (this.isInsert) {
+                return new Date();
+            }
+            return undefined;
+        },
+    },
+    updatedAt: {
+        type: Date,
+        autoValue() {
+            return new Date();
+        },
+    },
+});
+
+Cards.attachSchema(Cards.schema);
 
 if (Meteor.isServer) {
 
@@ -62,7 +91,6 @@ Meteor.methods({
                 {
                     $set: {
                         pos: pos,
-                        updatedAt: new Date(),
                     }
                 }
             );
@@ -98,7 +126,6 @@ Meteor.methods({
             {
                 $set: {
                     lockedAt: new Date(),
-                    updatedAt: new Date(),
                 }
             }
         );
@@ -161,7 +188,6 @@ Meteor.methods({
             {
                 $set: {
                     correct: correct,
-                    updatedAt: new Date(),
                 }
             }
         );
@@ -245,10 +271,6 @@ function drawCard(gameId, turnId) {
         clueId: randomClue._id,
         clue: randomClue,
         userId: turn.userId,
-        correct: null,
-        lockedAt: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
     };
 
     // Figure out whether this is the first card
@@ -258,9 +280,10 @@ function drawCard(gameId, turnId) {
     // If it's the first card, automatically mark it correct
     if (firstCard) {
         card.correct = true;
-        card.pos = 0;
         card.lockedAt = new Date();
     }
+
+    Logger.log('Insert Card: ' + JSON.stringify(card));
 
     // Add the card
     let cardId = Cards.insert(card);

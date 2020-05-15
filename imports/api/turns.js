@@ -3,11 +3,36 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { Promise } from 'meteor/promise';
 import { NonEmptyString } from "../startup/validations";
+import SimpleSchema from "simpl-schema";
 
 import { Games } from '../api/games';
 import { Cards } from '../api/cards';
 
 export const Turns = new Mongo.Collection('turns');
+
+Turns.schema = new SimpleSchema({
+    gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    userId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
+    lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},
+    createdAt: {
+        type: Date,
+        autoValue() {
+            if (this.isInsert) {
+                return new Date();
+            }
+            return undefined;
+        },
+    },
+    updatedAt: {
+        type: Date,
+        autoValue() {
+            return new Date();
+        },
+    },
+});
+
+Turns.attachSchema(Turns.schema);
 
 if (Meteor.isServer) {
     Meteor.publish('turns', function turnPublication(gameId) {
@@ -43,7 +68,6 @@ Meteor.methods({
                 $set: {
                     currentCardId: attrs.currentCardId,
                     lastCardCorrect: attrs.lastCardCorrect,
-                    updatedAt: new Date(),
                 }
             }
         );
@@ -78,7 +102,6 @@ if (Meteor.isServer) {
                     {
                         $set: {
                             endedAt: new Date(),
-                            updatedAt: new Date(),
                         }
                     }
                 );
@@ -155,11 +178,7 @@ if (Meteor.isServer) {
             const turnId = Turns.insert({
                 gameId: gameId,
                 userId: lastPlayer._id,
-                currentCardId: null,
                 startedAt: new Date(),
-                endedAt: null,
-                createdAt: new Date(),
-                updatedAt: new Date(),
             });
             console.log(turnId);
 
