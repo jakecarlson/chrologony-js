@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
+import { Schema } from "./Schema";
 
 import { Games } from '../api/games';
 import { Turns } from '../api/turns';
@@ -13,34 +14,10 @@ Rooms.schema = new SimpleSchema({
     name: {type: String, max: 40},
     password: {type: String, max: 40},
     currentGameId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
-    owner: {
-        type: String,
-        regEx: SimpleSchema.RegEx.Id,
-        autoValue() {
-            if (this.isInsert) {
-                return this.userId;
-            }
-            return undefined;
-        },
-    },
-    createdAt: {
-        type: Date,
-        autoValue() {
-            if (this.isInsert) {
-                return new Date();
-            }
-            return undefined;
-        },
-    },
-    updatedAt: {
-        type: Date,
-        autoValue() {
-            return new Date();
-        },
-    },
     deletedAt: {type: Date, defaultValue: null, optional: true},
 });
-
+Rooms.schema.extend(Schema.timestamps);
+Rooms.schema.extend(Schema.owned);
 Rooms.attachSchema(Rooms.schema);
 
 if (Meteor.isServer) {

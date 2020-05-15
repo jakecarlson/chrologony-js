@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
+import { Schema } from "./Schema";
 
 import { Rooms } from '../api/rooms';
 import { Turns } from '../api/turns';
@@ -17,23 +18,8 @@ Games.schema = new SimpleSchema({
     winner: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     startedAt: {type: Date, defaultValue: new Date(), optional: true},
     endedAt: {type: Date, defaultValue: null, optional: true},
-    createdAt: {
-        type: Date,
-        autoValue() {
-            if (this.isInsert) {
-                return new Date();
-            }
-            return undefined;
-        },
-    },
-    updatedAt: {
-        type: Date,
-        autoValue() {
-            return new Date();
-        },
-    },
 });
-
+Games.schema.extend(Schema.timestamps);
 Games.attachSchema(Games.schema);
 
 if (Meteor.isServer) {

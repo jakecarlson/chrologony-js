@@ -4,6 +4,7 @@ import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
 import { Promise } from "meteor/promise";
 import SimpleSchema from 'simpl-schema';
+import { Schema } from './Schema';
 
 import { Games } from "./games";
 import { Clues } from "./clues";
@@ -20,23 +21,8 @@ Cards.schema = new SimpleSchema({
     correct: {type: Boolean, defaultValue: null, optional: true},
     lockedAt: {type: Date, defaultValue: null, optional: true},
     pos: {type: SimpleSchema.Integer, defaultValue: 0},
-    createdAt: {
-        type: Date,
-        autoValue() {
-            if (this.isInsert) {
-                return new Date();
-            }
-            return undefined;
-        },
-    },
-    updatedAt: {
-        type: Date,
-        autoValue() {
-            return new Date();
-        },
-    },
 });
-
+Cards.schema.extend(Schema.timestamps);
 Cards.attachSchema(Cards.schema);
 
 if (Meteor.isServer) {

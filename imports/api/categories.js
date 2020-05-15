@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
-
 import SimpleSchema from "simpl-schema";
+import { Schema } from "./Schema";
 
 export const Categories = new Mongo.Collection('categories');
 
@@ -25,23 +25,8 @@ Categories.schema = new SimpleSchema({
     },
     collaborators: {type: Array},
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
-    createdAt: {
-        type: Date,
-        autoValue() {
-            if (this.isInsert) {
-                return new Date();
-            }
-            return undefined;
-        },
-    },
-    updatedAt: {
-        type: Date,
-        autoValue() {
-            return new Date();
-        },
-    },
 });
-
+Categories.schema.extend(Schema.timestamps);
 Categories.attachSchema(Categories.schema);
 
 if (Meteor.isServer) {

@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
+import { Schema } from "./Schema";
 
 export const Clues = new Mongo.Collection('clues');
 
@@ -11,16 +12,6 @@ Clues.schema = new SimpleSchema({
     date: {type: Date},
     hint: {type: String, max: 960, defaultValue: null, optional: true},
     active: {type: Boolean, defaultValue: true},
-    owner: {
-        type: String,
-        regEx: SimpleSchema.RegEx.Id,
-        autoValue() {
-            if (this.isInsert) {
-                return this.userId;
-            }
-            return undefined;
-        },
-    },
     categories: {type: Array},
     'categories.$': {type: String, regEx: SimpleSchema.RegEx.Id},
     thumbnailUrl: {type: String, max: 480, defaultValue: null, optional: true},
@@ -30,23 +21,9 @@ Clues.schema = new SimpleSchema({
     externalId: {type: String, defaultValue: null, optional: true},
     externalUrl: {type: String, max: 480, defaultValue: null, optional: true},
     moreInfo: {type: String, max: 3840, defaultValue: null, optional: true},
-    createdAt: {
-        type: Date,
-        autoValue() {
-            if (this.isInsert) {
-                return new Date();
-            }
-            return undefined;
-        },
-    },
-    updatedAt: {
-        type: Date,
-        autoValue() {
-            return new Date();
-        },
-    },
 });
-
+Clues.schema.extend(Schema.timestamps);
+Clues.schema.extend(Schema.owned);
 Clues.attachSchema(Clues.schema);
 
 if (Meteor.isServer) {

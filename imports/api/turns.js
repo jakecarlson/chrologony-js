@@ -4,6 +4,7 @@ import { check } from 'meteor/check';
 import { Promise } from 'meteor/promise';
 import { NonEmptyString } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
+import { Schema } from "./Schema";
 
 import { Games } from '../api/games';
 import { Cards } from '../api/cards';
@@ -15,23 +16,8 @@ Turns.schema = new SimpleSchema({
     userId: {type: String, regEx: SimpleSchema.RegEx.Id},
     currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},
-    createdAt: {
-        type: Date,
-        autoValue() {
-            if (this.isInsert) {
-                return new Date();
-            }
-            return undefined;
-        },
-    },
-    updatedAt: {
-        type: Date,
-        autoValue() {
-            return new Date();
-        },
-    },
 });
-
+Turns.schema.extend(Schema.timestamps);
 Turns.attachSchema(Turns.schema);
 
 if (Meteor.isServer) {
