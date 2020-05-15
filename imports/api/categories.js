@@ -23,7 +23,7 @@ Categories.schema = new SimpleSchema({
             return undefined;
         },
     },
-    collaborators: {type: Array},
+    collaborators: {type: Array, defaultValue: [], optional: true},
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
 });
 Categories.schema.extend(Schema.timestamps);
