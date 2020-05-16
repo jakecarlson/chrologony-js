@@ -1,27 +1,32 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import { NonEmptyString } from "../startup/validations";
+import { NonEmptyString, RecordId } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
 export const Clues = new Mongo.Collection('clues');
 
-Clues.schema = new SimpleSchema({
-    description: {type: String, max: 240},
-    date: {type: Date},
-    hint: {type: String, max: 960, defaultValue: null, optional: true},
-    active: {type: Boolean, defaultValue: true},
-    categories: {type: Array},
+Clues.schema = new SimpleSchema(
+    {
+    description: {type: String, max: 240, required: true},
+    date: {type: Date, required: true},
+    hint: {type: String, max: 960, defaultValue: null},
+    active: {type: Boolean, defaultValue: true, required: true},
+    categories: {type: Array, minCount: 1, required: true},
     'categories.$': {type: String, regEx: SimpleSchema.RegEx.Id},
-    thumbnailUrl: {type: String, max: 480, defaultValue: null, optional: true},
-    imageUrl: {type: String, max: 480, defaultValue: null, optional: true},
-    latitude: {type: Number, defaultValue: null, optional: true},
-    longitude: {type: Number, defaultValue: null, optional: true},
-    externalId: {type: String, defaultValue: null, optional: true},
-    externalUrl: {type: String, max: 480, defaultValue: null, optional: true},
-    moreInfo: {type: String, max: 3840, defaultValue: null, optional: true},
-});
+    thumbnailUrl: {type: String, max: 480, defaultValue: null},
+    imageUrl: {type: String, max: 480, defaultValue: null},
+    latitude: {type: Number, defaultValue: null},
+    longitude: {type: Number, defaultValue: null},
+    externalId: {type: String, defaultValue: null},
+    externalUrl: {type: String, max: 480, defaultValue: null},
+    moreInfo: {type: String, max: 3840, defaultValue: null},
+    },
+    {
+        requiredByDefault: false,
+    }
+);
 Clues.schema.extend(Schema.timestamps);
 Clues.schema.extend(Schema.owned);
 Clues.attachSchema(Clues.schema);
@@ -41,11 +46,16 @@ if (Meteor.isServer) {
 Meteor.methods({
 
     // Insert
-    'clue.insert'(attrs) {
+    'clue.create'(attrs) {
 
-        check(attrs.description, NonEmptyString);
-        check(attrs.date, NonEmptyString);
-        check(attrs.categoryId, NonEmptyString);
+        check(
+            attrs,
+            {
+                description: NonEmptyString,
+                date: NonEmptyString,
+                categoryId: RecordId,
+            }
+        );
         // check(attrs.hint, String);
 
         // Make sure the user is logged in before inserting a task
@@ -71,9 +81,14 @@ Meteor.methods({
     // Update
     'clue.update'(attrs) {
 
-        check(attrs._id, NonEmptyString);
-        check(attrs.description, NonEmptyString);
-        check(attrs.date, NonEmptyString);
+        check(
+            attrs,
+            {
+                _id: RecordId,
+                description: NonEmptyString,
+                date: NonEmptyString,
+            }
+        );
         // check(attrs.hint, String);
 
         // Make sure the user is logged in before inserting a task
@@ -103,10 +118,15 @@ Meteor.methods({
     },
 
     // Categories
-    'clue.categories'(attrs) {
+    'clue.setCategories'(attrs) {
 
-        check(attrs._id, NonEmptyString);
-        check(attrs.categories, Array);
+        check(
+            attrs,
+            {
+                _id: RecordId,
+                categories: [RecordId],
+            }
+        );
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {
@@ -132,9 +152,9 @@ Meteor.methods({
     },
 
     // Delete
-    'clue.delete'(id) {
+    'clue.remove'(id) {
 
-        check(id, String);
+        check(id, RecordId);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {

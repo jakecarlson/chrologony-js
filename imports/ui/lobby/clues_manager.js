@@ -143,7 +143,7 @@ Template.clues_manager.events({
         if (clue && clue.categories) {
             Meteor.call('category.get', clue.categories, function(err, res) {
                 if (err) {
-                    console.log(err);
+                    Logger.log(err, 3);
                     return;
                 }
                 launchCategoriesModal(i, res.map(getCategoryMapper()));

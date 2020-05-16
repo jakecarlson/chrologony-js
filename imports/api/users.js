@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import {NonEmptyString} from "../startup/validations";
+import { NonEmptyString } from "../startup/validations";
 
 if (Meteor.isServer) {
 
@@ -8,7 +8,7 @@ if (Meteor.isServer) {
     Meteor.publish('userData', function () {
         if (this.userId) {
             return Meteor.users.find({ _id: this.userId }, {
-                fields: { currentRoomId: 1}
+                fields: {currentRoomId: 1}
             });
         } else {
             this.ready();
@@ -25,38 +25,6 @@ if (Meteor.isServer) {
     });
 
 }
-
-Meteor.methods({
-
-    // Update
-    'user.update'(attrs) {
-
-        check(attrs._id, NonEmptyString);
-        check(attrs.currentRoomId, NonEmptyString);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
-
-        Logger.log('Update User: ' + attrs._id + ' ' + JSON.stringify(attrs));
-
-        // If there is an ID, this is an update
-        return Meteor.users.update(
-            {
-                _id: attrs._id,
-            },
-            {
-                $set: {
-                    currentRoomId: attrs.currentRoomId,
-                    updatedAt: new Date(),
-                }
-            }
-        );
-
-    },
-
-});
 
 if (Meteor.isServer) {
 

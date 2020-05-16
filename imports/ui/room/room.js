@@ -87,7 +87,7 @@ Template.room.events({
 
     'click .destroy'(e, i) {
         LoadingState.start();
-        Meteor.call('room.delete', this.room._id, function(error, id) {
+        Meteor.call('room.remove', this.room._id, function(error, id) {
             if (!error) {
                 Logger.log("Room Deleted: " + id);
                 Flasher.set('success', "You have successfully deleted the room. You can join or create a new one below.");

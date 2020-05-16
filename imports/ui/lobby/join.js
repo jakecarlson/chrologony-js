@@ -26,7 +26,7 @@ Template.join.events({
             password: target.password.value,
         };
 
-        Meteor.call('room.findOrCreate', attrs, function(error, id) {
+        Meteor.call('room.joinOrCreate', attrs, function(error, id) {
             if (error) {
                 Logger.log(error);
                 Flasher.set('danger', "That room exists, but the password is wrong.");

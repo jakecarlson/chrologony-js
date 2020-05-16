@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import { NonEmptyString } from "../startup/validations";
+import { NonEmptyString, RecordId } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
@@ -13,20 +13,11 @@ Categories.schema = new SimpleSchema({
     private: {type: Boolean, defaultValue: true},
     theme: {type: String, max: 40},
     source: {type: String, max: 40, defaultValue: 'user'},
-    owner: {
-        type: String,
-        regEx: SimpleSchema.RegEx.Id,
-        autoValue() {
-            if (this.isInsert) {
-                return this.userId;
-            }
-            return undefined;
-        },
-    },
     collaborators: {type: Array, defaultValue: [], optional: true},
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
 });
 Categories.schema.extend(Schema.timestamps);
+Categories.schema.extend(Schema.owned);
 Categories.attachSchema(Categories.schema);
 
 if (Meteor.isServer) {
@@ -49,11 +40,17 @@ if (Meteor.isServer) {
 Meteor.methods({
 
     // Insert
-    'category.insert'(attrs) {
+    'category.create'(attrs) {
 
-        check(attrs.name, NonEmptyString);
-        check(attrs.private, Boolean);
-        check(attrs.active, Boolean);
+        check(
+            attrs,
+            {
+                name: RecordId,
+                theme: NonEmptyString,
+                private: Boolean,
+                active: Boolean,
+            }
+        );
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -75,11 +72,16 @@ Meteor.methods({
     // Update
     'category.update'(attrs) {
 
-        check(attrs._id, NonEmptyString);
-        check(attrs.name, NonEmptyString);
-        check(attrs.theme, NonEmptyString);
-        check(attrs.private, Boolean);
-        check(attrs.active, Boolean);
+        check(
+            attrs,
+            {
+                _id: RecordId,
+                name: NonEmptyString,
+                theme: NonEmptyString,
+                private: Boolean,
+                active: Boolean,
+            }
+        );
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -106,10 +108,15 @@ Meteor.methods({
     },
 
     // Collaborators
-    'category.collaborators'(attrs) {
+    'category.setCollaborators'(attrs) {
 
-        check(attrs._id, NonEmptyString);
-        check(attrs.collaborators, Array);
+        check(
+            attrs,
+            {
+                _id: RecordId,
+                collaborators: [RecordId],
+            }
+        );
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {
@@ -135,9 +142,9 @@ Meteor.methods({
     },
 
     // Delete
-    'category.delete'(id) {
+    'category.remove'(id) {
 
-        check(id, NonEmptyString);
+        check(id, RecordId);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -159,10 +166,15 @@ if (Meteor.isServer) {
 
         // Search
         'category.search'(query, excludeIds = []) {
+
+            check(query, String);
             if (typeof(excludeIds) != 'object') {
                 excludeIds = [excludeIds];
             }
+            check(excludeIds, [RecordId]);
+
             const regex = new RegExp("^" + query, 'i');
+
             return Categories.find(
                 {
                     $and: [
@@ -175,13 +187,17 @@ if (Meteor.isServer) {
                     sort: getSort(),
                 }
             ).fetch();
+
         },
 
         // Get
         'category.get'(ids) {
+
             if (typeof(ids) != 'object') {
                 ids = [ids];
             }
+            check(ids, [RecordId]);
+
             return Categories.find(
                 {
                     _id: {$in: ids},

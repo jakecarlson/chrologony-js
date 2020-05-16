@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { Promise } from 'meteor/promise';
-import { NonEmptyString } from "../startup/validations";
+import { NonEmptyString, RecordId } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
@@ -21,6 +21,7 @@ Turns.schema.extend(Schema.timestamps);
 Turns.attachSchema(Turns.schema);
 
 if (Meteor.isServer) {
+
     Meteor.publish('turns', function turnPublication(gameId) {
         if (this.userId && gameId) {
             return Turns.find({gameId: gameId}, {sort: {createdAt: -1}, limit: 2});
@@ -28,16 +29,27 @@ if (Meteor.isServer) {
             return this.ready();
         }
     });
+
+    Turns.deny({
+        insert() { return true; },
+        remove() { return true; },
+    });
+
 }
 
 Meteor.methods({
 
     // Update
-    'turn.update'(attrs) {
+    'turn.setCard'(attrs) {
 
-        check(attrs._id, NonEmptyString);
-        // check(attrs.currentCardId, Match.Maybe(String)); // This must be a bug with Meteor; it always fails
-        // check(attrs.lastCardCorrect, Match.Maybe(Boolean)); // ditto
+        check(
+            attrs,
+            {
+                _id: RecordId,
+                currentCardId: Match.OneOf(null, RecordId),
+                lastCardCorrect: Match.OneOf(null, Boolean),
+            }
+        );
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {
@@ -67,9 +79,9 @@ if (Meteor.isServer) {
     Meteor.methods({
 
         // Next Turn
-        'turn.end'(gameId) {
+        'turn.next'(gameId) {
 
-            check(gameId, NonEmptyString);
+            check(gameId, RecordId);
 
             // Make sure the user is logged in
             if (! Meteor.userId()) {
@@ -166,9 +178,8 @@ if (Meteor.isServer) {
                 userId: lastPlayer._id,
                 startedAt: new Date(),
             });
-            console.log(turnId);
 
-            Meteor.call('game.update', {_id: gameId, currentTurnId: turnId}, function(error, updated) {
+            Meteor.call('game.setTurn', {_id: gameId, currentTurnId: turnId}, function(error, updated) {
                 if (!error) {
                     Logger.log("Updated Game: " + updated);
                 }

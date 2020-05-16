@@ -14,7 +14,7 @@ export const ModelEvents = {
         LoadingState.start(e);
         let attrs = getAttrs(i);
 
-        Meteor.call(getModelName(i) + '.insert', attrs, function(error, id) {
+        Meteor.call(getModelName(i) + '.create', attrs, function(error, id) {
             if (!error) {
                 Logger.log('Created ' + capitalize(getModelName(i)) + ': ' + id);
                 i.state.set('error', false);
@@ -57,7 +57,7 @@ export const ModelEvents = {
         let button = $(e.target);
         let id = button.attr('data-id');
         let modelName = button.attr('data-model');
-        Meteor.call(modelName + '.delete', id, function(error, deleted) {
+        Meteor.call(modelName + '.remove', id, function(error, deleted) {
             if (!error) {
                 Logger.log('Deleted ' + capitalize(modelName) + ': ' + deleted);
             }

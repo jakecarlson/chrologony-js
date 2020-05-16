@@ -35,7 +35,7 @@ Template.child_manager.helpers({
         let childMapper = this.childMapper;
         Meteor.call(this.childType + '.search', query, children, function(err, res) {
             if (err) {
-                console.log(err);
+                Logger.log(err, 3);
                 return;
             }
             callback(res.map(childMapper));
@@ -73,9 +73,9 @@ Template.child_manager.events({
         };
         attrs[this.childrenName.toLowerCase()] = children;
         let childrenName = this.childrenName;
-        Meteor.call(this.parentType.toLowerCase() + '.' + this.childrenName.toLowerCase(), attrs, function(err, numSaved) {
+        Meteor.call(this.parentType.toLowerCase() + '.set' + this.childrenName, attrs, function(err, numSaved) {
             if (err) {
-                console.log(err);
+                Logger.log(err, 3);
                 return;
             }
             Logger.log(childrenName + ' Saved: ' + numSaved);

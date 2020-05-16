@@ -36,7 +36,7 @@ Template.game.events({
         };
 
         let roomId = this.room._id;
-        Meteor.call('game.insert', attrs, function(error, id) {
+        Meteor.call('game.create', attrs, function(error, id) {
             if (!error) {
                 Logger.log("Created Game: " + id);
             }

@@ -88,7 +88,7 @@ Template.categories_manager.events({
         if (category && category.collaborators) {
             Meteor.call('user.get', category.collaborators, function(err, res) {
                 if (err) {
-                    console.log(err);
+                    Logger.log(err, 3);
                     return;
                 }
                 launchCollaboratorsModal(i, res.map(getUserMapper()));

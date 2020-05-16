@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import { NonEmptyString } from "../startup/validations";
+import { NonEmptyString, RecordId } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
@@ -23,6 +23,7 @@ Games.schema.extend(Schema.timestamps);
 Games.attachSchema(Games.schema);
 
 if (Meteor.isServer) {
+
     Meteor.publish('games', function gamePublication(roomId) {
         if (this.userId && roomId) {
             return Games.find({roomId: roomId}, {sort: {createdAt: -1}, limit: 2});
@@ -30,15 +31,26 @@ if (Meteor.isServer) {
             return this.ready();
         }
     });
+
+    Games.deny({
+        insert() { return true; },
+        remove() { return true; },
+    });
+
 }
 
 Meteor.methods({
 
     // Update
-    'game.update'(attrs) {
+    'game.setTurn'(attrs) {
 
-        check(attrs._id, NonEmptyString);
-        check(attrs.currentTurnId, NonEmptyString);
+        check(
+            attrs,
+            {
+                _id: RecordId,
+                currentTurnId: RecordId,
+            }
+        );
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -64,7 +76,7 @@ Meteor.methods({
     // End
     'game.end'(gameId) {
 
-        check(gameId, NonEmptyString);
+        check(gameId, RecordId);
 
         // Make sure the user is logged in
         if (! Meteor.userId()) {
@@ -80,14 +92,18 @@ Meteor.methods({
 
 if (Meteor.isServer) {
 
-
     Meteor.methods({
 
         // Insert
-        'game.insert'(attrs) {
+        'game.create'(attrs) {
 
-            check(attrs.categoryId, NonEmptyString);
-            check(attrs.roomId, NonEmptyString);
+            check(
+                attrs,
+                {
+                    categoryId: RecordId,
+                    roomId: RecordId,
+                }
+            );
 
             // Make sure the user is logged in
             if (!Meteor.userId()) {
@@ -122,13 +138,13 @@ if (Meteor.isServer) {
                 categoryId: attrs.categoryId,
             });
 
-            Meteor.call('room.update', {_id: attrs.roomId, currentGameId: gameId}, function (error, updated) {
+            Meteor.call('room.setGame', {_id: attrs.roomId, currentGameId: gameId}, function (error, updated) {
                 if (!error) {
                     Logger.log("Updated Room: " + updated);
                 }
             });
 
-            Meteor.call('turn.end', gameId, function (error, id) {
+            Meteor.call('turn.next', gameId, function (error, id) {
                 if (!error) {
                     Logger.log("First Turn: " + id);
                 }

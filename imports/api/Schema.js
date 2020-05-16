@@ -11,12 +11,14 @@ export const Schema = {
                 }
                 return undefined;
             },
+            required: true,
         },
         updatedAt: {
             type: Date,
             autoValue() {
                 return new Date();
             },
+            required: true,
         },
     }),
 
@@ -30,6 +32,7 @@ export const Schema = {
                 }
                 return undefined;
             },
+            required: true,
         },
     }),
 

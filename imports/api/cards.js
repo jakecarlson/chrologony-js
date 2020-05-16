@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
-import { NonEmptyString } from "../startup/validations";
+import { check, Match } from 'meteor/check';
+import { NonEmptyString, RecordId } from "../startup/validations";
 import { Promise } from "meteor/promise";
 import SimpleSchema from 'simpl-schema';
 import { Schema } from './Schema';
@@ -35,6 +35,12 @@ if (Meteor.isServer) {
         }
     });
 
+    Cards.deny({
+        insert() { return true; },
+        update() { return true; },
+        remove() { return true; },
+    });
+
     /*
     Meteor.publish('playerCardCounts', function playerCardsCountPublication(gameId) {
         if (this.userId && gameId) {
@@ -57,7 +63,7 @@ if (Meteor.isServer) {
 Meteor.methods({
 
     // Set the card positions
-    'card.pos'(cards) {
+    'card.setPositions'(cards) {
 
         check(cards, Object);
 
@@ -70,6 +76,8 @@ Meteor.methods({
 
         let numUpdated = 0;
         for (const [id, pos] of Object.entries(cards)) {
+            check(id, RecordId);
+            check(pos, Match.Integer);
             numUpdated += Cards.update(
                 {
                     _id: id,
@@ -86,10 +94,10 @@ Meteor.methods({
 
     },
 
-    // Lock
+    // Lock Card
     'card.lock'(id) {
 
-        check(id, NonEmptyString);
+        check(id, RecordId);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -118,13 +126,18 @@ Meteor.methods({
 
     },
 
-    // Submit Cards
-    'card.submit'(args) {
+    // Submit Guess
+    'card.submitGuess'(args) {
 
-        check(args.gameId, String);
-        check(args.turnId, String);
-        check(args.cardId, String);
-        check(args.pos, Number);
+        check(
+            args,
+            {
+                gameId: RecordId,
+                turnId: RecordId,
+                cardId: RecordId,
+                pos: Match.Integer,
+            }
+        );
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -158,7 +171,7 @@ Meteor.methods({
         Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
 
         // Null out the current card ID
-        Meteor.call('turn.update', {_id: args.turnId, currentCardId: null, lastCardCorrect: correct}, function(error, updated) {
+        Meteor.call('turn.setCard', {_id: args.turnId, currentCardId: null, lastCardCorrect: correct}, function(error, updated) {
             if (!error) {
                 Logger.log("Updated Turn: " + updated);
             }
@@ -191,8 +204,13 @@ if (Meteor.isServer) {
         // Draw Card
         'card.draw'(attrs) {
 
-            check(attrs.turnId, NonEmptyString);
-            check(attrs.gameId, NonEmptyString);
+            check(
+                attrs,
+                {
+                    turnId: RecordId,
+                    gameId: RecordId,
+                }
+            );
 
             // Make sure the user is logged in
             if (! Meteor.userId()) {
@@ -203,7 +221,7 @@ if (Meteor.isServer) {
             let cardId = drawCard(attrs.gameId, attrs.turnId);
             Logger.log("Card ID: " + cardId);
 
-            Meteor.call('turn.update', {_id: attrs.turnId, currentCardId: cardId, lastCardCorrect: null}, function(error, updated) {
+            Meteor.call('turn.setCard', {_id: attrs.turnId, currentCardId: cardId, lastCardCorrect: null}, function(error, updated) {
                 if (!error) {
                     Logger.log("Updated Turn: " + updated);
                 }

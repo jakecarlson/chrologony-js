@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import { NonEmptyString } from "../startup/validations";
+import { NonEmptyString, RecordId } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
@@ -21,6 +21,7 @@ Rooms.schema.extend(Schema.owned);
 Rooms.attachSchema(Rooms.schema);
 
 if (Meteor.isServer) {
+
     Meteor.publish('rooms', function roomsPublication() {
         if (this.userId) {
             return Rooms.find({
@@ -31,9 +32,44 @@ if (Meteor.isServer) {
             return this.ready();
         }
     });
+
+    Rooms.deny({
+        insert() { return true; },
+        remove() { return true; },
+    });
+
 }
 
 Meteor.methods({
+
+    /*
+    // Join
+    'room.join'(roomId) {
+
+        check(roomId, RecordId);
+
+        // Make sure the user is logged in before inserting a task
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        Logger.log('Update User: ' + attrs._id + ' ' + JSON.stringify(attrs));
+
+        // If there is an ID, this is an update
+        return Meteor.users.update(
+            {
+                _id: this.userId,
+            },
+            {
+                $set: {
+                    currentRoomId: roomId,
+                    updatedAt: new Date(),
+                }
+            }
+        );
+
+    },
+     */
 
     'room.leave'(userId = false) {
 
@@ -47,15 +83,20 @@ Meteor.methods({
             userId = Meteor.userId();
         }
 
+        // Make sure the user is the owner of the room that the other user is in, or the user him/herself
+        const roomId = Meteor.users.findOne(userId).currentRoomId;
+        const room = Rooms.findOne(roomId);
+        if ((userId != Meteor.userId()) && (room.owner != Meteor.userId())) {
+            throw new Meteor.Error('not-authorized');
+        }
+
         // Check to see if it's this users turn currently and end it if so
-        let roomId = Meteor.users.findOne(userId).currentRoomId;
-        let room = Rooms.findOne(roomId);
         if (room.currentGameId) {
             let game = Games.findOne(room.currentGameId);
             if (game && game.currentTurnId) {
                 let turn = Turns.findOne(game.currentTurnId);
                 if (turn && (turn.userId == userId)) {
-                    Meteor.call('turn.end', game._id, function(error, id) {
+                    Meteor.call('turn.next', game._id, function(error, id) {
                         if (!error) {
                             Logger.log("Start Turn: " + id);
                         }
@@ -74,11 +115,16 @@ Meteor.methods({
 
     },
 
-    // Update
-    'room.update'(attrs) {
+    // Set Game
+    'room.setGame'(attrs) {
 
-        check(attrs._id, NonEmptyString);
-        check(attrs.currentGameId, NonEmptyString);
+        check(
+            attrs,
+            {
+                _id: RecordId,
+                currentGameId: RecordId,
+            }
+        );
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -102,9 +148,9 @@ Meteor.methods({
     },
 
     // Delete
-    'room.delete'(id) {
+    'room.remove'(id) {
 
-        check(id, NonEmptyString);
+        check(id, RecordId);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -133,10 +179,15 @@ if (Meteor.isServer) {
 
     Meteor.methods({
 
-        'room.findOrCreate'(attrs) {
+        'room.joinOrCreate'(attrs) {
 
-            check(attrs.name, NonEmptyString);
-            check(attrs.password, NonEmptyString);
+            check(
+                attrs,
+                {
+                    name: NonEmptyString,
+                    password: NonEmptyString,
+                }
+            );
 
             // Make sure the user is logged in before inserting a task
             if (! Meteor.userId()) {
@@ -171,13 +222,6 @@ if (Meteor.isServer) {
                 });
             }
 
-            /*
-            Meteor.call('user.update', {_id: this.userId, currentRoomId: roomId}, function(error, updated) {
-                if (!error) {
-                    Logger.log("Updated User: " + updated);
-                }
-            });
-             */
             Meteor.users.update(
                 {
                     _id: Meteor.userId(),
