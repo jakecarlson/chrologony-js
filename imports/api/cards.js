@@ -110,7 +110,7 @@ Meteor.methods({
         return Cards.update(
             {
                 _id: id,
-                // userId: Meteor.userId(),
+                userId: Meteor.userId(),
             },
             {
                 $set: {

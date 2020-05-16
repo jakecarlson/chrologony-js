@@ -39,7 +39,7 @@ Template.body.onCreated(function bodyOnCreated() {
 Template.body.helpers({
 
     currentRoom() {
-        if (Meteor.user().currentRoomId) {
+        if (Meteor.userId() && Meteor.user().currentRoomId) {
             let room = Rooms.findOne({_id: Meteor.user().currentRoomId, deletedAt: null});
             if (room) {
                 return room;
