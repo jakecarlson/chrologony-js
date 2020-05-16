@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
+import { Permissions } from './Permissions';
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
@@ -51,11 +52,7 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Insert Category: ' + JSON.stringify(attrs));
 
@@ -82,17 +79,16 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Update Category: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
         return Categories.update(
-            attrs._id,
+            {
+                _id: attrs._id,
+                owner: Meteor.userId(),
+            },
             {
                 $set: {
                     name: attrs.name,
@@ -110,17 +106,16 @@ Meteor.methods({
 
         check(id, RecordId);
         check(collaborators, [RecordId]);
-
-        // Make sure the user is logged in before inserting a task
-        if (!Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Update Category Collaborators: ' + id + ' ' + JSON.stringify(collaborators));
 
         // Update the category collaborators
         Categories.update(
-            id,
+            {
+                _id: id,
+                owner: Meteor.userId(),
+            },
             {
                 $set: {
                     collaborators: collaborators,
@@ -136,16 +131,17 @@ Meteor.methods({
     'category.remove'(id) {
 
         check(id, RecordId);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Delete Category: ' + id);
 
         // Remove the item
-        return Categories.remove({_id: id});
+        return Categories.remove(
+            {
+                _id: id,
+                owner: Meteor.userId(),
+            }
+        );
 
     },
 
@@ -164,6 +160,7 @@ if (Meteor.isServer) {
 
             check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
+            Permissions.authenticated();
 
             const regex = new RegExp("^" + query, 'i');
 
@@ -190,6 +187,7 @@ if (Meteor.isServer) {
             }
 
             check(ids, [RecordId]);
+            Permissions.authenticated();
 
             return Categories.find(
                 {

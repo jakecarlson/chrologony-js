@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
+import { Permissions } from './Permissions';
 
 if (Meteor.isServer) {
 
@@ -49,6 +50,7 @@ if (Meteor.isServer) {
 
             check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
+            Permissions.authenticated();
 
             const regex = new RegExp("^" + query, 'i');
             return Meteor.users.find(
@@ -71,6 +73,7 @@ if (Meteor.isServer) {
             }
 
             check(ids, [RecordId]);
+            Permissions.authenticated();
 
             return Meteor.users.find(
                 {

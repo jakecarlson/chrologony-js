@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
 import { Promise } from 'meteor/promise';
 import { NonEmptyString, RecordId } from "../startup/validations";
+import { Permissions } from './Permissions';
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
@@ -45,11 +46,7 @@ Meteor.methods({
         check(id, RecordId);
         check(cardId, Match.OneOf(null, RecordId));
         check(lastCardCorrect, Match.OneOf(null, Boolean));
-
-        // Make sure the user is logged in before inserting a task
-        if (!Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Update Turn ' + id + ' Card to ' + cardId);
 
@@ -75,11 +72,7 @@ if (Meteor.isServer) {
         'turn.next'(gameId) {
 
             check(gameId, RecordId);
-
-            // Make sure the user is logged in
-            if (! Meteor.userId()) {
-                throw new Meteor.Error('not-authorized');
-            }
+            Permissions.authenticated();
 
             // Set the game
             const game = Games.findOne(gameId);

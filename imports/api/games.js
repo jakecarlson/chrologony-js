@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
+import { Permissions } from './Permissions';
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
@@ -46,11 +47,7 @@ Meteor.methods({
 
         check(id, RecordId);
         check(turnId, RecordId);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Update Game Turn: ' + id + ': ' + turnId);
 
@@ -70,11 +67,8 @@ Meteor.methods({
     'game.end'(id) {
 
         check(id, RecordId);
+        Permissions.authenticated();
 
-        // Make sure the user is logged in
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
         let game = Games.findOne(id);
         let turn = Turns.findOne(game.currentTurnId);
         return Games.update(
@@ -102,11 +96,7 @@ if (Meteor.isServer) {
                     roomId: RecordId,
                 }
             );
-
-            // Make sure the user is logged in
-            if (!Meteor.userId()) {
-                throw new Meteor.Error('not-authorized');
-            }
+            Permissions.authenticated();
 
             // End the previous game
             let room = Rooms.findOne(attrs.roomId);

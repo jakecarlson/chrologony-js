@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
+import { Permissions } from './Permissions';
 import { Promise } from "meteor/promise";
 import SimpleSchema from 'simpl-schema';
 import { Schema } from './Schema';
@@ -66,11 +67,7 @@ Meteor.methods({
     'card.setPositions'(cards) {
 
         check(cards, Object);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log("Card Positions: " + JSON.stringify(cards));
 
@@ -79,7 +76,10 @@ Meteor.methods({
             check(id, RecordId);
             check(pos, Match.Integer);
             numUpdated += Cards.update(
-                id,
+                {
+                    _id: id,
+                    userId: Meteor.userId(),
+                },
                 {
                     $set: {
                         pos: pos,
@@ -96,11 +96,7 @@ Meteor.methods({
     'card.lock'(id) {
 
         check(id, RecordId);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         // Double check that the card was correct before locking
         const card = Cards.findOne(id);
@@ -112,7 +108,10 @@ Meteor.methods({
 
         // If there is an ID, this is an update
         return Cards.update(
-            id,
+            {
+                _id: id,
+                // userId: Meteor.userId(),
+            },
             {
                 $set: {
                     lockedAt: new Date(),
@@ -127,19 +126,15 @@ Meteor.methods({
 
         check(id, RecordId);
         check(pos, Match.Integer);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         // Get the previously correct cards + the current card in the correct order
-        const card = Cards.findOne(id)
+        const card = Cards.findOne(id);
         let turn = Turns.findOne(card.turnId);
         let guess = Cards.find(
             {
                 gameId: turn.gameId,
-                userId: turn.userId,
+                userId: Meteor.userId(),
                 $or: [
                     {lockedAt: {$ne: null}},
                     {turnId: turn._id, correct: true},
@@ -156,7 +151,7 @@ Meteor.methods({
         ).fetch()[0];
 
         // Validate that the card is in the correct position
-        let correct = (id === card._id);
+        let correct = (id === guess._id);
 
         Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
 
@@ -193,11 +188,7 @@ if (Meteor.isServer) {
         'card.draw'(turnId) {
 
             check(turnId, RecordId);
-
-            // Make sure the user is logged in
-            if (! Meteor.userId()) {
-                throw new Meteor.Error('not-authorized');
-            }
+            Permissions.authenticated();
 
             // Draw the card -- defer this to a helper defined below because it's recursive
             let cardId = drawCard(turnId);

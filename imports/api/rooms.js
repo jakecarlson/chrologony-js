@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
+import { Permissions } from './Permissions';
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
@@ -23,7 +24,7 @@ Rooms.attachSchema(Rooms.schema);
 if (Meteor.isServer) {
 
     Meteor.publish('rooms', function roomsPublication() {
-        if (this.userId) {
+        if (this.userId && Meteor.user().currentRoomId) {
             return Rooms.find({
                 _id: Meteor.user().currentRoomId,
                 deletedAt: null,
@@ -42,44 +43,15 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    /*
-    // Join
-    'room.join'(id) {
-
-        check(id, RecordId);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
-
-        Logger.log('Join Room: ' + id);
-
-        // If there is an ID, this is an update
-        return Meteor.users.update(
-            this.userId,
-            {
-                $set: {
-                    currentRoomId: roomId,
-                    updatedAt: new Date(),
-                }
-            }
-        );
-
-    },
-     */
-
     'room.leave'(userId = false) {
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
 
         // If no userID was provided, use the current user
         if (!userId) {
             userId = Meteor.userId();
         }
+
+        check(userId, RecordId);
+        Permissions.authenticated();
 
         // Make sure the user is the owner of the room that the other user is in, or the user him/herself
         const roomId = Meteor.users.findOne(userId).currentRoomId;
@@ -121,17 +93,16 @@ Meteor.methods({
 
         check(id, RecordId);
         check(gameId, RecordId);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Set Room ' + id + ' Game to ' + gameId);
 
         // If there is an ID, this is an update
         return Rooms.update(
-            id,
+            {
+                _id: id,
+                owner: Meteor.userId(),
+            },
             {
                 $set: {
                     currentGameId: gameId,
@@ -145,17 +116,16 @@ Meteor.methods({
     'room.remove'(id) {
 
         check(id, RecordId);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Delete Room: ' + id);
 
         // If there is an ID, this is an update
         return Rooms.update(
-            id,
+            {
+                _id: id,
+                owner: Meteor.userId(),
+            },
             {
                 $set: {
                     deletedAt: new Date(),
@@ -175,11 +145,7 @@ if (Meteor.isServer) {
 
             check(name, NonEmptyString);
             check(password, NonEmptyString);
-
-            // Make sure the user is logged in before inserting a task
-            if (! Meteor.userId()) {
-                throw new Meteor.Error('not-authorized');
-            }
+            Permissions.authenticated();
 
             let roomId = false;
 

@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
+import { Permissions } from './Permissions';
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
@@ -55,12 +56,7 @@ Meteor.methods({
                 hint: Match.OneOf(null, String),
             }
         );
-        // check(attrs.hint, String);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
@@ -89,11 +85,7 @@ Meteor.methods({
                 hint: Match.OneOf(null, String),
             }
         );
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
@@ -102,7 +94,10 @@ Meteor.methods({
 
         // If there is an ID, this is an update
         return Clues.update(
-            attrs._id,
+            {
+                _id: attrs._id,
+                owner: Meteor.userId(),
+            },
             {
                 $set: {
                     description: attrs.description,
@@ -119,17 +114,16 @@ Meteor.methods({
 
         check(id, RecordId);
         check(categories, [RecordId]);
-
-        // Make sure the user is logged in before inserting a task
-        if (!Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Update Clue Categories: ' + id + ' ' + JSON.stringify(categories));
 
         // Update the clue categories
         Clues.update(
-            id,
+            {
+                _id: id,
+                owner: Meteor.userId(),
+            },
             {
                 $set: {
                     categories: categories,
@@ -145,16 +139,17 @@ Meteor.methods({
     'clue.remove'(id) {
 
         check(id, RecordId);
-
-        // Make sure the user is logged in before inserting a task
-        if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.authenticated();
 
         Logger.log('Delete Clue: ' + id);
 
         // Remove the item
-        return Clues.remove({_id: id});
+        return Clues.remove(
+            {
+                _id: id,
+                owner: Meteor.userId(),
+            }
+        );
 
     },
 
