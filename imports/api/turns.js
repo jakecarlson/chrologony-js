@@ -14,7 +14,8 @@ export const Turns = new Mongo.Collection('turns');
 
 Turns.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    userId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    userId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
+    owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},
 });
@@ -120,9 +121,9 @@ if (Meteor.isServer) {
             const players = Promise.await(
                 Turns.rawCollection().aggregate(
                     [
-                        {$match: {gameId: gameId, userId: {$in: playerPool}}},
-                        {$group: {_id: "$userId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
-                        {$sort: {turns: -1, lastTurn: 1, userId: randomSort}}
+                        {$match: {gameId: gameId, owner: {$in: playerPool}}},
+                        {$group: {_id: "$owner", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
+                        {$sort: {turns: -1, lastTurn: 1, owner: randomSort}}
                     ]
                 ).toArray()
             );
@@ -141,7 +142,7 @@ if (Meteor.isServer) {
                 },
                 {
                     $sort: {
-                        userId: -1,
+                        owner: -1,
                     }
                 }
             ).fetch();
@@ -159,7 +160,7 @@ if (Meteor.isServer) {
             Logger.log("Next Turn Belongs To: " + lastPlayer._id);
             const turnId = Turns.insert({
                 gameId: gameId,
-                userId: lastPlayer._id,
+                owner: lastPlayer._id,
                 startedAt: new Date(),
             });
 

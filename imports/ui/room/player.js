@@ -13,7 +13,7 @@ Template.player.onCreated(function playerOnCreated() {
 Template.player.helpers({
 
     isTurnOwner() {
-        return (this.turn && (this.turn.userId == this.player._id));
+        return (this.turn && (this.turn.owner == this.player._id));
     },
 
     id() {
@@ -25,7 +25,13 @@ Template.player.helpers({
     },
 
     numLockedCards() {
-        return Cards.find({userId: this.player._id, gameId: this.room.currentGameId, lockedAt: {$ne: null}}).count();
+        return Cards.find(
+            {
+                owner: this.player._id,
+                gameId: this.room.currentGameId,
+                lockedAt: {$ne: null}
+            }
+        ).count();
     },
 
     gameInProgress() {

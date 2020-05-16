@@ -60,12 +60,12 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        // Check to see if it's this users turn currently and end it if so
+        // Check to see if it's this user's turn currently and end it if so
         if (room.currentGameId) {
             let game = Games.findOne(room.currentGameId);
             if (game && game.currentTurnId) {
                 let turn = Turns.findOne(game.currentTurnId);
-                if (turn && (turn.userId == userId)) {
+                if (turn && (turn.owner == userId)) {
                     Meteor.call('turn.next', game._id, function(error, id) {
                         if (!error) {
                             Logger.log("Start Turn: " + id);

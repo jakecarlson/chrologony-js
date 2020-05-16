@@ -74,7 +74,7 @@ Meteor.methods({
         return Games.update(
             id,
             {
-                $set: {endedAt: new Date(), winner: turn.userId},
+                $set: {endedAt: new Date(), winner: turn.owner},
             }
         );
 

@@ -69,7 +69,7 @@ Template.card.events({
 });
 
 function isOwned(turn, card) {
-    return (turn && card && (turn.userId == Meteor.userId()));
+    return (turn && card && (turn.owner == Meteor.userId()));
 }
 
 function isCurrent(turn, card) {

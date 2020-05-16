@@ -18,7 +18,8 @@ Cards.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
     clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
     clue: {type: Clues.schema},
-    userId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    userId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
+    owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     correct: {type: Boolean, defaultValue: null, optional: true},
     lockedAt: {type: Date, defaultValue: null, optional: true},
     pos: {type: SimpleSchema.Integer, defaultValue: 0},
@@ -78,7 +79,7 @@ Meteor.methods({
             numUpdated += Cards.update(
                 {
                     _id: id,
-                    userId: Meteor.userId(),
+                    owner: Meteor.userId(),
                 },
                 {
                     $set: {
@@ -110,7 +111,7 @@ Meteor.methods({
         return Cards.update(
             {
                 _id: id,
-                userId: Meteor.userId(),
+                owner: Meteor.userId(),
             },
             {
                 $set: {
@@ -134,7 +135,7 @@ Meteor.methods({
         let guess = Cards.find(
             {
                 gameId: turn.gameId,
-                userId: Meteor.userId(),
+                owner: Meteor.userId(),
                 $or: [
                     {lockedAt: {$ne: null}},
                     {turnId: turn._id, correct: true},
@@ -247,11 +248,16 @@ function drawCard(turnId) {
         gameId: turn.gameId,
         clueId: randomClue._id,
         clue: randomClue,
-        userId: turn.userId,
+        owner: turn.owner,
     };
 
     // Figure out whether this is the first card
-    const userCards = Cards.find({gameId: turn.gameId, userId: turn.userId}).fetch();
+    const userCards = Cards.find(
+        {
+            gameId: turn.gameId,
+            owner: turn.owner
+        }
+    ).fetch();
     const firstCard = (userCards.length == 0);
 
     // If it's the first card, automatically mark it correct

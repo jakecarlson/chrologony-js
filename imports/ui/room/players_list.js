@@ -17,7 +17,7 @@ Template.players_list.helpers({
     },
 
     isTurnOwner(userId) {
-        return (this.turn && (this.turn.userId == userId));
+        return (this.turn && (this.turn.owner == userId));
     },
 
 });
