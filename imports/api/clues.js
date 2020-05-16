@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
@@ -32,7 +32,6 @@ Clues.schema.extend(Schema.owned);
 Clues.attachSchema(Clues.schema);
 
 if (Meteor.isServer) {
-
     Meteor.publish('clues', function cluesPublication(categoryId) {
         if (this.userId && categoryId) {
             return Clues.find({categories: categoryId}, {sort: {date: -1}});
@@ -40,7 +39,6 @@ if (Meteor.isServer) {
             return this.ready();
         }
     });
-
 }
 
 Meteor.methods({
@@ -54,6 +52,7 @@ Meteor.methods({
                 description: NonEmptyString,
                 date: NonEmptyString,
                 categoryId: RecordId,
+                hint: Match.OneOf(null, String),
             }
         );
         // check(attrs.hint, String);
@@ -87,9 +86,9 @@ Meteor.methods({
                 _id: RecordId,
                 description: NonEmptyString,
                 date: NonEmptyString,
+                hint: Match.OneOf(null, String),
             }
         );
-        // check(attrs.hint, String);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -103,9 +102,7 @@ Meteor.methods({
 
         // If there is an ID, this is an update
         return Clues.update(
-            {
-                _id: attrs._id,
-            },
+            attrs._id,
             {
                 $set: {
                     description: attrs.description,
@@ -118,36 +115,29 @@ Meteor.methods({
     },
 
     // Categories
-    'clue.setCategories'(attrs) {
+    'clue.setCategories'(id, categories) {
 
-        check(
-            attrs,
-            {
-                _id: RecordId,
-                categories: [RecordId],
-            }
-        );
+        check(id, RecordId);
+        check(categories, [RecordId]);
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
-        Logger.log('Update Clue Categories: ' + attrs._id + ' ' + JSON.stringify(attrs.categories));
+        Logger.log('Update Clue Categories: ' + id + ' ' + JSON.stringify(categories));
 
         // Update the clue categories
         Clues.update(
-            {
-                _id: attrs._id,
-            },
+            id,
             {
                 $set: {
-                    categories: attrs.categories,
+                    categories: categories,
                 }
             }
         );
 
-        return attrs.categories.length;
+        return categories.length;
 
     },
 

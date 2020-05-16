@@ -45,7 +45,7 @@ Meteor.methods({
         check(
             attrs,
             {
-                name: RecordId,
+                name: NonEmptyString,
                 theme: NonEmptyString,
                 private: Boolean,
                 active: Boolean,
@@ -92,9 +92,7 @@ Meteor.methods({
 
         // If there is an ID, this is an update
         return Categories.update(
-            {
-                _id: attrs._id,
-            },
+            attrs._id,
             {
                 $set: {
                     name: attrs.name,
@@ -108,36 +106,29 @@ Meteor.methods({
     },
 
     // Collaborators
-    'category.setCollaborators'(attrs) {
+    'category.setCollaborators'(id, collaborators) {
 
-        check(
-            attrs,
-            {
-                _id: RecordId,
-                collaborators: [RecordId],
-            }
-        );
+        check(id, RecordId);
+        check(collaborators, [RecordId]);
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
-        Logger.log('Update Category Collaborators: ' + attrs._id + ' ' + JSON.stringify(attrs.collaborators));
+        Logger.log('Update Category Collaborators: ' + id + ' ' + JSON.stringify(collaborators));
 
         // Update the category collaborators
         Categories.update(
-            {
-                _id: attrs._id,
-            },
+            id,
             {
                 $set: {
-                    collaborators: attrs.collaborators,
+                    collaborators: collaborators,
                 }
             }
         );
 
-        return attrs.collaborators.length;
+        return collaborators.length;
 
     },
 
@@ -167,10 +158,11 @@ if (Meteor.isServer) {
         // Search
         'category.search'(query, excludeIds = []) {
 
-            check(query, String);
             if (typeof(excludeIds) != 'object') {
                 excludeIds = [excludeIds];
             }
+
+            check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
 
             const regex = new RegExp("^" + query, 'i');
@@ -196,6 +188,7 @@ if (Meteor.isServer) {
             if (typeof(ids) != 'object') {
                 ids = [ids];
             }
+
             check(ids, [RecordId]);
 
             return Categories.find(

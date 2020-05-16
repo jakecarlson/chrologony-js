@@ -21,12 +21,10 @@ Template.join.events({
 
         // Get value from form element
         const target = e.target;
-        const attrs = {
-            name: target.name.value,
-            password: target.password.value,
-        };
+        const name = target.name.value;
+        const password = target.password.value;
 
-        Meteor.call('room.joinOrCreate', attrs, function(error, id) {
+        Meteor.call('room.joinOrCreate', name, password, function(error, id) {
             if (error) {
                 Logger.log(error);
                 Flasher.set('danger', "That room exists, but the password is wrong.");

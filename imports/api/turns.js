@@ -40,32 +40,25 @@ if (Meteor.isServer) {
 Meteor.methods({
 
     // Update
-    'turn.setCard'(attrs) {
+    'turn.setCard'(id, cardId, lastCardCorrect) {
 
-        check(
-            attrs,
-            {
-                _id: RecordId,
-                currentCardId: Match.OneOf(null, RecordId),
-                lastCardCorrect: Match.OneOf(null, Boolean),
-            }
-        );
+        check(id, RecordId);
+        check(cardId, Match.OneOf(null, RecordId));
+        check(lastCardCorrect, Match.OneOf(null, Boolean));
 
         // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
-        Logger.log('Update Turn: ' + attrs._id + ' ' + JSON.stringify(attrs));
+        Logger.log('Update Turn ' + id + ' Card to ' + cardId);
 
         return Turns.update(
-            {
-                _id: attrs._id,
-            },
+            id,
             {
                 $set: {
-                    currentCardId: attrs.currentCardId,
-                    lastCardCorrect: attrs.lastCardCorrect,
+                    currentCardId: cardId,
+                    lastCardCorrect: lastCardCorrect,
                 }
             }
         );
@@ -94,9 +87,7 @@ if (Meteor.isServer) {
             // End the current turn
             if (game.currentTurnId) {
                 let updated = Turns.update(
-                    {
-                        _id: game.currentTurnId
-                    },
+                    game.currentTurnId,
                     {
                         $set: {
                             endedAt: new Date(),
@@ -179,13 +170,13 @@ if (Meteor.isServer) {
                 startedAt: new Date(),
             });
 
-            Meteor.call('game.setTurn', {_id: gameId, currentTurnId: turnId}, function(error, updated) {
+            Meteor.call('game.setTurn', gameId, turnId, function(error, updated) {
                 if (!error) {
                     Logger.log("Updated Game: " + updated);
                 }
             });
 
-            Meteor.call('card.draw', {turnId: turnId, gameId: gameId}, function(error, id) {
+            Meteor.call('card.draw', turnId, function(error, id) {
                 if (!error) {
                     Logger.log("Created Card: " + id);
                 }

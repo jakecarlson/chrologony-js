@@ -42,31 +42,24 @@ if (Meteor.isServer) {
 Meteor.methods({
 
     // Update
-    'game.setTurn'(attrs) {
+    'game.setTurn'(id, turnId) {
 
-        check(
-            attrs,
-            {
-                _id: RecordId,
-                currentTurnId: RecordId,
-            }
-        );
+        check(id, RecordId);
+        check(turnId, RecordId);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
-        Logger.log('Update Game: ' + attrs._id + ' ' + JSON.stringify(attrs));
+        Logger.log('Update Game Turn: ' + id + ': ' + turnId);
 
         // If there is an ID, this is an update
         return Games.update(
-            {
-                _id: attrs._id,
-            },
+            id,
             {
                 $set: {
-                    currentTurnId: attrs.currentTurnId,
+                    currentTurnId: turnId,
                 }
             }
         );
@@ -74,17 +67,22 @@ Meteor.methods({
     },
 
     // End
-    'game.end'(gameId) {
+    'game.end'(id) {
 
-        check(gameId, RecordId);
+        check(id, RecordId);
 
         // Make sure the user is logged in
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
-        let game = Games.findOne(gameId);
+        let game = Games.findOne(id);
         let turn = Turns.findOne(game.currentTurnId);
-        Games.update(gameId, { $set: { endedAt: new Date(), winner: turn.userId } });
+        return Games.update(
+            id,
+            {
+                $set: {endedAt: new Date(), winner: turn.userId},
+            }
+        );
 
     },
 
@@ -114,9 +112,7 @@ if (Meteor.isServer) {
             let room = Rooms.findOne(attrs.roomId);
             if (room.currentGameId) {
                 let updated = Games.update(
-                    {
-                        _id: room.currentGameId,
-                    },
+                    room.currentGameId,
                     {
                         $set: {
                             endedAt: new Date(),
@@ -138,7 +134,7 @@ if (Meteor.isServer) {
                 categoryId: attrs.categoryId,
             });
 
-            Meteor.call('room.setGame', {_id: attrs.roomId, currentGameId: gameId}, function (error, updated) {
+            Meteor.call('room.setGame', attrs.roomId, gameId, function (error, updated) {
                 if (!error) {
                     Logger.log("Updated Room: " + updated);
                 }

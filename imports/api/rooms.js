@@ -44,22 +44,20 @@ Meteor.methods({
 
     /*
     // Join
-    'room.join'(roomId) {
+    'room.join'(id) {
 
-        check(roomId, RecordId);
+        check(id, RecordId);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
-        Logger.log('Update User: ' + attrs._id + ' ' + JSON.stringify(attrs));
+        Logger.log('Join Room: ' + id);
 
         // If there is an ID, this is an update
         return Meteor.users.update(
-            {
-                _id: this.userId,
-            },
+            this.userId,
             {
                 $set: {
                     currentRoomId: roomId,
@@ -105,42 +103,38 @@ Meteor.methods({
             }
         }
 
-        Meteor.users.update(userId, {
-            $set: {
-                currentRoomId: null,
+        Meteor.users.update(
+            userId,
+            {
+                $set: {
+                    currentRoomId: null,
+                }
             }
-        });
+        );
 
         return userId;
 
     },
 
     // Set Game
-    'room.setGame'(attrs) {
+    'room.setGame'(id, gameId) {
 
-        check(
-            attrs,
-            {
-                _id: RecordId,
-                currentGameId: RecordId,
-            }
-        );
+        check(id, RecordId);
+        check(gameId, RecordId);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
-        Logger.log('Update Room: ' + attrs._id + ' ' + JSON.stringify(attrs));
+        Logger.log('Set Room ' + id + ' Game to ' + gameId);
 
         // If there is an ID, this is an update
         return Rooms.update(
-            {
-                _id: attrs._id,
-            },
+            id,
             {
                 $set: {
-                    currentGameId: attrs.currentGameId,
+                    currentGameId: gameId,
                 }
             }
         );
@@ -161,9 +155,7 @@ Meteor.methods({
 
         // If there is an ID, this is an update
         return Rooms.update(
-            {
-                _id: id,
-            },
+            id,
             {
                 $set: {
                     deletedAt: new Date(),
@@ -179,15 +171,10 @@ if (Meteor.isServer) {
 
     Meteor.methods({
 
-        'room.joinOrCreate'(attrs) {
+        'room.joinOrCreate'(name, password) {
 
-            check(
-                attrs,
-                {
-                    name: NonEmptyString,
-                    password: NonEmptyString,
-                }
-            );
+            check(name, NonEmptyString);
+            check(password, NonEmptyString);
 
             // Make sure the user is logged in before inserting a task
             if (! Meteor.userId()) {
@@ -201,7 +188,7 @@ if (Meteor.isServer) {
                 {
                     deletedAt: null,
                     name: {
-                        $regex: new RegExp(`^${attrs.name}$`),
+                        $regex: new RegExp(`^${name}$`),
                         $options: 'i',
                     },
                  },
@@ -211,21 +198,19 @@ if (Meteor.isServer) {
                 }
             );
             if (room) {
-                if ((room.owner != this.userId) && (room.password !== attrs.password)) {
+                if ((room.owner != this.userId) && (room.password !== password)) {
                     throw new Meteor.Error('not-authorized');
                 }
                 roomId = room._id;
             } else {
                 roomId = Rooms.insert({
-                    name: attrs.name,
-                    password: attrs.password,
+                    name: name,
+                    password: password,
                 });
             }
 
             Meteor.users.update(
-                {
-                    _id: Meteor.userId(),
-                },
+                Meteor.userId(),
                 {
                     $set: {
                         currentRoomId: roomId,

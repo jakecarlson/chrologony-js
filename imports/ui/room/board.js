@@ -168,7 +168,7 @@ Template.board.events({
             }
         });*/
 
-        Meteor.call('card.submitGuess', {gameId: this.game._id, turnId: this.turn._id, cardId: currentCardId, pos: currentCardPos}, function(error, correct) {
+        Meteor.call('card.submitGuess', currentCardId, currentCardPos, function(error, correct) {
             if (!error) {
                 Logger.log('Guess Correct for: ' + currentCardId + ': ' + correct);
             }
@@ -180,7 +180,7 @@ Template.board.events({
     'click .draw-card'(e, i) {
         LoadingState.start();
         let gameId = this.game._id;
-        Meteor.call('card.draw', {turnId: this.game.currentTurnId, gameId: gameId}, function(error, id) {
+        Meteor.call('card.draw', this.game.currentTurnId, function(error, id) {
             if (!error) {
                 Logger.log("Created Card: " + id);
                 Meteor.subscribe('cards', gameId);

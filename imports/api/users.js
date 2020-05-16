@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import { NonEmptyString } from "../startup/validations";
+import { NonEmptyString, RecordId } from "../startup/validations";
 
 if (Meteor.isServer) {
 
@@ -42,9 +42,14 @@ if (Meteor.isServer) {
 
         // Search
         'user.search'(query, excludeIds = []) {
+
             if (typeof(excludeIds) != 'object') {
                 excludeIds = [excludeIds];
             }
+
+            check(query, NonEmptyString);
+            check(excludeIds, [RecordId]);
+
             const regex = new RegExp("^" + query, 'i');
             return Meteor.users.find(
                 {
@@ -55,13 +60,18 @@ if (Meteor.isServer) {
                     sort: {username: 1},
                 }
             ).fetch();
+
         },
 
         // Get
         'user.get'(ids) {
+
             if (typeof(ids) != 'object') {
                 ids = [ids];
             }
+
+            check(ids, [RecordId]);
+
             return Meteor.users.find(
                 {
                         _id: {$in: ids},
@@ -70,6 +80,7 @@ if (Meteor.isServer) {
                     sort: {username: 1},
                 }
             ).fetch();
+
         },
 
     });

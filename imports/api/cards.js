@@ -79,9 +79,7 @@ Meteor.methods({
             check(id, RecordId);
             check(pos, Match.Integer);
             numUpdated += Cards.update(
-                {
-                    _id: id,
-                },
+                id,
                 {
                     $set: {
                         pos: pos,
@@ -114,9 +112,7 @@ Meteor.methods({
 
         // If there is an ID, this is an update
         return Cards.update(
-            {
-                _id: id,
-            },
+            id,
             {
                 $set: {
                     lockedAt: new Date(),
@@ -127,17 +123,10 @@ Meteor.methods({
     },
 
     // Submit Guess
-    'card.submitGuess'(args) {
+    'card.submitGuess'(id, pos) {
 
-        check(
-            args,
-            {
-                gameId: RecordId,
-                turnId: RecordId,
-                cardId: RecordId,
-                pos: Match.Integer,
-            }
-        );
+        check(id, RecordId);
+        check(pos, Match.Integer);
 
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
@@ -145,45 +134,44 @@ Meteor.methods({
         }
 
         // Get the previously correct cards + the current card in the correct order
-        let turn = Turns.findOne(args.turnId);
-        let card = Cards.find(
+        const card = Cards.findOne(id)
+        let turn = Turns.findOne(card.turnId);
+        let guess = Cards.find(
             {
-                gameId: args.gameId,
+                gameId: turn.gameId,
                 userId: turn.userId,
                 $or: [
                     {lockedAt: {$ne: null}},
-                    {turnId: args.turnId, correct: true},
-                    {_id: args.cardId},
+                    {turnId: turn._id, correct: true},
+                    {_id: id},
                 ],
             },
             {
                 sort: {
                     'clue.date': 1,
                 },
-                skip: args.pos,
+                skip: pos,
                 limit: 1,
             }
         ).fetch()[0];
 
         // Validate that the card is in the correct position
-        let correct = (args.cardId === card._id);
+        let correct = (id === card._id);
 
         Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
 
         // Null out the current card ID
-        Meteor.call('turn.setCard', {_id: args.turnId, currentCardId: null, lastCardCorrect: correct}, function(error, updated) {
+        Meteor.call('turn.setCard', turn._id, null, correct, function(error, updated) {
             if (!error) {
                 Logger.log("Updated Turn: " + updated);
             }
         });
 
-        Logger.log('Update Card: ' + args.cardId + ' ' + JSON.stringify({correct: correct}));
+        Logger.log('Update Card: ' + id + ' ' + JSON.stringify({correct: correct}));
 
         // Update the card
         Cards.update(
-            {
-                _id: args.cardId,
-            },
+            id,
             {
                 $set: {
                     correct: correct,
@@ -202,15 +190,9 @@ if (Meteor.isServer) {
     Meteor.methods({
 
         // Draw Card
-        'card.draw'(attrs) {
+        'card.draw'(turnId) {
 
-            check(
-                attrs,
-                {
-                    turnId: RecordId,
-                    gameId: RecordId,
-                }
-            );
+            check(turnId, RecordId);
 
             // Make sure the user is logged in
             if (! Meteor.userId()) {
@@ -218,10 +200,10 @@ if (Meteor.isServer) {
             }
 
             // Draw the card -- defer this to a helper defined below because it's recursive
-            let cardId = drawCard(attrs.gameId, attrs.turnId);
+            let cardId = drawCard(turnId);
             Logger.log("Card ID: " + cardId);
 
-            Meteor.call('turn.setCard', {_id: attrs.turnId, currentCardId: cardId, lastCardCorrect: null}, function(error, updated) {
+            Meteor.call('turn.setCard', turnId, cardId, null, function(error, updated) {
                 if (!error) {
                     Logger.log("Updated Turn: " + updated);
                 }
@@ -236,11 +218,12 @@ if (Meteor.isServer) {
 }
 
 // Helpers
-function drawCard(gameId, turnId) {
+function drawCard(turnId) {
 
     // Get a random card that hasn't been drawn this game
-    let game = Games.findOne(gameId);
-    let lockedCards = Cards.find({gameId: gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
+    let turn = Turns.findOne(turnId);
+    let game = Games.findOne(turn.gameId);
+    let lockedCards = Cards.find({gameId: turn.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
     let turnCards = Cards.find({turnId: turnId}).map(function(i) { return i.clueId; });
     let usedCards = lockedCards.concat(turnCards);
 
@@ -268,17 +251,16 @@ function drawCard(gameId, turnId) {
     let randomClue = possibleClues[0];
 
     // Set the card doc
-    let turn = Turns.findOne(turnId);
     let card = {
         turnId: turnId,
-        gameId: gameId,
+        gameId: turn.gameId,
         clueId: randomClue._id,
         clue: randomClue,
         userId: turn.userId,
     };
 
     // Figure out whether this is the first card
-    const userCards = Cards.find({gameId: gameId, userId: turn.userId}).fetch();
+    const userCards = Cards.find({gameId: turn.gameId, userId: turn.userId}).fetch();
     const firstCard = (userCards.length == 0);
 
     // If it's the first card, automatically mark it correct
@@ -294,7 +276,7 @@ function drawCard(gameId, turnId) {
 
     // If it's the first card, draw another
     if (firstCard) {
-        return drawCard(gameId, turnId);
+        return drawCard(turnId);
     } else {
         return cardId;
     }

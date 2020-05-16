@@ -68,12 +68,8 @@ Template.child_manager.events({
         i.state.get('children').forEach(function(child) {
             children.push(child.id);
         });
-        let attrs = {
-            _id: this.parent._id,
-        };
-        attrs[this.childrenName.toLowerCase()] = children;
         let childrenName = this.childrenName;
-        Meteor.call(this.parentType.toLowerCase() + '.set' + this.childrenName, attrs, function(err, numSaved) {
+        Meteor.call(this.parentType.toLowerCase() + '.set' + this.childrenName, this.parent._id, children, function(err, numSaved) {
             if (err) {
                 Logger.log(err, 3);
                 return;
