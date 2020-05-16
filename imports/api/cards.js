@@ -13,6 +13,7 @@ import { Turns } from "./turns";
 
 export const Cards = new Mongo.Collection('cards');
 
+/*
 Cards.schema = new SimpleSchema({
     turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
@@ -26,6 +27,7 @@ Cards.schema = new SimpleSchema({
 });
 Cards.schema.extend(Schema.timestamps);
 Cards.attachSchema(Cards.schema);
+ */
 
 if (Meteor.isServer) {
 
@@ -270,6 +272,7 @@ function drawCard(turnId) {
 
     // Add the card
     let cardId = Cards.insert(card);
+    console.log("New CARD: " + cardId);
 
     // If it's the first card, draw another
     if (firstCard) {
