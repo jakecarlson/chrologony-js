@@ -44,7 +44,7 @@ Template.register.events({
 
                 // Validate that the passwords match
                 if (password !== confirmPassword) {
-                    Flasher.set('danger', "Passwords do not match.")
+                    Flasher.set('danger', "Passwords do not match.");
 
                 // If so, continue on to attempt to register the user
                 } else {
@@ -64,15 +64,13 @@ Template.register.events({
                             } else {
                                 Flasher.set('success', "You have successfully registered. Create or join a room below.");
                             }
-                            LoadingState.stop();
+
                         }
                     );
 
                 }
 
             }
-
-            LoadingState.stop();
 
         });
 

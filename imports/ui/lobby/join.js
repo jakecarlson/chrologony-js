@@ -35,7 +35,6 @@ Template.join.events({
                 target.password.value = '';
                 Flasher.set('success', "Success! Invite others to join.");
             }
-            LoadingState.stop();
         });
 
     },

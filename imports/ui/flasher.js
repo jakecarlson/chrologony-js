@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
+import { LoadingState } from "../startup/LoadingState";
 
 import './flasher.html';
 
@@ -15,6 +16,9 @@ export const Flasher = {
 
     set(type, msg) {
         Session.set('flasher', {type: type, msg: msg});
+        if (type == 'danger') {
+            LoadingState.stop();
+        }
     },
 
     clear() {

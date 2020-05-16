@@ -29,7 +29,7 @@ Template.room.onCreated(function roomOnCreated() {
 
     Games.find().observeChanges({
         added: function(gameId, fields) {
-            Meteor.subscribe('games', Meteor.user().currentRoomId);
+            Meteor.subscribe('games', (Meteor.userId()) ? Meteor.user().currentRoomId : null);
             Meteor.subscribe('turns', gameId);
             Meteor.subscribe('cards', gameId);
         }

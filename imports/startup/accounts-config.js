@@ -30,7 +30,6 @@ Accounts.onLogin(function(auth) {
 Accounts.onLoginFailure(function(res) {
     Logger.log(res, 2);
     Flasher.set('danger', "Login failed. Please try again.");
-    LoadingState.stop();
 });
 
 if (Meteor.isServer) {
