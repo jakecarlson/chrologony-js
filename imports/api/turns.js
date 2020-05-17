@@ -79,7 +79,7 @@ if (Meteor.isServer) {
 
             // End the current turn
             if (game.currentTurnId) {
-                let updated = Turns.update(
+                const updated = Turns.update(
                     game.currentTurnId,
                     {
                         $set: {

@@ -40,7 +40,7 @@ Template.body.helpers({
 
     currentRoom() {
         if (Meteor.userId() && Meteor.user().currentRoomId) {
-            let room = Rooms.findOne({_id: Meteor.user().currentRoomId, deletedAt: null});
+            const room = Rooms.findOne({_id: Meteor.user().currentRoomId, deletedAt: null});
             if (room) {
                 return room;
             }

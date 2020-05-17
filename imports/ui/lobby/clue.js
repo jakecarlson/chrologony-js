@@ -55,7 +55,7 @@ Template.clue.helpers({
         if (!this.clue) {
             return true;
         } else {
-            let category = Categories.findOne(this.categoryId);
+            const category = Categories.findOne(this.categoryId);
             return (
                 (this.clue.owner == Meteor.userId()) ||
                 (category && (category.owner == Meteor.userId()))

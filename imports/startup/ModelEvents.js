@@ -12,7 +12,7 @@ export const ModelEvents = {
     add(e, i) {
 
         LoadingState.start(e);
-        let attrs = getAttrs(i);
+        const attrs = getAttrs(i);
 
         Meteor.call(getModelName(i) + '.create', attrs, function(error, id) {
             if (!error) {
@@ -30,7 +30,7 @@ export const ModelEvents = {
     save(e, i) {
 
         LoadingState.start(e);
-        let attrs = getAttrs(i);
+        const attrs = getAttrs(i);
 
         Meteor.call(getModelName(i) + '.update', attrs, function(error, updated) {
             if (!error) {
@@ -54,9 +54,9 @@ export const ModelEvents = {
 
     remove(e, i) {
         LoadingState.start(e);
-        let button = $(e.target);
-        let id = button.attr('data-id');
-        let modelName = button.attr('data-model');
+        const button = $(e.target);
+        const id = button.attr('data-id');
+        const modelName = button.attr('data-model');
         Meteor.call(modelName + '.remove', id, function(error, deleted) {
             if (!error) {
                 Logger.log('Deleted ' + capitalize(modelName) + ': ' + deleted);
@@ -74,7 +74,7 @@ function getModelName(i) {
 
 function getAttrs(i) {
     let attrs = {}
-    let inputs = i.findAll('.attr');
+    const inputs = i.findAll('.attr');
     for (input of inputs) {
         let val = input.value;
         if (input.type == 'checkbox') {
@@ -86,7 +86,7 @@ function getAttrs(i) {
 }
 
 function resetAttrs(i) {
-    let inputs = i.findAll('.attr');
+    const inputs = i.findAll('.attr');
     for (input of inputs) {
         if (input.type == 'checkbox') {
             input.checked = false;

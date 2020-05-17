@@ -59,7 +59,7 @@ Template.room.helpers({
 
     currentTurn() {
         if (this.room.currentGameId) {
-            let game = Games.findOne(this.room.currentGameId);
+            const game = Games.findOne(this.room.currentGameId);
             if (game && game.currentTurnId) {
                 return Turns.findOne(game.currentTurnId);
             }

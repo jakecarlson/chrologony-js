@@ -62,9 +62,9 @@ Meteor.methods({
 
         // Check to see if it's this user's turn currently and end it if so
         if (room.currentGameId) {
-            let game = Games.findOne(room.currentGameId);
+            const game = Games.findOne(room.currentGameId);
             if (game && game.currentTurnId) {
-                let turn = Turns.findOne(game.currentTurnId);
+                const turn = Turns.findOne(game.currentTurnId);
                 if (turn && (turn.owner == userId)) {
                     Meteor.call('turn.next', game._id, function(error, id) {
                         if (!error) {
@@ -150,7 +150,7 @@ if (Meteor.isServer) {
             let roomId = false;
 
             // If the room exists, validate the password
-            let room = Rooms.findOne(
+            const room = Rooms.findOne(
                 {
                     deletedAt: null,
                     name: {

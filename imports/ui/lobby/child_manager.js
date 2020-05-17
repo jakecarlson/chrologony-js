@@ -32,7 +32,7 @@ Template.child_manager.helpers({
         if (this.excludeId) {
             children.push(this.excludeId);
         }
-        let childMapper = this.childMapper;
+        const childMapper = this.childMapper;
         Meteor.call(this.childType + '.search', query, children, function(err, res) {
             if (err) {
                 Logger.log(err, 3);
@@ -43,7 +43,7 @@ Template.child_manager.helpers({
     },
 
     addChild(e, child, source) {
-        let children = Template.instance().state.get('children');
+        const children = Template.instance().state.get('children');
         children.push(child);
         setChildren(Template.instance(), children);
         Template.instance().state.set('error', false);
@@ -68,7 +68,7 @@ Template.child_manager.events({
         i.state.get('children').forEach(function(child) {
             children.push(child.id);
         });
-        let childrenName = this.childrenName;
+        const childrenName = this.childrenName;
         Meteor.call(this.parentType.toLowerCase() + '.set' + this.childrenName, this.parent._id, children, function(err, numSaved) {
             if (err) {
                 Logger.log(err, 3);
@@ -82,9 +82,9 @@ Template.child_manager.events({
 
     'click .remove'(e, i) {
         e.preventDefault();
-        let link = $(e.target);
-        let id = link.attr('data-id');
-        let children = i.state.get('children');
+        const link = $(e.target);
+        const id = link.attr('data-id');
+        const children = i.state.get('children');
         if (this.required && children.length < 2) {
             i.state.set('error', true);
             return;

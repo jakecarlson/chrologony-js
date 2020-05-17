@@ -33,7 +33,7 @@ if (Meteor.isServer) {
 
         // Validate CAPTCHA
         'user.validateCaptcha'(captcha) {
-            let captchaResult = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captcha);
+            const captchaResult = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captcha);
             if (!captchaResult.success) {
                 Logger.log('reCAPTCHA check failed!', captchaResult);
                 throw new Meteor.Error(422, 'reCAPTCHA Failed: ' + captchaResult.error);

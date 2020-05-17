@@ -69,8 +69,8 @@ Meteor.methods({
         check(id, RecordId);
         Permissions.authenticated();
 
-        let game = Games.findOne(id);
-        let turn = Turns.findOne(game.currentTurnId);
+        const game = Games.findOne(id);
+        const turn = Turns.findOne(game.currentTurnId);
         return Games.update(
             id,
             {
@@ -99,9 +99,9 @@ if (Meteor.isServer) {
             Permissions.authenticated();
 
             // End the previous game
-            let room = Rooms.findOne(attrs.roomId);
+            const room = Rooms.findOne(attrs.roomId);
             if (room.currentGameId) {
-                let updated = Games.update(
+                const updated = Games.update(
                     room.currentGameId,
                     {
                         $set: {
@@ -119,7 +119,7 @@ if (Meteor.isServer) {
             Logger.log('Create Game: ' + JSON.stringify(attrs));
 
             // Create the new game
-            let gameId = Games.insert({
+            const gameId = Games.insert({
                 roomId: attrs.roomId,
                 categoryId: attrs.categoryId,
             });

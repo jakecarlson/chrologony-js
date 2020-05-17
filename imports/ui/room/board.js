@@ -16,7 +16,7 @@ Template.board.onCreated(function boardOnCreated() {
 
         // Make sure the current turn isn't for a user who isn't in the room anymore
         if (this.data.turn && (this.data.turn.owner != Meteor.userId())) {
-            let turnUser = Meteor.users.findOne(this.data.turn.owner);
+            const turnUser = Meteor.users.findOne(this.data.turn.owner);
             if (!turnUser || (turnUser.currentRoomId != this.data.room._id)) {
                 endTurn(this.data.game);
             }
@@ -55,7 +55,7 @@ Template.board.helpers({
             if (this.turn.owner == Meteor.userId()) {
                 title += 'Your';
             } else {
-                let user = Meteor.users.findOne(this.turn.owner);
+                const user = Meteor.users.findOne(this.turn.owner);
                 if (user) {
                     title += user.username + "'s";
                 } else {
@@ -131,9 +131,9 @@ Template.board.helpers({
     },
 
     timelineWidth() {
-        let cards = getTurnCards(this.game, this.turn);
+        const cards = getTurnCards(this.game, this.turn);
         if (cards.count) {
-            let numCards = cards.count()-2;
+            const numCards = cards.count()-2;
             return ((numCards * 5.25) + 45) + 'rem';
         } else {
             return '100%';
@@ -156,7 +156,7 @@ Template.board.events({
         const currentCardId = this.turn.currentCardId;
 
         $(i.findAll('.clue-card')).each(function(n, card) {
-            let id = $(card).attr('data-id');
+            const id = $(card).attr('data-id');
             pos[id] = n;
             if (id === currentCardId) {
                 currentCardPos = n;
@@ -174,7 +174,7 @@ Template.board.events({
 
     'click .draw-card'(e, i) {
         LoadingState.start();
-        let gameId = this.game._id;
+        const gameId = this.game._id;
         Meteor.call('card.draw', this.game.currentTurnId, function(error, id) {
             if (!error) {
                 Logger.log("Created Card: " + id);
@@ -279,7 +279,7 @@ function saveCardPos() {
 
 function endTurn(game) {
     Logger.log('End Turn: ' + game.currentTurnId);
-    let gameId = game._id;
+    const gameId = game._id;
     Meteor.call('turn.next', gameId, function(error, id) {
         if (!error) {
             Logger.log("Start Turn: " + id);

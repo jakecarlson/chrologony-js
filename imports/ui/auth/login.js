@@ -19,8 +19,8 @@ Template.login.events({
 
     'submit form': function(e) {
         LoadingState.start(e);
-        let username = e.target.username.value;
-        let password = e.target.password.value;
+        const username = e.target.username.value;
+        const password = e.target.password.value;
         Meteor.loginWithPassword(username, password);
         Flasher.clear();
         LoadingState.stop();

@@ -29,13 +29,13 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
             this.state.set('numResults', Clues.find().count());
 
-            let instance = this;
+            const instance = this;
             Tracker.afterFlush(() => {
 
                 $('#removeClue').on('show.bs.modal', function (event) {
-                    let button = $(event.relatedTarget);
-                    let id = button.attr('data-id');
-                    let modal = $(this)
+                    const button = $(event.relatedTarget);
+                    const id = button.attr('data-id');
+                    const modal = $(this)
                     modal.find('.remove').attr('data-id', id);
                 });
 
@@ -59,7 +59,7 @@ Template.clues_manager.helpers({
         let selector = {};
 
         // keyword
-        let keyword = Template.instance().state.get('keyword');
+        const keyword = Template.instance().state.get('keyword');
         if (keyword.length > 2) {
             selector.$or = [
                 {description: {$regex: keyword, $options: 'i'}},
@@ -74,7 +74,7 @@ Template.clues_manager.helpers({
         }
 
         // category
-        let categoryId = Template.instance().state.get('categoryId');
+        const categoryId = Template.instance().state.get('categoryId');
         if (categoryId) {
             selector.categories = categoryId;
         }
@@ -124,7 +124,7 @@ Template.clues_manager.events({
     },
 
     'change #cluesFilter [name="categoryId"]'(e, i) {
-        let categoryId = e.target.options[e.target.selectedIndex].value;
+        const categoryId = e.target.options[e.target.selectedIndex].value;
         i.state.set('categoryId', categoryId);
     },
 
@@ -136,8 +136,8 @@ Template.clues_manager.events({
 
     'click .categories'(e, i) {
         LoadingState.start(e);
-        let link = $(e.target);
-        let id = link.attr('data-id');
+        const link = $(e.target);
+        const id = link.attr('data-id');
         const clue = Clues.findOne(id);
         i.state.set('currentClue', clue);
         if (clue && clue.categories) {

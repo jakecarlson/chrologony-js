@@ -128,7 +128,7 @@ if (Meteor.isServer) {
             Permissions.authenticated();
 
             // Draw the card -- defer this to a helper defined below because it's recursive
-            let cardId = drawCard(turnId);
+            const cardId = drawCard(turnId);
             Logger.log("Card ID: " + cardId);
 
             Meteor.call('turn.setCard', turnId, cardId, null, function(error, updated) {
@@ -179,7 +179,7 @@ if (Meteor.isServer) {
             ).fetch()[0];
 
             // Validate that the card is in the correct position
-            let correct = (card.clueId === guess._id);
+            const correct = (card.clueId === guess._id);
 
             Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
 
@@ -214,11 +214,11 @@ if (Meteor.isServer) {
 function drawCard(turnId) {
 
     // Get a random card that hasn't been drawn this game
-    let turn = Turns.findOne(turnId);
-    let game = Games.findOne(turn.gameId);
-    let lockedCards = Cards.find({gameId: turn.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
-    let turnCards = Cards.find({turnId: turnId}).map(function(i) { return i.clueId; });
-    let usedCards = lockedCards.concat(turnCards);
+    const turn = Turns.findOne(turnId);
+    const game = Games.findOne(turn.gameId);
+    const lockedCards = Cards.find({gameId: turn.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
+    const turnCards = Cards.find({turnId: turnId}).map(function(i) { return i.clueId; });
+    const usedCards = lockedCards.concat(turnCards);
 
     Logger.log('Used Cards: ' + JSON.stringify(usedCards));
 
@@ -229,7 +229,7 @@ function drawCard(turnId) {
     if (usedCards.length > 0) {
         selector._id = {$nin: usedCards};
     }
-    let possibleClues = Promise.await(
+    const possibleClues = Promise.await(
         Clues.rawCollection().aggregate(
             [
                 {$match: selector},
@@ -241,10 +241,10 @@ function drawCard(turnId) {
         Logger.log("No more cards to draw!!!");
         return null;
     }
-    let randomClue = possibleClues[0];
+    const randomClue = possibleClues[0];
 
     // Set the card doc
-    let card = {
+    const card = {
         gameId: turn.gameId,
         turnId: turnId,
         clueId: randomClue._id,
@@ -269,7 +269,7 @@ function drawCard(turnId) {
     Logger.log('Insert Card: ' + JSON.stringify(card));
 
     // Add the card
-    let cardId = Cards.insert(card);
+    const cardId = Cards.insert(card);
 
     // If it's the first card, draw another
     if (firstCard) {

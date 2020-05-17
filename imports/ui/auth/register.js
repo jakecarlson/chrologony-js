@@ -22,7 +22,7 @@ Template.register.events({
         LoadingState.start(e);
 
         // Validate the CAPTCHA
-        let captcha = grecaptcha.getResponse();
+        const captcha = grecaptcha.getResponse();
         grecaptcha.reset();
         Meteor.call('user.validateCaptcha', captcha, function(error, result) {
 
@@ -38,9 +38,9 @@ Template.register.events({
             } else {
 
                 // Get the inputs
-                let username = e.target.username.value;
-                let password = e.target.password.value;
-                let confirmPassword = e.target.password_confirm.value;
+                const username = e.target.username.value;
+                const password = e.target.password.value;
+                const confirmPassword = e.target.password_confirm.value;
 
                 // Validate that the passwords match
                 if (password !== confirmPassword) {

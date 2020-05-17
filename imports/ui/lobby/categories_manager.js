@@ -23,13 +23,13 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
 
         if (this.subscriptionsReady()) {
 
-            let instance = this;
+            const instance = this;
             Tracker.afterFlush(() => {
 
                 $('#removeCategory').on('show.bs.modal', function(e) {
-                    let button = $(e.relatedTarget);
-                    let id = button.attr('data-id');
-                    let modal = $(this)
+                    const button = $(e.relatedTarget);
+                    const id = button.attr('data-id');
+                    const modal = $(this)
                     modal.find('.remove').attr('data-id', id);
                 });
 
@@ -81,8 +81,8 @@ Template.categories_manager.events({
 
     'click .collaborators'(e, i) {
         LoadingState.start(e);
-        let link = $(e.target);
-        let id = link.attr('data-id');
+        const link = $(e.target);
+        const id = link.attr('data-id');
         const category = Categories.findOne(id);
         i.state.set('currentCategory', category);
         if (category && category.collaborators) {
