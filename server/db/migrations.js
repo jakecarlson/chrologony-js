@@ -1,5 +1,6 @@
 import { Turns } from '../../imports/api/turns';
 import { Cards } from '../../imports/api/cards';
+import { Clues } from '../../imports/api/clues';
 
 // Rename userId to owner on Turns and Cards.
 Migrations.add({
