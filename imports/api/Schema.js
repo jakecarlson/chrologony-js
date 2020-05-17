@@ -2,7 +2,7 @@ import SimpleSchema from "simpl-schema";
 
 export const Schema = {
 
-    timestamps: new SimpleSchema({
+    timestampable: new SimpleSchema({
         createdAt: {
             type: Date,
             autoValue() {
@@ -22,8 +22,8 @@ export const Schema = {
         },
     }),
 
-    owned: new SimpleSchema({
-        owner: {
+    ownable: new SimpleSchema({
+        ownerId: {
             type: String,
             regEx: SimpleSchema.RegEx.Id,
             autoValue() {
@@ -32,7 +32,27 @@ export const Schema = {
                 }
                 return undefined;
             },
+            // required: true,
+            optional: true,
+        },
+        owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
+    }),
+
+    endable: new SimpleSchema({
+        startedAt: {
+            type: Date,
+            autoValue() {
+                if (this.isInsert) {
+                    return new Date();
+                }
+                return undefined;
+            },
             required: true,
+        },
+        endedAt: {
+            type: Date,
+            defaultValue: null,
+            optional: true,
         },
     }),
 

@@ -14,12 +14,38 @@ export const Turns = new Mongo.Collection('turns');
 
 Turns.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    ownerId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},
 });
-Turns.schema.extend(Schema.timestamps);
+Turns.schema.extend(Schema.timestampable);
+Turns.schema.extend(Schema.endable);
 Turns.attachSchema(Turns.schema);
+
+Turns.helpers({
+
+    game() {
+        return Games.findOne(this.gameId);
+    },
+
+    cards() {
+        return Cards.find({turnId: this._id}, {sort: {pos: 1}});
+    },
+
+    correctCards() {
+        return Cards.find({turnId: this._id, correct: true}, {sort: {pos: 1}});
+    },
+
+    currentCard() {
+        return Cards.findOne(this.currentCardId);
+    },
+
+    owner() {
+        return Meteor.users.findOne(this.ownerId);
+    },
+
+});
 
 if (Meteor.isServer) {
 
@@ -95,22 +121,21 @@ if (Meteor.isServer) {
             }
 
             // Lock all current turn cards
-            const turnCards = Cards.find({turnId: game.currentTurnId});
-            const correctCards = Cards.find({turnId: game.currentTurnId, correct: true});
-            if (turnCards.count() === correctCards.count()) {
-                correctCards.forEach(function(card) {
-                    Meteor.call('card.lock', card._id, function(error, updated) {
-                        if (!error) {
-                            Logger.log("Locked Card: " + updated);
-                        }
+            if (game.currentTurn() && game.currentTurn().cards()) {
+                if (game.currentTurn().cards().count() === game.currentTurn().correctCards().count()) {
+                    game.currentTurn().correctCards().forEach(function(card) {
+                        Meteor.call('card.lock', card._id, function(error, updated) {
+                            if (!error) {
+                                Logger.log("Locked Card: " + updated);
+                            }
+                        });
                     });
-                });
+                }
             }
 
             // Create an array of user IDs of players currently in the room
-            const roomUsers = Meteor.users.find({currentRoomId: game.roomId}).fetch();
             let playerPool = [];
-            roomUsers.forEach(function(user) {
+            game.room().players().forEach(function(user) {
                 playerPool.push(user._id);
             });
 
@@ -120,9 +145,9 @@ if (Meteor.isServer) {
             const players = Promise.await(
                 Turns.rawCollection().aggregate(
                     [
-                        {$match: {gameId: gameId, owner: {$in: playerPool}}},
-                        {$group: {_id: "$owner", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
-                        {$sort: {turns: -1, lastTurn: 1, owner: randomSort}}
+                        {$match: {gameId: gameId, ownerId: {$in: playerPool}}},
+                        {$group: {_id: "$ownerId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
+                        {$sort: {turns: -1, lastTurn: 1, ownerId: randomSort}}
                     ]
                 ).toArray()
             );
@@ -141,7 +166,7 @@ if (Meteor.isServer) {
                 },
                 {
                     $sort: {
-                        owner: -1,
+                        ownerId: -1,
                     }
                 }
             ).fetch();
@@ -159,7 +184,7 @@ if (Meteor.isServer) {
             Logger.log("Next Turn Belongs To: " + lastPlayer._id);
             const turnId = Turns.insert({
                 gameId: gameId,
-                owner: lastPlayer._id,
+                ownerId: lastPlayer._id,
                 startedAt: new Date(),
             });
 

@@ -18,13 +18,34 @@ Cards.schema = new SimpleSchema({
     turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
     // clueId: {type: String, regEx: SimpleSchema.RegEx.idOfLength()}, // Doesn't work for imported IDs
     clueId: {type: String, min: 17, max: 24},
-    owner: {type: String, regEx: SimpleSchema.RegEx.Id},
+    ownerId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
+    owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     correct: {type: Boolean, defaultValue: null, optional: true},
     lockedAt: {type: Date, defaultValue: null, optional: true},
     pos: {type: SimpleSchema.Integer, defaultValue: 0},
 });
-Cards.schema.extend(Schema.timestamps);
+Cards.schema.extend(Schema.timestampable);
 Cards.attachSchema(Cards.schema);
+
+Cards.helpers({
+
+    game() {
+        return Games.findOne(this.gameId);
+    },
+
+    turn() {
+        return Turns.findOne(this.turnId);
+    },
+
+    clue() {
+        return Clues.findOne(this.clueId);
+    },
+
+    owner() {
+        return Meteor.users.findOne(this.ownerId);
+    },
+
+});
 
 if (Meteor.isServer) {
 
@@ -72,7 +93,7 @@ Meteor.methods({
             numUpdated += Cards.update(
                 {
                     _id: id,
-                    owner: Meteor.userId(),
+                    ownerId: Meteor.userId(),
                 },
                 {
                     $set: {
@@ -104,7 +125,7 @@ Meteor.methods({
         return Cards.update(
             {
                 _id: id,
-                owner: Meteor.userId(),
+                ownerId: Meteor.userId(),
             },
             {
                 $set: {
@@ -150,16 +171,15 @@ if (Meteor.isServer) {
 
             // Get the previously correct cards + the current card in the correct order
             const card = Cards.findOne(id);
-            const turn = Turns.findOne(card.turnId);
             const clueIds = Promise.await(
                 Cards.rawCollection().distinct(
                     'clueId',
                     {
-                        gameId: turn.gameId,
-                        owner: Meteor.userId(),
+                        gameId: card.turn().gameId,
+                        ownerId: Meteor.userId(),
                         $or: [
                             {lockedAt: {$ne: null}},
-                            {turnId: turn._id, correct: true},
+                            {turnId: card.turn()._id, correct: true},
                             {_id: id},
                         ],
                     }
@@ -184,7 +204,7 @@ if (Meteor.isServer) {
             Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
 
             // Null out the current card ID
-            Meteor.call('turn.setCard', turn._id, null, correct, function(error, updated) {
+            Meteor.call('turn.setCard', card.turn()._id, null, correct, function(error, updated) {
                 if (!error) {
                     Logger.log("Updated Turn: " + updated);
                 }
@@ -215,7 +235,6 @@ function drawCard(turnId) {
 
     // Get a random card that hasn't been drawn this game
     const turn = Turns.findOne(turnId);
-    const game = Games.findOne(turn.gameId);
     const lockedCards = Cards.find({gameId: turn.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
     const turnCards = Cards.find({turnId: turnId}).map(function(i) { return i.clueId; });
     const usedCards = lockedCards.concat(turnCards);
@@ -224,7 +243,7 @@ function drawCard(turnId) {
 
     let selector = {
         active: true,
-        categories: game.categoryId,
+        categories: turn.game().categoryId,
     };
     if (usedCards.length > 0) {
         selector._id = {$nin: usedCards};
@@ -248,14 +267,14 @@ function drawCard(turnId) {
         gameId: turn.gameId,
         turnId: turnId,
         clueId: randomClue._id,
-        owner: turn.owner,
+        ownerId: turn.ownerId,
     };
 
     // Figure out whether this is the first card
     const userCards = Cards.find(
         {
             gameId: turn.gameId,
-            owner: turn.owner
+            ownerId: turn.ownerId,
         }
     ).fetch();
     const firstCard = (userCards.length == 0);

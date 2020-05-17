@@ -70,7 +70,7 @@ Template.clues_manager.helpers({
 
         // owned
         if (Template.instance().state.get('owned')) {
-            selector.owner = Meteor.userId();
+            selector.ownerId = Meteor.userId();
         }
 
         // category

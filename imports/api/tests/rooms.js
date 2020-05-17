@@ -18,7 +18,7 @@ if (Meteor.isServer) {
                     name: 'test room',
                     password: 'test password',
                     createdAt: new Date(),
-                    owner: userId,
+                    ownerId: userId,
                     username: 'tmeasday',
                 });
             });

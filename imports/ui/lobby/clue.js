@@ -57,8 +57,8 @@ Template.clue.helpers({
         } else {
             const category = Categories.findOne(this.categoryId);
             return (
-                (this.clue.owner == Meteor.userId()) ||
-                (category && (category.owner == Meteor.userId()))
+                (this.clue.ownerId == Meteor.userId()) ||
+                (category && (category.ownerId == Meteor.userId()))
             );
         }
     },

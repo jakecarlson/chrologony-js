@@ -54,7 +54,7 @@ function getCategoriesSelector(isPrivate, inGame) {
     };
     if (isPrivate) {
         selector.$or = [
-            {owner: Meteor.userId()},
+            {ownerId: Meteor.userId()},
             {collaborators: Meteor.userId()},
         ];
     }

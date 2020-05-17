@@ -12,7 +12,7 @@ Template.player.onCreated(function playerOnCreated() {
 Template.player.helpers({
 
     isTurnOwner() {
-        return (this.turn && (this.turn.owner == this.player._id));
+        return (this.turn && (this.turn.ownerId == this.player._id));
     },
 
     id() {
@@ -26,7 +26,7 @@ Template.player.helpers({
     numLockedCards() {
         return Cards.find(
             {
-                owner: this.player._id,
+                ownerId: this.player._id,
                 gameId: this.room.currentGameId,
                 lockedAt: {$ne: null}
             }
@@ -38,7 +38,7 @@ Template.player.helpers({
     },
 
     canEject() {
-        return ((this.room.owner == Meteor.userId()) && (this.player._id != Meteor.userId()));
+        return ((this.room.ownerId == Meteor.userId()) && (this.player._id != Meteor.userId()));
     },
 
 });

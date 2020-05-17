@@ -6,6 +6,8 @@ import { Permissions } from './Permissions';
 import SimpleSchema from "simpl-schema";
 import { Schema } from "./Schema";
 
+import { Categories } from "./categories";
+
 export const Clues = new Mongo.Collection('clues');
 
 Clues.schema = new SimpleSchema(
@@ -28,9 +30,31 @@ Clues.schema = new SimpleSchema(
         requiredByDefault: false,
     }
 );
-Clues.schema.extend(Schema.timestamps);
-Clues.schema.extend(Schema.owned);
+Clues.schema.extend(Schema.timestampable);
+Clues.schema.extend(Schema.ownable);
 Clues.attachSchema(Clues.schema);
+
+Clues.helpers({
+
+    categories() {
+        return Categories.find(
+            {
+                _id: {$in: this.categories},
+            },
+            {
+                sort: {
+                    theme: 1,
+                    name: 1,
+                },
+            }
+        );
+    },
+
+    owner() {
+        return Meteor.users.findOne(this.ownerId);
+    },
+
+});
 
 if (Meteor.isServer) {
     Meteor.publish('clues', function cluesPublication(categoryId) {
@@ -96,7 +120,7 @@ Meteor.methods({
         return Clues.update(
             {
                 _id: attrs._id,
-                owner: Meteor.userId(),
+                ownerId: Meteor.userId(),
             },
             {
                 $set: {
@@ -122,7 +146,7 @@ Meteor.methods({
         Clues.update(
             {
                 _id: id,
-                owner: Meteor.userId(),
+                ownerId: Meteor.userId(),
             },
             {
                 $set: {
@@ -147,7 +171,7 @@ Meteor.methods({
         return Clues.remove(
             {
                 _id: id,
-                owner: Meteor.userId(),
+                ownerId: Meteor.userId(),
             }
         );
 

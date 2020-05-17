@@ -3,8 +3,8 @@ import { Template } from 'meteor/templating';
 import { Flasher } from '../flasher';
 import { LoadingState } from '../../startup/LoadingState';
 
+import '../../api/users';
 import { Games } from '../../api/games';
-import { Turns } from '../../api/turns';
 import { Cards } from "../../api/cards";
 
 import './room.html';
@@ -50,25 +50,24 @@ Template.room.onCreated(function roomOnCreated() {
 Template.room.helpers({
 
     isOwner() {
-        return (this.room.owner == Meteor.userId());
+        return (this.room.ownerId == Meteor.userId());
     },
 
     currentGame() {
-        return (this.room.currentGameId) ? Games.findOne(this.room.currentGameId) : null;
+        return this.room.currentGame();
     },
 
     currentTurn() {
         if (this.room.currentGameId) {
-            const game = Games.findOne(this.room.currentGameId);
-            if (game && game.currentTurnId) {
-                return Turns.findOne(game.currentTurnId);
+            if (this.room.currentGame() && this.room.currentGame().currentTurnId) {
+                return this.room.currentGame().currentTurn();
             }
         }
         return null;
     },
 
     players() {
-        return Meteor.users.find({currentRoomId: this.room._id});
+        return this.room.players();
     },
 
     password() {
@@ -76,8 +75,7 @@ Template.room.helpers({
     },
 
     owner() {
-        const user = Meteor.users.findOne(this.room.owner);
-        return (user) ? user.username : null;
+        return this.room.owner();
     },
 
 });

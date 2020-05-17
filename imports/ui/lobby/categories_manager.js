@@ -50,7 +50,7 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
 Template.categories_manager.helpers({
 
     ownedCategories() {
-        return Categories.find({owner: Meteor.userId()}, {sort:{name: 1}});
+        return Categories.find({ownerId: Meteor.userId()}, {sort: {theme: 1, name: 1}});
     },
 
     currentCategory() {

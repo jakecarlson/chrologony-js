@@ -1,21 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Clues } from '../../api/clues';
 
 import './card.html';
 
 Template.card.onCreated(function boardOnCreated() {
-
-    Meteor.subscribe('clueCards', this.data.turn.gameId);
-    this.clue = new ReactiveVar(null);
-
-    this.autorun(() => {
-
-        if (this.subscriptionsReady()) {
-            this.clue.set(Clues.findOne(this.data.card.clueId));
-        }
-
-    });
 
 });
 
@@ -26,19 +14,20 @@ Template.card.helpers({
     },
 
     date() {
-        return (this.card) ? moment.utc(getClueField(Template, 'date')).format("Y-MM-DD") : null;
+        return (this.card && this.card.clue()) ? moment.utc(this.card.clue().date).format("Y-MM-DD") : null;
+
     },
 
     year() {
-        return (this.card) ? moment.utc(getClueField(Template, 'date')).format("Y") : null;
+        return (this.card && this.card.clue()) ? moment.utc(this.card.clue().date).format("Y") : null;
     },
 
     description() {
-        return (this.card) ? getClueField(Template, 'description') : null;
+        return (this.card && this.card.clue()) ? this.card.clue().description : null;
     },
 
     hint() {
-        return (this.card) ? getClueField(Template, 'hint') : null;
+        return (this.card && this.card.clue()) ? this.card.clue().hint : null;
     },
 
     isLocked() {
@@ -72,16 +61,9 @@ Template.card.events({
 });
 
 function isOwned(turn, card) {
-    return (turn && card && (turn.owner == Meteor.userId()));
+    return (turn && card && (turn.ownerId == Meteor.userId()));
 }
 
 function isCurrent(turn, card) {
     return (turn && card) ? (turn.currentCardId == card._id) : false;
-}
-
-function getClueField(template, field) {
-    if (template.instance().clue.get()) {
-        return template.instance().clue.get()[field];
-    }
-    return null;
 }

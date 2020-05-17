@@ -9,7 +9,7 @@ export const Permissions = {
     },
 
     owned(item) {
-        if (item.owner != Meteor.userId()) {
+        if (item.ownerId != Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
     },

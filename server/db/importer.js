@@ -13,7 +13,7 @@ for (var i = 0; i < total; i += chunkSize) {
             parseInt(parts[i+2])
         );
         document.active = true;
-        document.owner = null;
+        document.ownerId = null;
         document.createdAt = new Date();
         document.updatedAt = new Date();
         // db.clues.insert(document);

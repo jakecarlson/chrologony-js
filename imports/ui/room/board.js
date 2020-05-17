@@ -15,9 +15,8 @@ Template.board.onCreated(function boardOnCreated() {
     this.autorun(() => {
 
         // Make sure the current turn isn't for a user who isn't in the room anymore
-        if (this.data.turn && (this.data.turn.owner != Meteor.userId())) {
-            const turnUser = Meteor.users.findOne(this.data.turn.owner);
-            if (!turnUser || (turnUser.currentRoomId != this.data.room._id)) {
+        if (this.data.turn && (this.data.turn.ownerId != Meteor.userId())) {
+            if (!this.data.turn.ownerId || (this.data.turn.owner().currentRoomId != this.data.room._id)) {
                 endTurn(this.data.game);
             }
         }
@@ -52,12 +51,11 @@ Template.board.helpers({
     turnTitle() {
         if (this.turn) {
             let title = '';
-            if (this.turn.owner == Meteor.userId()) {
+            if (this.turn.ownerId == Meteor.userId()) {
                 title += 'Your';
             } else {
-                const user = Meteor.users.findOne(this.turn.owner);
-                if (user) {
-                    title += user.username + "'s";
+                if (this.turn.ownerId) {
+                    title += this.turn.owner().username + "'s";
                 } else {
                     title += "Unknown's";
                 }
@@ -231,11 +229,11 @@ function getStatus(turn) {
 }
 
 function isCurrentPlayer(turn) {
-    return (turn && (turn.owner == Meteor.userId()));
+    return (turn && (turn.ownerId == Meteor.userId()));
 }
 
 function isRoomOwner(room) {
-    return (room.owner == Meteor.userId());
+    return (room.ownerId == Meteor.userId());
 }
 
 function getTurnCards(game, turn) {
@@ -243,7 +241,7 @@ function getTurnCards(game, turn) {
         return Cards.find(
             {
                 gameId: game._id,
-                owner: turn.owner,
+                ownerId: turn.ownerId,
                 $or: [
                     {turnId: turn._id},
                     {lockedAt: {$ne: null}},

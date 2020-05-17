@@ -5,6 +5,7 @@ import './players_list.html';
 import './player.js';
 
 Template.players_list.onCreated(function players_listOnCreated() {
+    this.subscribe('players', this.data.room._id);
     this.autorun(() => {
 
     });
@@ -13,11 +14,11 @@ Template.players_list.onCreated(function players_listOnCreated() {
 Template.players_list.helpers({
 
     players() {
-        return Meteor.users.find({currentRoomId: this.room._id});
+        return this.room.players();
     },
 
     isTurnOwner(userId) {
-        return (this.turn && (this.turn.owner == userId));
+        return (this.turn && (this.turn.ownerId == userId));
     },
 
 });

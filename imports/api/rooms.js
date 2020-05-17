@@ -17,9 +17,25 @@ Rooms.schema = new SimpleSchema({
     currentGameId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     deletedAt: {type: Date, defaultValue: null, optional: true},
 });
-Rooms.schema.extend(Schema.timestamps);
-Rooms.schema.extend(Schema.owned);
+Rooms.schema.extend(Schema.timestampable);
+Rooms.schema.extend(Schema.ownable);
 Rooms.attachSchema(Rooms.schema);
+
+Rooms.helpers({
+
+    currentGame() {
+        return Games.findOne(this.currentGameId);
+    },
+
+    players() {
+        return Meteor.users.find({currentRoomId: this._id});
+    },
+
+    owner() {
+        return Meteor.users.findOne(this.ownerId);
+    },
+
+});
 
 if (Meteor.isServer) {
 
@@ -54,19 +70,15 @@ Meteor.methods({
         Permissions.authenticated();
 
         // Make sure the user is the owner of the room that the other user is in, or the user him/herself
-        const roomId = Meteor.users.findOne(userId).currentRoomId;
-        const room = Rooms.findOne(roomId);
-        if ((userId != Meteor.userId()) && (room.owner != Meteor.userId())) {
+        if ((userId != Meteor.userId()) && (Meteor.user().currentRoom().ownerId != Meteor.userId())) {
             throw new Meteor.Error('not-authorized');
         }
 
         // Check to see if it's this user's turn currently and end it if so
-        if (room.currentGameId) {
-            const game = Games.findOne(room.currentGameId);
-            if (game && game.currentTurnId) {
-                const turn = Turns.findOne(game.currentTurnId);
-                if (turn && (turn.owner == userId)) {
-                    Meteor.call('turn.next', game._id, function(error, id) {
+        if (Meteor.user().currentRoom().currentGameId) {
+            if (Meteor.user().currentRoom().currentGame() && Meteor.user().currentRoom().currentGame().currentTurnId) {
+                if (Meteor.user().currentRoom().currentGame().currentTurn() && (Meteor.user().currentRoom().currentGame().currentTurn().ownerId == userId)) {
+                    Meteor.call('turn.next', Meteor.user().currentRoom().currentGameId, function(error, id) {
                         if (!error) {
                             Logger.log("Start Turn: " + id);
                         }
@@ -101,7 +113,7 @@ Meteor.methods({
         return Rooms.update(
             {
                 _id: id,
-                owner: Meteor.userId(),
+                ownerId: Meteor.userId(),
             },
             {
                 $set: {
@@ -124,7 +136,7 @@ Meteor.methods({
         return Rooms.update(
             {
                 _id: id,
-                owner: Meteor.userId(),
+                ownerId: Meteor.userId(),
             },
             {
                 $set: {
@@ -164,7 +176,7 @@ if (Meteor.isServer) {
                 }
             );
             if (room) {
-                if ((room.owner != this.userId) && (room.password !== password)) {
+                if ((room.ownerId != this.userId) && (room.password !== password)) {
                     throw new Meteor.Error('not-authorized');
                 }
                 roomId = room._id;

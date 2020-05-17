@@ -3,6 +3,8 @@ import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from './Permissions';
 
+import { Rooms } from "./rooms";
+
 if (Meteor.isServer) {
 
     // Additional user data
@@ -26,6 +28,14 @@ if (Meteor.isServer) {
     });
 
 }
+
+Meteor.users.helpers({
+
+    currentRoom() {
+        return Rooms.findOne({_id: this.currentRoomId, deletedAt: null});
+    },
+
+});
 
 if (Meteor.isServer) {
 

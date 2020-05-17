@@ -17,9 +17,28 @@ Categories.schema = new SimpleSchema({
     collaborators: {type: Array, defaultValue: [], optional: true},
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
 });
-Categories.schema.extend(Schema.timestamps);
-Categories.schema.extend(Schema.owned);
+Categories.schema.extend(Schema.timestampable);
+Categories.schema.extend(Schema.ownable);
 Categories.attachSchema(Categories.schema);
+
+Categories.helpers({
+
+    colabborators() {
+        return Meteor.users.find(
+            {
+                _id: {$in: this.collaborators},
+            },
+            {
+                sort: {username: 1},
+            }
+        );
+    },
+
+    owner() {
+        return Meteor.users.findOne(this.ownerId);
+    },
+
+});
 
 if (Meteor.isServer) {
     Meteor.publish('categories', function categoriesPublication() {
@@ -87,7 +106,7 @@ Meteor.methods({
         return Categories.update(
             {
                 _id: attrs._id,
-                owner: Meteor.userId(),
+                ownerId: Meteor.userId(),
             },
             {
                 $set: {
@@ -114,7 +133,7 @@ Meteor.methods({
         Categories.update(
             {
                 _id: id,
-                owner: Meteor.userId(),
+                ownerId: Meteor.userId(),
             },
             {
                 $set: {
@@ -139,7 +158,7 @@ Meteor.methods({
         return Categories.remove(
             {
                 _id: id,
-                owner: Meteor.userId(),
+                ownerId: Meteor.userId(),
             }
         );
 
@@ -207,7 +226,7 @@ if (Meteor.isServer) {
 function getAllowedConditions() {
     return [
         {private: false},
-        {owner: Meteor.userId()},
+        {ownerId: Meteor.userId()},
         {collaborators: Meteor.userId()},
     ];
 }

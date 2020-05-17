@@ -16,12 +16,36 @@ Games.schema = new SimpleSchema({
     categoryId: {type: String, regEx: SimpleSchema.RegEx.Id},
     streak: {type: Boolean, defaultValue: false},
     currentTurnId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
+    winnerId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     winner: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
-    startedAt: {type: Date, defaultValue: new Date(), optional: true},
-    endedAt: {type: Date, defaultValue: null, optional: true},
 });
-Games.schema.extend(Schema.timestamps);
+Games.schema.extend(Schema.timestampable);
+Games.schema.extend(Schema.endable);
 Games.attachSchema(Games.schema);
+
+Games.helpers({
+
+    room() {
+        return Rooms.findOne(this.roomId);
+    },
+
+    category() {
+        return Categories.findOne(this.categoryId);
+    },
+
+    currentTurn() {
+        return Turns.findOne(this.currentTurnId);
+    },
+
+    turns() {
+        return Turns.find({gameId: this._id});
+    },
+
+    winner() {
+        return Meteor.users.findOne(this.winnerId);
+    },
+
+});
 
 if (Meteor.isServer) {
 
@@ -70,11 +94,10 @@ Meteor.methods({
         Permissions.authenticated();
 
         const game = Games.findOne(id);
-        const turn = Turns.findOne(game.currentTurnId);
         return Games.update(
             id,
             {
-                $set: {endedAt: new Date(), winner: turn.owner},
+                $set: {endedAt: new Date(), winnerId: game.currentTurn().ownerId},
             }
         );
 
