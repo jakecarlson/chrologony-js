@@ -14,7 +14,6 @@ export const Turns = new Mongo.Collection('turns');
 
 Turns.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    userId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},

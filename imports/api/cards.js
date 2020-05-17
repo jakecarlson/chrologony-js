@@ -13,21 +13,18 @@ import { Turns } from "./turns";
 
 export const Cards = new Mongo.Collection('cards');
 
-/*
 Cards.schema = new SimpleSchema({
-    turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    clue: {type: Clues.schema},
-    userId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
-    owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
+    turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    // clueId: {type: String, regEx: SimpleSchema.RegEx.idOfLength()}, // Doesn't work for imported IDs
+    clueId: {type: String, min: 17, max: 24},
+    owner: {type: String, regEx: SimpleSchema.RegEx.Id},
     correct: {type: Boolean, defaultValue: null, optional: true},
     lockedAt: {type: Date, defaultValue: null, optional: true},
     pos: {type: SimpleSchema.Integer, defaultValue: 0},
 });
 Cards.schema.extend(Schema.timestamps);
 Cards.attachSchema(Cards.schema);
- */
 
 if (Meteor.isServer) {
 
@@ -39,28 +36,22 @@ if (Meteor.isServer) {
         }
     });
 
+    Meteor.publish('cardClues', function cardCluesPublication(gameId) {
+        if (this.userId && gameId) {
+            const clueIds = Promise.await(
+                Cards.rawCollection().distinct('clueId', {gameId: gameId})
+            );
+            return Clues.find({_id: {$in: clueIds}});
+        } else {
+            return this.ready();
+        }
+    });
+
     Cards.deny({
         insert() { return true; },
         update() { return true; },
         remove() { return true; },
     });
-
-    /*
-    Meteor.publish('playerCardCounts', function playerCardsCountPublication(gameId) {
-        if (this.userId && gameId) {
-            return Promise.await(
-                Cards.rawCollection().aggregate(
-                    [
-                        {$match: {gameId: gameId, lockedAt: {$ne: null}}},
-                        {$group: {_id: "$userId", cards: {$sum: 1}}}
-                    ]
-                ).toArray()
-            );
-        } else {
-            return this.ready();
-        }
-    });
-    */
 
 }
 
@@ -124,63 +115,6 @@ Meteor.methods({
 
     },
 
-    // Submit Guess
-    'card.submitGuess'(id, pos) {
-
-        check(id, RecordId);
-        check(pos, Match.Integer);
-        Permissions.authenticated();
-
-        // Get the previously correct cards + the current card in the correct order
-        const card = Cards.findOne(id);
-        let turn = Turns.findOne(card.turnId);
-        let guess = Cards.find(
-            {
-                gameId: turn.gameId,
-                owner: Meteor.userId(),
-                $or: [
-                    {lockedAt: {$ne: null}},
-                    {turnId: turn._id, correct: true},
-                    {_id: id},
-                ],
-            },
-            {
-                sort: {
-                    'clue.date': 1,
-                },
-                skip: pos,
-                limit: 1,
-            }
-        ).fetch()[0];
-
-        // Validate that the card is in the correct position
-        let correct = (id === guess._id);
-
-        Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
-
-        // Null out the current card ID
-        Meteor.call('turn.setCard', turn._id, null, correct, function(error, updated) {
-            if (!error) {
-                Logger.log("Updated Turn: " + updated);
-            }
-        });
-
-        Logger.log('Update Card: ' + id + ' ' + JSON.stringify({correct: correct}));
-
-        // Update the card
-        Cards.update(
-            id,
-            {
-                $set: {
-                    correct: correct,
-                }
-            }
-        );
-
-        return correct;
-
-    },
-
 });
 
 if (Meteor.isServer) {
@@ -204,6 +138,71 @@ if (Meteor.isServer) {
             });
 
             return cardId;
+
+        },
+
+        // Submit Guess
+        'card.submitGuess'(id, pos) {
+
+            check(id, RecordId);
+            check(pos, Match.Integer);
+            Permissions.authenticated();
+
+            // Get the previously correct cards + the current card in the correct order
+            const card = Cards.findOne(id);
+            const turn = Turns.findOne(card.turnId);
+            const clueIds = Promise.await(
+                Cards.rawCollection().distinct(
+                    'clueId',
+                    {
+                        gameId: turn.gameId,
+                        owner: Meteor.userId(),
+                        $or: [
+                            {lockedAt: {$ne: null}},
+                            {turnId: turn._id, correct: true},
+                            {_id: id},
+                        ],
+                    }
+                )
+            );
+            const guess = Clues.find(
+                {
+                    _id: {$in: clueIds},
+                },
+                {
+                    sort: {
+                        date: 1,
+                    },
+                    skip: pos,
+                    limit: 1,
+                }
+            ).fetch()[0];
+
+            // Validate that the card is in the correct position
+            let correct = (card.clueId === guess._id);
+
+            Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
+
+            // Null out the current card ID
+            Meteor.call('turn.setCard', turn._id, null, correct, function(error, updated) {
+                if (!error) {
+                    Logger.log("Updated Turn: " + updated);
+                }
+            });
+
+            Logger.log('Update Card: ' + id + ' ' + JSON.stringify({correct: correct}));
+
+            // Update the card
+            Cards.update(
+                id,
+                {
+                    $set: {
+                        correct: correct,
+                    }
+                }
+            );
+
+            return correct;
 
         },
 
@@ -246,10 +245,9 @@ function drawCard(turnId) {
 
     // Set the card doc
     let card = {
-        turnId: turnId,
         gameId: turn.gameId,
+        turnId: turnId,
         clueId: randomClue._id,
-        clue: randomClue,
         owner: turn.owner,
     };
 
@@ -272,7 +270,6 @@ function drawCard(turnId) {
 
     // Add the card
     let cardId = Cards.insert(card);
-    console.log("New CARD: " + cardId);
 
     // If it's the first card, draw another
     if (firstCard) {

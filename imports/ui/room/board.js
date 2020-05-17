@@ -5,6 +5,7 @@ import { LoadingState } from '../../startup/LoadingState';
 // import { Insult } from "insult";
 
 import { Cards } from '../../api/cards';
+import { Turns } from "../../api/turns";
 
 import './board.html';
 import './card.js';
@@ -162,12 +163,6 @@ Template.board.events({
             }
         });
 
-        /*Meteor.call('card.setPositions', pos, function(error, updated) {
-            if (!error) {
-                Logger.log("Card Positions Updated: " + updated);
-            }
-        });*/
-
         Meteor.call('card.submitGuess', currentCardId, currentCardPos, function(error, correct) {
             if (!error) {
                 Logger.log('Guess Correct for: ' + currentCardId + ': ' + correct);
@@ -184,6 +179,7 @@ Template.board.events({
             if (!error) {
                 Logger.log("Created Card: " + id);
                 Meteor.subscribe('cards', gameId);
+                Meteor.subscribe('cardClues', gameId);
             }
             LoadingState.stop();
         });
@@ -289,6 +285,7 @@ function endTurn(game) {
             Logger.log("Start Turn: " + id);
             Meteor.subscribe('turns', gameId);
             Meteor.subscribe('cards', gameId);
+            Meteor.subscribe('cardClues', gameId);
         }
         LoadingState.stop();
     });

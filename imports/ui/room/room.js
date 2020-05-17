@@ -5,6 +5,7 @@ import { LoadingState } from '../../startup/LoadingState';
 
 import { Games } from '../../api/games';
 import { Turns } from '../../api/turns';
+import { Cards } from "../../api/cards";
 
 import './room.html';
 import './players_list.js';
@@ -20,6 +21,7 @@ Template.room.onCreated(function roomOnCreated() {
         this.subscribe('players', this.data.room._id);
         this.subscribe('turns', this.data.room.currentGameId);
         this.subscribe('cards', this.data.room.currentGameId);
+        this.subscribe('cardClues', this.data.room.currentGameId);
 
         if (this.subscriptionsReady()) {
             LoadingState.stop();
@@ -32,6 +34,14 @@ Template.room.onCreated(function roomOnCreated() {
             Meteor.subscribe('games', (Meteor.userId()) ? Meteor.user().currentRoomId : null);
             Meteor.subscribe('turns', gameId);
             Meteor.subscribe('cards', gameId);
+            Meteor.subscribe('cardClues', gameId);
+        }
+    });
+
+    Cards.find().observeChanges({
+        added: function(cardId, fields) {
+            Meteor.subscribe('cards', fields.gameId);
+            Meteor.subscribe('cardClues', fields.gameId);
         }
     });
 

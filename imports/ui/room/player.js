@@ -1,10 +1,9 @@
 import { Template } from 'meteor/templating';
+import { LoadingState } from "../../startup/LoadingState";
 
-import {Cards} from "../../api/cards";
+import { Cards } from "../../api/cards";
 
 import './player.html';
-import {LoadingState} from "../../startup/LoadingState";
-import {Flasher} from "../flasher";
 
 Template.player.onCreated(function playerOnCreated() {
 

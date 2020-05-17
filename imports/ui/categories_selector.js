@@ -1,22 +1,22 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { ReactiveVar } from "meteor/reactive-var";
 
 import { Categories } from '../api/categories';
 
 import './categories_selector.html';
-import {ReactiveDict} from "meteor/reactive-dict";
 
 Template.categories_selector.onCreated(function categories_selectorOnCreated() {
 
-    this.state = new ReactiveDict();
+    this.loaded = new ReactiveVar(false);
 
     this.autorun(() => {
 
-        this.state.set('ready', false);
+        this.loaded.set(false);
         this.subscribe('categories');
 
         if (this.subscriptionsReady()) {
-            this.state.set('ready', true);
+            this.loaded.set(true);
         }
 
     });
@@ -38,7 +38,7 @@ Template.categories_selector.helpers({
     },
 
     unready() {
-        return !Template.instance().state.get('ready');
+        return !Template.instance().loaded.get();
     },
 
 });
