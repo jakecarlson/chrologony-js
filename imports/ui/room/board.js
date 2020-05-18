@@ -14,10 +14,12 @@ Template.board.onCreated(function boardOnCreated() {
     this.autorun(() => {
 
         // Make sure the current turn isn't for a user who isn't in the room anymore
-        if (this.data.turn && (this.data.turn.ownerId != Meteor.userId())) {
-            if (!this.data.turn.ownerId || (this.data.turn.owner().currentRoomId != this.data.room._id)) {
-                endTurn(this.data.game);
-            }
+        if (
+            this.data.turn &&
+            (this.data.turn.ownerId != Meteor.userId()) &&
+            (!this.data.turn.ownerId || (this.data.turn.owner().currentRoomId != this.data.room._id))
+        ) {
+            endTurn(this.data.game);
         }
 
         if (this.subscriptionsReady()) {

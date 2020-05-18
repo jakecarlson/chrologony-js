@@ -23,14 +23,17 @@ Rooms.attachSchema(Rooms.schema);
 Rooms.helpers({
 
     currentGame() {
+        console.log('room.currentGame');
         return Games.findOne(this.currentGameId);
     },
 
     players() {
+        console.log('room.players');
         return Meteor.users.find({currentRoomId: this._id});
     },
 
     owner() {
+        console.log('room.owner');
         return Meteor.users.findOne(this.ownerId);
     },
 
@@ -74,10 +77,13 @@ Meteor.methods({
         }
 
         // Check to see if it's this user's turn currently and end it if so
-        if (Meteor.user().currentRoom().currentGameId) {
-            if (Meteor.user().currentRoom().currentGame() && Meteor.user().currentRoom().currentGame().currentTurnId) {
-                if (Meteor.user().currentRoom().currentGame().currentTurn() && (Meteor.user().currentRoom().currentGame().currentTurn().ownerId == userId)) {
-                    Meteor.call('turn.next', Meteor.user().currentRoom().currentGameId, function(error, id) {
+        const room = Meteor.user().currentRoom();
+        if (room.currentGameId) {
+            const game = room.currentGame();
+            if (game.currentTurnId) {
+                const turn = game.currentTurn();
+                if (turn.ownerId == userId) {
+                    Meteor.call('turn.next', room.currentGameId, function(error, id) {
                         if (!error) {
                             Logger.log("Start Turn: " + id);
                         }

@@ -4,7 +4,10 @@ import { Template } from 'meteor/templating';
 import './card.html';
 
 Template.card.onCreated(function boardOnCreated() {
-
+    this.clue = new ReactiveVar(null);
+    this.autorun(() => {
+        this.clue.set(this.data.card.clue());
+    });
 });
 
 Template.card.helpers({
@@ -14,20 +17,19 @@ Template.card.helpers({
     },
 
     date() {
-        return (this.card && this.card.clue()) ? moment.utc(this.card.clue().date).format("Y-MM-DD") : null;
-
+        return (this.card) ? moment.utc(Template.instance().clue.get().date).format("Y-MM-DD") : null;
     },
 
     year() {
-        return (this.card && this.card.clue()) ? moment.utc(this.card.clue().date).format("Y") : null;
+        return (this.card) ? moment.utc(Template.instance().clue.get().date).format("Y") : null;
     },
 
     description() {
-        return (this.card && this.card.clue()) ? this.card.clue().description : null;
+        return (this.card) ? Template.instance().clue.get().description : null;
     },
 
     hint() {
-        return (this.card && this.card.clue()) ? this.card.clue().hint : null;
+        return (this.card) ? Template.instance().clue.get().hint : null;
     },
 
     isLocked() {

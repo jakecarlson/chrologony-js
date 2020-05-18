@@ -26,22 +26,28 @@ Turns.attachSchema(Turns.schema);
 Turns.helpers({
 
     game() {
+        console.log('turn.game');
         return Games.findOne(this.gameId);
     },
 
-    cards() {
-        return Cards.find({turnId: this._id}, {sort: {pos: 1}});
-    },
-
-    correctCards() {
-        return Cards.find({turnId: this._id, correct: true}, {sort: {pos: 1}});
+    cards(correct = null) {
+        console.log('turn.cards');
+        let selector = {
+            turnId: this._id,
+        };
+        if (correct !== null) {
+            selector.correct = correct;
+        }
+        return Cards.find(selector, {sort: {pos: 1}});
     },
 
     currentCard() {
+        console.log('turn.currentCard');
         return Cards.findOne(this.currentCardId);
     },
 
     owner() {
+        console.log('turn.owner');
         return Meteor.users.findOne(this.ownerId);
     },
 
@@ -121,9 +127,12 @@ if (Meteor.isServer) {
             }
 
             // Lock all current turn cards
-            if (game.currentTurn() && game.currentTurn().cards()) {
-                if (game.currentTurn().cards().count() === game.currentTurn().correctCards().count()) {
-                    game.currentTurn().correctCards().forEach(function(card) {
+            if (game && game.currentTurnId) {
+                const turn = game.currentTurn();
+                const cards = turn.cards();
+                const correctCards = turn.cards(true);
+                if (cards.count() === correctCards.count()) {
+                    correctCards.forEach(function(card) {
                         Meteor.call('card.lock', card._id, function(error, updated) {
                             if (!error) {
                                 Logger.log("Locked Card: " + updated);

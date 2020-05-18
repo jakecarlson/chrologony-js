@@ -58,9 +58,10 @@ Template.room.helpers({
     },
 
     currentTurn() {
-        if (this.room.currentGameId) {
-            if (this.room.currentGame() && this.room.currentGame().currentTurnId) {
-                return this.room.currentGame().currentTurn();
+        if (this.room && this.room.currentGameId) {
+            const game = this.room.currentGame();
+            if (game && game.currentTurnId) {
+                return game.currentTurn();
             }
         }
         return null;

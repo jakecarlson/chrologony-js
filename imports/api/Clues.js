@@ -37,6 +37,7 @@ Clues.attachSchema(Clues.schema);
 Clues.helpers({
 
     categories() {
+        console.log('clue.categories');
         return Categories.find(
             {
                 _id: {$in: this.categories},
@@ -51,6 +52,7 @@ Clues.helpers({
     },
 
     owner() {
+        console.log('clue.owner');
         return Meteor.users.findOne(this.ownerId);
     },
 
