@@ -2,12 +2,12 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
-import { Permissions } from './Permissions';
+import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
-import { Schema } from "./Schema";
+import { Schemas } from "../modules/Schemas";
 
-import { Rooms } from '../api/rooms';
-import { Turns } from '../api/turns';
+import { Rooms } from './Rooms';
+import { Turns } from './Turns';
 
 export const Games = new Mongo.Collection('games');
 
@@ -19,8 +19,8 @@ Games.schema = new SimpleSchema({
     winnerId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     winner: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
 });
-Games.schema.extend(Schema.timestampable);
-Games.schema.extend(Schema.endable);
+Games.schema.extend(Schemas.timestampable);
+Games.schema.extend(Schemas.endable);
 Games.attachSchema(Games.schema);
 
 Games.helpers({

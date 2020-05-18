@@ -1,6 +1,6 @@
 import { Template } from 'meteor/templating';
-import { Flasher } from '../flasher.js';
 import { ReactiveDict } from "meteor/reactive-dict";
+import { Flasher } from '../flasher.js';
 
 import './auth.html';
 import './login.js';

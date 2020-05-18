@@ -1,9 +1,9 @@
-import { Categories } from '../../imports/api/categories';
-import { Clues } from '../../imports/api/clues';
-import { Rooms } from '../../imports/api/rooms';
-import { Games } from '../../imports/api/games';
-import { Turns } from '../../imports/api/turns';
-import { Cards } from '../../imports/api/cards';
+import { Categories } from '../../imports/api/Categories';
+import { Clues } from '../../imports/api/Clues';
+import { Rooms } from '../../imports/api/Rooms';
+import { Games } from '../../imports/api/Games';
+import { Turns } from '../../imports/api/Turns';
+import { Cards } from '../../imports/api/Cards';
 
 // Rename userId to owner on Turns and Cards.
 Migrations.add({

@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { LoadingState } from "../startup/LoadingState";
+import { LoadingState } from "../modules/LoadingState";
 
-import { Rooms } from '../api/rooms';
+import { Rooms } from '../api/Rooms';
 
 import './body.html';
 import './header.js';

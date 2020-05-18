@@ -2,9 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
-import { Permissions } from './Permissions';
+import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
-import { Schema } from "./Schema";
+import { Schemas } from "../modules/Schemas";
 
 export const Categories = new Mongo.Collection('categories');
 
@@ -17,8 +17,8 @@ Categories.schema = new SimpleSchema({
     collaborators: {type: Array, defaultValue: [], optional: true},
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
 });
-Categories.schema.extend(Schema.timestampable);
-Categories.schema.extend(Schema.ownable);
+Categories.schema.extend(Schemas.timestampable);
+Categories.schema.extend(Schemas.ownable);
 Categories.attachSchema(Categories.schema);
 
 Categories.helpers({

@@ -1,11 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Flasher } from '../flasher';
-import { LoadingState } from '../../startup/LoadingState';
+import { LoadingState } from '../../modules/LoadingState';
 
-import '../../api/users';
-import { Games } from '../../api/games';
-import { Cards } from "../../api/cards";
+import '../../api/Users';
+import { Games } from '../../api/Games';
+import { Cards } from "../../api/Cards";
 
 import './room.html';
 import './players_list.js';

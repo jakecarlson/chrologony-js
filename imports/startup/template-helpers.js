@@ -1,4 +1,4 @@
-import { LoadingState } from './LoadingState';
+import { LoadingState } from '../modules/LoadingState';
 
 Template.registerHelper('collectionNotEmpty', function(collection) {
     return (collection.count() > 0);

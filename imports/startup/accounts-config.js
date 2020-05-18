@@ -1,6 +1,6 @@
 import { Accounts } from 'meteor/accounts-base';
 import { Flasher } from '../ui/flasher';
-import { LoadingState } from './LoadingState';
+import { LoadingState } from '../modules/LoadingState';
 
 Accounts.config({
     defaultFieldSelector: {

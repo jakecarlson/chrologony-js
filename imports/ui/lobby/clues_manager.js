@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
-import { LoadingState } from "../../startup/LoadingState";
+import { LoadingState } from "../../modules/LoadingState";
 
-import { Clues } from "../../api/clues";
-import { ModelEvents } from "../../startup/ModelEvents";
+import { Clues } from "../../api/Clues";
+import { ModelEvents } from "../../modules/ModelEvents";
 
 import './clues_manager.html';
 import './clue.js';

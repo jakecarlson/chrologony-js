@@ -1,11 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Sortable } from 'sortablejs';
-import { LoadingState } from '../../startup/LoadingState';
+import { LoadingState } from '../../modules/LoadingState';
 // import { Insult } from "insult";
 
-import { Cards } from '../../api/cards';
-import { Turns } from "../../api/turns";
+import { Cards } from '../../api/Cards';
 
 import './board.html';
 import './card.js';

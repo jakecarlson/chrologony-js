@@ -2,14 +2,14 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
-import { Permissions } from './Permissions';
+import { Permissions } from '../modules/Permissions';
 import { Promise } from "meteor/promise";
 import SimpleSchema from 'simpl-schema';
-import { Schema } from './Schema';
+import { Schemas } from '../modules/Schemas';
 
-import { Games } from "./games";
-import { Clues } from "./clues";
-import { Turns } from "./turns";
+import { Games } from "./Games";
+import { Clues } from "./Clues";
+import { Turns } from "./Turns";
 
 export const Cards = new Mongo.Collection('cards');
 
@@ -24,7 +24,7 @@ Cards.schema = new SimpleSchema({
     lockedAt: {type: Date, defaultValue: null, optional: true},
     pos: {type: SimpleSchema.Integer, defaultValue: 0},
 });
-Cards.schema.extend(Schema.timestampable);
+Cards.schema.extend(Schemas.timestampable);
 Cards.attachSchema(Cards.schema);
 
 Cards.helpers({

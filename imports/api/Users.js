@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
-import { Permissions } from './Permissions';
+import { Permissions } from '../modules/Permissions';
 
-import { Rooms } from "./rooms";
+import { Rooms } from "./Rooms";
 
 if (Meteor.isServer) {
 

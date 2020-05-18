@@ -3,12 +3,12 @@ import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
 import { Promise } from 'meteor/promise';
 import { NonEmptyString, RecordId } from "../startup/validations";
-import { Permissions } from './Permissions';
+import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
-import { Schema } from "./Schema";
+import { Schemas } from "../modules/Schemas";
 
-import { Games } from '../api/games';
-import { Cards } from '../api/cards';
+import { Games } from './Games';
+import { Cards } from './Cards';
 
 export const Turns = new Mongo.Collection('turns');
 
@@ -19,8 +19,8 @@ Turns.schema = new SimpleSchema({
     currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},
 });
-Turns.schema.extend(Schema.timestampable);
-Turns.schema.extend(Schema.endable);
+Turns.schema.extend(Schemas.timestampable);
+Turns.schema.extend(Schemas.endable);
 Turns.attachSchema(Turns.schema);
 
 Turns.helpers({

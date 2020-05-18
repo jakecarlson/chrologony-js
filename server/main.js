@@ -1,14 +1,14 @@
 import { Meteor } from 'meteor/meteor';
-import '../imports/startup/Logger';
+import '../imports/modules/Logger';
 import './db/migrations';
 
-import '../imports/api/users';
-import '../imports/api/cards';
-import '../imports/api/games';
-import '../imports/api/rooms';
-import '../imports/api/clues';
-import '../imports/api/categories';
-import '../imports/api/turns';
+import '../imports/api/Users';
+import '../imports/api/Cards';
+import '../imports/api/Games';
+import '../imports/api/Rooms';
+import '../imports/api/Clues';
+import '../imports/api/Categories';
+import '../imports/api/Turns';
 
 Meteor.startup(() => {
     reCAPTCHA.config({

@@ -2,11 +2,11 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
-import { Permissions } from './Permissions';
+import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
-import { Schema } from "./Schema";
+import { Schemas } from "../modules/Schemas";
 
-import { Categories } from "./categories";
+import { Categories } from "./Categories";
 
 export const Clues = new Mongo.Collection('clues');
 
@@ -30,8 +30,8 @@ Clues.schema = new SimpleSchema(
         requiredByDefault: false,
     }
 );
-Clues.schema.extend(Schema.timestampable);
-Clues.schema.extend(Schema.ownable);
+Clues.schema.extend(Schemas.timestampable);
+Clues.schema.extend(Schemas.ownable);
 Clues.attachSchema(Clues.schema);
 
 Clues.helpers({

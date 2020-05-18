@@ -1,5 +1,5 @@
 import './Logger';
-import { LoadingState } from './LoadingState';
+import { LoadingState } from '../modules/LoadingState';
 
 export const ModelEvents = {
 

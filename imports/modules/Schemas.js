@@ -1,6 +1,6 @@
 import SimpleSchema from "simpl-schema";
 
-export const Schema = {
+export const Schemas = {
 
     timestampable: new SimpleSchema({
         createdAt: {

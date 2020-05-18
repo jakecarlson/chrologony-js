@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from "meteor/reactive-var";
 
-import { Categories } from '../api/categories';
+import { Categories } from '../api/Categories';
 
 import './categories_selector.html';
 

@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
-import { LoadingState } from "../../startup/LoadingState";
+import { LoadingState } from "../../modules/LoadingState";
 
-import { Categories } from "../../api/categories";
-import { ModelEvents } from "../../startup/ModelEvents";
+import { Categories } from "../../api/Categories";
+import { ModelEvents } from "../../modules/ModelEvents";
 
 import './categories_manager.html';
 import './category.js';

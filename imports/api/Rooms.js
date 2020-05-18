@@ -2,12 +2,11 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
-import { Permissions } from './Permissions';
+import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
-import { Schema } from "./Schema";
+import { Schemas } from "../modules/Schemas";
 
-import { Games } from '../api/games';
-import { Turns } from '../api/turns';
+import { Games } from './Games';
 
 export const Rooms = new Mongo.Collection('rooms');
 
@@ -17,8 +16,8 @@ Rooms.schema = new SimpleSchema({
     currentGameId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     deletedAt: {type: Date, defaultValue: null, optional: true},
 });
-Rooms.schema.extend(Schema.timestampable);
-Rooms.schema.extend(Schema.ownable);
+Rooms.schema.extend(Schemas.timestampable);
+Rooms.schema.extend(Schemas.ownable);
 Rooms.attachSchema(Rooms.schema);
 
 Rooms.helpers({

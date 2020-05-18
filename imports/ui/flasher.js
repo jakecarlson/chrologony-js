@@ -1,6 +1,6 @@
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
-import { LoadingState } from "../startup/LoadingState";
+import { LoadingState } from "../modules/LoadingState";
 
 import './flasher.html';
 
