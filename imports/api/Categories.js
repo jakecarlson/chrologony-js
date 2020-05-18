@@ -24,7 +24,6 @@ Categories.attachSchema(Categories.schema);
 Categories.helpers({
 
     colabborators() {
-        console.log('category.collaborators');
         return Meteor.users.find(
             {
                 _id: {$in: this.collaborators},

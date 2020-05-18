@@ -26,27 +26,22 @@ Games.attachSchema(Games.schema);
 Games.helpers({
 
     room() {
-        console.log('game.room');
         return Rooms.findOne(this.roomId);
     },
 
     category() {
-        console.log('game.category');
         return Categories.findOne(this.categoryId);
     },
 
     currentTurn() {
-        console.log('game.currentTurn');
         return Turns.findOne(this.currentTurnId);
     },
 
     turns() {
-        console.log('game.turns');
         return Turns.find({gameId: this._id});
     },
 
     winner() {
-        console.log('game.winner');
         return Meteor.users.findOne(this.winnerId);
     },
 

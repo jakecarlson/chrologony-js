@@ -32,7 +32,6 @@ if (Meteor.isServer) {
 Meteor.users.helpers({
 
     currentRoom() {
-        console.log('user.currentRoom');
         return Rooms.findOne({_id: this.currentRoomId, deletedAt: null});
     },
 

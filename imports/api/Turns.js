@@ -26,12 +26,10 @@ Turns.attachSchema(Turns.schema);
 Turns.helpers({
 
     game() {
-        console.log('turn.game');
         return Games.findOne(this.gameId);
     },
 
     cards(correct = null) {
-        console.log('turn.cards');
         let selector = {
             turnId: this._id,
         };
@@ -42,12 +40,10 @@ Turns.helpers({
     },
 
     currentCard() {
-        console.log('turn.currentCard');
         return Cards.findOne(this.currentCardId);
     },
 
     owner() {
-        console.log('turn.owner');
         return Meteor.users.findOne(this.ownerId);
     },
 

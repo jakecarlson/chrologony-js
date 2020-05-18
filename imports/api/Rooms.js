@@ -23,17 +23,14 @@ Rooms.attachSchema(Rooms.schema);
 Rooms.helpers({
 
     currentGame() {
-        console.log('room.currentGame');
         return Games.findOne(this.currentGameId);
     },
 
     players() {
-        console.log('room.players');
         return Meteor.users.find({currentRoomId: this._id});
     },
 
     owner() {
-        console.log('room.owner');
         return Meteor.users.findOne(this.ownerId);
     },
 

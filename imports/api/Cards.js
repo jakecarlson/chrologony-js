@@ -30,22 +30,18 @@ Cards.attachSchema(Cards.schema);
 Cards.helpers({
 
     game() {
-        console.log('card.game');
         return Games.findOne(this.gameId);
     },
 
     turn() {
-        console.log('card.turn');
         return Turns.findOne(this.turnId);
     },
 
     clue() {
-        console.log('card.clue');
         return Clues.findOne(this.clueId);
     },
 
     owner() {
-        console.log('card.owner');
         return Meteor.users.findOne(this.ownerId);
     },
 
