@@ -29,7 +29,7 @@ Meteor.startup(() => {
     ImportSets.find({completedAt: null}).fetch().forEach(function(importSet) {
         Meteor.call('importer.import', importSet._id, function(error, res) {
             if (!error) {
-                Logger.log("Imported Set " + importSet._id + ": " + res);
+                Logger.log("Imported Set " + importSet._id);
             }
         });
     });
