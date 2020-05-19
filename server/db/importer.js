@@ -4,10 +4,10 @@ import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../../imports/startup/validations";
 import { Clues } from "../../imports/api/Clues";
 
-if (Meteor.isServer) {
+export const ImportSets = new Mongo.Collection('import_sets');
+export const Imports = new Mongo.Collection('imports');
 
-    const ImportSets = new Mongo.Collection('import_sets');
-    const Imports = new Mongo.Collection('imports');
+if (Meteor.isServer) {
 
     Meteor.methods({
 
