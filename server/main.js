@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import '../imports/modules/Logger';
 import './db/migrations';
+import './db/importer';
 
 import '../imports/api/Users';
 import '../imports/api/Cards';
