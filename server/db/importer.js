@@ -66,10 +66,14 @@ if (Meteor.isServer) {
             const total = Imports.find({setId: setId}).count();
             const numChunks = Math.ceil(total / chunkSize);
 
-            const importSet = ImportSets.findOne(setId);
+            if (total == 0) {
+                Logger.log('No clues to import for set ' + setId + '. Aborting.');
+                return;
+            }
 
+            const importSet = ImportSets.findOne(setId);
             if (importSet.completedAt) {
-                Logger.log('Import Set ' + setId + ' has already been imported. Aborting.');
+                Logger.log('Import set ' + setId + ' has already been imported. Aborting.');
                 return;
             }
 
