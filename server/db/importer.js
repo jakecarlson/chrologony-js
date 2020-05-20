@@ -57,6 +57,19 @@ if (Meteor.isServer) {
 
         },
 
+        // Import queued sets
+        'importer.importQueued'(chunkSize = 1000) {
+
+            ImportSets.find({completedAt: null}).fetch().forEach(function(importSet) {
+                Meteor.call('importer.import', importSet._id, chunkSize, function(err, res) {
+                    if (!err) {
+                        Logger.log("Imported Set: " + importSet._id, 3);
+                    }
+                });
+            });
+
+        },
+
         // Import Clues
         'importer.import'(setId, chunkSize = 1000) {
 
@@ -67,13 +80,13 @@ if (Meteor.isServer) {
             const numChunks = Math.ceil(total / chunkSize);
 
             if (total == 0) {
-                Logger.log('No clues to import for set ' + setId + '. Aborting.');
+                Logger.log('No clues to import for set ' + setId + '. Aborting.', 3);
                 return;
             }
 
             const importSet = ImportSets.findOne(setId);
             if (importSet.completedAt) {
-                Logger.log('Import set ' + setId + ' has already been imported. Aborting.');
+                Logger.log('Import set ' + setId + ' has already been imported. Aborting.', 3);
                 return;
             }
 
@@ -81,9 +94,7 @@ if (Meteor.isServer) {
             for (let i = 0; i < numChunks; ++i) {
 
                 const start = i * chunkSize;
-                Logger.log("Importing " + (start+1) + " - " + (start+chunkSize) + " of " + total);
-                Logger.log("-".repeat(64));
-                Imports.find(
+                const imports = Imports.find(
                     {
                         setId: setId,
                     },
@@ -92,7 +103,11 @@ if (Meteor.isServer) {
                         skip: start,
                         limit: chunkSize,
                     }
-                ).fetch().forEach(function (document) {
+                );
+
+                Logger.log("Importing " + (start+1) + " - " + (start+imports.count()) + " of " + total, 3);
+                Logger.log("-".repeat(64), 3);
+                imports.fetch().forEach(function (document) {
 
                     // Make sure the description is less than 240 chars
                     if (document.description.length > 240) {
@@ -141,11 +156,11 @@ if (Meteor.isServer) {
                     // Import the clue
                     Clues.upsert({importId: document.importId}, {$setOnInsert: document});
 
-                    Logger.log(date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ': ' + document.description);
+                    Logger.log(date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ': ' + document.description, 3);
 
                 });
                 ImportSets.update(setId, {$set: {completedAt: new Date()}});
-                Logger.log("");
+                Logger.log("", 3);
 
             }
 

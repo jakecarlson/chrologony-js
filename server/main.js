@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { ImportSets } from "./db/importer";
 import '../imports/modules/Logger';
 import './db/migrations';
 import './db/importer';
@@ -26,12 +25,10 @@ Meteor.startup(() => {
     Migrations.migrateTo('latest');
 
     // Do any imports that are queued up
-    ImportSets.find({completedAt: null}).fetch().forEach(function(importSet) {
-        Meteor.call('importer.import', importSet._id, function(error, res) {
-            if (!error) {
-                Logger.log("Imported Set " + importSet._id);
-            }
-        });
+    Meteor.call('importer.importQueued', function(err, res) {
+        if (!err) {
+            Logger.log("Queued Imports Complete", 3);
+        }
     });
 
 });
