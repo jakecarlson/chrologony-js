@@ -25,10 +25,6 @@ Meteor.startup(() => {
     Migrations.migrateTo('latest');
 
     // Do any imports that are queued up
-    Meteor.call('importer.importQueued', function(err, res) {
-        if (!err) {
-            Logger.log("Queued Imports Complete", 3);
-        }
-    });
+    Meteor.call('importer.importQueued');
 
 });

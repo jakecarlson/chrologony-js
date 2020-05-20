@@ -60,7 +60,7 @@ if (Meteor.isServer) {
         // Import queued sets
         'importer.importQueued'(chunkSize = 1000) {
 
-            ImportSets.find({completedAt: null}).fetch().forEach(function(importSet) {
+            ImportSets.find({startedAt: null, completedAt: null}).fetch().forEach(function(importSet) {
                 Meteor.call('importer.import', importSet._id, chunkSize, function(err, res) {
                     if (!err) {
                         Logger.log("Imported Set: " + importSet._id, 3);
