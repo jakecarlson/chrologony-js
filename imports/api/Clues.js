@@ -180,3 +180,40 @@ Meteor.methods({
     },
 
 });
+
+
+if (Meteor.isServer) {
+
+    Meteor.methods({
+
+        // Add a category to clues
+        'clue.addCategory'(selector, categoryId) {
+
+            check(selector, Object);
+            check(categoryId, RecordId);
+
+            return Clues.update(
+                selector,
+                {$push: {categories: categoryId}},
+                {multi: true}
+            );
+
+        },
+
+        // Remove a category from clues
+        'clue.removeCategory'(selector, categoryId) {
+
+            check(selector, Object);
+            check(categoryId, RecordId);
+
+            return Clues.update(
+                selector,
+                {$pull: {categories: categoryId}},
+                {multi: true}
+            );
+
+        },
+
+    });
+
+}
