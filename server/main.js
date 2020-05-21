@@ -11,9 +11,7 @@ import '../imports/api/Clues';
 import '../imports/api/Categories';
 import '../imports/api/Turns';
 
-Meteor.startup(async () => {
-
-
+Meteor.startup(() => {
 
     // Initalize recaptcha
     reCAPTCHA.config({
