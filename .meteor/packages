@@ -41,3 +41,5 @@ fortawesome:fontawesome
 sergeyt:typeahead
 aldeed:collection2
 percolate:migrations
+ostrio:flow-router-extra
+kadira:blaze-layout

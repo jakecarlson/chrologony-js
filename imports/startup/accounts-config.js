@@ -1,4 +1,5 @@
 import { Accounts } from 'meteor/accounts-base';
+import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { Flasher } from '../ui/flasher';
 import { LoadingState } from '../modules/LoadingState';
 
@@ -18,13 +19,13 @@ Accounts.onLogout(function(error) {
         Logger.log(error, 2);
     } else {
         Flasher.set('success', "You have successfully logged out.");
+        FlowRouter.go('home');
     }
     LoadingState.stop();
 });
 
 Accounts.onLogin(function(auth) {
     Logger.log('Authentication Status: ' + JSON.stringify(auth));
-    LoadingState.stop();
 });
 
 Accounts.onLoginFailure(function(res) {

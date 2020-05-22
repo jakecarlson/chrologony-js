@@ -10,12 +10,12 @@ Template.header.onCreated(function headerOnCreated() {
 Template.header.helpers({
 
     username() {
-        return Meteor.user().username;
+        return (Meteor.user()) ? Meteor.user().username : null;
     },
 
 });
 
-Template.body.events({
+Template.header.events({
 
     'click .logout': function(e, i){
         e.preventDefault();

@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { Flasher } from '../flasher';
 import { LoadingState } from '../../modules/LoadingState';
 
@@ -7,7 +8,7 @@ import './register.html';
 
 Template.register.onCreated(function registerOnCreated() {
     this.autorun(() => {
-
+        FlowRouter.watchPathChange();
     });
 });
 
@@ -67,6 +68,7 @@ Template.register.events({
 
                         }
                     );
+                    FlowRouter.go('lobby');
 
                 }
 
@@ -74,6 +76,12 @@ Template.register.events({
 
         });
 
-    }
+    },
+
+    'click .login': function(e, i){
+        e.preventDefault();
+        Flasher.clear();
+        FlowRouter.go('home');
+    },
 
 });

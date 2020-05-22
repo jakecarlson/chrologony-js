@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { Flasher } from '../flasher';
 import { LoadingState } from '../../modules/LoadingState';
 
@@ -34,6 +35,7 @@ Template.join.events({
                 target.name.value = '';
                 target.password.value = '';
                 Flasher.set('success', "Success! Invite others to join.");
+                FlowRouter.go('rooms.id', {id: id});
             }
         });
 

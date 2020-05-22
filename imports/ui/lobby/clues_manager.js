@@ -1,10 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+import { ModelEvents } from "../../modules/ModelEvents";
 import { LoadingState } from "../../modules/LoadingState";
 
+import { Categories } from "../../api/Categories";
 import { Clues } from "../../api/Clues";
-import { ModelEvents } from "../../modules/ModelEvents";
 
 import './clues_manager.html';
 import './clue.js';
@@ -23,29 +25,39 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.autorun(() => {
 
         LoadingState.start();
+
+        FlowRouter.watchPathChange();
+
+        this.state.set('categoryId', FlowRouter.getParam('categoryId'));
+
+        if (Categories.findOne(this.state.get('categoryId'))) {
+
         this.subscribe('clues', this.state.get('categoryId'));
 
-        if (this.subscriptionsReady()) {
+            if (this.subscriptionsReady()) {
 
-            this.state.set('numResults', Clues.find().count());
+                this.state.set('numResults', Clues.find().count());
 
-            const instance = this;
-            Tracker.afterFlush(() => {
+                const instance = this;
+                Tracker.afterFlush(() => {
 
-                $('#removeClue').on('show.bs.modal', function (event) {
-                    const button = $(event.relatedTarget);
-                    const id = button.attr('data-id');
-                    const modal = $(this)
-                    modal.find('.remove').attr('data-id', id);
+                    $('#removeClue').on('show.bs.modal', function (event) {
+                        const button = $(event.relatedTarget);
+                        const id = button.attr('data-id');
+                        const modal = $(this)
+                        modal.find('.remove').attr('data-id', id);
+                    });
+
+                    $('#manageChildCategories').on('hide.bs.modal', function(e) {
+                        instance.state.set('currentClue', null);
+                    });
+
                 });
 
-                $('#manageChildCategories').on('hide.bs.modal', function(e) {
-                    instance.state.set('currentClue', null);
-                });
+                LoadingState.stop();
 
-            });
+            }
 
-            LoadingState.stop();
         }
 
     });
@@ -125,7 +137,7 @@ Template.clues_manager.events({
 
     'change #cluesFilter [name="categoryId"]'(e, i) {
         const categoryId = e.target.options[e.target.selectedIndex].value;
-        i.state.set('categoryId', categoryId);
+        FlowRouter.go('clues.categoryId', {categoryId: categoryId});
     },
 
     'change #cluesFilter [name="owned"]'(e, i) {

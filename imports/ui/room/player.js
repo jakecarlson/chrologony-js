@@ -11,8 +11,12 @@ Template.player.onCreated(function playerOnCreated() {
 
 Template.player.helpers({
 
+    dataReady() {
+        return (this.room && this.turn && this.player);
+    },
+
     isTurnOwner() {
-        return (this.turn && (this.turn.ownerId == this.player._id));
+        return (this.turn.ownerId == this.player._id);
     },
 
     id() {

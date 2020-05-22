@@ -1,9 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { check } from 'meteor/check';
+import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
+import { RecordId } from '../../startup/validations';
 import { Flasher } from '../flasher';
 import { LoadingState } from '../../modules/LoadingState';
 
 import '../../api/Users';
+import { Rooms } from '../../api/Rooms';
 import { Games } from '../../api/Games';
 import { Cards } from "../../api/Cards";
 
@@ -14,24 +18,42 @@ import './game.js';
 
 Template.room.onCreated(function roomOnCreated() {
 
+    this.room = new ReactiveVar(null);
+
     this.autorun(() => {
 
         LoadingState.start();
-        this.subscribe('games', this.data.room._id);
-        this.subscribe('players', this.data.room._id);
-        this.subscribe('turns', this.data.room.currentGameId);
-        this.subscribe('cards', this.data.room.currentGameId);
-        this.subscribe('cardClues', this.data.room.currentGameId);
 
-        if (this.subscriptionsReady()) {
-            LoadingState.stop();
+        FlowRouter.watchPathChange();
+
+        if (Meteor.user()) {
+
+            const roomId = Meteor.user().currentRoomId;
+
+            // Redirect the user back to lobby if they aren't authenticated to this room
+            if (roomId != FlowRouter.getParam('id')) {
+                leaveRoom();
+            }
+
+            this.room.set(Meteor.user().currentRoom());
+            if (this.room.get()) {
+                this.subscribe('games', this.room.get()._id);
+                this.subscribe('players', this.room.get()._id);
+                this.subscribe('turns', this.room.get().currentGameId);
+                this.subscribe('cards', this.room.get().currentGameId);
+                this.subscribe('cardClues', this.room.get().currentGameId);
+                if (this.subscriptionsReady()) {
+                    LoadingState.stop();
+                }
+            }
+
         }
 
     });
 
     Games.find().observeChanges({
         added: function(gameId, fields) {
-            Meteor.subscribe('games', (Meteor.userId()) ? Meteor.user().currentRoomId : null);
+            Meteor.subscribe('games', fields.roomId);
             Meteor.subscribe('turns', gameId);
             Meteor.subscribe('cards', gameId);
             Meteor.subscribe('cardClues', gameId);
@@ -49,17 +71,29 @@ Template.room.onCreated(function roomOnCreated() {
 
 Template.room.helpers({
 
+    dataReady() {
+        return (Meteor.user() && Meteor.user().currentRoomId && Template.instance().room.get());
+    },
+
+    name() {
+        return Template.instance().room.get().name;
+    },
+
     isOwner() {
-        return (this.room.ownerId == Meteor.userId());
+        return (Template.instance().room.get().ownerId == Meteor.userId());
+    },
+
+    currentRoom() {
+        return Template.instance().room.get();
     },
 
     currentGame() {
-        return this.room.currentGame();
+        return Template.instance().room.get().currentGame();
     },
 
     currentTurn() {
-        if (this.room && this.room.currentGameId) {
-            const game = this.room.currentGame();
+        if (Template.instance().room.get().currentGameId) {
+            const game = Template.instance().room.get().currentGame();
             if (game && game.currentTurnId) {
                 return game.currentTurn();
             }
@@ -68,15 +102,15 @@ Template.room.helpers({
     },
 
     players() {
-        return this.room.players();
+        return Template.instance().room.get().players();
     },
 
     password() {
-        return this.room.password;
+        return Template.instance().room.get().password;
     },
 
     owner() {
-        return this.room.owner();
+        return Template.instance().room.get().owner();
     },
 
 });
@@ -84,19 +118,12 @@ Template.room.helpers({
 Template.room.events({
 
     'click .leave'(e, i) {
-        LoadingState.start();
-        Meteor.call('room.leave', false, function(error, id) {
-            if (!error) {
-                Logger.log("Player Left Room: " + id);
-            }
-            Flasher.clear();
-            LoadingState.stop();
-        });
+        leaveRoom();
     },
 
     'click .destroy'(e, i) {
         LoadingState.start();
-        Meteor.call('room.remove', this.room._id, function(error, id) {
+        Meteor.call('room.remove', this.room.get()._id, function(error, id) {
             if (!error) {
                 Logger.log("Room Deleted: " + id);
                 Flasher.set('success', "You have successfully deleted the room. You can join or create a new one below.");
@@ -106,3 +133,15 @@ Template.room.events({
     },
 
 });
+
+function leaveRoom() {
+    LoadingState.start();
+    Meteor.call('room.leave', false, function(error, id) {
+        if (!error) {
+            Logger.log("Player Left Room: " + id);
+        }
+        Flasher.clear();
+        FlowRouter.go('lobby');
+        LoadingState.stop();
+    });
+}

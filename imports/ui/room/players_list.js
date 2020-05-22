@@ -12,12 +12,16 @@ Template.players_list.onCreated(function players_listOnCreated() {
 
 Template.players_list.helpers({
 
+    dataReady() {
+        return this.room;
+    },
+
     players() {
         return this.room.players();
     },
 
     isTurnOwner(userId) {
-        return (this.turn && (this.turn.ownerId == userId));
+        return (this.turn.ownerId == userId);
     },
 
 });

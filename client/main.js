@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap4-toggle';
 import 'bootstrap4-toggle/css/bootstrap4-toggle.min.css';
 import '../imports/ui/body.js';
+import './routes.js';
 
 Meteor.startup(function() {
     reCAPTCHA.config({

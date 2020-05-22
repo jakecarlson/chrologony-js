@@ -1,0 +1,10 @@
+<template name="layout_unauthenticated">
+
+    <main id="home" class="container mb-4 {{#if registration}}registration-container{{/if}}">
+        <h1 id="title">Chrologony</h1>
+        {{> flasher}}
+        {{> Template.dynamic template=main}}
+        {{> footer}}
+    </main>
+
+</template>

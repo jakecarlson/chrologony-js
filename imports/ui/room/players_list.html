@@ -1,14 +1,16 @@
 <template name="players_list">
 
-    <div id="players" class="card mb-4">
-        <div class="card-header">
-            <h2 class="card-title">Players in this Room</h2>
+    {{#if dataReady}}
+        <div id="players" class="card mb-4">
+            <div class="card-header">
+                <h2 class="card-title">Players in this Room</h2>
+            </div>
+            <ul class="list-group list-group-flush">
+                {{#each currentPlayer in players}}
+                    {{> player room=room game=game turn=turn player=currentPlayer}}
+                {{/each}}
+            </ul>
         </div>
-        <ul class="list-group list-group-flush">
-            {{#each currentPlayer in players}}
-                {{> player room=room game=game turn=turn player=currentPlayer}}
-            {{/each}}
-        </ul>
-    </div>
+    {{/if}}
 
 </template>

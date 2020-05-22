@@ -49,6 +49,10 @@ Template.board.onCreated(function boardOnCreated() {
 
 Template.board.helpers({
 
+    dataReady() {
+        return this.room;
+    },
+
     turnTitle() {
         if (this.turn) {
             let title = '';

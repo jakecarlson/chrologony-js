@@ -12,8 +12,12 @@ Template.card.onCreated(function boardOnCreated() {
 
 Template.card.helpers({
 
+    dataReady() {
+        return (this.card && Template.instance().clue && Template.instance().clue.get());
+    },
+
     id() {
-        return (this.card) ? this.card._id : null;
+        return this.card._id;
     },
 
     date() {
@@ -33,11 +37,11 @@ Template.card.helpers({
     },
 
     isLocked() {
-        return (this.card) ? (this.card.lockedAt != null) : false;
+        return (this.card.lockedAt != null);
     },
 
     isTurn() {
-        return (this.card) ? (this.card.turnId == this.turn._id) : false;
+        return (this.card.turnId == this.turn._id);
     },
 
     isCurrent() {
@@ -45,15 +49,15 @@ Template.card.helpers({
     },
 
     isCorrect() {
-        return (this.card && this.card.correct);
+        return this.card.correct;
     },
 
     isOwned() {
-        return isOwned(this.card, this.turn);
+        return isOwned(this.turn);
     },
 
     canMoveCard() {
-        return (isOwned(this.turn, this.card) && isCurrent(this.turn, this.card));
+        return (isOwned(this.turn) && isCurrent(this.turn, this.card));
     },
 
 });
@@ -62,17 +66,14 @@ Template.card.events({
 
 });
 
-function isOwned(turn, card) {
-    return (turn && card && (turn.ownerId == Meteor.userId()));
+function isOwned(turn) {
+    return (turn.ownerId == Meteor.userId());
 }
 
 function isCurrent(turn, card) {
-    return (turn && card) ? (turn.currentCardId == card._id) : false;
+    return (turn.currentCardId == card._id);
 }
 
 function getClueField(template, field) {
-    if (Template.instance().data.card && Template.instance().clue.get()) {
-        return Template.instance().clue.get()[field];
-    }
-    return null;
+    return Template.instance().clue.get()[field];
 }

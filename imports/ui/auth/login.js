@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { Flasher } from '../flasher';
 import { LoadingState } from '../../modules/LoadingState';
 
@@ -7,7 +8,7 @@ import './login.html';
 
 Template.login.onCreated(function loginOnCreated() {
     this.autorun(() => {
-
+        FlowRouter.watchPathChange();
     });
 });
 
@@ -21,9 +22,18 @@ Template.login.events({
         LoadingState.start(e);
         const username = e.target.username.value;
         const password = e.target.password.value;
-        Meteor.loginWithPassword(username, password);
         Flasher.clear();
-        LoadingState.stop();
-    }
+        Meteor.loginWithPassword(username, password, function(err) {
+            if (!err) {
+                FlowRouter.go('lobby');
+            }
+        });
+    },
+
+    'click a': function(e, i){
+        e.preventDefault();
+        Flasher.clear();
+        FlowRouter.go('register');
+    },
 
 });

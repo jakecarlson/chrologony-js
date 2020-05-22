@@ -1,11 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { Accounts } from 'meteor/accounts-base';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
 import { Schemas } from "../modules/Schemas";
 
+import './Users';
 import { Games } from './Games';
 
 export const Rooms = new Mongo.Collection('rooms');
@@ -73,9 +75,14 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        // Check to see if it's this user's turn currently and end it if so
+        // If the user isn't in a room, just pretend like it worked
+        if (!Meteor.user().currentRoomId) {
+            return userId;
+        }
+
+        // Check to see if it's this user's turn currently and end it if so -- but only if it's a multiplayer game
         const room = Meteor.user().currentRoom();
-        if (room.currentGameId) {
+        if (room.currentGameId && (room.players().count() > 1)) {
             const game = room.currentGame();
             if (game.currentTurnId) {
                 const turn = game.currentTurn();
@@ -162,6 +169,18 @@ if (Meteor.isServer) {
             Permissions.authenticated();
 
             let roomId = false;
+
+            /*
+            const bcrypt = Npm.require('bcrypt');
+            const saltRounds = 10;
+            const myPlaintextPassword = 's0/\/\P4$$w0rD';
+            const someOtherPlaintextPassword = 'not_bacon';
+
+            bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
+                console.log(hash);
+            });
+            */
+
 
             // If the room exists, validate the password
             const room = Rooms.findOne(

@@ -2,28 +2,30 @@
 
     <section id="room">
 
-        <header class="clearfix mb-2">
-            <h1 class="room-title float-left" data-toggle="popover" data-trigger="hover" data-content="Password: {{password}}; Owner: {{#if owner}}{{owner}}{{else}}[unknown]{{/if}}">{{room.name}}</h1>
-            <button class="btn btn-secondary float-right mb-2 leave" disabled="{{loading}}">Leave Room</button>
-            {{#if isOwner}}
-                <button class="btn btn-light float-right mr-2 destroy" disabled="{{loading}}">Destroy Room</button>
-            {{/if}}
-        </header>
+        {{#if dataReady}}
 
-        <div class="row">
+            <header class="clearfix mb-2">
+                <h1 class="room-title float-left" data-toggle="popover" data-trigger="hover" data-content="Password: {{password}}; Owner: {{#if owner}}{{owner}}{{else}}[unknown]{{/if}}">{{name}}</h1>
+                <button class="btn btn-secondary float-right mb-2 leave" disabled="{{loading}}">Leave Room</button>
+            </header>
 
-            <div class="col-md-9" id="roomMain">
-                {{> board room=room game=currentGame turn=currentTurn}}
+            <div class="row">
+
+                <div class="col-md-9" id="roomMain">
+                    {{> board room=currentRoom game=currentGame turn=currentTurn}}
+                </div>
+
+                <div class="col-md-3" id="roomSide">
+                    {{> players_list room=currentRoom turn=currentTurn}}
+                    {{#if isOwner}}
+                        {{> game room=currentRoom game=currentGame}}
+                        <button class="btn btn-outline-danger float-right destroy" disabled="{{loading}}">Destroy Room</button>
+                    {{/if}}
+                </div>
+
             </div>
 
-            <div class="col-md-3" id="roomSide">
-                {{> players_list room=room turn=currentTurn}}
-                {{#if isOwner}}
-                    {{> game room=room game=currentGame}}
-                {{/if}}
-            </div>
-
-        </div>
+        {{/if}}
 
     </section>
 

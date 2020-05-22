@@ -1,23 +1,4 @@
-<body class="text-dark">
-
-    {{#if currentUser}}
-
-        {{> header}}
-
-        <div class="container-fluid">
-            {{> flasher}}
-            {{#if currentRoom}}
-                {{> room room=currentRoom}}
-            {{else}}
-                {{> lobby}}
-            {{/if}}
-        </div>
-
-    {{else}}
-
-        {{> auth}}
-
-    {{/if}}
+<body class="text-dark" id="__blaze-root">
 
     {{#if loading}}
         <div class="row text-center" id="loader">

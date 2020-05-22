@@ -1,53 +1,57 @@
 <template name="card">
 
-    <div
-        class="
-            card
-            clue-card
-            text-white
-            {{#if isOwned}}
-                owned
-            {{/if}}
-            {{#if isLocked}}
-                locked bg-success
-            {{else}}
-                {{#if isTurn}}
-                    turn
-                    {{#if isCurrent}}
-                        current bg-primary
-                    {{else}}
-                        {{#if isCorrect}}
-                            correct bg-warning
+    {{#if dataReady}}
+
+        <div
+            class="
+                card
+                clue-card
+                text-white
+                {{#if isOwned}}
+                    owned
+                {{/if}}
+                {{#if isLocked}}
+                    locked bg-success
+                {{else}}
+                    {{#if isTurn}}
+                        turn
+                        {{#if isCurrent}}
+                            current bg-primary
                         {{else}}
-                            incorrect bg-danger
+                            {{#if isCorrect}}
+                                correct bg-warning
+                            {{else}}
+                                incorrect bg-danger
+                            {{/if}}
                         {{/if}}
                     {{/if}}
                 {{/if}}
-            {{/if}}
-        "
-        data-id="{{id}}"
-    >
+            "
+            data-id="{{id}}"
+        >
 
-        <header class="card-header">
-            {{#if canMoveCard}}
-                <a href="#" class="move move-left text-white"><i class="fa fa-arrow-circle-left" title="Move Left"></i></a>
-                <a href="#" class="move move-right text-white"><i class="fa fa-arrow-circle-right" title="Move Right"></i></a>
-            {{/if}}
-            <h3 class="card-title">
-                {{#if isCurrent}}
-                    ???
-                {{else}}
-                    <span class="date">{{date}}</span>
-                    <span class="year">{{year}}</span>
+            <header class="card-header">
+                {{#if canMoveCard}}
+                    <a href="#" class="move move-left text-white"><i class="fa fa-arrow-circle-left" title="Move Left"></i></a>
+                    <a href="#" class="move move-right text-white"><i class="fa fa-arrow-circle-right" title="Move Right"></i></a>
                 {{/if}}
-            </h3>
-        </header>
+                <h3 class="card-title">
+                    {{#if isCurrent}}
+                        ???
+                    {{else}}
+                        <span class="date">{{date}}</span>
+                        <span class="year">{{year}}</span>
+                    {{/if}}
+                </h3>
+            </header>
 
-        <div class="card-body">
-            <p class="clue">{{description}}</p>
-            <p class="hint">{{hint}}</p>
+            <div class="card-body">
+                <p class="clue">{{description}}</p>
+                <p class="hint">{{hint}}</p>
+            </div>
+
         </div>
 
-    </div>
+    {{/if}}
 
 </template>
