@@ -182,15 +182,16 @@ if (Meteor.isServer) {
             Permissions.authenticated();
 
             const regex = new RegExp("^" + query, 'i');
-
+            const selector ={
+                $and: [
+                    {source: 'user'},
+                    {$or: [{theme: {$regex: regex}}, {name: {$regex: regex}}]},
+                    {$or: getAllowedConditions()},
+                    {_id: {$nin: excludeIds}},
+                ],
+            };
             return Categories.find(
-                {
-                    $and: [
-                        {$or: [{theme: {$regex: regex}}, {name: {$regex: regex}}]},
-                        {$or: getAllowedConditions()},
-                        {_id: {$nin: excludeIds}},
-                    ],
-                },
+                selector,
                 {
                     sort: getSort(),
                 }
