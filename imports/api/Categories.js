@@ -184,7 +184,7 @@ if (Meteor.isServer) {
             const regex = new RegExp("^" + query, 'i');
             const selector ={
                 $and: [
-                    {source: 'user'},
+                    {active: true, source: 'user'},
                     {$or: [{theme: {$regex: regex}}, {name: {$regex: regex}}]},
                     {$or: getAllowedConditions()},
                     {_id: {$nin: excludeIds}},
