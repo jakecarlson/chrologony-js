@@ -32,7 +32,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
         if (Categories.findOne(this.state.get('categoryId'))) {
 
-        this.subscribe('clues', this.state.get('categoryId'));
+            this.subscribe('clues', this.state.get('categoryId'));
 
             if (this.subscriptionsReady()) {
 
@@ -58,6 +58,8 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
             }
 
+        } else {
+            LoadingState.stop();
         }
 
     });
