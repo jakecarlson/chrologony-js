@@ -103,7 +103,11 @@ FlowRouter.route('/rooms/:id', {
 
 function redirectToHome(ctx, redirect) {
     if (!Meteor.userId()) {
-        redirect('home');
+        redirect(FlowRouter.path(
+            'home',
+            {},
+            {redirect: FlowRouter.current().path}
+        ));
     }
 }
 

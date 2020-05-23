@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating';
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
+import { LoadingState } from '../../modules/LoadingState';
 
 import './lobby.html';
 import './join.js';
@@ -12,6 +13,7 @@ Template.lobby.onCreated(function lobbyOnCreated() {
         if (Meteor.user() && Meteor.user().currentRoomId) {
             FlowRouter.go('rooms.id', {id: Meteor.user().currentRoomId});
         }
+        LoadingState.stop();
     });
 });
 

@@ -25,7 +25,11 @@ Template.login.events({
         Flasher.clear();
         Meteor.loginWithPassword(username, password, function(err) {
             if (!err) {
-                FlowRouter.go('lobby');
+                if (FlowRouter.getQueryParam('redirect')) {
+                    FlowRouter.go(FlowRouter.getQueryParam('redirect'));
+                } else {
+                    FlowRouter.go('lobby');
+                }
             }
         });
     },

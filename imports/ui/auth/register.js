@@ -64,11 +64,15 @@ Template.register.events({
                                 Flasher.set('danger', errorReason);
                             } else {
                                 Flasher.set('success', "You have successfully registered. Create or join a room below.");
+                                if (FlowRouter.getQueryParam('redirect')) {
+                                    FlowRouter.go(FlowRouter.getQueryParam('redirect'));
+                                } else {
+                                    FlowRouter.go('lobby');
+                                }
                             }
 
                         }
                     );
-                    FlowRouter.go('lobby');
 
                 }
 
