@@ -34,5 +34,8 @@
   },
   "recaptcha": {
     "key": "6LfjB_EUAAAAAOnpHYYTiBz_DwcFW2QzHGPWyJIu"
+  },
+  "crypt": {
+    "saltRounds": 10
   }
 }

@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import { Accounts } from 'meteor/accounts-base';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
@@ -14,7 +13,7 @@ export const Rooms = new Mongo.Collection('rooms');
 
 Rooms.schema = new SimpleSchema({
     name: {type: String, max: 40},
-    password: {type: String, max: 40},
+    password: {type: String, max: 72},
     currentGameId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     deletedAt: {type: Date, defaultValue: null, optional: true},
 });
@@ -170,18 +169,6 @@ if (Meteor.isServer) {
 
             let roomId = false;
 
-            /*
-            const bcrypt = Npm.require('bcrypt');
-            const saltRounds = 10;
-            const myPlaintextPassword = 's0/\/\P4$$w0rD';
-            const someOtherPlaintextPassword = 'not_bacon';
-
-            bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
-                console.log(hash);
-            });
-            */
-
-
             // If the room exists, validate the password
             const room = Rooms.findOne(
                 {
@@ -196,15 +183,16 @@ if (Meteor.isServer) {
                     sort: {createdAt: -1}
                 }
             );
+
             if (room) {
-                if ((room.ownerId != this.userId) && (room.password !== password)) {
+                if ((room.ownerId != this.userId) && !Hasher.match(password, room.password)) {
                     throw new Meteor.Error('not-authorized');
                 }
                 roomId = room._id;
             } else {
                 roomId = Rooms.insert({
                     name: name,
-                    password: password,
+                    password: Hasher.hash(password),
                 });
             }
 

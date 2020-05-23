@@ -37,14 +37,17 @@ Template.room.onCreated(function roomOnCreated() {
 
             this.room.set(Meteor.user().currentRoom());
             if (this.room.get()) {
+
                 this.subscribe('games', this.room.get()._id);
                 this.subscribe('players', this.room.get()._id);
                 this.subscribe('turns', this.room.get().currentGameId);
                 this.subscribe('cards', this.room.get().currentGameId);
                 this.subscribe('cardClues', this.room.get().currentGameId);
+
                 if (this.subscriptionsReady()) {
                     LoadingState.stop();
                 }
+
             }
 
         }
@@ -123,10 +126,11 @@ Template.room.events({
 
     'click .destroy'(e, i) {
         LoadingState.start();
-        Meteor.call('room.remove', this.room.get()._id, function(error, id) {
+        Meteor.call('room.remove', i.room.get()._id, function(error, id) {
             if (!error) {
                 Logger.log("Room Deleted: " + id);
                 Flasher.set('success', "You have successfully deleted the room. You can join or create a new one below.");
+                FlowRouter.go('lobby');
             }
             LoadingState.stop();
         });

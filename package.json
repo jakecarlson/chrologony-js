@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.8.3",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^4.4.1",
     "bootstrap4-toggle": "^3.6.1",
     "insult": "0.0.3",
