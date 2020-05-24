@@ -10,7 +10,10 @@
                 <input type="text" class="form-control mr-sm-2" name="name" id="roomName" aria-describedby="roomNameHelp" placeholder="Room Name" maxlength="40">
                 <label class="sr-only" for="roomPassword">Room Password</label>
                 <input type="password" class="form-control mt-3 mt-sm-0 mr-sm-2" name="password" id="roomPassword" aria-describedby="roomPasswordHelp" placeholder="Room Password" maxlength="40">
-                <button type="submit" class="btn btn-primary mt-3 mt-sm-0" disabled="{{loading}}">Go</button>
+                <button type="submit" class="btn btn-primary mt-3 mt-sm-0" disabled="{{loading}}">
+                    <i class="fa fa-sign-in"></i>
+                    <span>Go</span>
+                </button>
             </div>
             {{#if error}}
                 <small class="text-danger mt-0 mb-0">Enter the correct room password to enter, or change the room name to create a new room.</small>

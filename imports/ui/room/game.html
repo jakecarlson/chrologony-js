@@ -9,7 +9,22 @@
                 <label for="gameCategoryId">Category:</label>
                 {{> categories_selector id="gameCategoryId" val=categoryId game=true}}
             </div>
-            <button type="submit" class="btn {{#if gameInProgress}}btn-secondary{{else}}btn-primary{{/if}} float-right draw" disabled="{{loading}}">Start</button>
+            <button
+                type="submit"
+                class="
+                    btn
+                    {{#if gameInProgress}}
+                        btn-secondary
+                    {{else}}
+                        btn-primary
+                    {{/if}}
+                    float-right draw
+                "
+                disabled="{{loading}}"
+            >
+                <i class="fa fa-play-circle"></i>
+                <span>Start</span>
+            </button>
         </div>
     </form>
 
