@@ -119,8 +119,6 @@ FlowRouter.route('/join/:id/:token', {
     }
 });
 
-// Tracker.autorun(redirectToHome);
-
 function redirectToHome(ctx, redirect) {
     if (!Meteor.userId()) {
         redirect(FlowRouter.path(
