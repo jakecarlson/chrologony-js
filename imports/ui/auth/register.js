@@ -30,10 +30,12 @@ Template.register.events({
             // Throw an error if the user hasn't checked the CAPTCHA box at all
             if (!result) {
                 Flasher.set('danger', "You must check the box below to continue.");
+                LoadingState.stop();
 
             // If there was a problem with the CAPTCHA, display the error
             } else if (err) {
                 Flasher.set('danger', result.error);
+                LoadingState.stop();
 
             // Otherwise continue to validate
             } else {
@@ -46,6 +48,7 @@ Template.register.events({
                 // Validate that the passwords match
                 if (password !== confirmPassword) {
                     Flasher.set('danger', "Passwords do not match.");
+                    LoadingState.stop();
 
                 // If so, continue on to attempt to register the user
                 } else {
@@ -62,6 +65,7 @@ Template.register.events({
                                     errorReason += '.';
                                 }
                                 Flasher.set('danger', errorReason);
+                                LoadingState.stop();
                             } else {
                                 Flasher.set('success', "You have successfully registered. Create or join a room below.");
                                 if (FlowRouter.getQueryParam('redirect')) {

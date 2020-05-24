@@ -48,6 +48,8 @@ Template.room.onCreated(function roomOnCreated() {
                     LoadingState.stop();
                 }
 
+            } else {
+                LoadingState.stop();
             }
 
         }
@@ -70,14 +72,6 @@ Template.room.onCreated(function roomOnCreated() {
         }
     });
 
-});
-
-Template.room.onRendered(function roomOnRendered() {
-    let clipboard = new Clipboard('.link');
-    clipboard.on('success', function(e) {
-        e.clearSelection();
-        setTimeout(function() {$(e.trigger).popover('hide');},3000);
-    });
 });
 
 Template.room.helpers({
@@ -158,6 +152,5 @@ function leaveRoom() {
         }
         Flasher.clear();
         FlowRouter.go('lobby');
-        LoadingState.stop();
     });
 }

@@ -149,7 +149,6 @@ Template.clues_manager.events({
     'click .remove': ModelEvents.remove,
 
     'click .categories'(e, i) {
-        LoadingState.start(e);
         const link = $(e.target);
         const id = link.attr('data-id');
         const clue = Clues.findOne(id);

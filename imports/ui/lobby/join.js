@@ -29,6 +29,7 @@ Template.join.events({
             if (err) {
                 Logger.log(err);
                 Flasher.set('danger', "That room exists, but the password is wrong.");
+                LoadingState.stop();
             } else {
                 Logger.log("Room Set: " + id);
                 Meteor.subscribe('rooms');

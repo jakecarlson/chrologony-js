@@ -72,7 +72,6 @@ Template.child_manager.events({
         Meteor.call(this.parentType.toLowerCase() + '.set' + this.childrenName, this.parent._id, children, function(err, numSaved) {
             if (err) {
                 Logger.log(err, 3);
-                return;
             }
             Logger.log(childrenName + ' Saved: ' + numSaved);
             LoadingState.stop();

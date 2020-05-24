@@ -80,7 +80,6 @@ Template.categories_manager.events({
     'click #removeCategory .remove': ModelEvents.remove,
 
     'click .collaborators'(e, i) {
-        LoadingState.start(e);
         const link = $(e.target);
         const id = link.attr('data-id');
         const category = Categories.findOne(id);

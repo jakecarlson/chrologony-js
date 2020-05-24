@@ -30,6 +30,8 @@ Template.login.events({
                 } else {
                     FlowRouter.go('lobby');
                 }
+            } else {
+                LoadingState.stop();
             }
         });
     },
