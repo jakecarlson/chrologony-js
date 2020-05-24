@@ -168,37 +168,9 @@ if (Meteor.isServer) {
             check(pos, Match.Integer);
             Permissions.authenticated();
 
-            // Get the previously correct cards + the current card in the correct order
+            // Get the card and determine if the guess is correct
             const card = Cards.findOne(id);
-            const clueIds = Promise.await(
-                Cards.rawCollection().distinct(
-                    'clueId',
-                    {
-                        gameId: card.turn().gameId,
-                        ownerId: Meteor.userId(),
-                        $or: [
-                            {lockedAt: {$ne: null}},
-                            {turnId: card.turn()._id, correct: true},
-                            {_id: id},
-                        ],
-                    }
-                )
-            );
-            const guess = Clues.find(
-                {
-                    _id: {$in: clueIds},
-                },
-                {
-                    sort: {
-                        date: 1,
-                    },
-                    skip: pos,
-                    limit: 1,
-                }
-            ).fetch()[0];
-
-            // Validate that the card is in the correct position
-            const correct = (card.clueId === guess._id);
+            const correct = guessIsCorrect(card, pos);
 
             Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
 
@@ -227,73 +199,117 @@ if (Meteor.isServer) {
 
     });
 
-}
+    // Draw a new card
+    function drawCard(turnId) {
 
-// Helpers
-function drawCard(turnId) {
+        // Get a random card that hasn't been drawn this game
+        const turn = Turns.findOne(turnId);
+        const lockedCards = Cards.find({gameId: turn.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
+        const turnCards = Cards.find({turnId: turnId}).map(function(i) { return i.clueId; });
+        const usedCards = lockedCards.concat(turnCards);
 
-    // Get a random card that hasn't been drawn this game
-    const turn = Turns.findOne(turnId);
-    const lockedCards = Cards.find({gameId: turn.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
-    const turnCards = Cards.find({turnId: turnId}).map(function(i) { return i.clueId; });
-    const usedCards = lockedCards.concat(turnCards);
+        Logger.log('Used Cards: ' + JSON.stringify(usedCards));
 
-    Logger.log('Used Cards: ' + JSON.stringify(usedCards));
-
-    let selector = {
-        active: true,
-        categories: turn.game().categoryId,
-    };
-    if (usedCards.length > 0) {
-        selector._id = {$nin: usedCards};
-    }
-    const possibleClues = Promise.await(
-        Clues.rawCollection().aggregate(
-            [
-                {$match: selector},
-                {$sample: {size: 1 }},
-            ]
-        ).toArray()
-    );
-    if (possibleClues.length == 0) {
-        Logger.log("No more cards to draw!!!");
-        return null;
-    }
-    const randomClue = possibleClues[0];
-
-    // Set the card doc
-    const card = {
-        gameId: turn.gameId,
-        turnId: turnId,
-        clueId: randomClue._id,
-        ownerId: turn.ownerId,
-    };
-
-    // Figure out whether this is the first card
-    const userCards = Cards.find(
-        {
-            gameId: turn.gameId,
-            ownerId: turn.ownerId,
+        let selector = {
+            active: true,
+            categories: turn.game().categoryId,
+        };
+        if (usedCards.length > 0) {
+            selector._id = {$nin: usedCards};
         }
-    ).fetch();
-    const firstCard = (userCards.length == 0);
+        const possibleClues = Promise.await(
+            Clues.rawCollection().aggregate(
+                [
+                    {$match: selector},
+                    {$sample: {size: 1 }},
+                ]
+            ).toArray()
+        );
+        if (possibleClues.length == 0) {
+            Logger.log("No more cards to draw!!!");
+            return null;
+        }
+        const randomClue = possibleClues[0];
 
-    // If it's the first card, automatically mark it correct
-    if (firstCard) {
-        card.correct = true;
-        card.lockedAt = new Date();
+        // Set the card doc
+        const card = {
+            gameId: turn.gameId,
+            turnId: turnId,
+            clueId: randomClue._id,
+            ownerId: turn.ownerId,
+        };
+
+        // Figure out whether this is the first card
+        const userCards = Cards.find(
+            {
+                gameId: turn.gameId,
+                ownerId: turn.ownerId,
+            }
+        ).fetch();
+        const firstCard = (userCards.length == 0);
+
+        // If it's the first card, automatically mark it correct
+        if (firstCard) {
+            card.correct = true;
+            card.lockedAt = new Date();
+        }
+
+        Logger.log('Insert Card: ' + JSON.stringify(card));
+
+        // Add the card
+        const cardId = Cards.insert(card);
+
+        // If it's the first card, draw another
+        if (firstCard) {
+            return drawCard(turnId);
+        } else {
+            return cardId;
+        }
+
     }
 
-    Logger.log('Insert Card: ' + JSON.stringify(card));
+    // Determine if the guess is correct
+    function guessIsCorrect(card, pos) {
 
-    // Add the card
-    const cardId = Cards.insert(card);
+        const cards = Cards.find(
+            {
+                gameId: card.turn().gameId,
+                ownerId: Meteor.userId(),
+                $or: [
+                    {turnId: card.turn()._id},
+                    {lockedAt: {$ne: null}},
+                ],
+            },
+            {
+                sort: {
+                    pos: 1,
+                    createdAt: -1,
+                }
+            }
+        ).fetch();
 
-    // If it's the first card, draw another
-    if (firstCard) {
-        return drawCard(turnId);
-    } else {
-        return cardId;
+        // Save the guess date
+        const guessDate = cards[pos].clue().dateObj();
+
+        // If there is a previous card, validate the guess against it
+        if (pos > 0) {
+            const previousDate = cards[pos-1].clue().dateObj();
+            if (guessDate.isBefore(previousDate)) {
+                return false;
+            }
+        }
+
+        // If there is a next card, validate the guess against it
+        if (pos < (cards.length-1)) {
+            const nextDate = cards[pos+1].clue().dateObj();
+            if (guessDate.isAfter(nextDate)) {
+                return false;
+            }
+        }
+
+        // If both validations passed, this is correct!
+        return true;
+
     }
 
 }

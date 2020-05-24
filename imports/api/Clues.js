@@ -56,6 +56,18 @@ Clues.helpers({
         return Meteor.users.findOne(this.ownerId);
     },
 
+    dateObj() {
+        return moment.utc(Formatter.date(this.date));
+    },
+
+    formattedDate() {
+        return Formatter.date(this.dateObj());
+    },
+
+    year() {
+        return Formatter.year(this.dateObj());
+    },
+
 });
 
 if (Meteor.isServer) {

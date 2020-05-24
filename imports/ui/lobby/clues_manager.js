@@ -118,7 +118,7 @@ Template.clues_manager.helpers({
     },
 
     currentClueName() {
-        return (Template.instance().state.get('currentClue')) ? moment.utc(Template.instance().state.get('currentClue').date).format("Y-MM-DD") : null;
+        return (Template.instance().state.get('currentClue')) ? Template.instance().state.get('currentClue').formattedDate() : null;
     },
 
     categories() {

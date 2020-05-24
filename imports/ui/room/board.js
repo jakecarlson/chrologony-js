@@ -184,6 +184,7 @@ Template.board.events({
                 Meteor.subscribe('cards', gameId);
                 Meteor.subscribe('cardClues', gameId);
             }
+            saveCardPos();
             LoadingState.stop();
         });
     },

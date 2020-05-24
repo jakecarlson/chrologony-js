@@ -21,19 +21,19 @@ Template.card.helpers({
     },
 
     date() {
-        return moment.utc(getClueField(Template, 'date')).format("Y-MM-DD");
+        return Template.instance().clue.get().formattedDate();
     },
 
     year() {
-        return moment.utc(getClueField(Template, 'date')).format("Y");
+        return Template.instance().clue.get().year();
     },
 
     description() {
-        return getClueField(Template, 'description');
+        return Template.instance().clue.get().description;
     },
 
     hint() {
-        return getClueField(Template, 'hint');
+        return Template.instance().clue.get().hint;
     },
 
     isLocked() {
@@ -72,8 +72,4 @@ function isOwned(turn) {
 
 function isCurrent(turn, card) {
     return (turn.currentCardId == card._id);
-}
-
-function getClueField(template, field) {
-    return Template.instance().clue.get()[field];
 }

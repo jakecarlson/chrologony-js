@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import '../imports/modules/Logger';
 import '../imports/modules/Hasher';
+import '../imports/modules/Formatter';
 import './db/migrations';
 import './db/importer';
 
