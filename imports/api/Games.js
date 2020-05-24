@@ -153,14 +153,14 @@ if (Meteor.isServer) {
                 categoryId: attrs.categoryId,
             });
 
-            Meteor.call('room.setGame', attrs.roomId, gameId, function (error, updated) {
-                if (!error) {
+            Meteor.call('room.setGame', attrs.roomId, gameId, function(err, updated) {
+                if (!err) {
                     Logger.log("Updated Room: " + updated);
                 }
             });
 
-            Meteor.call('turn.next', gameId, function (error, id) {
-                if (!error) {
+            Meteor.call('turn.next', gameId, function(err, id) {
+                if (!err) {
                     Logger.log("First Turn: " + id);
                 }
             });

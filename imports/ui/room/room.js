@@ -1,13 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { check } from 'meteor/check';
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
-import { RecordId } from '../../startup/validations';
 import { Flasher } from '../flasher';
 import { LoadingState } from '../../modules/LoadingState';
+import Clipboard from 'clipboard';
 
 import '../../api/Users';
-import { Rooms } from '../../api/Rooms';
 import { Games } from '../../api/Games';
 import { Cards } from "../../api/Cards";
 
@@ -26,12 +24,14 @@ Template.room.onCreated(function roomOnCreated() {
 
         FlowRouter.watchPathChange();
 
-        if (Meteor.user()) {
+        const userHandle = Meteor.subscribe('userData');
+        if (userHandle.ready()) {
 
             const roomId = Meteor.user().currentRoomId;
 
             // Redirect the user back to lobby if they aren't authenticated to this room
             if (roomId != FlowRouter.getParam('id')) {
+                Flasher.set('danger', "You are not authorized to view that room.");
                 leaveRoom();
             }
 
@@ -70,6 +70,14 @@ Template.room.onCreated(function roomOnCreated() {
         }
     });
 
+});
+
+Template.room.onRendered(function roomOnRendered() {
+    let clipboard = new Clipboard('.link');
+    clipboard.on('success', function(e) {
+        e.clearSelection();
+        setTimeout(function() {$(e.trigger).popover('hide');},3000);
+    });
 });
 
 Template.room.helpers({
@@ -116,6 +124,10 @@ Template.room.helpers({
         return Template.instance().room.get().owner();
     },
 
+    link() {
+        return Meteor.absoluteUrl(FlowRouter.path('joinByToken', {id: Template.instance().room.get()._id, token: Template.instance().room.get().token}));
+    },
+
 });
 
 Template.room.events({
@@ -126,8 +138,8 @@ Template.room.events({
 
     'click .destroy'(e, i) {
         LoadingState.start();
-        Meteor.call('room.remove', i.room.get()._id, function(error, id) {
-            if (!error) {
+        Meteor.call('room.remove', i.room.get()._id, function(err, id) {
+            if (!err) {
                 Logger.log("Room Deleted: " + id);
                 Flasher.set('success', "You have successfully deleted the room. You can join or create a new one below.");
                 FlowRouter.go('lobby');
@@ -140,8 +152,8 @@ Template.room.events({
 
 function leaveRoom() {
     LoadingState.start();
-    Meteor.call('room.leave', false, function(error, id) {
-        if (!error) {
+    Meteor.call('room.leave', false, function(err, id) {
+        if (!err) {
             Logger.log("Player Left Room: " + id);
         }
         Flasher.clear();

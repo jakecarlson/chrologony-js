@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { publishComposite } from 'meteor/reywood:publish-composite';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
@@ -39,15 +40,33 @@ Rooms.helpers({
 
 if (Meteor.isServer) {
 
-    Meteor.publish('rooms', function roomsPublication() {
-        if (this.userId && Meteor.user().currentRoomId) {
-            return Rooms.find({
-                _id: Meteor.user().currentRoomId,
-                deletedAt: null,
-            });
-        } else {
-            return this.ready();
-        }
+    publishComposite('rooms', {
+        find() {
+            if (this.userId && Meteor.user().currentRoomId) {
+                return Rooms.find(
+                    {
+                        _id: Meteor.user().currentRoomId,
+                        deletedAt: null,
+                    },
+                    {
+                        fields: {
+                            _id: 1,
+                            name: 1,
+                            currentGameId: 1,
+                            ownerId: 1,
+                            token: 1,
+                        },
+                        transform: function(doc) {
+                            doc.token = Hasher.md5.hash(doc._id);
+                            return doc;
+                        },
+                    }
+                );
+            } else {
+                return this.ready();
+            }
+        },
+
     });
 
     Rooms.deny({
@@ -86,8 +105,8 @@ Meteor.methods({
             if (game.currentTurnId) {
                 const turn = game.currentTurn();
                 if (turn.ownerId == userId) {
-                    Meteor.call('turn.next', room.currentGameId, function(error, id) {
-                        if (!error) {
+                    Meteor.call('turn.next', room.currentGameId, function(err, id) {
+                        if (!err) {
                             Logger.log("Start Turn: " + id);
                         }
                     });
@@ -95,14 +114,7 @@ Meteor.methods({
             }
         }
 
-        Meteor.users.update(
-            userId,
-            {
-                $set: {
-                    currentRoomId: null,
-                }
-            }
-        );
+        setRoom(null, userId);
 
         return userId;
 
@@ -185,30 +197,70 @@ if (Meteor.isServer) {
             );
 
             if (room) {
-                if ((room.ownerId != this.userId) && !Hasher.match(password, room.password)) {
+                if ((room.ownerId != this.userId) && !Hasher.bcrypt.match(password, room.password)) {
                     throw new Meteor.Error('not-authorized');
                 }
                 roomId = room._id;
             } else {
                 roomId = Rooms.insert({
                     name: name,
-                    password: Hasher.hash(password),
+                    password: Hasher.bcrypt.hash(password),
                 });
             }
 
-            Meteor.users.update(
-                Meteor.userId(),
-                {
-                    $set: {
-                        currentRoomId: roomId,
-                    }
-                }
-            );
+            setRoom(roomId);
 
             return roomId;
 
         },
 
+        'room.joinByToken'(roomId, token) {
+
+            check(roomId, RecordId);
+            check(token, NonEmptyString);
+            Permissions.authenticated();
+
+            // Find the room by token
+            const selector = {
+                deletedAt: null,
+                _id: roomId,
+                $where: getTokenStr() + " == '" + token.trim() + "'",
+            };
+            const room = Rooms.findOne(
+                selector,
+                {
+                    sort: {createdAt: -1}
+                }
+            );
+
+            if (!room) {
+                setRoom(null);
+                throw new Meteor.Error('not-authorized');
+            } else {
+                setRoom(roomId);
+                return roomId;
+            }
+
+        },
+
     });
 
+    function getTokenStr() {
+        return "hex_md5(this._id + '" + Meteor.settings.crypt.salt + "')";
+    }
+
+}
+
+function setRoom(id, userId = null) {
+    if (!userId) {
+        userId = Meteor.userId();
+    }
+    return Meteor.users.update(
+        userId,
+        {
+            $set: {
+                currentRoomId: id
+            }
+        }
+    );
 }

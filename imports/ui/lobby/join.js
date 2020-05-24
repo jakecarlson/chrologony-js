@@ -25,9 +25,9 @@ Template.join.events({
         const name = target.name.value;
         const password = target.password.value;
 
-        Meteor.call('room.joinOrCreate', name, password, function(error, id) {
-            if (error) {
-                Logger.log(error);
+        Meteor.call('room.joinOrCreate', name, password, function(err, id) {
+            if (err) {
+                Logger.log(err);
                 Flasher.set('danger', "That room exists, but the password is wrong.");
             } else {
                 Logger.log("Room Set: " + id);
@@ -35,7 +35,7 @@ Template.join.events({
                 target.name.value = '';
                 target.password.value = '';
                 Flasher.set('success', "Success! Invite others to join.");
-                FlowRouter.go('rooms.id', {id: id});
+                FlowRouter.go('room', {id: id});
             }
         });
 

@@ -14,8 +14,8 @@ export const ModelEvents = {
         LoadingState.start(e);
         const attrs = getAttrs(i);
 
-        Meteor.call(getModelName(i) + '.create', attrs, function(error, id) {
-            if (!error) {
+        Meteor.call(getModelName(i) + '.create', attrs, function(err, id) {
+            if (!err) {
                 Logger.log('Created ' + capitalize(getModelName(i)) + ': ' + id);
                 i.state.set('error', false);
                 resetAttrs(i);
@@ -32,8 +32,8 @@ export const ModelEvents = {
         LoadingState.start(e);
         const attrs = getAttrs(i);
 
-        Meteor.call(getModelName(i) + '.update', attrs, function(error, updated) {
-            if (!error) {
+        Meteor.call(getModelName(i) + '.update', attrs, function(err, updated) {
+            if (!err) {
                 Logger.log('Updated ' + capitalize(getModelName(i)) + ': ' + updated);
                 i.state.set('editing', false);
                 i.state.set('error', false);
@@ -57,8 +57,8 @@ export const ModelEvents = {
         const button = $(e.target);
         const id = button.attr('data-id');
         const modelName = button.attr('data-model');
-        Meteor.call(modelName + '.remove', id, function(error, deleted) {
-            if (!error) {
+        Meteor.call(modelName + '.remove', id, function(err, deleted) {
+            if (!err) {
                 Logger.log('Deleted ' + capitalize(modelName) + ': ' + deleted);
             }
             LoadingState.stop();

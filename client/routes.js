@@ -1,5 +1,6 @@
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+import {Flasher} from "../imports/ui/flasher";
 
 FlowRouter.route('/', {
     name: 'home',
@@ -86,16 +87,35 @@ FlowRouter.route('/categories', {
 });
 
 FlowRouter.route('/rooms/:id', {
-    name: 'rooms.id',
+    name: 'room',
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
-        Logger.log("Route: rooms.id");
+        Logger.log("Route: room");
         BlazeLayout.render(
             'layout_authenticated',
             {
                 main: 'room',
             }
         );
+    }
+});
+
+FlowRouter.route('/join/:id/:token', {
+    name: 'joinByToken',
+    triggersEnter: [redirectToHome],
+    action(params, queryParams) {
+        Logger.log("Route: joinByToken");
+        Meteor.call('room.joinByToken', params.id, params.token, function(err, id) {
+            if (err) {
+                Logger.log(err);
+                Flasher.set('danger', "Room token is not valid.");
+                FlowRouter.go('lobby');
+            } else {
+                Logger.log("Room Set: " + id);
+                Flasher.set('success', "Success! Invite others to join.");
+                FlowRouter.go('room', {id: id});
+            }
+        });
     }
 });
 

@@ -5,8 +5,20 @@
         {{#if dataReady}}
 
             <header class="clearfix mb-2">
-                <h1 class="room-title float-left" data-toggle="popover" data-trigger="hover" data-content="Password: {{password}}; Owner: {{#if owner}}{{owner}}{{else}}[unknown]{{/if}}">{{name}}</h1>
-                <button class="btn btn-secondary float-right mb-2 leave" disabled="{{loading}}">Leave Room</button>
+                <h1 class="room-title float-left">{{name}}</h1>
+                <button
+                    class="btn btn-secondary float-right mb-2 leave"
+                    disabled="{{loading}}"
+                    title="Leave Room"
+                >Leave Room</button>
+                <button
+                    class="btn btn-light float-right mb-2 mr-2 link"
+                    data-clipboard-text="{{link}}"
+                    data-toggle="popover"
+                    data-placement="top"
+                    data-content="Room URL copied to your clipboard!"
+                    title="Room Link"
+                >Room Link</button>
             </header>
 
             <div class="row">

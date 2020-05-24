@@ -129,8 +129,8 @@ if (Meteor.isServer) {
                 const correctCards = turn.cards(true);
                 if (cards.count() === correctCards.count()) {
                     correctCards.forEach(function(card) {
-                        Meteor.call('card.lock', card._id, function(error, updated) {
-                            if (!error) {
+                        Meteor.call('card.lock', card._id, function(err, updated) {
+                            if (!err) {
                                 Logger.log("Locked Card: " + updated);
                             }
                         });
@@ -193,14 +193,14 @@ if (Meteor.isServer) {
                 startedAt: new Date(),
             });
 
-            Meteor.call('game.setTurn', gameId, turnId, function(error, updated) {
-                if (!error) {
+            Meteor.call('game.setTurn', gameId, turnId, function(err, updated) {
+                if (!err) {
                     Logger.log("Updated Game: " + updated);
                 }
             });
 
-            Meteor.call('card.draw', turnId, function(error, id) {
-                if (!error) {
+            Meteor.call('card.draw', turnId, function(err, id) {
+                if (!err) {
                     Logger.log("Created Card: " + id);
                 }
             });

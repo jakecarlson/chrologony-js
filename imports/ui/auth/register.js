@@ -25,14 +25,14 @@ Template.register.events({
         // Validate the CAPTCHA
         const captcha = grecaptcha.getResponse();
         grecaptcha.reset();
-        Meteor.call('user.validateCaptcha', captcha, function(error, result) {
+        Meteor.call('user.validateCaptcha', captcha, function(err, result) {
 
             // Throw an error if the user hasn't checked the CAPTCHA box at all
             if (!result) {
                 Flasher.set('danger', "You must check the box below to continue.");
 
             // If there was a problem with the CAPTCHA, display the error
-            } else if (error) {
+            } else if (err) {
                 Flasher.set('danger', result.error);
 
             // Otherwise continue to validate
@@ -55,9 +55,9 @@ Template.register.events({
                             username: username,
                             password: password,
                         },
-                        function(error) {
-                            if (error) {
-                                let errorReason = error.reason;
+                        function(err) {
+                            if (err) {
+                                let errorReason = err.reason;
                                 if (errorReason.substr(-1) != '.') {
                                     errorReason += '.';
                                 }

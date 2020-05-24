@@ -14,9 +14,9 @@ Accounts.config({
     }
 });
 
-Accounts.onLogout(function(error) {
-    if (error) {
-        Logger.log(error, 2);
+Accounts.onLogout(function(err) {
+    if (err) {
+        Logger.log(err, 2);
     } else {
         Flasher.set('success', "You have successfully logged out.");
         FlowRouter.go('home');

@@ -152,8 +152,8 @@ if (Meteor.isServer) {
             const cardId = drawCard(turnId);
             Logger.log("Card ID: " + cardId);
 
-            Meteor.call('turn.setCard', turnId, cardId, null, function(error, updated) {
-                if (!error) {
+            Meteor.call('turn.setCard', turnId, cardId, null, function(err, updated) {
+                if (!err) {
                     Logger.log("Updated Turn: " + updated);
                 }
             });
@@ -204,8 +204,8 @@ if (Meteor.isServer) {
             Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
 
             // Null out the current card ID
-            Meteor.call('turn.setCard', card.turn()._id, null, correct, function(error, updated) {
-                if (!error) {
+            Meteor.call('turn.setCard', card.turn()._id, null, correct, function(err, updated) {
+                if (!err) {
                     Logger.log("Updated Turn: " + updated);
                 }
             });

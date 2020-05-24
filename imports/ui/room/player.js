@@ -51,8 +51,8 @@ Template.player.events({
 
     'click .eject'(e, i) {
         LoadingState.start(e);
-        Meteor.call('room.leave', this.player._id, function(error, id) {
-            if (!error) {
+        Meteor.call('room.leave', this.player._id, function(err, id) {
+            if (!err) {
                 Logger.log("Player Left Room: " + id);
             }
             LoadingState.stop();
