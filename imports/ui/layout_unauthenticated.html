@@ -1,7 +1,8 @@
 <template name="layout_unauthenticated">
 
-    <main id="home" class="container mb-4 {{#if registration}}registration-container{{/if}}">
-        <h1 id="title">Chrologony</h1>
+    <main id="home" class="container mb-4">
+        <h1 id="title" class="mb-0">Chrologony</h1>
+        <h2 class="h6 text-muted mb-4">The Best Game of All Time</h2>
         {{> flasher}}
         {{> Template.dynamic template=main}}
         {{> footer}}
