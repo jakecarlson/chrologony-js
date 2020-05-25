@@ -58,7 +58,7 @@ Clues.helpers({
 
     dateObj() {
         if (this.date) {
-            return moment.utc(Formatter.date(this.date));
+            return moment.utc(this.date);
         }
         return null;
     },
