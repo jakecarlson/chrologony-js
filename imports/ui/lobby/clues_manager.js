@@ -118,7 +118,7 @@ Template.clues_manager.helpers({
     },
 
     currentClueName() {
-        return (Template.instance().state.get('currentClue')) ? Template.instance().state.get('currentClue').formattedDate() : null;
+        return (Template.instance().state.get('currentClue')) ? Formatter.date(Template.instance().state.get('currentClue').date) : null;
     },
 
     categories() {

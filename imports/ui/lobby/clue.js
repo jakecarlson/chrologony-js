@@ -36,7 +36,7 @@ Template.clue.helpers({
     },
 
     date() {
-        return this.clue.formattedDate();
+        return Formatter.date(this.clue.date);
     },
 
     categoryId() {
