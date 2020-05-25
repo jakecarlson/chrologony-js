@@ -42,42 +42,53 @@
 <!--        </td>-->
 
         <td>
-            <form class="clue-edit {{#if viewing}}d-none{{/if}}">
-                {{#if newClue}}
+
+            {{#if canEdit}}
+
+                <form class="clue-edit {{#if viewing}}d-none{{/if}}">
+
                     <input class="attr" type="hidden" name="categoryId" value="{{categoryId}}">
-                {{/if}}
-                <input class="attr" type="hidden" name="hint" value="">
-                {{#if clue}}
-                    <input class="attr" type="hidden" name="_id" value="{{id}}">
-                    <button type="submit" class="save btn btn-primary mr-0 mb-2 mr-md-2 mb-md-0" disabled="{{loading}}">
-                        <i class="fa fa-check"></i>
-                        <span class="d-none d-xl-inline">Save</span>
-                    </button>
-                    <button type="submit" class="cancel btn btn-light mr-0 mb-2 mr-md-2 mb-md-0">
-                        <i class="fa fa-times"></i>
-                        <span class="d-none d-xl-inline">Cancel</span>
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-outline-danger ml-0 ml-md-2 float-md-right"
-                        data-toggle="modal"
-                        data-target="#removeClue"
-                        data-id="{{id}}"
-                    >
-                        <i class="fa fa-trash"></i>
-                        <span class="d-none d-xl-inline">Remove</span>
-                    </button>
-                {{else}}
-                    <button type="submit" class="add btn btn-primary" disabled="{{loading}}">
-                        <i class="fa fa-plus"></i>
-                        <span class="d-none d-xl-inline">Add</span>
-                    </button>
-                {{/if}}
-            </form>
-            <button class="edit btn btn-light btn-sm {{#if editing}}d-none{{/if}}">
-                <i class="fa fa-pencil"></i>
-                <span class="d-none d-xl-inline">Edit</span>
-            </button>
+                    <input class="attr" type="hidden" name="hint" value="">
+
+                    {{#if clue}}
+
+                        <input class="attr" type="hidden" name="_id" value="{{id}}">
+                        <button type="submit" class="save btn btn-primary mr-0 mb-2 mr-md-2 mb-md-0" disabled="{{loading}}">
+                            <i class="fa fa-check"></i>
+                            <span class="d-none d-xl-inline">Save</span>
+                        </button>
+                        <button type="submit" class="cancel btn btn-light mr-0 mb-2 mr-md-2 mb-md-0">
+                            <i class="fa fa-times"></i>
+                            <span class="d-none d-xl-inline">Cancel</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-outline-danger ml-0 ml-md-2 float-md-right"
+                            data-toggle="modal"
+                            data-target="#removeClue"
+                            data-id="{{id}}"
+                        >
+                            <i class="fa fa-trash"></i>
+                            <span class="d-none d-xl-inline">Remove</span>
+                        </button>
+
+                    {{else}}
+
+                        <button type="submit" class="add btn btn-primary" disabled="{{loading}}">
+                            <i class="fa fa-plus"></i>
+                            <span class="d-none d-xl-inline">Add</span>
+                        </button>
+
+                    {{/if}}
+
+                </form>
+
+                <button class="edit btn btn-light btn-sm {{#if editing}}d-none{{/if}}">
+                    <i class="fa fa-pencil"></i>
+                    <span class="d-none d-xl-inline">Edit</span>
+                </button>
+            {{/if}}
+
         </td>
     </tr>
 

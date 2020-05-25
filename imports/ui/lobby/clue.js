@@ -52,15 +52,14 @@ Template.clue.helpers({
     },
 
     canEdit() {
-        if (!this.clue) {
+        if (this.clue && (this.clue.ownerId == Meteor.userId())) {
             return true;
-        } else {
-            const category = Categories.findOne(this.categoryId);
-            return (
-                (this.clue.ownerId == Meteor.userId()) ||
-                (category && (category.ownerId == Meteor.userId()))
-            );
         }
+        const category = Categories.findOne(this.categoryId);
+        if (category && (category.ownerId == Meteor.userId())) {
+            return true;
+        }
+        return false;
     },
 
 });

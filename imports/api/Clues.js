@@ -146,6 +146,7 @@ Meteor.methods({
                 description: NonEmptyString,
                 date: NonEmptyString,
                 hint: Match.OneOf(null, String),
+                categoryId: RecordId,
             }
         );
         Permissions.authenticated();
@@ -155,12 +156,21 @@ Meteor.methods({
 
         Logger.log('Update Clue: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
+        // Add the owner of the category to allowable editors
+        let selector = {
+            _id: attrs._id,
+            $or: [
+                {ownerId: Meteor.userId()},
+            ],
+        };
+        const category = Categories.findOne(attrs.categoryId);
+        if (category.ownerId == Meteor.userId()) {
+            selector.$or.push({categories: attrs.categoryId});
+        }
+
         // If there is an ID, this is an update
         return Clues.update(
-            {
-                _id: attrs._id,
-                ownerId: Meteor.userId(),
-            },
+            selector,
             {
                 $set: {
                     description: attrs.description,
