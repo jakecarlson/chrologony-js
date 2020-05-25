@@ -10,9 +10,16 @@ if (Meteor.isServer) {
     // Additional user data
     Meteor.publish('userData', function () {
         if (this.userId) {
-            return Meteor.users.find({ _id: this.userId }, {
-                fields: {currentRoomId: 1}
-            });
+            return Meteor.users.find(
+                {
+                    _id: this.userId,
+                },
+                {
+                    fields: {
+                        currentRoomId: 1,
+                    }
+                }
+            );
         } else {
             this.ready();
         }
@@ -21,7 +28,11 @@ if (Meteor.isServer) {
     // Get the players in the room
     Meteor.publish('players', function playersPublication(roomId) {
         if (this.userId && roomId) {
-            return Meteor.users.find({currentRoomId: roomId});
+            return Meteor.users.find(
+                {
+                    currentRoomId: roomId,
+                }
+            );
         } else {
             return this.ready();
         }
@@ -69,7 +80,9 @@ if (Meteor.isServer) {
                     _id: {$nin: excludeIds},
                 },
                 {
-                    sort: {username: 1},
+                    sort: {
+                        username: 1,
+                    },
                 }
             ).fetch();
 
@@ -90,7 +103,9 @@ if (Meteor.isServer) {
                         _id: {$in: ids},
                     },
                 {
-                    sort: {username: 1},
+                    sort: {
+                        username: 1,
+                    },
                 }
             ).fetch();
 

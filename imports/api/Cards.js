@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
+import { publishComposite } from 'meteor/reywood:publish-composite';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import { Promise } from "meteor/promise";
@@ -50,21 +51,62 @@ if (Meteor.isServer) {
 
     Meteor.publish('cards', function cardsPublication(gameId) {
         if (this.userId && gameId) {
-            return Cards.find({gameId: gameId});
+            return Cards.find(
+                {
+                    gameId: gameId
+                },
+                {
+                    fields: {
+                        _id: 1,
+                        gameId: 1,
+                        turnId: 1,
+                        clueId: 1,
+                        correct: 1,
+                        lockedAt: 1,
+                        pos: 1,
+                        ownerId: 1,
+                        createdAt: 1,
+                    }
+                }
+            );
         } else {
             return this.ready();
         }
     });
 
-    Meteor.publish('cardClues', function cardCluesPublication(gameId) {
-        if (this.userId && gameId) {
-            const clueIds = Promise.await(
-                Cards.rawCollection().distinct('clueId', {gameId: gameId})
-            );
-            return Clues.find({_id: {$in: clueIds}});
-        } else {
-            return this.ready();
-        }
+    publishComposite('cardClues', function(gameId) {
+        return {
+            find() {
+                if (this.userId && gameId) {
+                    const clueIds = Promise.await(
+                        Cards.rawCollection().distinct('clueId', {gameId: gameId})
+                    );
+                    const unsubmittedClueIds = Promise.await(
+                        Cards.rawCollection().distinct('clueId', {gameId: gameId, correct: null})
+                    );
+                    return Clues.find(
+                        {
+                            _id: {$in: clueIds},
+                        },
+                        {
+                            fields: {
+                                _id: 1,
+                                date: 1,
+                                description: 1,
+                            },
+                            transform: function(doc) {
+                                if (unsubmittedClueIds.includes(doc._id)) {
+                                    doc.date = null;
+                                }
+                                return doc;
+                            },
+                        }
+                    );
+                } else {
+                    return this.ready();
+                }
+            }
+        };
     });
 
     Cards.deny({
@@ -237,6 +279,8 @@ if (Meteor.isServer) {
             turnId: turnId,
             clueId: randomClue._id,
             ownerId: turn.ownerId,
+            correct: null,
+            lockedAt: null,
         };
 
         // Figure out whether this is the first card

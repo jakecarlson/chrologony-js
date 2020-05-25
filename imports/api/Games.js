@@ -51,7 +51,25 @@ if (Meteor.isServer) {
 
     Meteor.publish('games', function gamePublication(roomId) {
         if (this.userId && roomId) {
-            return Games.find({roomId: roomId}, {sort: {createdAt: -1}, limit: 2});
+            return Games.find(
+                {
+                    roomId: roomId,
+                },
+                {
+                    fields: {
+                        _id: 1,
+                        roomId: 1,
+                        categoryId: 1,
+                        streak: 1,
+                        currentTurnId: 1,
+                        winnerId: 1,
+                    },
+                    sort: {
+                        createdAt: -1,
+                    },
+                    limit: 2,
+                }
+            );
         } else {
             return this.ready();
         }

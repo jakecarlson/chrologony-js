@@ -29,7 +29,9 @@ Categories.helpers({
                 _id: {$in: this.collaborators},
             },
             {
-                sort: {username: 1},
+                sort: {
+                    username: 1,
+                },
             }
         );
     },
@@ -41,6 +43,7 @@ Categories.helpers({
 });
 
 if (Meteor.isServer) {
+
     Meteor.publish('categories', function categoriesPublication() {
         if (this.userId) {
             return Categories.find(
@@ -48,13 +51,23 @@ if (Meteor.isServer) {
                     $or: getAllowedConditions(),
                 },
                 {
-                    sort: getSort(),
+                    fields: {
+                        _id: 1,
+                        name: 1,
+                        theme: 1,
+                        active: 1,
+                        private: 1,
+                        source: 1,
+                        collaborators: 1,
+                        ownerId: 1,
+                    },
                 }
             );
         } else {
             return this.ready();
         }
     });
+
 }
 
 Meteor.methods({

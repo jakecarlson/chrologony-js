@@ -3,9 +3,9 @@ import { Template } from 'meteor/templating';
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { Flasher } from '../flasher';
 import { LoadingState } from '../../modules/LoadingState';
-import Clipboard from 'clipboard';
 
 import '../../api/Users';
+import { Clues } from '../../api/Clues';
 import { Games } from '../../api/Games';
 import { Cards } from "../../api/Cards";
 
@@ -38,11 +38,8 @@ Template.room.onCreated(function roomOnCreated() {
             this.room.set(Meteor.user().currentRoom());
             if (this.room.get()) {
 
-                this.subscribe('games', this.room.get()._id);
                 this.subscribe('players', this.room.get()._id);
-                this.subscribe('turns', this.room.get().currentGameId);
-                this.subscribe('cards', this.room.get().currentGameId);
-                this.subscribe('cardClues', this.room.get().currentGameId);
+                subscribeToGame(this.room.get()._id, this.room.get().currentGameId);
 
                 if (this.subscriptionsReady()) {
                     LoadingState.stop();
@@ -56,20 +53,38 @@ Template.room.onCreated(function roomOnCreated() {
 
     });
 
-    Games.find().observeChanges({
+    const gamesObserver = Games.find().observeChanges({
         added: function(gameId, fields) {
-            Meteor.subscribe('games', fields.roomId);
-            Meteor.subscribe('turns', gameId);
-            Meteor.subscribe('cards', gameId);
-            Meteor.subscribe('cardClues', gameId);
+            if (gamesObserver) {
+                subscribeToGame(fields.roomId, gameId);
+            }
         }
     });
 
-    Cards.find().observeChanges({
+    const cardsObserver = Cards.find().observeChanges({
+
         added: function(cardId, fields) {
-            Meteor.subscribe('cards', fields.gameId);
-            Meteor.subscribe('cardClues', fields.gameId);
-        }
+            if (cardsObserver) {
+                subscribeToCards(fields.gameId);
+            }
+        },
+
+        changed(cardId, fields) {
+            if (cardsObserver && (fields.correct != null)) {
+                const card = Cards.findOne(cardId);
+                Meteor.call('clue.getDate', card.clueId, function(err, date) {
+                    if (!err) {
+
+                        Logger.log("Update Clue Date " + card.clueId + ": " + date);
+
+                        // Update the clue date on the client only
+                        Clues._collection.update(card.clueId, {$set: {date: date}});
+
+                    }
+                });
+            }
+        },
+
     });
 
 });
@@ -153,4 +168,17 @@ function leaveRoom() {
         Flasher.clear();
         FlowRouter.go('lobby');
     });
+}
+
+function subscribeToGame(roomId, gameId) {
+    Logger.log("Subscribe: Games + Turns");
+    Meteor.subscribe('games', roomId);
+    Meteor.subscribe('turns', gameId);
+    subscribeToCards(gameId);
+}
+
+function subscribeToCards(gameId) {
+    Logger.log("Subscribe: Cards + Clues");
+    Meteor.subscribe('cards', gameId);
+    Meteor.subscribe('cardClues', gameId);
 }

@@ -192,7 +192,9 @@ if (Meteor.isServer) {
                  },
                 {
                     limit: 1,
-                    sort: {createdAt: -1}
+                    sort: {
+                        createdAt: -1,
+                    },
                 }
             );
 
@@ -229,7 +231,9 @@ if (Meteor.isServer) {
             const room = Rooms.findOne(
                 selector,
                 {
-                    sort: {createdAt: -1}
+                    sort: {
+                        createdAt: -1,
+                    },
                 }
             );
 

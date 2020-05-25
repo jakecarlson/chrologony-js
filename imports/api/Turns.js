@@ -36,7 +36,15 @@ Turns.helpers({
         if (correct !== null) {
             selector.correct = correct;
         }
-        return Cards.find(selector, {sort: {pos: 1}});
+        return Cards.find(
+            selector,
+            {
+                sort: {
+                    pos: 1,
+                    createdAt: -1,
+                }
+            }
+        );
     },
 
     currentCard() {
@@ -53,7 +61,24 @@ if (Meteor.isServer) {
 
     Meteor.publish('turns', function turnPublication(gameId) {
         if (this.userId && gameId) {
-            return Turns.find({gameId: gameId}, {sort: {createdAt: -1}, limit: 2});
+            return Turns.find(
+                {
+                    gameId: gameId,
+                },
+                {
+                    fields: {
+                        _id: 1,
+                        gameId: 1,
+                        currentCardId: 1,
+                        ownerId: 1,
+                        lastCardCorrect: 1,
+                    },
+                    sort: {
+                        createdAt: -1,
+                    },
+                    limit: 2,
+                }
+            );
         } else {
             return this.ready();
         }
@@ -152,7 +177,7 @@ if (Meteor.isServer) {
                     [
                         {$match: {gameId: gameId, ownerId: {$in: playerPool}}},
                         {$group: {_id: "$ownerId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
-                        {$sort: {turns: -1, lastTurn: 1, ownerId: randomSort}}
+                        {$sort: {turns: -1, lastTurn: -1, ownerId: randomSort}}
                     ]
                 ).toArray()
             );
@@ -170,7 +195,7 @@ if (Meteor.isServer) {
                     _id: {$nin: alreadyPlayed},
                 },
                 {
-                    $sort: {
+                    sort: {
                         ownerId: -1,
                     }
                 }

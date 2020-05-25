@@ -57,27 +57,52 @@ Clues.helpers({
     },
 
     dateObj() {
-        return moment.utc(Formatter.date(this.date));
+        if (this.date) {
+            return moment.utc(Formatter.date(this.date));
+        }
+        return null;
     },
 
     formattedDate() {
-        return Formatter.date(this.dateObj());
+        if (this.date) {
+            return Formatter.date(this.dateObj());
+        }
+        return null;
     },
 
     year() {
-        return Formatter.year(this.dateObj());
+        if (this.date) {
+            return Formatter.year(this.dateObj());
+        }
+        return null;
     },
 
 });
 
 if (Meteor.isServer) {
+
     Meteor.publish('clues', function cluesPublication(categoryId) {
         if (this.userId && categoryId) {
-            return Clues.find({categories: categoryId}, {sort: {date: -1}});
+            return Clues.find(
+                {
+                    categories: categoryId,
+                },
+                {
+                    fields: {
+                        _id: 1,
+                        description: 1,
+                        date: 1,
+                        active: 1,
+                        categories: 1,
+                        ownerId: 1,
+                    },
+                }
+            );
         } else {
             return this.ready();
         }
     });
+
 }
 
 Meteor.methods({
@@ -224,6 +249,12 @@ if (Meteor.isServer) {
                 {multi: true}
             );
 
+        },
+
+        // Get the clue date
+        'clue.getDate'(id) {
+            const clue = Clues.findOne(id);
+            return clue.date;
         },
 
     });
