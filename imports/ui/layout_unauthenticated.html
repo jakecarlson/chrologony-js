@@ -2,7 +2,16 @@
 
     <main id="home" class="container mb-4">
         <h1 id="title" class="mb-0">Chrologony</h1>
-        <h2 class="h6 text-muted mb-4">The Best Game of All Time</h2>
+        <h2
+            class="h6 text-muted mb-4"
+            data-toggle="popover"
+            data-placement="top"
+            title="What is Chrologony?"
+            data-content="Chrologony is an online game where players sequence thematic events into a timeline. You can build your own categories, or use and contribute to community categories."
+        >
+            The Greatest Game of All Time
+            <i class="fa fa-question-circle"></i>
+        </h2>
         {{> flasher}}
         {{> Template.dynamic template=main}}
         {{> footer}}

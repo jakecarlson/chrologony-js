@@ -31,6 +31,9 @@ html {
     max-width: 30rem;
     margin: 0 auto;
 }
+#home [data-toggle="popover"] {
+    cursor: pointer;
+}
 
 #login .form-inline,
 #register .form-inline

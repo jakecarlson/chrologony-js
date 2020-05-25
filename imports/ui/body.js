@@ -14,12 +14,9 @@ Template.body.onCreated(function bodyOnCreated() {
         if (this.subscriptionsReady()) {
 
             Tracker.afterFlush(() => {
-                let clipboards = new Clipboard('[data-clipboard-text]');
-                clipboards.on('success', function(e) {
-                    var btn = $(e.trigger);
-                    btn.popover('show');
-                    setTimeout(function() {btn.popover('hide');},3000);
-                });
+                $(function() {
+                    $('[data-toggle="popover"]').popover();
+                })
             });
 
             LoadingState.stop();

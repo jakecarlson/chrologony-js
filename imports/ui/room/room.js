@@ -13,6 +13,7 @@ import './room.html';
 import './players_list.js';
 import './board.js';
 import './game.js';
+import Clipboard from "clipboard";
 
 Template.room.onCreated(function roomOnCreated() {
 
@@ -42,7 +43,18 @@ Template.room.onCreated(function roomOnCreated() {
                 subscribeToGame(this.room.get()._id, this.room.get().currentGameId);
 
                 if (this.subscriptionsReady()) {
+
+                    Tracker.afterFlush(() => {
+                        let clipboards = new Clipboard('[data-clipboard-text]');
+                        clipboards.on('success', function(e) {
+                            var btn = $(e.trigger);
+                            btn.popover('show');
+                            setTimeout(function() {btn.popover('hide');},3000);
+                        });
+                    });
+
                     LoadingState.stop();
+
                 }
 
             } else {
