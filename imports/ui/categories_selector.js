@@ -13,7 +13,6 @@ Template.categories_selector.onCreated(function categories_selectorOnCreated() {
     this.autorun(() => {
 
         this.loaded.set(false);
-        this.subscribe('categories');
 
         if (this.subscriptionsReady()) {
             this.loaded.set(true);

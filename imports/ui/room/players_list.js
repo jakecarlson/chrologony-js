@@ -4,7 +4,7 @@ import './players_list.html';
 import './player.js';
 
 Template.players_list.onCreated(function players_listOnCreated() {
-    this.subscribe('players', this.data.room._id);
+    // this.subscribe('players', this.data.room._id);
     this.autorun(() => {
 
     });

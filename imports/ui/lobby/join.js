@@ -32,7 +32,7 @@ Template.join.events({
                 LoadingState.stop();
             } else {
                 Logger.log("Room Set: " + id);
-                Meteor.subscribe('rooms');
+                // Meteor.subscribe('rooms');
                 target.name.value = '';
                 target.password.value = '';
                 Flasher.set('success', "Success! Invite others to join.");

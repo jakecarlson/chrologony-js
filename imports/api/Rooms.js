@@ -100,7 +100,7 @@ Meteor.methods({
 
         // Check to see if it's this user's turn currently and end it if so -- but only if it's a multiplayer game
         const room = Meteor.user().currentRoom();
-        if (room.currentGameId && (room.players().count() > 1)) {
+        if (room && room.currentGameId && (room.players().count() > 1)) {
             const game = room.currentGame();
             if (game.currentTurnId) {
                 const turn = game.currentTurn();

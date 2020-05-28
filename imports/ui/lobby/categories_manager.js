@@ -19,7 +19,6 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
     this.autorun(() => {
 
         LoadingState.start();
-        this.subscribe('categories');
 
         if (this.subscriptionsReady()) {
 
