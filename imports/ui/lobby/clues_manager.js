@@ -36,20 +36,20 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
             if (this.subscriptionsReady()) {
 
-                this.state.set('numResults', Clues.find().count());
+                this.state.set('numResults', Clues.find({categories: this.state.get('categoryId')}).count());
 
-                const instance = this;
+                const self = this;
                 Tracker.afterFlush(() => {
 
-                    $('#removeClue').on('show.bs.modal', function (event) {
-                        const button = $(event.relatedTarget);
+                    $('#removeClue').on('show.bs.modal', function(e) {
+                        const button = $(e.relatedTarget);
                         const id = button.attr('data-id');
                         const modal = $(this)
                         modal.find('.remove').attr('data-id', id);
                     });
 
                     $('#manageChildCategories').on('hide.bs.modal', function(e) {
-                        instance.state.set('currentClue', null);
+                        self.state.set('currentClue', null);
                     });
 
                 });
