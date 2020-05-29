@@ -22,13 +22,13 @@ Template.header.events({
     'click .change-password': function(e, i){
         e.preventDefault();
         // Meteor.logout();
-        FlowRouter.go('/change-password');
+        FlowRouter.go('changePassword');
     },
 
     'click .logout': function(e, i){
         e.preventDefault();
         AccountsTemplates.logout();
-        // AccountsTemplates.setState('signIn');
+        FlowRouter.go('home');
     },
 
 });

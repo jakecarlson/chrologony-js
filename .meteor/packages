@@ -47,4 +47,4 @@ aldeed:template-extension
 service-configuration
 accounts-ui
 useraccounts:bootstrap
-useraccounts:flow-routing
+mealsunite:flow-routing-extra

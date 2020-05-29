@@ -25,7 +25,8 @@ AccountsTemplates.configure({
 
     // Hooks
     onLogoutHook: function() {
-        FlowRouter.go('/');
+        Flasher.set('success', 'You have successfully logged out.');
+        FlowRouter.go('home');
     },
 
     // onSubmitHook: mySubmitFunc,

@@ -11,36 +11,56 @@ AccountsTemplates.configure({
     defaultContentRegion: 'main'
 });
 
-// AccountsTemplates.configureRoute('changePwd');
+AccountsTemplates.configureRoute('signIn', {
+    name: 'home',
+    path: '/',
+    redirect: function() {
+        if (Meteor.user()) {
+            FlowRouter.go('lobby');
+        }
+    },
+});
 
+AccountsTemplates.configureRoute('signUp', {
+    name: 'signUp',
+    path: '/sign-up',
+    redirect: function() {
+        if (Meteor.user()) {
+            Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try!');
+            FlowRouter.go('lobby');
+        }
+    },
+});
 
 AccountsTemplates.configureRoute('changePwd', {
-    name: 'changePwd',
-    // template: '',
-    layoutTemplate: 'layout_authenticated',
-    contentRegion: 'main',
-    redirect: '/lobby',
-});
-AccountsTemplates.configureRoute('enrollAccount');
-AccountsTemplates.configureRoute('forgotPwd');
-AccountsTemplates.configureRoute('resetPwd');
-AccountsTemplates.configureRoute('verifyEmail');
-AccountsTemplates.configureRoute('resendVerificationEmail');
-AccountsTemplates.configureRoute('signIn', {
-    path: '/',
-    name: 'home',
+    name: 'changePassword',
+    path: '/change-password',
     redirect: function() {
         if (Meteor.user()) {
+            Flasher.set('success', 'You have successfully changed your password.');
             FlowRouter.go('lobby');
         }
-    }
+    },
 });
-AccountsTemplates.configureRoute('signUp', {
+
+AccountsTemplates.configureRoute('forgotPwd', {
+    name: 'forgotPassword',
+    path: '/forgot-password',
     redirect: function() {
         if (Meteor.user()) {
-            FlowRouter.go('lobby');
+            FlowRouter.go('home');
         }
-    }
+    },
+});
+
+AccountsTemplates.configureRoute('resetPwd', {
+    name: 'resetPassword',
+    path: '/reset-password',
+    redirect: function() {
+        if (Meteor.user()) {
+            FlowRouter.go('home');
+        }
+    },
 });
 
 FlowRouter.route('/lobby', {
@@ -135,7 +155,7 @@ FlowRouter.route('/join/:id/:token', {
 function redirectToHome(ctx, redirect) {
     if (!Meteor.userId()) {
         redirect(FlowRouter.path(
-            'home',
+            'signIn',
             {},
             {redirect: FlowRouter.current().path}
         ));
