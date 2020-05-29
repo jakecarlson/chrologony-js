@@ -10,9 +10,5 @@ import '../imports/ui/body.js';
 import './routes.js';
 
 Meteor.startup(function() {
-    reCAPTCHA.config({
-        publickey: Meteor.settings.public.recaptcha.key,
-        hl: 'en',
-    });
     Logger.init();
 });

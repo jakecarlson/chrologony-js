@@ -28,12 +28,12 @@
     "analyticsSettings": {
       "Google Analytics" : {"trackingId": false}
     },
-    "recaptcha": {
-      "key": "6LfjB_EUAAAAAEOuqnBkMvmTp0kgkG9Pa8ALRPXJ"
+    "reCaptcha": {
+      "siteKey": "6LfjB_EUAAAAAEOuqnBkMvmTp0kgkG9Pa8ALRPXJ"
     }
   },
-  "recaptcha": {
-    "key": "6LfjB_EUAAAAAOnpHYYTiBz_DwcFW2QzHGPWyJIu"
+  "reCaptcha": {
+    "secretKey": "6LfjB_EUAAAAAOnpHYYTiBz_DwcFW2QzHGPWyJIu"
   },
   "crypt": {
     "saltRounds": 10,

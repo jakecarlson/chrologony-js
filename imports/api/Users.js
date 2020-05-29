@@ -52,14 +52,8 @@ if (Meteor.isServer) {
 
     Meteor.methods({
 
-        // Validate CAPTCHA
-        'user.validateCaptcha'(captcha) {
-            const captchaResult = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captcha);
-            if (!captchaResult.success) {
-                Logger.log('reCAPTCHA check failed!', captchaResult);
-                throw new Meteor.Error(422, 'reCAPTCHA Failed: ' + captchaResult.error);
-            }
-            return captchaResult;
+        'user.exists': function(username){
+            return !!Meteor.users.findOne({username: username});
         },
 
         // Search

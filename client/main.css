@@ -9,53 +9,117 @@ html {
     width: 11rem;
     height: 4rem;
 }
+
 #authStatus {
-    line-height: 3.45rem;
+    line-height: 1.7rem;
+    text-align: right;
+}
+#authLinks {
+    display: block;
+}
+@media (min-width: 576px) {
+    #authStatus {
+        line-height: 3.45rem;
+    }
+    #authLinks {
+        display: inline;
+    }
 }
 
-#home {
+#auth {
     margin-top: 4rem;
     text-align: center;
     transition: margin-top .5s ease-out;
+    max-width: 960px;
 }
-#home.registration-container {
-    margin-top: 0;
-}
-#home #title {
+#auth #title {
     width: auto;
     height: 8rem;
     background-position: center center;
     font-weight: normal;
+    margin-bottom: 6rem;
 }
-#home .alert {
-    max-width: 30rem;
-    margin: 0 auto;
-}
-#home [data-toggle="popover"] {
+
+#tagline {
+    position: absolute;
+    top: 9.5rem;
+    left: 50%;
+    margin-left: -10.35rem;
+    font-size: small;
     cursor: pointer;
 }
 
-#login .form-inline,
-#register .form-inline
-{
-    display: block;
+/* authentication */
+.at-form {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
-#login .register {
-    font-size: larger;
+.at-title {
+    font-size: large;
+    text-align: center;
+}
+.at-form .alert p {
+    margin: 0;
+}
+button.at-social-btn i {
+    padding-left: 0;
+    padding-right: 10px;
+    width: 30px;
 }
 
-#register {
-    max-width: 18.9rem;
-    text-align: left;
+/* login form */
+.at-pwd-form fieldset {
+    width: 100%;
 }
-#register .g-recaptcha > div {
-    margin: 0 auto;
+.at-pwd-form .at-input.form-group {
+    width: 6rem;
+    margin-bottom: 1rem;
 }
-#register .password-note {
-    font-size: smaller;
+@media (min-width: 576px) {
+    .at-form-signUp .at-pwd-form .at-input.form-group:nth-child(odd):before {
+        content: "\A\A";
+        white-space: pre;
+    }
+    .at-form-signUp .at-pwd-form .at-input.form-group:first-child:before {
+        content: none;
+        white-space: normal;
+    }
+    .at-form-signUp .at-pwd-form .at-input.form-group:first-child {
+        margin-left: .75rem;
+    }
 }
-#register .back-to-login {
-    line-height: 2.4;
+.at-pwd-form .at-input.form-group,
+.at-pwd-form #at-btn
+{
+    display: inline;
+    margin-left: .5rem;
+    margin-right: .5rem;
+}
+.at-form-changePwd .at-pwd-form .at-input.form-group {
+    width: auto;
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+}
+.at-pwd-form #at-btn {
+    margin-top: 0;
+    padding: .375rem .75rem;
+}
+.at-form-changePwd .at-pwd-form #at-btn {
+    margin-top: 0 !important;
+}
+.at-pwd-link p {
+    margin-bottom: 0;
+}
+.at-signup-link p:first-child,
+.at-signin-link p:first-child
+{
+    font-size: large;
+    margin: 0;
+}
+.g-recaptcha {
+    max-width: 302px;
 }
 
 #join .card-title {

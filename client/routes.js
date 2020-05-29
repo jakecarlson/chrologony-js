@@ -1,32 +1,45 @@
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
-import {Flasher} from "../imports/ui/flasher";
+import { AccountsTemplates } from 'meteor/useraccounts:core';
+import { Flasher } from "../imports/ui/flasher";
 
-FlowRouter.route('/', {
-    name: 'home',
-    triggersEnter: [redirectToLobby],
-    action(params, queryParams) {
-        Logger.log("Route: home");
-        BlazeLayout.render(
-            'layout_unauthenticated',
-            {
-                main: 'login',
-            }
-        );
-    }
+
+AccountsTemplates.configure({
+    defaultTemplate: 'atForm',
+    defaultLayout: 'layout_unauthenticated',
+    defaultLayoutRegions: {},
+    defaultContentRegion: 'main'
 });
 
-FlowRouter.route('/register', {
-    name: 'register',
-    triggersEnter: [redirectToLobby],
-    action(params, queryParams) {
-        Logger.log("Route: register");
-        BlazeLayout.render(
-            'layout_unauthenticated',
-            {
-                main: 'register',
-            }
-        );
+// AccountsTemplates.configureRoute('changePwd');
+
+
+AccountsTemplates.configureRoute('changePwd', {
+    name: 'changePwd',
+    // template: '',
+    layoutTemplate: 'layout_authenticated',
+    contentRegion: 'main',
+    redirect: '/lobby',
+});
+AccountsTemplates.configureRoute('enrollAccount');
+AccountsTemplates.configureRoute('forgotPwd');
+AccountsTemplates.configureRoute('resetPwd');
+AccountsTemplates.configureRoute('verifyEmail');
+AccountsTemplates.configureRoute('resendVerificationEmail');
+AccountsTemplates.configureRoute('signIn', {
+    path: '/',
+    name: 'home',
+    redirect: function() {
+        if (Meteor.user()) {
+            FlowRouter.go('lobby');
+        }
+    }
+});
+AccountsTemplates.configureRoute('signUp', {
+    redirect: function() {
+        if (Meteor.user()) {
+            FlowRouter.go('lobby');
+        }
     }
 });
 
