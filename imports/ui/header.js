@@ -15,20 +15,28 @@ Template.header.helpers({
         return Formatter.username(Meteor.user({fields: {"username": 1, "profile.name": 1}}));
     },
 
+    passwordLink() {
+        return FlowRouter.path('changePassword');
+    },
+
+    loginLink() {
+        return FlowRouter.path('home');
+    },
+
+    signupLink() {
+        return FlowRouter.path('signUp');
+    },
+
+    lobbyLink() {
+        return FlowRouter.path('lobby');
+    },
+
+    logoutLink() {
+        return FlowRouter.path('logout');
+    },
+
 });
 
 Template.header.events({
-
-    'click .change-password': function(e, i){
-        e.preventDefault();
-        // Meteor.logout();
-        FlowRouter.go('changePassword');
-    },
-
-    'click .logout': function(e, i){
-        e.preventDefault();
-        AccountsTemplates.logout();
-        FlowRouter.go('home');
-    },
 
 });

@@ -1,3 +1,5 @@
+import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
+
 import './footer.html';
 
 Template.footer.onCreated(function footerOnCreated() {
@@ -14,6 +16,14 @@ Template.footer.helpers({
         } else {
             return currentYear;
         }
+    },
+
+    privacyLink() {
+        return FlowRouter.path('privacy');
+    },
+
+    termsLink() {
+        return FlowRouter.path('terms');
     },
 
 });

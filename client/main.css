@@ -122,6 +122,11 @@ button.at-social-btn i {
     max-width: 302px;
 }
 
+/* content */
+.content {
+    text-align: left;
+}
+
 #join .card-title {
     margin-bottom: 0;
     font-size: x-large;

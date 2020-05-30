@@ -3,7 +3,6 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { Flasher } from "../imports/ui/flasher";
 
-
 AccountsTemplates.configure({
     defaultTemplate: 'atForm',
     defaultLayout: 'layout_unauthenticated',
@@ -35,6 +34,7 @@ AccountsTemplates.configureRoute('signUp', {
 AccountsTemplates.configureRoute('changePwd', {
     name: 'changePassword',
     path: '/change-password',
+    layoutTemplate: 'layout_authenticated',
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully changed your password.');
@@ -61,6 +61,41 @@ AccountsTemplates.configureRoute('resetPwd', {
             FlowRouter.go('home');
         }
     },
+});
+
+FlowRouter.route('/privacy', {
+    name: 'privacy',
+    action(params, queryParams) {
+        Logger.log("Route: privacy");
+        BlazeLayout.render(
+            'layout_authenticated',
+            {
+                main: 'privacy',
+            }
+        );
+    }
+});
+
+FlowRouter.route('/terms', {
+    name: 'terms',
+    action(params, queryParams) {
+        Logger.log("Route: terms");
+        BlazeLayout.render(
+            'layout_authenticated',
+            {
+                main: 'terms',
+            }
+        );
+    }
+});
+
+FlowRouter.route('/logout', {
+    name: 'logout',
+    action(params, queryParams) {
+        Logger.log("Route: logout");
+        AccountsTemplates.logout();
+        FlowRouter.go('home');
+    }
 });
 
 FlowRouter.route('/lobby', {
