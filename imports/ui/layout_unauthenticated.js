@@ -1,3 +1,5 @@
+import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
+
 import './layout_unauthenticated.html';
 import './footer.js';
 import './flasher.js';
@@ -40,3 +42,15 @@ Template['o-atCheckboxInput'].replaces('atCheckboxInput');
 Template['o-atSelectInput'].replaces('atSelectInput');
 Template['o-atRadioInput'].replaces('atRadioInput');
 Template['o-atHiddenInput'].replaces('atHiddenInput');
+
+Template.layout_unauthenticated.onRendered(function layout_unauthenticatedOnCreated() {
+
+    if (Meteor.userId()) {
+        FlowRouter.go('lobby');
+    }
+
+    $(function() {
+        $('[data-toggle="popover"]').popover();
+    })
+
+});

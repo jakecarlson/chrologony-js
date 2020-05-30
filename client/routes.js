@@ -200,12 +200,6 @@ function redirectToHome(ctx, redirect) {
     }
 }
 
-function redirectToLobby(ctx, redirect) {
-    if (Meteor.userId()) {
-        redirect('lobby');
-    }
-}
-
 function redirectToPrevious(defaultRoute = 'lobby') {
     const redirect = Session.get('redirect');
     if (redirect) {
