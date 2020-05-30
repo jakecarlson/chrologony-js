@@ -24,7 +24,7 @@ Template.player.helpers({
     },
 
     username() {
-        return this.player.username;
+        return Formatter.username(this.player);
     },
 
     numLockedCards() {

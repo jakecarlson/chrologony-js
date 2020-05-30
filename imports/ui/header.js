@@ -12,7 +12,7 @@ Template.header.onCreated(function headerOnCreated() {
 Template.header.helpers({
 
     username() {
-        return (Meteor.user()) ? Meteor.user().username : null;
+        return Formatter.username(Meteor.user({fields: {"username": 1, "profile.name": 1}}));
     },
 
 });

@@ -181,8 +181,6 @@ Template.board.events({
         Meteor.call('card.draw', this.game.currentTurnId, function(err, id) {
             if (!err) {
                 Logger.log("Created Card: " + id);
-                // Meteor.subscribe('cards', gameId);
-                // Meteor.subscribe('cardClues', gameId);
             }
             saveCardPos();
             LoadingState.stop();
@@ -287,9 +285,6 @@ function endTurn(game) {
     Meteor.call('turn.next', gameId, function(err, id) {
         if (!err) {
             Logger.log("Start Turn: " + id);
-            // Meteor.subscribe('turns', gameId);
-            // Meteor.subscribe('cards', gameId);
-            // Meteor.subscribe('cardClues', gameId);
         }
         LoadingState.stop();
     });

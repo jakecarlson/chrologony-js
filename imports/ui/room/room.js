@@ -35,10 +35,11 @@ Template.room.onCreated(function roomOnCreated() {
         LoadingState.start();
         FlowRouter.watchPathChange();
 
-        if (Meteor.user()) {
+        const user = Meteor.user({fields: {"currentRoomId": 1}});
+        if (user) {
 
             // console.log('GET SUBSCRIPTIONS');
-            const roomId = Meteor.user().currentRoomId;
+            const roomId = user.currentRoomId;
 
             // Redirect the user back to lobby if they aren't authenticated to this room
             if (roomId != FlowRouter.getParam('id')) {
@@ -47,14 +48,8 @@ Template.room.onCreated(function roomOnCreated() {
                 leaveRoom();
             }
 
-            this.room.set(Meteor.user().currentRoom());
+            this.room.set(user.currentRoom());
             if (this.room.get()) {
-
-                // this.subscribe('players', this.room.get()._id);
-                // this.subscribe('games', this.room.get()._id);
-                // this.subscribe('turns', this.room.get().currentGameId);
-                // this.subscribe('cards', this.room.get().currentGameId);
-                // this.subscribe('cardClues', this.room.get().currentGameId);
 
                 subscribe(this, 'players', this.room.get()._id);
                 subscribe(this, 'games', this.room.get()._id);
