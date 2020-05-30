@@ -217,7 +217,7 @@ button.at-social-btn i {
 }
 
 #playerCardsWrapper {
-    height: 18rem;
+    height: 19rem;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -254,14 +254,14 @@ button.at-social-btn i {
 .clue-col.current-col,
 .inactive .clue-col:hover
 {
-    width: 15rem;
+    width: 16rem;
 }
 
 .clue-card {
     position: absolute;
-    top: 15rem;
-    width: 15rem;
-    min-height: 19rem;
+    top: 16rem;
+    width: 16rem;
+    min-height: 20rem;
     text-align: left;
     transition: top .25s ease-in-out;
 }
