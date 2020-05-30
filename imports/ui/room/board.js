@@ -60,7 +60,7 @@ Template.board.helpers({
                 title += 'Your';
             } else {
                 if (this.turn.ownerId) {
-                    title += this.turn.owner().username + "'s";
+                    title += Formatter.username(this.turn.owner()) + "'s";
                 } else {
                     title += "Unknown's";
                 }
