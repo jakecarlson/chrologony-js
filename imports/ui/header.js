@@ -30,6 +30,14 @@ Template.header.helpers({
         return FlowRouter.path('lobby');
     },
 
+    cluesLink() {
+        return FlowRouter.path('clues');
+    },
+
+    categoriesLink() {
+        return FlowRouter.path('categories');
+    },
+
     logoutLink() {
         return FlowRouter.path('logout');
     },

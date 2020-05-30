@@ -10,20 +10,15 @@ html {
     height: 4rem;
 }
 
-#authStatus {
-    line-height: 1.7rem;
-    text-align: right;
+#headerLinks {
+    line-height: 3.45rem;
 }
-#authLinks {
-    display: block;
+
+#profile .btn-link {
+    font-weight: bold;
 }
-@media (min-width: 576px) {
-    #authStatus {
-        line-height: 3.45rem;
-    }
-    #authLinks {
-        display: inline;
-    }
+#profile .dropdown-menu {
+    min-width: 11.5rem;
 }
 
 #auth {
@@ -127,9 +122,19 @@ button.at-social-btn i {
     text-align: left;
 }
 
+/* join */
+#join {
+    max-width: 576px;
+}
 #join .card-title {
     margin-bottom: 0;
     font-size: x-large;
+    text-align: center;
+}
+@media (min-width: 576px) {
+    #join .form-control {
+        max-width: 12rem;
+    }
 }
 
 .card h1 {

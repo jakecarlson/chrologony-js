@@ -1,15 +1,15 @@
 <template name="join">
 
-    <div id="join" class="card mb-4">
+    <div id="join" class="card bg-primary text-white mx-auto mb-4">
         <header class="card-header">
             <h1 class="card-title">Create or Join a Room</h1>
         </header>
-        <form class="card-body text-center" autocomplete="off">
+        <form class="card-body text-center bg-white" autocomplete="off">
             <div class="form-inline justify-content-center">
                 <label class="sr-only" for="roomName">Room Name</label>
-                <input type="text" class="form-control mr-sm-2" name="name" id="roomName" aria-describedby="roomNameHelp" placeholder="Room Name" maxlength="40">
+                <input type="text" class="form-control mr-sm-3" name="name" id="roomName" aria-describedby="roomNameHelp" placeholder="Room Name" maxlength="40">
                 <label class="sr-only" for="roomPassword">Room Password</label>
-                <input type="password" class="form-control mt-3 mt-sm-0 mr-sm-2" name="password" id="roomPassword" aria-describedby="roomPasswordHelp" placeholder="Room Password" maxlength="40">
+                <input type="password" class="form-control mt-3 mt-sm-0 mr-sm-3" name="password" id="roomPassword" aria-describedby="roomPasswordHelp" placeholder="Room Password" maxlength="40">
                 <button type="submit" class="btn btn-primary mt-3 mt-sm-0" disabled="{{loading}}">
                     <i class="fa fa-sign-in"></i>
                     <span>Go</span>
