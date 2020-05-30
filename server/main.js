@@ -15,11 +15,6 @@ import '../imports/api/Turns';
 
 Meteor.startup(() => {
 
-    // Initalize recaptcha
-    // reCAPTCHA.config({
-    //     privatekey: Meteor.settings.recaptcha.key,
-    // });
-
     // Initialize the logger
     Logger.init();
 

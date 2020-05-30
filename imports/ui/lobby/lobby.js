@@ -22,7 +22,7 @@ Template.lobby.helpers({
     joinIsActive() {
         return (FlowRouter.getRouteName() == 'lobby');
     },
-    
+
     cluesIsActive() {
         return ['clues', 'clues.categoryId'].includes(FlowRouter.getRouteName());
     },
