@@ -2,7 +2,7 @@
 
     {{#if dataReady}}
         <li class="list-group-item player {{#if isTurnOwner}}current{{/if}}">
-            {{username}}
+            {{profileName}}
             {{#if gameInProgress}}
                 <span class="badge {{#if isTurnOwner}}badge-secondary{{else}}badge-light{{/if}} float-right ml-2">{{numLockedCards}}</span>
             {{/if}}

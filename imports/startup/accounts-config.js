@@ -28,10 +28,6 @@ AccountsTemplates.configure({
         FlowRouter.go('home');
     },
 
-    // onSubmitHook: mySubmitFunc,
-    // preSignUpHook: myPreSubmitFunc,
-    // postSignUpHook: myPostSubmitFunc,
-
     // Texts
     texts: {
         navSignIn: "Login",

@@ -23,8 +23,8 @@ Template.player.helpers({
         return this.player.id;
     },
 
-    username() {
-        return Formatter.username(this.player);
+    profileName() {
+        return this.player.profile.name;
     },
 
     numLockedCards() {

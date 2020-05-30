@@ -26,6 +26,10 @@ AccountsTemplates.configureRoute('signUp', {
     path: '/sign-up',
     redirect: function() {
         if (Meteor.user()) {
+            const username = Meteor.user().username;
+            if (username) {
+                Meteor.users.update(Meteor.userId(), {$set: {'profile.name': username}});
+            }
             Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try!');
             redirectToPrevious('lobby');
         }

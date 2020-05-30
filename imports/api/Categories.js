@@ -30,7 +30,7 @@ Categories.helpers({
             },
             {
                 sort: {
-                    username: 1,
+                    'profile.name': 1,
                 },
             }
         );

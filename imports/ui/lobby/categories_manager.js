@@ -105,5 +105,5 @@ function launchCollaboratorsModal(i, collaborators) {
 }
 
 function getUserMapper() {
-    return (function(user){ return {id: user._id, value: user.username} });
+    return (function(user){ return {id: user._id, value: user.profile.name} });
 }

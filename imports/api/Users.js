@@ -35,7 +35,6 @@ if (Meteor.isServer) {
                 {
                     fields: {
                         _id: 1,
-                        username: 1,
                         'profile.name': 1,
                         currentRoomId: 1,
                     }
@@ -78,12 +77,12 @@ if (Meteor.isServer) {
             const regex = new RegExp("^" + query, 'i');
             return Meteor.users.find(
                 {
-                    username: {$regex: regex},
+                    'profile.name': {$regex: regex},
                     _id: {$nin: excludeIds},
                 },
                 {
                     sort: {
-                        username: 1,
+                        'profile.name': 1,
                     },
                 }
             ).fetch();
@@ -106,7 +105,7 @@ if (Meteor.isServer) {
                     },
                 {
                     sort: {
-                        username: 1,
+                        'profile.name': 1,
                     },
                 }
             ).fetch();

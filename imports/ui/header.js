@@ -10,8 +10,8 @@ Template.header.onCreated(function headerOnCreated() {
 
 Template.header.helpers({
 
-    username() {
-        return Formatter.username(Meteor.user({fields: {"username": 1, "profile.name": 1}}));
+    profileName() {
+        return Meteor.user({fields: {"profile.name": 1}}).profile.name;
     },
 
     passwordLink() {
