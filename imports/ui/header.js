@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
-import { AccountsTemplates } from 'meteor/useraccounts:core';
 
 import './header.html';
 

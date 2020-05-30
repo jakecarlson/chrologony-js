@@ -1,4 +1,5 @@
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
+import { Session } from 'meteor/session';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { Flasher } from "../imports/ui/flasher";
@@ -15,7 +16,7 @@ AccountsTemplates.configureRoute('signIn', {
     path: '/',
     redirect: function() {
         if (Meteor.user()) {
-            FlowRouter.go('lobby');
+            redirectToPrevious('lobby');
         }
     },
 });
@@ -26,7 +27,7 @@ AccountsTemplates.configureRoute('signUp', {
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try!');
-            FlowRouter.go('lobby');
+            redirectToPrevious('lobby');
         }
     },
 });
@@ -180,6 +181,7 @@ FlowRouter.route('/join/:id/:token', {
                 FlowRouter.go('lobby');
             } else {
                 Logger.log("Room Set: " + id);
+                Meteor.subscribe('rooms');
                 Flasher.set('success', "Success! Invite others to join.");
                 FlowRouter.go('room', {id: id});
             }
@@ -189,11 +191,8 @@ FlowRouter.route('/join/:id/:token', {
 
 function redirectToHome(ctx, redirect) {
     if (!Meteor.userId()) {
-        redirect(FlowRouter.path(
-            'signIn',
-            {},
-            {redirect: FlowRouter.current().path}
-        ));
+        Session.set('redirect', FlowRouter.current().path);
+        redirect(FlowRouter.path('home'));
     }
 }
 
@@ -201,4 +200,13 @@ function redirectToLobby(ctx, redirect) {
     if (Meteor.userId()) {
         redirect('lobby');
     }
+}
+
+function redirectToPrevious(defaultRoute = 'lobby') {
+    const redirect = Session.get('redirect');
+    if (redirect) {
+        delete Session.keys['redirect'];
+        FlowRouter.go(redirect);
+    }
+    FlowRouter.go(defaultRoute);
 }

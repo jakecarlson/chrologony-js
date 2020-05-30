@@ -1,7 +1,6 @@
 import { Accounts } from 'meteor/accounts-base';
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { Flasher } from '../ui/flasher';
-import { LoadingState } from '../modules/LoadingState';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 
 Accounts.config({
