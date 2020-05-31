@@ -222,36 +222,17 @@ if (Meteor.isServer) {
             check(token, NonEmptyString);
             Permissions.authenticated();
 
-            // Find the room by token
-            const selector = {
-                deletedAt: null,
-                _id: roomId,
-                $where: getTokenStr() + " == '" + token.trim() + "'",
-            };
-            const room = Rooms.findOne(
-                selector,
-                {
-                    sort: {
-                        createdAt: -1,
-                    },
-                }
-            );
-
-            if (!room) {
-                setRoom(null);
-                throw new Meteor.Error('not-authorized');
-            } else {
+            if (Hasher.md5.hash(roomId) == token.trim()) {
                 setRoom(roomId);
                 return roomId;
+            } else {
+                setRoom(null);
+                throw new Meteor.Error('not-authorized');
             }
 
         },
 
     });
-
-    function getTokenStr() {
-        return "hex_md5(this._id + '" + Meteor.settings.crypt.salt + "')";
-    }
 
 }
 
