@@ -48,3 +48,4 @@ service-configuration
 accounts-ui
 useraccounts:bootstrap
 mealsunite:flow-routing-extra
+email
