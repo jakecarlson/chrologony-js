@@ -52,6 +52,9 @@ Template.clue.helpers({
     },
 
     canEdit() {
+        if (!this.clue) {
+            return true;
+        }
         if (this.clue && (this.clue.ownerId == Meteor.userId())) {
             return true;
         }
