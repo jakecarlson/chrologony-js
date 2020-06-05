@@ -191,7 +191,6 @@ if (Meteor.isServer) {
                     },
                  },
                 {
-                    limit: 1,
                     sort: {
                         createdAt: -1,
                     },
