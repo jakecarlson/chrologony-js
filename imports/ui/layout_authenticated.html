@@ -1,10 +1,12 @@
 <template name="layout_authenticated">
 
-    {{> header}}
-    <main class="container-fluid">
-        {{> flasher}}
-        {{> Template.dynamic template=main}}
-    </main>
-    {{> footer}}
+    <div id="layout">
+        {{> header}}
+        <main class="container-fluid">
+            {{> flasher}}
+            {{> Template.dynamic template=main}}
+        </main>
+        {{> footer}}
+    </div>
 
 </template>

@@ -1,6 +1,5 @@
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
-
 import { ModelEvents } from "../../modules/ModelEvents";
 
 import './category.html';

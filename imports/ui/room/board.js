@@ -81,15 +81,33 @@ Template.board.helpers({
     },
 
     cannotSubmitGuess() {
-        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'correct', 'incorrect', 'empty'].includes(getStatus(this.turn)));
+        return (
+            LoadingState.active() ||
+            !isCurrentPlayer(this.turn) ||
+            ['waiting', 'correct', 'incorrect', 'empty'].includes(getStatus(this.turn))
+        );
     },
 
     cannotDrawCard() {
-        return (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'guessing', 'incorrect', 'empty'].includes(getStatus(this.turn)));
+        return (
+            LoadingState.active() ||
+            !isCurrentPlayer(this.turn) ||
+            ['waiting', 'guessing', 'incorrect', 'empty'].includes(getStatus(this.turn))
+        );
     },
 
     cannotEndTurn() {
-        return (!isRoomOwner(this.room) && (LoadingState.active() || !isCurrentPlayer(this.turn) || ['waiting', 'guessing'].includes(getStatus(this.turn))));
+        return (
+            (
+                !isRoomOwner(this.room) ||
+                TourGuide.isActive()
+            ) &&
+            (
+                LoadingState.active() ||
+                !isCurrentPlayer(this.turn) ||
+                ['waiting', 'guessing'].includes(getStatus(this.turn))
+            )
+        );
     },
 
     prompt() {
@@ -171,6 +189,7 @@ Template.board.events({
                 Logger.log('Guess Correct for ' + currentCardId + ': ' + correct);
             }
             LoadingState.stop();
+            TourGuide.resume();
         });
 
     },
@@ -287,5 +306,6 @@ function endTurn(game) {
             Logger.log("Start Turn: " + id);
         }
         LoadingState.stop();
+        TourGuide.resume();
     });
 }

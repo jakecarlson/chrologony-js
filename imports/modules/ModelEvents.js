@@ -23,6 +23,7 @@ export const ModelEvents = {
                 i.state.set('error', true);
             }
             LoadingState.stop();
+            TourGuide.resume();
         });
 
     },

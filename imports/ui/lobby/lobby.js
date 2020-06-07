@@ -35,12 +35,32 @@ Template.lobby.helpers({
 
 Template.lobby.events({
 
-    'click #clues-tab'(e, i) {
-        FlowRouter.go('clues');
+    'click #cluesTab'(e, i) {
+        if (
+            !TourGuide.isActive() ||
+            (TourGuide.isActive() && TourGuide.isCluesStep())
+        ) {
+            FlowRouter.go('clues');
+            if (TourGuide.isActive()) {
+                TourGuide.resume();
+            }
+        } else {
+            e.preventDefault();
+        }
     },
 
-    'click #categories-tab'(e, i) {
-        FlowRouter.go('categories');
+    'click #categoriesTab'(e, i) {
+        if (
+            !TourGuide.isActive() ||
+            (TourGuide.isActive() && TourGuide.isCategoriesStep())
+        ) {
+            FlowRouter.go('categories');
+            if (TourGuide.isActive()) {
+                TourGuide.resume();
+            }
+        } else {
+            e.preventDefault();
+        }
     },
 
 });

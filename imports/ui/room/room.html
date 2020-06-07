@@ -5,24 +5,32 @@
         {{#if dataReady}}
 
             <header class="clearfix mb-2">
+
                 <h1 class="room-title float-left">{{name}}</h1>
-                <button
-                        class="btn btn-secondary float-right mb-2 leave"
-                        disabled="{{loading}}"
-                        title="Leave Room"
-                >
-                    <i class="fa fa-sign-out"></i>
-                    <span class="d-none d-md-inline">Leave Room</span>
-                </button>
-                <button
-                        class="btn btn-light float-right mb-2 mr-2 link"
-                        data-clipboard-text="{{link}}"
-                        data-placement="top"
-                        data-content="Room URL copied to your clipboard!"
-                >
-                    <i class="fa fa-link"></i>
-                    <span class="d-none d-md-inline">Room Link</span>
-                </button>
+
+                <div class="float-right mb-2" id="roomMenu">
+
+                    <button
+                            class="btn btn-secondary float-right leave"
+                            disabled="{{loading}}"
+                            title="Leave Room"
+                    >
+                        <i class="fa fa-sign-out"></i>
+                        <span class="d-none d-md-inline">Leave Room</span>
+                    </button>
+
+                    <button
+                            class="btn btn-light float-right mr-2 link"
+                            data-clipboard-text="{{link}}"
+                            data-placement="top"
+                            data-content="Room URL copied to your clipboard!"
+                    >
+                        <i class="fa fa-link"></i>
+                        <span class="d-none d-md-inline">Room Link</span>
+                    </button>
+
+                </div>
+
             </header>
 
             <div class="row">

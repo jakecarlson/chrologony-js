@@ -1,12 +1,12 @@
 <template name="header">
 
-    <div class="container-fluid clearfix mb-2">
+    <div class="container-fluid clearfix mb-2" id="header">
 
         <div class="float-left">
             <h1 id="title">Chrologony</h1>
         </div>
 
-        <div id="menu" class="float-right text-muted">
+        <div id="menu" class="float-right text-muted" data-intro="Hello step one!" data-step="1">
 
             {{#if currentUser}}
 
@@ -16,8 +16,9 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="menuToggle">
                         <a class="dropdown-item" href="{{cluesLink}}">Clues</a>
-                        <a class="dropdown-item" href="{{categoriesLink}}">Categories</a>
+                        <a class="dropdown-item category-link" href="{{categoriesLink}}">Categories</a>
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item tour-link" href="#tour">Take a Tour</a>
                         <a class="dropdown-item" href="{{passwordLink}}">Change Password</a>
                         <a class="dropdown-item" href="{{logoutLink}}">Logout</a>
                     </div>

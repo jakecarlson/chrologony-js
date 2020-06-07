@@ -37,6 +37,7 @@ Template.join.events({
                 target.password.value = '';
                 Flasher.set('success', "Success! Invite others to join using the Room Link.");
                 FlowRouter.go('room', {id: id});
+                TourGuide.resume();
             }
         });
 

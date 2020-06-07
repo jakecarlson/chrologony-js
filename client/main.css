@@ -10,8 +10,13 @@ html {
     height: 4rem;
 }
 
+#header {
+    padding-right: 3px;
+}
 #headerLinks {
     line-height: 3.45rem;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 #profile .btn-link {
@@ -183,7 +188,7 @@ button.at-social-btn i {
 .clue .categories {
     line-height: 2;
 }
-.clue.table-success .categories {
+.clue.editing .categories {
     line-height: 2.5;
 }
 
@@ -415,4 +420,8 @@ span.twitter-typeahead {
 /* Hacky but necessary? */
 .twitter-typeahead > .twitter-typeahead {
     display: none !important;
+}
+
+.popover-body .progress {
+    margin-bottom: .5rem;
 }

@@ -40,6 +40,7 @@ Template.game.events({
                 Logger.log("Created Game: " + id);
             }
             LoadingState.stop();
+            TourGuide.resume();
         });
 
     },

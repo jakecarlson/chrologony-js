@@ -140,6 +140,7 @@ Template.clues_manager.events({
     'change #cluesFilter [name="categoryId"]'(e, i) {
         const categoryId = e.target.options[e.target.selectedIndex].value;
         FlowRouter.go('clues.categoryId', {categoryId: categoryId});
+        TourGuide.resume();
     },
 
     'change #cluesFilter [name="owned"]'(e, i) {

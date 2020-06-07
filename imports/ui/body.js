@@ -1,7 +1,6 @@
 import { LoadingState } from "../modules/LoadingState";
 import './layout_authenticated.js';
 import './layout_unauthenticated.js';
-import Clipboard from "clipboard";
 
 Template.body.onCreated(function bodyOnCreated() {
 
@@ -17,7 +16,7 @@ Template.body.onCreated(function bodyOnCreated() {
             Tracker.afterFlush(() => {
                 $(function() {
                     $('[data-toggle="popover"]').popover();
-                })
+                });
             });
 
             LoadingState.stop();

@@ -33,7 +33,7 @@ Template.room.onCreated(function roomOnCreated() {
          */
 
         LoadingState.start();
-        FlowRouter.watchPathChange();
+        // FlowRouter.watchPathChange();
 
         const user = Meteor.user({fields: {"currentRoomId": 1}});
         if (user) {
@@ -43,7 +43,6 @@ Template.room.onCreated(function roomOnCreated() {
 
             // Redirect the user back to lobby if they aren't authenticated to this room
             if (roomId != FlowRouter.getParam('id')) {
-                // console.log('redirect');
                 Flasher.set('danger', "You are not authorized to view that room.");
                 leaveRoom();
             }
