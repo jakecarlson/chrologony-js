@@ -207,14 +207,6 @@ button.at-social-btn i {
 #players .player .badge {
     margin-top: .2rem;
 }
-.badge-success-light {
-    background: #d4edda;
-    color: #155724;
-}
-.badge-warning-light {
-    background: #fff3cd;
-    color: #856404;
-}
 
 /* board */
 #board .card-title {

@@ -6,22 +6,21 @@
             class="
                 card
                 clue-card
-                text-white
                 {{#if isOwned}}
                     owned
                 {{/if}}
                 {{#if isLocked}}
-                    locked bg-success
+                    locked bg-success text-white
                 {{else}}
                     {{#if isTurn}}
                         turn
                         {{#if isCurrent}}
-                            current bg-primary
+                            current bg-primary text-white
                         {{else}}
                             {{#if isCorrect}}
                                 correct bg-warning
                             {{else}}
-                                incorrect bg-danger
+                                incorrect bg-danger text-white
                             {{/if}}
                         {{/if}}
                     {{/if}}
