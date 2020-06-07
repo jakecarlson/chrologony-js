@@ -42,7 +42,10 @@ Template.player.helpers({
             {
                 ownerId: this.player._id,
                 gameId: this.room.currentGameId,
-                correct: {$ne: false},
+                $or: [
+                    {lockedAt: {$ne: null}},
+                    {turnId: this.turn._id, correct: true},
+                ],
             }
         ).count();
     },
