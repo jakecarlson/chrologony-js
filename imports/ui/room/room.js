@@ -33,7 +33,7 @@ Template.room.onCreated(function roomOnCreated() {
          */
 
         LoadingState.start();
-        // FlowRouter.watchPathChange();
+        FlowRouter.watchPathChange();
 
         const user = Meteor.user({fields: {"currentRoomId": 1}});
         if (user) {
@@ -71,7 +71,7 @@ Template.room.onCreated(function roomOnCreated() {
                     Tracker.afterFlush(() => {
                         let clipboards = new Clipboard('[data-clipboard-text]');
                         clipboards.on('success', function(e) {
-                            var btn = $(e.trigger);
+                            let btn = $(e.trigger);
                             btn.popover('show');
                             setTimeout(function() {btn.popover('hide');},3000);
                         });
