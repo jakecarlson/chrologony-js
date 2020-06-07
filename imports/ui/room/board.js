@@ -27,9 +27,9 @@ Template.board.onCreated(function boardOnCreated() {
                 const cardsSortable = new Sortable(
                     document.getElementById('playerCards'),
                     {
-                        handle: '.clue-card',
+                        handle: '.clue-card.current',
                         direction: 'horizontal',
-                        filter: '.clue-card:not(.current), .clue-card:not(.owned), .clue-card .move',
+                        filter: '.clue-card .move',
                         forceFallback: true,
                         onStart: function (e) {
                             $('#playerCards').removeClass('inactive');
