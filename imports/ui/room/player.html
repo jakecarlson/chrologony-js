@@ -2,13 +2,38 @@
 
     {{#if dataReady}}
         <li class="list-group-item player {{#if isTurnOwner}}current{{/if}}">
+
             {{profileName}}
+
             {{#if gameInProgress}}
-                <span class="badge {{#if isTurnOwner}}badge-secondary{{else}}badge-light{{/if}} float-right ml-2">{{numLockedCards}}</span>
+
+                {{#if isTurnOwner}}
+                    <span
+                        class="badge badge-warning-light float-right ml-2"
+                        title="{{numPendingCards}} Total Cards"
+                    >{{numPendingCards}}</span>
+                {{/if}}
+
+                <span
+                    class="
+                        badge
+                        {{#if isTurnOwner}}
+                            badge-success-light
+                        {{else}}
+                            badge-light
+                        {{/if}}
+                        float-right
+                        ml-2
+                    "
+                    title="{{numLockedCards}} Cards Locked In"
+                >{{numLockedCards}}</span>
+
             {{/if}}
+
             {{#if canEject}}
                 <a href="#" class="float-right text-dark ml-2 eject" title="Eject Player">&times;</a>
             {{/if}}
+
         </li>
     {{/if}}
 

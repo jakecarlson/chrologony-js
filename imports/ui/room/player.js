@@ -32,7 +32,17 @@ Template.player.helpers({
             {
                 ownerId: this.player._id,
                 gameId: this.room.currentGameId,
-                lockedAt: {$ne: null}
+                lockedAt: {$ne: null},
+            }
+        ).count();
+    },
+
+    numPendingCards() {
+        return Cards.find(
+            {
+                ownerId: this.player._id,
+                gameId: this.room.currentGameId,
+                correct: {$ne: false},
             }
         ).count();
     },
