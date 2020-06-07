@@ -35,7 +35,7 @@ Template.room.onCreated(function roomOnCreated() {
         LoadingState.start();
         FlowRouter.watchPathChange();
 
-        const user = Meteor.user({fields: {"currentRoomId": 1}});
+        const user = Meteor.user({fields: {currentRoomId: 1}});
         if (user) {
 
             // console.log('GET SUBSCRIPTIONS');

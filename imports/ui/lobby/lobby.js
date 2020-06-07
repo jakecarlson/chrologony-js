@@ -9,10 +9,6 @@ import './clues_manager.js';
 
 Template.lobby.onCreated(function lobbyOnCreated() {
     this.autorun(() => {
-        FlowRouter.watchPathChange();
-        if (Meteor.user() && Meteor.user().currentRoomId) {
-            FlowRouter.go('room', {id: Meteor.user().currentRoomId});
-        }
         LoadingState.stop();
     });
 });

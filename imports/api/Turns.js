@@ -170,14 +170,12 @@ if (Meteor.isServer) {
             });
 
             // Get turn counts for players who have had turns in the current game and are still in the room
-            const sorts = [-1, 1];
-            const randomSort = sorts[Math.floor(Math.random() * sorts.length)];
             const players = Promise.await(
                 Turns.rawCollection().aggregate(
                     [
                         {$match: {gameId: gameId, ownerId: {$in: playerPool}}},
                         {$group: {_id: "$ownerId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
-                        {$sort: {turns: -1, lastTurn: -1, ownerId: randomSort}}
+                        {$sort: {turns: -1, lastTurn: -1}}
                     ]
                 ).toArray()
             );
@@ -196,7 +194,7 @@ if (Meteor.isServer) {
                 },
                 {
                     sort: {
-                        ownerId: -1,
+                        joinedRoomAt: 1,
                     }
                 }
             ).fetch();

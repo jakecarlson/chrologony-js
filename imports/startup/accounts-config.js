@@ -11,6 +11,7 @@ Accounts.config({
         profile: 1,
         services: 1,
         currentRoomId: 1,
+        joinedRoomAt: 1,
     }
 });
 

@@ -17,6 +17,7 @@ if (Meteor.isServer) {
                 {
                     fields: {
                         currentRoomId: 1,
+                        joinedRoomAt: 1,
                     }
                 }
             );
@@ -37,6 +38,7 @@ if (Meteor.isServer) {
                         _id: 1,
                         'profile.name': 1,
                         currentRoomId: 1,
+                        joinedRoomAt: 1,
                     }
                 }
             );

@@ -29,7 +29,14 @@ Rooms.helpers({
     },
 
     players() {
-        return Meteor.users.find({currentRoomId: this._id});
+        return Meteor.users.find(
+            {
+                currentRoomId: this._id
+            },
+            {
+                sort: {joinedRoomAt: 1, 'profile.name': 1},
+            }
+        );
     },
 
     owner() {
@@ -42,10 +49,11 @@ if (Meteor.isServer) {
 
     publishComposite('rooms', {
         find() {
-            if (this.userId && Meteor.user().currentRoomId) {
+            const roomId = Meteor.user().currentRoomId;
+            if (this.userId && roomId) {
                 return Rooms.find(
                     {
-                        _id: Meteor.user().currentRoomId,
+                        _id: roomId,
                         deletedAt: null,
                     },
                     {
@@ -243,7 +251,8 @@ function setRoom(id, userId = null) {
         userId,
         {
             $set: {
-                currentRoomId: id
+                currentRoomId: id,
+                joinedRoomAt: (id) ? new Date() : null,
             }
         }
     );
