@@ -78,7 +78,7 @@ TourGuide = {
                     element: "#players",
                     placement: "right",
                     title: "Players in this Room",
-                    content: "This is the list of players currently in this room. Each player's current score is shown to the right of their name. If you are the room owner, you will also see an 'x' next to all players (besides yourself), which will allow you to eject that player from the room.",
+                    content: "This is the list of players currently in this room. Each player's score is shown to the right of their name. If you are the room owner, you will also see an 'x' next to all players (besides yourself), which will allow you to eject that player from the room.",
                 },
                 {
                     element: "#game",
@@ -113,7 +113,7 @@ TourGuide = {
                     onShown: this.wait,
                     placement: "right",
                     title: "End Your Turn",
-                    content: "Now let's end your turn by clicking on the 'End Turn' button. If you are the only player in the room, it will be your turn again; otherwise it will be the next player's turn. Any cards you guessed right will turn green to indicate that they are locked in. Note that if a new player enters the room when a game is in progress, that player will get as many turns as it takes for him/her to catch up to the rest of the players in total turns.",
+                    content: "Now let's end your turn by clicking on the 'End Turn' button. If you are the only player in the room, it will be your turn again; otherwise it will be the next player's turn. Any cards you guessed right will turn green to indicate that they are locked in. Note that if a new player enters the room when a game is in progress, that player will get as many turns as it takes for him/her to catch up to the rest of the players in the room.",
                 },
                 {
                     element: "#roomMenu",
@@ -131,14 +131,14 @@ TourGuide = {
                 },
                 {
                     element: "#managers",
+                    preventInteraction: true,
                     delayOnElement: {
                         delayElement: "#managers",
                         maxDelay: 2000,
                     },
-                    onShown: this.wait,
                     placement: "left",
-                    title: "Managing Categories and Clues",
-                    content: "You're not restricted to the categories and clues that come with the game. You can create your own categories and contribute clues to categories others have created. Click on the 'Categories' tab to see how.",
+                    title: "Contributions Welcome!",
+                    content: "You're not restricted to the categories and clues that come with the game. You can create your own categories and contribute clues to categories others have created.",
                 },
                 {
                     element: "#categories",
@@ -150,19 +150,19 @@ TourGuide = {
                 {
                     element: "#managers",
                     onShown: this.wait,
-                    placement: "left",
+                    placement: "bottom",
                     title: "Adding Clues to Categories",
                     content: "Good job! You can edit and remove categories that you own as well. Now that you've created a category, let's add some clues to it. Click on the 'Clues' tab to contribute and manage clues in the categories you own or for which you are a collaborator.",
                 },
                 {
-                    element: "#clues",
+                    element: "#managers",
                     onShown: this.wait,
                     placement: "top",
                     title: "Select a Category",
                     content: "In order to manage the clues in a category, first you must select a category. You will only be able to select categories that you own, categories for which you have been added as a collaborator, or public categories. Select the category you just created to continue.",
                 },
                 {
-                    element: "#clues",
+                    element: "#managers",
                     onShown: this.wait,
                     placement: "top",
                     title: "Add a Clue",
@@ -171,9 +171,9 @@ TourGuide = {
                 {
                     element: "#layout",
                     preventInteraction: true,
-                    placement: "top",
+                    placement: "bottom",
                     title: "The End",
-                    content: "That's it! You now know how to create a room and play the game. You also learned how to create your own categories and clues. There's plenty more to explore, but you now know the basics. Go have fun! Click on the 'End Tour' button.",
+                    content: "That's it! You now know how to create a room and play the game. You also learned how to create your own categories and clues. There's plenty more to explore, but you have the basics down. Go have fun! Click on the 'End Tour' button.",
                 }
             ],
         });
