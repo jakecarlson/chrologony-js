@@ -5,8 +5,8 @@ TourGuide = {
 
     tour: false,
     paused: false,
-    categoriesStep: 11,
-    cluesStep: 13,
+    categoriesStep: 10,
+    cluesStep: 12,
 
     isActive() {
         return (this.tour != false);
@@ -14,13 +14,6 @@ TourGuide = {
 
     isPaused() {
         return (this.isActive() && this.paused);
-    },
-
-    canEndTurn() {
-        if (!this.isActive()) {
-            return true;
-        }
-        return this.allowEndTurnSteps.includes(this.tour.getCurrentStepIndex());
     },
 
     isCategoriesStep() {
@@ -136,16 +129,9 @@ TourGuide = {
                         maxDelay: 2000,
                     },
                     onShown: this.wait,
-                    placement: "left",
-                    title: "Managing Categories and Clues",
-                    content: "You're not restricted to the categories and clues that come with the game. You can create your own categories and contribute clues to categories others have created. Click on the 'Categories' tab to see how.",
-                },
-                {
-                    element: "#categories",
-                    onShown: this.wait,
                     placement: "top",
                     title: "Add a Category",
-                    content: "The 'Categories' tab lets you manage any categories you own or to which you have been added as a collaborator. Try adding a test category right now by filling out and submitting the green form at the top of the list. You can add a public or private category. Let's make this one private, and don't forget to toggle it 'Active' so we can add clues to it.",
+                    content: "You're not restricted to the categories and clues that come with the game. The 'Categories' tab lets you manage any categories you own or to which you have been added as a collaborator. Try adding a test category right now by filling out and submitting the green form at the top of the list. You can add a public or private category. Let's make this one private, and don't forget to toggle it 'Active' so we can add clues to it.",
                 },
                 {
                     element: "#managers",
@@ -155,14 +141,14 @@ TourGuide = {
                     content: "Good job! You can edit and remove categories that you own as well. Now that you've created a category, let's add some clues to it. Click on the 'Clues' tab to contribute and manage clues in the categories you own or for which you are a collaborator.",
                 },
                 {
-                    element: "#clues",
+                    element: "#managers",
                     onShown: this.wait,
                     placement: "top",
                     title: "Select a Category",
                     content: "In order to manage the clues in a category, first you must select a category. You will only be able to select categories that you own, categories for which you have been added as a collaborator, or public categories. Select the category you just created to continue.",
                 },
                 {
-                    element: "#clues",
+                    element: "#managers",
                     onShown: this.wait,
                     placement: "top",
                     title: "Add a Clue",

@@ -45,18 +45,4 @@ Template.lobby.events({
         }
     },
 
-    'click #categoriesTab'(e, i) {
-        if (
-            !TourGuide.isActive() ||
-            (TourGuide.isActive() && TourGuide.isCategoriesStep())
-        ) {
-            FlowRouter.go('categories');
-            if (TourGuide.isActive()) {
-                TourGuide.resume();
-            }
-        } else {
-            e.preventDefault();
-        }
-    },
-
 });
