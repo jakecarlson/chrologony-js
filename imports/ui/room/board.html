@@ -2,28 +2,14 @@
 
     {{#if dataReady}}
 
-        <div id="board" class="card {{#if isTurnOwner}}bg-{{color}}{{/if}} mb-4 mb-md-0">
+        <div id="board" class="{{boardClasses}}">
 
             <header class="card-header">
 
                 <h2 class="card-title float-left turn-title {{#if isTurnOwner}}text-white{{else}}text-muted{{/if}}">{{turnTitle}}</h2>
 
                 <button
-                    class="
-                        btn
-                        {{#if isTurnOwner}}
-                            {{#if cannotEndTurn}}
-                                btn-{{color}}
-                            {{else}}
-                                btn-light
-                            {{/if}}
-                        {{else}}
-                            btn-light
-                        {{/if}}
-                        float-right
-                        ml-2
-                        end-turn
-                    "
+                    class="{{buttonClasses cannotEndTurn}} end-turn"
                     disabled="{{cannotEndTurn}}"
                     title="End Turn"
                 >
@@ -32,21 +18,7 @@
                 </button>
 
                 <button
-                    class="
-                        btn
-                        {{#if isTurnOwner}}
-                            {{#if cannotDrawCard}}
-                                btn-{{color}}
-                            {{else}}
-                                btn-light
-                            {{/if}}
-                        {{else}}
-                            btn-light
-                        {{/if}}
-                        float-right
-                        ml-2
-                        draw-card
-                    "
+                    class="{{buttonClasses cannotDrawCard}} draw-card"
                     disabled="{{cannotDrawCard}}"
                     title="Draw Card"
                 >
@@ -55,20 +27,7 @@
                 </button>
 
                 <button
-                    class="
-                        btn
-                        {{#if isTurnOwner}}
-                            {{#if cannotSubmitGuess}}
-                                btn-{{color}}
-                            {{else}}
-                                btn-light
-                            {{/if}}
-                        {{else}}
-                            btn-light
-                        {{/if}}
-                        float-right
-                        submit-guess
-                    "
+                    class="{{buttonClasses cannotSubmitGuess}} submit-guess"
                     disabled="{{cannotSubmitGuess}}"
                     title="Submit Guess"
                 >

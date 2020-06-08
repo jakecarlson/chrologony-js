@@ -36,28 +36,37 @@ Template.card.helpers({
         return Template.instance().clue.get().hint;
     },
 
-    isLocked() {
-        return (this.card.lockedAt != null);
-    },
-
-    isTurn() {
-        return (this.card.turnId == this.turn._id);
-    },
-
     isCurrent() {
         return isCurrent(this.turn, this.card);
     },
 
-    isCorrect() {
-        return this.card.correct;
-    },
-
-    isOwned() {
-        return isOwned(this.turn);
-    },
-
     canMoveCard() {
         return (isOwned(this.turn) && isCurrent(this.turn, this.card));
+    },
+
+    cardClasses() {
+        let str = 'card clue-card';
+        if (isOwned(this.turn)) {
+            str += ' owned';
+        }
+        if (this.card.lockedAt != null) {
+            str += ' locked bg-success text-white';
+        } else {
+            if (this.card.turnId == this.turn._id) {
+                str += ' turn';
+                if (isCurrent(this.turn, this.card)) {
+                    str += ' current bg-primary text-white'
+                } else {
+                    if (this.card.correct) {
+                        str += ' correct bg-warning';
+                    } else {
+                        str += ' incorrect bg-danger text-white'
+                    }
+
+                }
+            }
+        }
+        return str;
     },
 
 });

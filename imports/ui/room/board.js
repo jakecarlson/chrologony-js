@@ -132,25 +132,6 @@ Template.board.helpers({
         }
     },
 
-    color() {
-        switch(getStatus(this.turn)) {
-            case 'guessing':
-                return "primary";
-                break;
-            case 'correct':
-                return "success";
-                break;
-            case 'incorrect':
-                return "danger";
-                break;
-            case 'empty':
-                return "dark";
-                break;
-            default:
-                return "light";
-        }
-    },
-
     timelineWidth() {
         const cards = getTurnCards(this.game, this.turn);
         if (cards.count) {
@@ -163,6 +144,26 @@ Template.board.helpers({
 
     isTurnOwner() {
         return isCurrentPlayer(this.turn);
+    },
+
+    boardClasses() {
+        let str = 'card mb-4 mb-md-0';
+        if (isCurrentPlayer(this.turn)) {
+            str += ' bg-' + getColor(this.turn);
+        }
+        console.log(str);
+        return str;
+    },
+
+    buttonClasses(disabled) {
+        let str = 'btn';
+        if (disabled && isCurrentPlayer(this.turn)) {
+            str += ' btn-' + getColor(this.turn);
+        } else {
+            str += ' btn-light';
+        }
+        str += ' float-right ml-2';
+        return str;
     },
 
 });
@@ -233,24 +234,6 @@ Template.board.events({
 
 });
 
-function getStatus(turn) {
-    if (turn) {
-        if (turn.currentCardId) {
-            return 'guessing';
-        } else {
-            if (turn.lastCardCorrect === true) {
-                return 'correct';
-            } else if (turn.lastCardCorrect === false) {
-                return 'incorrect';
-            } else {
-                return 'empty';
-            }
-        }
-    } else {
-        return 'waiting';
-    }
-}
-
 function isCurrentPlayer(turn) {
     return (turn && (turn.ownerId == Meteor.userId()));
 }
@@ -309,3 +292,40 @@ function endTurn(game) {
         TourGuide.resume();
     });
 }
+
+function getStatus(turn) {
+    if (turn) {
+        if (turn.currentCardId) {
+            return 'guessing';
+        } else {
+            if (turn.lastCardCorrect === true) {
+                return 'correct';
+            } else if (turn.lastCardCorrect === false) {
+                return 'incorrect';
+            } else {
+                return 'empty';
+            }
+        }
+    } else {
+        return 'waiting';
+    }
+}
+
+function getColor(turn) {
+    switch(getStatus(turn)) {
+        case 'guessing':
+            return "primary";
+            break;
+        case 'correct':
+            return "success";
+            break;
+        case 'incorrect':
+            return "danger";
+            break;
+        case 'empty':
+            return "light";
+            break;
+        default:
+            return "light";
+    }
+};

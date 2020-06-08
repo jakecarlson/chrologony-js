@@ -2,32 +2,7 @@
 
     {{#if dataReady}}
 
-        <div
-            class="
-                card
-                clue-card
-                {{#if isOwned}}
-                    owned
-                {{/if}}
-                {{#if isLocked}}
-                    locked bg-success text-white
-                {{else}}
-                    {{#if isTurn}}
-                        turn
-                        {{#if isCurrent}}
-                            current bg-primary text-white
-                        {{else}}
-                            {{#if isCorrect}}
-                                correct bg-warning
-                            {{else}}
-                                incorrect bg-danger text-white
-                            {{/if}}
-                        {{/if}}
-                    {{/if}}
-                {{/if}}
-            "
-            data-id="{{id}}"
-        >
+        <div class="{{cardClasses}}" data-id="{{id}}">
 
             <header class="card-header">
                 {{#if canMoveCard}}
