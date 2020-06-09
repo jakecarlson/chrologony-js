@@ -41,11 +41,14 @@ Template.card.helpers({
     },
 
     canMoveCard() {
-        return (isOwned(this.turn) && isCurrent(this.turn, this.card));
+        return (!this.compact && isOwned(this.turn) && isCurrent(this.turn, this.card));
     },
 
     cardClasses() {
-        let str = 'card clue-card';
+        let str = '';
+        if (!this.compact) {
+            str += 'card board-card';
+        }
         if (isOwned(this.turn)) {
             str += ' owned';
         }

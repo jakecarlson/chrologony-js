@@ -3,36 +3,41 @@
     {{#if dataReady}}
         <li class="list-group-item player {{#if isTurnOwner}}current{{/if}}">
 
-            {{profileName}}
+            <div class="player-name" id="playerName-{{id}}" data-toggle="collapse" data-target="#playerDetails-{{id}}" aria-expanded="false" aria-controls="playerDetails-{{id}}">
 
-            {{#if gameInProgress}}
+                {{profileName}}
 
-                {{#if isTurnOwner}}
+                {{#if gameInProgress}}
+
+                    <i class="fa fa-angle-{{#if expanded}}up{{else}}down{{/if}} float-right ml-2 expand"></i>
+
+                    {{#if isTurnOwner}}
+                        <span
+                            class="badge badge-warning float-right ml-2"
+                            title="{{numPendingCards}} Total Cards"
+                        >{{numPendingCards}}</span>
+                    {{/if}}
+
                     <span
-                        class="badge badge-warning float-right ml-2"
-                        title="{{numPendingCards}} Total Cards"
-                    >{{numPendingCards}}</span>
+                        class="{{lockedBadgeClasses}}"
+                        title="{{numLockedCards}} Cards Locked In"
+                    >{{numLockedCards}}</span>
+
                 {{/if}}
 
-                <span
-                    class="
-                        badge
-                        {{#if isTurnOwner}}
-                            badge-success
-                        {{else}}
-                            badge-light
-                        {{/if}}
-                        float-right
-                        ml-2
-                    "
-                    title="{{numLockedCards}} Cards Locked In"
-                >{{numLockedCards}}</span>
+                {{#if canEject}}
+                    <a href="#" class="float-right text-dark ml-2 eject" title="Eject Player">&times;</a>
+                {{/if}}
 
-            {{/if}}
+            </div>
 
-            {{#if canEject}}
-                <a href="#" class="float-right text-dark ml-2 eject" title="Eject Player">&times;</a>
-            {{/if}}
+            <ul id="playerDetails-{{id}}" class="collapse player-cards" aria-labelledby="playerName-{{id}}" data-parent="#playersAccordion">
+                {{#each playerCard in cards}}
+                    <li class="">
+                        {{> card card=playerCard turn=turn compact=true}}
+                    </li>
+                {{/each}}
+            </ul>
 
         </li>
     {{/if}}

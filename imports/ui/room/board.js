@@ -27,9 +27,9 @@ Template.board.onCreated(function boardOnCreated() {
                 const cardsSortable = new Sortable(
                     document.getElementById('playerCards'),
                     {
-                        handle: '.clue-card.current',
+                        handle: '.board-card.current',
                         direction: 'horizontal',
-                        filter: '.clue-card .move',
+                        filter: '.board-card .move',
                         forceFallback: true,
                         onStart: function (e) {
                             $('#playerCards').removeClass('inactive');
@@ -142,10 +142,6 @@ Template.board.helpers({
         }
     },
 
-    isTurnOwner() {
-        return isCurrentPlayer(this.turn);
-    },
-
     boardClasses() {
         let str = 'card mb-4 mb-md-0';
         if (isCurrentPlayer(this.turn)) {
@@ -156,7 +152,13 @@ Template.board.helpers({
     },
 
     headerClasses() {
-        return 'card-header bg-' + getColor(this.turn);
+        let str = 'card-header ';
+        if (isCurrentPlayer(this.turn)) {
+            str += 'bg-' + getColor(this.turn);
+        } else {
+            str += 'bg-light';
+        }
+        return str;
     },
 
     buttonClasses(disabled) {
@@ -181,7 +183,7 @@ Template.board.events({
         let currentCardPos = null;
         const currentCardId = this.turn.currentCardId;
 
-        $(i.findAll('.clue-card')).each(function(n, card) {
+        $(i.findAll('.board-card')).each(function(n, card) {
             const id = $(card).attr('data-id');
             pos[id] = n;
             if (id === currentCardId) {
@@ -271,7 +273,7 @@ function getTurnCards(game, turn) {
 
 function saveCardPos() {
 
-    const cards = $('#playerCards').find('.clue-card');
+    const cards = $('#playerCards').find('.board-card');
     let pos = {};
     cards.each(function(n, card) {
         pos[$(card).attr('data-id')] = n;

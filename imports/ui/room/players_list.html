@@ -5,7 +5,7 @@
             <div class="card-header">
                 <h2 class="card-title">Players in this Room</h2>
             </div>
-            <ul class="list-group list-group-flush">
+            <ul id="playersAccordion" class="list-group list-group-flush">
                 {{#each currentPlayer in players}}
                     {{> player room=room game=game turn=turn player=currentPlayer}}
                 {{/each}}

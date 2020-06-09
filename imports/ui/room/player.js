@@ -1,12 +1,14 @@
 import { Template } from 'meteor/templating';
+import { ReactiveVar } from "meteor/reactive-var";
 import { LoadingState } from "../../modules/LoadingState";
 
 import { Cards } from "../../api/Cards";
 
 import './player.html';
+import './card.js';
 
 Template.player.onCreated(function playerOnCreated() {
-
+    this.expanded = new ReactiveVar(false);
 });
 
 Template.player.helpers({
@@ -16,11 +18,15 @@ Template.player.helpers({
     },
 
     isTurnOwner() {
-        return (this.turn && (this.turn.ownerId == this.player._id));
+        return isTurnOwner(this.turn, this.player._id);
     },
 
     id() {
-        return this.player.id;
+        return this.player._id;
+    },
+
+    expanded() {
+        return Template.instance().expanded.get();
     },
 
     profileName() {
@@ -58,6 +64,40 @@ Template.player.helpers({
         return ((this.room.ownerId == Meteor.userId()) && (this.player._id != Meteor.userId()));
     },
 
+    lockedBadgeClasses() {
+        let str = 'badge';
+        if (isTurnOwner(this.turn, this.player._id)) {
+            str += ' badge-success';
+        } else {
+            str += ' badge-light';
+        }
+        str += ' float-right ml-2';
+        return str;
+    },
+
+    cards() {
+        if (this.player && this.turn) {
+            return Cards.find(
+                {
+                    gameId: this.turn.gameId,
+                    ownerId: this.player._id,
+                    $or: [
+                        {turnId: this.turn._id},
+                        {lockedAt: {$ne: null}},
+                    ]
+                },
+                {
+                    sort: {
+                        pos: 1,
+                        createdAt: -1,
+                    }
+                }
+            );
+        } else {
+            return [];
+        }
+    },
+
 });
 
 Template.player.events({
@@ -72,4 +112,12 @@ Template.player.events({
         });
     },
 
+    'click .player-name'(e, i) {
+        i.expanded.set(!i.expanded.get());
+    },
+
 });
+
+function isTurnOwner(turn, playerId) {
+    return (turn && (turn.ownerId == playerId))
+}

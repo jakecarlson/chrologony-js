@@ -201,11 +201,52 @@ button.at-social-btn i {
     margin-bottom: 0;
 }
 
-#players .current {
+#players .player.current .player-name {
     font-weight: bold;
 }
-#players .player .badge {
+#players .player .badge,
+#players .player .expand
+{
     margin-top: .2rem;
+}
+#players .player .player-name {
+    cursor: pointer;
+}
+#players .player-cards {
+    padding-left: 0;
+    list-style: none inside none;
+    padding-top: .5rem;
+}
+#players .player-cards li .card-header,
+#players .player-cards li .card-body
+{
+    padding: .375rem .625rem;
+    font-size: small;
+}
+#players .player-cards li .card-body {
+    max-height: 0rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    transition: max-height .25s ease-in-out;
+    margin-bottom: 0;
+}
+#players .player-cards li:hover .card-body {
+    max-height: 16rem;
+    padding-top: .375rem;
+    padding-bottom: .375rem;
+}
+#players .player-cards .date {
+    display: none;
+}
+#players .player-cards .year {
+    display: block;
+}
+#players .player-cards li:hover .date {
+    display: block;
+}
+#players .player-cards li:hover .year {
+    display: none;
 }
 
 /* board */
@@ -214,6 +255,10 @@ button.at-social-btn i {
 }
 .turn-title {
     font-size: xx-large;
+    color: #fff;
+}
+#board .bg-light .turn-title {
+    color: #6c757d;
 }
 #board .card-subtitle {
     font-size: x-large;
@@ -272,7 +317,7 @@ button.at-social-btn i {
     width: 16rem;
 }
 
-.clue-card {
+.board-card {
     position: absolute;
     top: 16rem;
     width: 16rem;
@@ -280,38 +325,38 @@ button.at-social-btn i {
     text-align: left;
     transition: top .25s ease-in-out;
 }
-.inactive .clue-col:hover .clue-card,
-.clue-card.current
+.inactive .clue-col:hover .board-card,
+.board-card.current
 {
     top: 0;
 }
-.clue-card.current .card-title {
+.board-card.current .card-title {
     text-align: center;
 }
-.clue-col .clue-card .date {
+.clue-col .board-card .date {
     display: none;
 }
-.clue-col .clue-card .year {
+.clue-col .board-card .year {
     display: block;
 }
-.inactive .clue-col:hover .clue-card .date {
+.inactive .clue-col:hover .board-card .date {
     display: block;
     text-align: center;
 }
-.inactive .clue-col:hover .clue-card .year {
+.inactive .clue-col:hover .board-card .year {
     display: none;
 }
-.clue-card.current {
+.board-card.current {
     cursor: grab;
 }
-.clue-card .card-header {
+.board-card .card-header {
     position: relative;
 }
-.clue-card .card-title {
+.board-card .card-title {
     margin-bottom: 0;
     font-size: large;
 }
-.clue-card .move {
+.board-card .move {
     top: 0;
     font-size: 1.5rem;
     position: absolute;
@@ -319,11 +364,14 @@ button.at-social-btn i {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
 }
-.clue-card .move-left {
+.board-card .move-left {
     left: 0;
 }
-.clue-card .move-right {
+.board-card .move-right {
     right: 0;
+}
+.board-card .card-body {
+    margin-bottom: 0;
 }
 
 #login-dropdown-list .login-text-and-button,
