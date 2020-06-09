@@ -4,7 +4,7 @@
 
         <div id="board" class="{{boardClasses}}">
 
-            <header class="card-header">
+            <header class="{{headerClasses}}">
 
                 <h2 class="card-title float-left turn-title {{#if isTurnOwner}}text-white{{else}}text-muted{{/if}}">{{turnTitle}}</h2>
 
@@ -37,7 +37,7 @@
 
             </header>
 
-            <div class="card-body bg-white">
+            <div class="card-body">
                 <h3 class="card-subtitle text-secondary mb-2 prompt">{{prompt}}</h3>
                 <div class="clue-cards clearfix" id="playerCardsWrapper">
                     <ol style="width: {{timelineWidth}}" id="playerCards" class="inactive">
