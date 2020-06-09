@@ -224,28 +224,12 @@ button.at-social-btn i {
     font-size: small;
 }
 #players .player-cards li .card-body {
-    max-height: 0rem;
-    padding-top: 0;
-    padding-bottom: 0;
-    overflow: hidden;
-    transition: max-height .25s ease-in-out;
     margin-bottom: 0;
 }
-#players .player-cards li:hover .card-body {
-    max-height: 16rem;
-    padding-top: .375rem;
-    padding-bottom: .375rem;
-}
 #players .player-cards .date {
-    display: none;
+    display: block;
 }
 #players .player-cards .year {
-    display: block;
-}
-#players .player-cards li:hover .date {
-    display: block;
-}
-#players .player-cards li:hover .year {
     display: none;
 }
 
