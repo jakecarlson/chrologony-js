@@ -65,27 +65,27 @@ TourGuide = {
                     onShown: this.wait,
                     placement: "top",
                     title: "Create or Join a Room",
-                    content: "Let's jump right in and create a room! Enter a room name and password, then click 'Go'.",
+                    content: "Let's jump right in and create a room! Enter a room name and password, then click / tap 'Go'.",
                 },
                 {
                     element: "#layout",
                     preventInteraction: true,
-                    placement: "bottom",
+                    placement: "right",
                     title: "The Room",
-                    content: "This is a room, where the game actually happens. The room name is on the upper left; the room menu is on the upper right. The large box on the left is the Turn Board, and there are one or more side panels that provide more information about what's happening in the room.",
+                    content: "This is a room, where the games actually happen. The room name is on the upper left; the room menu is on the upper right. The first box is the Turn Board, and there are one or more panels that provide more information about what's happening in the room.",
                 },
                 {
                     element: "#players",
-                    placement: "right",
+                    placement: "bottom",
                     title: "Players in this Room",
                     content: "This is the list of players currently in this room. Each player's score is shown to the right of their name. If you are the room owner, you will also see an 'x' next to all players (besides yourself), which will allow you to eject that player from the room.",
                 },
                 {
                     element: "#game",
                     onShown: this.wait,
-                    placement: "top",
+                    placement: "bottom",
                     title: "Start a New Game",
-                    content: "Only the owner of a room can start a new game. You can start a new game whenever you wish, but note that the current game will be discarded when you do so. Select a category to use, then click on the 'Start' button.",
+                    content: "Only the owner of a room can start a new game. You can start a new game whenever you wish, but note that the current game will be discarded when you do so. Select a category to use, then click / tap on the 'Start' button.",
                 },
                 {
                     element: "#board",
@@ -97,9 +97,9 @@ TourGuide = {
                 {
                     element: "#board",
                     onShown: this.wait,
-                    placement: "left",
+                    placement: "top",
                     title: "Submit a Guess",
-                    content: "The currently active card is blue. Move it by clicking on the arrows, or by dragging it to where you think it belongs in the timeline. Note that you can view any non-active card by moving your mouse over it. When the active card is in the right place, click on the 'Submit Guess' button.",
+                    content: "The currently active card is blue. Move it by clicking / tapping on the arrows, or by dragging it to where you think it belongs in the timeline. Note that you can view any non-active card by moving your mouse over or tapping it. When the active card is in the right place, click / tap on the 'Submit Guess' button.",
                 },
                 {
                     element: "#board",
@@ -113,21 +113,21 @@ TourGuide = {
                     onShown: this.wait,
                     placement: "right",
                     title: "End Your Turn",
-                    content: "Now let's end your turn by clicking on the 'End Turn' button. If you are the only player in the room, it will be your turn again; otherwise it will be the next player's turn. Any cards you guessed right will turn green to indicate that they are locked in. Note that if a new player enters the room when a game is in progress, that player will get as many turns as it takes for him/her to catch up to the rest of the players in the room.",
+                    content: "Now let's end your turn by clicking / tapping on the 'End Turn' button. If you are the only player in the room, it will be your turn again; otherwise it will be the next player's turn. Any cards you guessed right will turn green to indicate that they are locked in. Note that if a new player enters the room when a game is in progress, that player will get as many turns as it takes for him/her to catch up to the rest of the players in the room.",
                 },
                 {
                     element: "#roomMenu",
                     preventInteraction: true,
                     placement: "right",
                     title: "Room Menu",
-                    content: "Feeling lonely in here all by yourself? To invite others to play with you, click on the 'Room Link' button and send others the copied URL. They can also join the room by entering the room name and password from the Lobby. You can leave the room and go back to the Lobby by clicking on the 'Leave Room' button.",
+                    content: "Feeling lonely in here all by yourself? To invite others to play with you, click / tap on the 'Room Link' button and send others the copied URL. They can also join the room by entering the room name and password from the Lobby. You can leave the room and go back to the Lobby by clicking / tapping on the 'Leave Room' button.",
                 },
                 {
                     element: "#menu",
                     onShown: this.wait,
                     placement: "right",
                     title: "Navigation",
-                    content: "You can navigate around using the menu at the top right of the screen. Next, let's try contributing some of your own categories and clues. Click on the your username to show the menu dropdown, then click on 'Categories'.",
+                    content: "You can navigate around using the menu at the top right of the screen. Next, let's try contributing some of your own categories and clues. Click / tap on the your username to show the menu dropdown, then on 'Categories'.",
                 },
                 {
                     element: "#managers",
@@ -150,9 +150,9 @@ TourGuide = {
                 {
                     element: "#managers",
                     onShown: this.wait,
-                    placement: "bottom",
+                    placement: "top",
                     title: "Adding Clues to Categories",
-                    content: "Good job! You can edit and remove categories that you own as well. Now that you've created a category, let's add some clues to it. Click on the 'Clues' tab to contribute and manage clues in the categories you own or for which you are a collaborator.",
+                    content: "Good job! You can edit and remove categories that you own as well. Now that you've created a category, let's add some clues to it. Click / tap on the 'Clues' tab to contribute and manage clues in the categories you own or for which you are a collaborator.",
                 },
                 {
                     element: "#managers",
@@ -173,7 +173,7 @@ TourGuide = {
                     preventInteraction: true,
                     placement: "bottom",
                     title: "The End",
-                    content: "That's it! You now know how to create a room and play the game. You also learned how to create your own categories and clues. There's plenty more to explore, but you have the basics down. Go have fun! Click on the 'End Tour' button.",
+                    content: "That's it! You now know how to create a room and play the game. You also learned how to create your own categories and clues. There's plenty more to explore, but you have the basics down. Go have fun! Click / tap on the 'End Tour' button.",
                 }
             ],
         });

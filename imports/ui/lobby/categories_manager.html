@@ -1,14 +1,15 @@
 <template name="categories_manager">
 
-    <table id="categoriesManager" class="table table-hover table-striped">
-        <colgroup>
-            <col class="name">
-            <col class="theme">
-            <col class="private">
-            <col class="status">
-            <col class="actions">
-        </colgroup>
-        <thead class="table-borderless">
+    <div class="table-responsive">
+        <table id="categoriesManager" class="table table-hover table-striped">
+            <colgroup>
+                <col class="name">
+                <col class="theme">
+                <col class="private">
+                <col class="status">
+                <col class="actions">
+            </colgroup>
+            <thead class="table-borderless">
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Theme</th>
@@ -17,13 +18,14 @@
                 <th scope="col"></th>
             </tr>
             {{> category category=false}}
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {{#each ownedCategory in ownedCategories}}
                 {{> category category=ownedCategory}}
             {{/each}}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
     <div class="modal fade" id="removeCategory" tabindex="-1" role="dialog" aria-labelledby="removeCategoryTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">

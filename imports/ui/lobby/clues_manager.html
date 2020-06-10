@@ -6,29 +6,31 @@
 
         <h3 class="text-center text-muted mt-4 mb-0 results-count">{{numResults}}</h3>
 
-        <table id="cluesManager" class="table table-hover table-striped">
-            <colgroup>
-                <col class="description">
-                <col class="date">
-                <col class="categories">
-                <col class="actions">
-            </colgroup>
-            <thead class="table-borderless">
+        <div class="table-responsive">
+            <table id="cluesManager" class="table table-hover table-striped">
+                <colgroup>
+                    <col class="description">
+                    <col class="date">
+                    <col class="categories">
+                    <col class="actions">
+                </colgroup>
+                <thead class="table-borderless">
                 <tr>
                     <th scope="col">Clue</th>
                     <th scope="col">Date</th>
                     <th scope="col">Categories</th>
-    <!--                <th scope="col">Hint</th>-->
+                    <!--                <th scope="col">Hint</th>-->
                     <th scope="col"></th>
                 </tr>
                 {{> clue clue=false categoryId=categoryId}}
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 {{#each clueCard in clueCards}}
                     {{> clue clue=clueCard categoryId=categoryId}}
                 {{/each}}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
 
         <div class="modal fade" id="removeClue" tabindex="-1" role="dialog" aria-labelledby="removeClueTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">

@@ -143,11 +143,10 @@ Template.board.helpers({
     },
 
     boardClasses() {
-        let str = 'card mb-4 mb-md-0';
+        let str = 'card mb-4 mb-lg-0';
         if (isCurrentPlayer(this.turn)) {
             str += ' border-' + getColor(this.turn);
         }
-        console.log(str);
         return str;
     },
 

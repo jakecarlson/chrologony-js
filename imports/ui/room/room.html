@@ -35,11 +35,11 @@
 
             <div class="row">
 
-                <div class="col-md-9" id="roomMain">
+                <div class="col-lg-9" id="roomMain">
                     {{> board room=currentRoom game=currentGame turn=currentTurn}}
                 </div>
 
-                <div class="col-md-3" id="roomSide">
+                <div class="col-lg-3" id="roomSide">
                     {{> players_list room=currentRoom turn=currentTurn}}
                     {{#if isOwner}}
                         {{> game room=currentRoom game=currentGame}}
