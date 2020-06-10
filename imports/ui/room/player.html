@@ -1,9 +1,9 @@
 <template name="player">
 
     {{#if dataReady}}
-        <li class="list-group-item player {{#if isTurnOwner}}current{{/if}}">
+        <li class="list-group-item p-0 player {{#if isTurnOwner}}current{{/if}}">
 
-            <div class="player-name" id="playerName-{{id}}" data-toggle="collapse" data-target="#playerDetails-{{id}}" aria-expanded="false" aria-controls="playerDetails-{{id}}">
+            <div class="player-name" id="playerName-{{id}}" data-toggle="collapse" data-target="#playerCards-{{id}}" aria-expanded="false" aria-controls="playerCards-{{id}}">
 
                 {{profileName}}
 
@@ -31,13 +31,13 @@
 
             </div>
 
-            <ul id="playerDetails-{{id}}" class="collapse player-cards" aria-labelledby="playerName-{{id}}" data-parent="#playersAccordion">
-                {{#each playerCard in cards}}
-                    <li class="">
-                        {{> card card=playerCard turn=turn compact=true}}
-                    </li>
-                {{/each}}
-            </ul>
+            <div id="playerCards-{{id}}" class="collapse player-cards" aria-labelledby="playerName-{{id}}"><!-- data-parent="#playersAccordion" -->
+                <ol>
+                    {{#each playerCard in cards}}
+                        <li>{{> card card=playerCard turn=turn compact=true}}</li>
+                    {{/each}}
+                </ol>
+            </div>
 
         </li>
     {{/if}}

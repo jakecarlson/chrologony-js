@@ -211,17 +211,24 @@ button.at-social-btn i {
 }
 #players .player .player-name {
     cursor: pointer;
+    padding: 0.75rem 1.25rem
 }
-#players .player-cards {
+#players .player-cards ol {
     padding-left: 0;
     list-style: none inside none;
-    padding-top: .5rem;
+    /*max-height: 16rem;*/
+    /*overflow: auto;*/
+}
+#players .player-cards li .card-title,
+#players .player-cards li .card-body
+{
+    font-size: small;
 }
 #players .player-cards li .card-header,
 #players .player-cards li .card-body
 {
-    padding: .375rem .625rem;
-    font-size: small;
+    padding-top: .375rem;
+    padding-bottom: .375rem;
 }
 #players .player-cards li .card-body {
     margin-bottom: 0;
