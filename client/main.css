@@ -156,20 +156,20 @@ button.at-social-btn i {
 #categoriesManager {
     min-width: 60rem;
 }
-#cluesManager .name {
-    width: 30%;
+#categoriesManager .name {
+    width: 25%;
 }
-#cluesManager .theme {
-    width: 10%;
+#categoriesManager .theme {
+    width: 20%;
 }
-#cluesManager .private {
+#categoriesManager .private {
     width: 15%;
 }
-#cluesManager .status {
+#categoriesManager .status {
     width: 15%;
 }
-#cluesManager .actions {
-    width: 30%;
+#categoriesManager .actions {
+    width: 25%;
 }
 .category.viewing {
     line-height: 2.5em;
@@ -198,13 +198,13 @@ button.at-social-btn i {
     width: 40%;
 }
 #cluesManager .date {
-    width: 15%;
+    width: 20%;
 }
 #cluesManager .categories {
     width: 15%;
 }
 #cluesManager .actions {
-    width: 30%;
+    width: 25%;
 }
 #cluesManager tbody th {
     font-weight: normal;

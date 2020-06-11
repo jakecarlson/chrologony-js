@@ -62,20 +62,25 @@
         </td>
 
         <td>
+
             <form class="category-edit {{#if viewing}}d-none{{/if}}">
+
                 {{#if category}}
+
                     <input class="attr" type="hidden" name="_id" value="{{id}}">
                     <button type="submit" class="save btn btn-primary mr-2" disabled="{{loading}}">
                         <i class="fa fa-check"></i>
                         <span class="d-none d-xl-inline">Save</span>
                     </button>
+
                     <button type="submit" class="cancel btn btn-light">
                         <i class="fa fa-times"></i>
                         <span class="d-none d-xl-inline">Cancel</span>
                     </button>
+
                     <button
                         type="button"
-                        class="btn btn-outline-danger float-right"
+                        class="btn btn-outline-danger ml-2 float-right"
                         data-toggle="modal"
                         data-target="#removeCategory"
                         data-id="{{id}}"
@@ -83,17 +88,23 @@
                         <i class="fa fa-trash"></i>
                         <span class="d-none d-xl-inline">Remove</span>
                     </button>
+
                 {{else}}
+
                     <button type="submit" class="add btn btn-primary" disabled="{{loading}}">
                         <i class="fa fa-plus"></i>
                         <span class="d-none d-xl-inline">Add</span>
                     </button>
+
                 {{/if}}
+
             </form>
+
             <button class="edit btn btn-light btn-sm {{#if editing}}d-none{{/if}}">
                 <i class="fa fa-pencil"></i>
                 <span class="d-none d-xl-inline">Edit</span>
             </button>
+
         </td>
 
     </tr>
