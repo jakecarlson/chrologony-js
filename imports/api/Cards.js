@@ -93,10 +93,26 @@ if (Meteor.isServer) {
                                 _id: 1,
                                 date: 1,
                                 description: 1,
+                                hint: 1,
+                                thumbnailUrl: 1,
+                                imageUrl: 1,
+                                latitude: 1,
+                                longitude: 1,
+                                externalId: 1,
+                                externalUrl: 1,
+                                moreInfo: 1,
                             },
                             transform: function(doc) {
                                 if (unsubmittedClueIds.includes(doc._id)) {
                                     doc.date = null;
+                                    doc.hint = null;
+                                    doc.thumbnailUrl = null;
+                                    doc.imageUrl = null;
+                                    doc.latitude = null;
+                                    doc.longitude = null;
+                                    doc.externalId = null;
+                                    doc.externalUrl = null;
+                                    doc.moreInfo = null;
                                 }
                                 return doc;
                             },

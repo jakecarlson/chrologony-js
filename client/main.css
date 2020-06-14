@@ -2,6 +2,7 @@ html {
     font-size: 16px;
 }
 
+/* header */
 #title {
     text-indent: -999rem;
     background: transparent url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI0LjEuMiwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA0NTIgMTI5IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0NTIgMTI5OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6IzZDNzU3RDt9Cgkuc3Qxe2ZvbnQtZmFtaWx5OidTdXBlcmNsYXJlbmRvbi1SZWd1bGFyJzt9Cgkuc3Qye2ZvbnQtc2l6ZTo3MnB4O30KCS5zdDN7ZmlsbDojMDA3QkZGO30KPC9zdHlsZT4KPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAtMi40NzM2IDY4LjQyMDkpIj48dHNwYW4geD0iMCIgeT0iMCIgY2xhc3M9InN0MCBzdDEgc3QyIj5jaHJvbDwvdHNwYW4+PHRzcGFuIHg9IjIxMi40IiB5PSIwIiBjbGFzcz0ic3QzIHN0MSBzdDIiPm9nbzwvdHNwYW4+PHRzcGFuIHg9IjM1Ny4yNiIgeT0iMCIgY2xhc3M9InN0MCBzdDEgc3QyIj5ueTwvdHNwYW4+PC90ZXh0Pgo8cGF0aCBjbGFzcz0ic3QzIiBkPSJNMjMyLjg1LDkuMTZjMTEuODUsMCwyMS42Niw4LjYsMjMuNDUsMTkuODRjMC40Mi0xLjc2LDAuNjUtMy41OSwwLjY1LTUuNDdDMjU2Ljk2LDEwLjUzLDI0Ni4zMywwLDIzMy4yMiwwCglzLTIzLjc0LDEwLjUzLTIzLjc0LDIzLjUzYzAsMS4yNSwwLjEsMi40OCwwLjI5LDMuNjlDMjEyLjI2LDE2Ljg2LDIyMS42NSw5LjE2LDIzMi44NSw5LjE2eiIvPgo8cGF0aCBjbGFzcz0ic3QzIiBkPSJNMzE4Ljk4LDc5LjA1Yy0wLjAxLTAuMTktMC4wMS0wLjM3LTAuMDItMC41NmMtMC4wMiwwLjA3LTAuMDQsMC4xNC0wLjA1LDAuMmMtMC4wMi0wLjA4LTAuMDMtMC4xNi0wLjA1LTAuMjQKCWMtMC4wNywwLjQ1LTAuMTYsMC45LTAuMjUsMS4zNWMtMy42NiwxMi4wNy0xOS45NiwyMS4yLTM5LjYxLDIxLjM4Yy0xOS42NS0wLjE5LTM1Ljk1LTkuMzItMzkuNjEtMjEuMzgKCWMtMC4wOS0wLjQ1LTAuMTctMC45LTAuMjUtMS4zNWMtMC4wMiwwLjA4LTAuMDMsMC4xNi0wLjA1LDAuMjRjLTAuMDItMC4wNy0wLjA0LTAuMTQtMC4wNS0wLjJjLTAuMDEsMC4xOS0wLjAxLDAuMzctMC4wMiwwLjU2CglDMjM4LjM2LDgxLjkzLDIzOCw4NC45MiwyMzgsODhjMCwyMi40OCwxOC4zMSw0MC43Miw0MSw0MC45OWMyMi42OS0wLjI3LDQxLTE4LjUxLDQxLTQwLjk5QzMyMCw4NC45MiwzMTkuNjQsODEuOTMsMzE4Ljk4LDc5LjA1egoJIE0yNzksMTEzYy0xNS4wNi0wLjQtMjguMTItOC43MS0zNS4wNi0yMC44OWM2Ljc5LDguMSwxOS45MSwxMy42MywzNS4wNiwxMy44N2MxNS4xNS0wLjI0LDI4LjI3LTUuNzcsMzUuMDYtMTMuODcKCUMzMDcuMTIsMTA0LjI5LDI5NC4wNiwxMTIuNiwyNzksMTEzeiIvPgo8cGF0aCBjbGFzcz0ic3QzIiBkPSJNMzMyLjA3LDkuNThjMTEuODUsMCwyMS42Niw4LjYsMjMuNDUsMTkuODRjMC40Mi0xLjc2LDAuNjUtMy41OSwwLjY1LTUuNDdjMC0xMi45OS0xMC42My0yMy41My0yMy43NC0yMy41MwoJcy0yMy43NCwxMC41My0yMy43NCwyMy41M2MwLDEuMjUsMC4xLDIuNDgsMC4yOSwzLjY5QzMxMS40NywxNy4yOCwzMjAuODYsOS41OCwzMzIuMDcsOS41OHoiLz4KPC9zdmc+Cg==") no-repeat left center;
@@ -9,7 +10,6 @@ html {
     width: 11rem;
     height: 4rem;
 }
-
 #header {
     padding-right: 3px;
 }
@@ -18,7 +18,6 @@ html {
     padding-left: 15px;
     padding-right: 15px;
 }
-
 #profile .btn-link {
     font-weight: bold;
 }
@@ -26,6 +25,7 @@ html {
     min-width: 11.5rem;
 }
 
+/* auth screens */
 #auth {
     margin-top: 4rem;
     text-align: center;
@@ -39,7 +39,6 @@ html {
     font-weight: normal;
     margin-bottom: 6rem;
 }
-
 #tagline {
     position: absolute;
     top: 9.5rem;
@@ -68,7 +67,7 @@ button.at-social-btn i {
     width: 30px;
 }
 
-/* login form */
+/* Meteor accounts overrides */
 .at-pwd-form fieldset {
     width: 100%;
 }
@@ -121,10 +120,26 @@ button.at-social-btn i {
 .g-recaptcha {
     max-width: 302px;
 }
+#login-dropdown-list .login-text-and-button,
+#login-dropdown-list .or
+{
+    display: none;
+}
 
 /* content */
 .content {
     text-align: left;
+}
+
+/* card overrides */
+.card h1 {
+    margin-top: 0;
+}
+.card-title {
+    margin-bottom: 0;
+}
+.card-body {
+    margin-bottom: 0;
 }
 
 /* join */
@@ -132,7 +147,6 @@ button.at-social-btn i {
     max-width: 576px;
 }
 #join .card-title {
-    margin-bottom: 0;
     font-size: x-large;
     text-align: center;
 }
@@ -142,10 +156,7 @@ button.at-social-btn i {
     }
 }
 
-.card h1 {
-    margin-top: 0;
-}
-
+/* child manager */
 .child-manager .list-group-item:last-child {
     border-bottom: none;
 }
@@ -153,6 +164,7 @@ button.at-social-btn i {
     width: 100%;
 }
 
+/* categories manager */
 #categoriesManager {
     min-width: 60rem;
 }
@@ -188,6 +200,7 @@ button.at-social-btn i {
     line-height: 1;
 }
 
+/* clues manager */
 #clues .results-count {
     font-size: medium !important;
 }
@@ -195,13 +208,17 @@ button.at-social-btn i {
     min-width: 60rem;
 }
 #cluesManager .description {
-    width: 45%;
+    width: 40%;
 }
 #cluesManager .date {
-    width: 15%;
-}
-#cluesManager .categories {
     width: 10%;
+}
+#cluesManager .categories,
+#cluesManager .more
+{
+    width: 10%;
+    line-height: 2;
+    white-space: nowrap;
 }
 #cluesManager .actions {
     width: 30%;
@@ -209,63 +226,63 @@ button.at-social-btn i {
 #cluesManager tbody th {
     font-weight: normal;
 }
-.clue .categories {
-    line-height: 2;
-}
 .clue.editing .categories {
     line-height: 2.5;
 }
+#manageClueMore fieldset.form-group {
+    margin: 0;
+}
 
+/* Room */
 .room-title {
     font-size: xx-large;
     margin-bottom: 0;
 }
 #roomSide .card-title {
     font-size: medium;
-    margin-bottom: 0;
 }
 
-#players .player.current .player-name {
+.player.current .player-name {
     font-weight: bold;
 }
-#players .player .badge,
-#players .player .expand
+.player .badge,
+.player .expand
 {
     margin-top: .2rem;
 }
-#players .player .player-name {
+.player .player-name {
     cursor: pointer;
     padding: 0.75rem 1.25rem
 }
-#players .player-cards ol {
+.player-cards ol {
     padding-left: 0;
     list-style: none inside none;
 }
-#players .player-cards li .card-title,
-#players .player-cards li .card-body
+.player-cards li .card-title,
+.player-cards li .card-body
 {
     font-size: small;
 }
-#players .player-cards li .card-header,
-#players .player-cards li .card-body
+.player-cards li .card-header,
+.player-cards li .card-body
 {
     padding-top: .375rem;
     padding-bottom: .375rem;
 }
-#players .player-cards li .card-body {
-    margin-bottom: 0;
-}
-#players .player-cards .date {
+.player-cards .date {
     display: block;
 }
-#players .player-cards .year {
+.player-cards .year {
     display: none;
+}
+.player-cards .more {
+    float: right;
+    position: relative;
+    top: -.25rem;
+    color: #6c757d;
 }
 
 /* board */
-#board .card-title {
-    margin-bottom: 0;
-}
 .turn-title {
     font-size: xx-large;
     color: #fff;
@@ -288,7 +305,6 @@ button.at-social-btn i {
     padding-top: 1.25rem;
     overflow: hidden;
 }
-
 #playerCardsWrapper {
     height: 19rem;
     text-align: center;
@@ -305,6 +321,15 @@ button.at-social-btn i {
     width: 100%;
 }
 
+/* More Clue Info modal */
+.more-img {
+    max-height: 8rem;
+}
+.more-map {
+    height: 24rem;
+}
+
+/* Sortable overrides */
 .sortable-chosen,
 .sortable-ghost,
 .sortable-fallback
@@ -329,7 +354,6 @@ button.at-social-btn i {
 {
     width: 16rem;
 }
-
 .board-card {
     position: absolute;
     top: 16rem;
@@ -354,7 +378,6 @@ button.at-social-btn i {
 }
 .inactive .clue-col:hover .board-card .date {
     display: block;
-    text-align: center;
 }
 .inactive .clue-col:hover .board-card .year {
     display: none;
@@ -366,10 +389,11 @@ button.at-social-btn i {
     position: relative;
 }
 .board-card .card-title {
-    margin-bottom: 0;
     font-size: large;
 }
-.board-card .move {
+.board-card .move,
+.board-card .more
+{
     top: 0;
     font-size: 1.5rem;
     position: absolute;
@@ -380,19 +404,23 @@ button.at-social-btn i {
 .board-card .move-left {
     left: 0;
 }
-.board-card .move-right {
+.board-card .move-right,
+.board-card .more
+{
     right: 0;
 }
-.board-card .card-body {
-    margin-bottom: 0;
-}
-
-#login-dropdown-list .login-text-and-button,
-#login-dropdown-list .or
-{
+.board-card .more {
     display: none;
+    color: white;
+}
+.inactive .clue-col:hover .board-card .more {
+    display: inline;
+}
+.board-card.bg-warning .more {
+    color: #212529;
 }
 
+/* loader */
 #loader {
     position: fixed;
     top: 0;
@@ -409,6 +437,7 @@ button.at-social-btn i {
     width: 5rem;
 }
 
+/* Typeahead overrides */
 span.twitter-typeahead .tt-menu {
     cursor: pointer;
 }
@@ -483,6 +512,7 @@ span.twitter-typeahead {
     display: none !important;
 }
 
+/* Bootstrap Tourist overrides */
 .popover-body .progress {
     margin-bottom: .5rem;
 }

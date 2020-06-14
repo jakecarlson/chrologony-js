@@ -12,13 +12,13 @@ export const ModelEvents = {
     add(e, i) {
 
         LoadingState.start(e);
-        const attrs = getAttrs(i);
+        const attrs = this.getAttrs(i);
 
-        Meteor.call(getModelName(i) + '.create', attrs, function(err, id) {
+        Meteor.call(this.getModelName(i) + '.create', attrs, function(err, id) {
             if (!err) {
-                Logger.log('Created ' + capitalize(getModelName(i)) + ': ' + id);
+                Logger.log('Created ' + ModelEvents.capitalize(ModelEvents.getModelName(i)) + ': ' + id);
                 i.state.set('error', false);
-                resetAttrs(i);
+                ModelEvents.resetAttrs(i);
             } else {
                 i.state.set('error', true);
             }
@@ -31,11 +31,11 @@ export const ModelEvents = {
     save(e, i) {
 
         LoadingState.start(e);
-        const attrs = getAttrs(i);
+        const attrs = ModelEvents.getAttrs(i);
 
-        Meteor.call(getModelName(i) + '.update', attrs, function(err, updated) {
+        Meteor.call(ModelEvents.getModelName(i) + '.update', attrs, function(err, updated) {
             if (!err) {
-                Logger.log('Updated ' + capitalize(getModelName(i)) + ': ' + updated);
+                Logger.log('Updated ' + ModelEvents.capitalize(ModelEvents.getModelName(i)) + ': ' + updated);
                 i.state.set('editing', false);
                 i.state.set('error', false);
             } else {
@@ -60,43 +60,45 @@ export const ModelEvents = {
         const modelName = button.attr('data-model');
         Meteor.call(modelName + '.remove', id, function(err, deleted) {
             if (!err) {
-                Logger.log('Deleted ' + capitalize(modelName) + ': ' + deleted);
+                Logger.log('Deleted ' + ModelEvents.capitalize(modelName) + ': ' + deleted);
             }
             LoadingState.stop();
         });
         i.state.set('error', false);
     },
 
+    getAttrs(parent) {
+        let attrs = {}
+        const inputs = $(parent).find('.attr');
+        for (input of inputs) {
+            let val = input.value;
+            if (input.type == 'checkbox') {
+                val = input.checked
+            } else if (!input.value || (input.value.trim().length == 0)) {
+                val = null;
+            }
+            attrs[input.name] = val;
+        }
+        return attrs;
+    },
+
+    resetAttrs(parent) {
+        const inputs = i.findAll('.attr');
+        for (input of inputs) {
+            if (input.type == 'checkbox') {
+                input.checked = false;
+            } else if (input.type != 'hidden') {
+                input.value = '';
+            }
+        }
+    },
+
+    getModelName(i) {
+        return i.view.name.substr(9);
+    },
+
+    capitalize(str) {
+        return str[0].toUpperCase() + str.slice(1);
+    },
+
 };
-
-function getModelName(i) {
-    return i.view.name.substr(9);
-}
-
-function getAttrs(i) {
-    let attrs = {}
-    const inputs = i.findAll('.attr');
-    for (input of inputs) {
-        let val = input.value;
-        if (input.type == 'checkbox') {
-            val = input.checked
-        }
-        attrs[input.name] = val;
-    }
-    return attrs;
-}
-
-function resetAttrs(i) {
-    const inputs = i.findAll('.attr');
-    for (input of inputs) {
-        if (input.type == 'checkbox') {
-            input.checked = false;
-        } else if (input.type != 'hidden') {
-            input.value = '';
-        }
-    }
-}
-
-function capitalize(str) {
-    return str[0].toUpperCase() + str.slice(1);
-}

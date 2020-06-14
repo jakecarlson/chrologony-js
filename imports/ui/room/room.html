@@ -52,6 +52,58 @@
 
             </div>
 
+            <div class="modal fade" id="clueMore" tabindex="-1" role="dialog" aria-labelledby="clueMoreTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="clueMoreTitle">{{moreName}}: More Info</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+
+                            {{#if hasMoreImage}}
+                                <a href="{{moreImageUrl}}" target="blank" class="float-left mr-4 mb-2"><img src="{{moreThumbnailUrl}}" class="more-img"></a>
+                            {{/if}}
+
+                            {{#if hasMoreAttr 'moreInfo'}}
+                                <p class="more-info">{{moreAttr 'moreInfo'}}</p>
+                            {{/if}}
+
+                            {{#if hasMoreLocation}}
+                                <div class="more-map mb-3">
+                                    <iframe
+                                        width="100%"
+                                        height="100%"
+                                        frameborder="0" style="border:0"
+                                        src="{{moreMapUrl}}" allowfullscreen>
+                                    </iframe>
+<!--                                    {{> googleMap name="moreMap" options=moreMapOptions}}-->
+                                </div>
+                            {{/if}}
+
+                            {{#if hasMoreAttr 'externalId'}}
+                                <span class="more-id float-left text-muted" title="External ID">{{moreAttr 'externalId'}}</span>
+                            {{/if}}
+
+                            {{#if hasMoreAttr 'externalUrl'}}
+                                <a href="{{moreAttr 'externalUrl'}}" class="more-url float-right" target="_blank">Read More <i class="fa fa-external-link"></i></a>
+                            {{/if}}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
         {{/if}}
 
     </section>

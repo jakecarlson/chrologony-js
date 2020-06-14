@@ -25,9 +25,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.autorun(() => {
 
         LoadingState.start();
-
         FlowRouter.watchPathChange();
-
         this.state.set('categoryId', FlowRouter.getParam('categoryId'));
 
         if (Categories.findOne(this.state.get('categoryId'))) {
@@ -48,7 +46,11 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                         modal.find('.remove').attr('data-id', id);
                     });
 
-                    $('#manageChildCategories').on('hide.bs.modal', function(e) {
+                    $('#manageChildCategories').on('hidden.bs.modal', function(e) {
+                        self.state.set('currentClue', null);
+                    });
+
+                    $('#manageClueMore').on('hidden.bs.modal', function(e) {
                         self.state.set('currentClue', null);
                     });
 
@@ -78,7 +80,6 @@ Template.clues_manager.helpers({
             selector.$or = [
                 {description: {$regex: keyword, $options: 'i'}},
                 {date: {$regex: keyword, $options: 'i'}},
-                {hint: {$regex: keyword, $options: 'i'}},
             ];
         }
 
@@ -106,19 +107,30 @@ Template.clues_manager.helpers({
     },
 
     numResults() {
+        const numResults = Template.instance().state.get('numResults');
         let suffix = 'Results';
-        if (Template.instance().state.get('numResults') == 1) {
+        if (numResults == 1) {
             suffix = 'Result';
         }
-        return Template.instance().state.get('numResults') + ' ' + suffix;
+        return numResults + ' ' + suffix;
     },
 
     currentClue() {
         return Template.instance().state.get('currentClue');
     },
 
+    currentClueAttr(attr) {
+        const clue = Template.instance().state.get('currentClue');
+        if (clue) {
+            return clue[attr];
+        } else {
+            return null;
+        }
+    },
+
     currentClueName() {
-        return (Template.instance().state.get('currentClue')) ? Formatter.date(Template.instance().state.get('currentClue').date) : null;
+        const clue = Template.instance().state.get('currentClue');
+        return (clue) ? Formatter.date(clue.date) : null;
     },
 
     categories() {
@@ -165,6 +177,33 @@ Template.clues_manager.events({
         } else {
             launchCategoriesModal(i, []);
         }
+    },
+
+    'click .more'(e, i) {
+        e.preventDefault();
+        const link = $(e.target);
+        const id = link.attr('data-id');
+        const clue = Clues.findOne(id);
+        i.state.set('currentClue', clue);
+        if (clue) {
+            $('#manageClueMore').modal('show');
+            $('#manageClueMore .save').attr('data-id', id);
+        }
+    },
+
+    'submit #manageClueMore'(e, i) {
+        LoadingState.start(e);
+        const form = $(e.target);
+        const id = form.find('.save').attr('data-id');
+        const attrs = ModelEvents.getAttrs(form);
+        attrs._id = id;
+        Meteor.call('clue.updateMore', attrs, function(err, updated) {
+            if (!err) {
+                Logger.log('Updated Clue: ' + updated);
+                form.modal('hide');
+            }
+            LoadingState.stop();
+        });
     },
 
 });

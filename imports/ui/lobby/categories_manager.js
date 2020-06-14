@@ -32,7 +32,7 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
                     modal.find('.remove').attr('data-id', id);
                 });
 
-                $('#manageChildCollaborators').on('hide.bs.modal', function(e) {
+                $('#manageChildCollaborators').on('hidden.bs.modal', function(e) {
                     instance.state.set('currentCategory', null);
                 });
 

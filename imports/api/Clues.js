@@ -18,12 +18,12 @@ Clues.schema = new SimpleSchema(
         active: {type: Boolean, defaultValue: true, required: true},
         categories: {type: Array, minCount: 1, required: true},
         'categories.$': {type: String, regEx: SimpleSchema.RegEx.Id},
-        thumbnailUrl: {type: String, max: 960, defaultValue: null},
-        imageUrl: {type: String, max: 960, defaultValue: null},
+        thumbnailUrl: {type: SimpleSchema.RegEx.Url, max: 960, defaultValue: null},
+        imageUrl: {type: SimpleSchema.RegEx.Url, max: 960, defaultValue: null},
         latitude: {type: Number, defaultValue: null},
         longitude: {type: Number, defaultValue: null},
         externalId: {type: String, defaultValue: null},
-        externalUrl: {type: String, max: 960, defaultValue: null},
+        externalUrl: {type: SimpleSchema.RegEx.Url, max: 960, defaultValue: null},
         moreInfo: {type: String, max: 3840, defaultValue: null},
         importId: {type: String, defaultValue: null, max: 27, optional: true},
         importSetId: {type: RecordId, defaultValue: null, optional: true},
@@ -95,6 +95,14 @@ if (Meteor.isServer) {
                         active: 1,
                         categories: 1,
                         ownerId: 1,
+                        hint: 1,
+                        thumbnailUrl: 1,
+                        imageUrl: 1,
+                        latitude: 1,
+                        longitude: 1,
+                        externalId: 1,
+                        externalUrl: 1,
+                        moreInfo: 1,
                     },
                 }
             );
@@ -156,21 +164,9 @@ Meteor.methods({
 
         Logger.log('Update Clue: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
-        // Add the owner of the category to allowable editors
-        let selector = {
-            _id: attrs._id,
-            $or: [
-                {ownerId: Meteor.userId()},
-            ],
-        };
-        const category = Categories.findOne(attrs.categoryId);
-        if (category.ownerId == Meteor.userId()) {
-            selector.$or.push({categories: attrs.categoryId});
-        }
-
         // If there is an ID, this is an update
         return Clues.update(
-            selector,
+            getClueUpdateSelector(attrs),
             {
                 $set: {
                     description: attrs.description,
@@ -205,6 +201,47 @@ Meteor.methods({
         );
 
         return categories.length;
+
+    },
+
+    // Update More Info
+    'clue.updateMore'(attrs) {
+
+        check(
+            attrs,
+            {
+                _id: RecordId,
+                categoryId: RecordId,
+                externalUrl: Match.OneOf(null, String),
+                externalId: Match.OneOf(null, String),
+                thumbnailUrl: Match.OneOf(null, String),
+                imageUrl: Match.OneOf(null, String),
+                latitude: Match.OneOf(null, Number),
+                longitude: Match.OneOf(null, Number),
+                hint: Match.OneOf(null, String),
+                moreInfo: Match.OneOf(null, String),
+            }
+        );
+        Permissions.authenticated();
+
+        Logger.log('Update Clue: ' + attrs._id + ' ' + JSON.stringify(attrs));
+
+        // If there is an ID, this is an update
+        return Clues.update(
+            getClueUpdateSelector(attrs),
+            {
+                $set: {
+                    externalUrl: attrs.externalUrl,
+                    externalId: attrs.externalId,
+                    thumbnailUrl: attrs.thumbnailUrl,
+                    imageUrl: attrs.imageUrl,
+                    latitude: attrs.latitude,
+                    longitude: attrs.longitude,
+                    hint: attrs.hint,
+                    moreInfo: attrs.moreInfo,
+                }
+            }
+        );
 
     },
 
@@ -261,12 +298,28 @@ if (Meteor.isServer) {
 
         },
 
-        // Get the clue date
-        'clue.getDate'(id) {
+        // Get the full clue data
+        'clue.get'(id) {
             const clue = Clues.findOne(id);
-            return clue.date;
+            return clue;
         },
 
     });
 
+}
+
+function getClueUpdateSelector(attrs) {
+    let selector = {
+        _id: attrs._id,
+        $or: [
+            {ownerId: Meteor.userId()},
+        ],
+    };
+    if (attrs.categoryId) {
+        const category = Categories.findOne(attrs.categoryId);
+        if (category.ownerId == Meteor.userId()) {
+            selector.$or.push({categories: attrs.categoryId});
+        }
+    }
+    return selector;
 }

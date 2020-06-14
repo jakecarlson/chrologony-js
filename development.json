@@ -30,6 +30,11 @@
     },
     "reCaptcha": {
       "siteKey": "6LfjB_EUAAAAAEOuqnBkMvmTp0kgkG9Pa8ALRPXJ"
+    },
+    "maps": {
+      "apiKey": "AIzaSyA9LjQcUjrvpLjAg4lmaEX_gtbq3Si_IKY",
+      "zoom": 4,
+      "type": "satellite"
     }
   },
   "reCaptcha": {

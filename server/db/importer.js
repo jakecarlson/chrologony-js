@@ -107,21 +107,21 @@ if (Meteor.isServer) {
 
                 Logger.log("Importing " + (start+1) + " - " + (start+imports.count()) + " of " + total, 3);
                 Logger.log("-".repeat(64), 3);
-                imports.fetch().forEach(function (document) {
+                imports.fetch().forEach(function (doc) {
 
                     // Make sure the description is less than 240 chars
-                    if (document.description.length > 240) {
-                        const lastPeriod = document.description.lastIndexOf('.', 240);
+                    if (doc.description.length > 240) {
+                        const lastPeriod = doc.description.lastIndexOf('.', 240);
                         if (lastPeriod === -1) {
-                            const lastSpace = document.description.lastIndexOf(' ', 236);
-                            document.description = document.description.substr(0, lastSpace) + ' ...';
+                            const lastSpace = doc.description.lastIndexOf(' ', 236);
+                            doc.description = doc.description.substr(0, lastSpace) + ' ...';
                         } else {
-                            document.description = document.description.substr(0, lastPeriod);
+                            doc.description = doc.description.substr(0, lastPeriod);
                         }
                     }
 
                     // Figure out the date
-                    const parts = document.date.split("-");
+                    const parts = doc.date.split("-");
                     const n = (parts.length > 3) ? 1 : 0;
                     const year = parseInt(parts[n]) * ((parts.length > 3) ? -1 : 1);
                     const month = parseInt(parts[n+1]) - 1;
@@ -130,33 +130,40 @@ if (Meteor.isServer) {
                     if ((year > 0) && (year < 100)) {
                         date.setFullYear(year);
                     }
-                    document.date = date;
+                    doc.date = date;
 
                     // Sort out coordinates
-                    document.latitude = parseCoord(document.latitude);
-                    document.longitude = parseCoord(document.longitude);
+                    doc.latitude = parseCoord(doc.latitude);
+                    doc.longitude = parseCoord(doc.longitude);
 
                     // Handle the category
-                    document.categories = [importSet.categoryId];
+                    doc.categories = [importSet.categoryId];
 
                     // Set the other defaults
-                    document.active = true;
-                    document.ownerId = null;
-                    document.createdAt = new Date();
-                    document.updatedAt = new Date();
+                    doc.active = true;
+                    doc.ownerId = null;
+                    doc.createdAt = new Date();
+                    doc.updatedAt = new Date();
 
                     // Get rid of the ID
-                    document.importId = document._id + '';
-                    delete document._id;
+                    doc.importId = doc._id + '';
+                    delete doc._id;
 
                     // Ditch the set ID
-                    document.importSetId = document.setId;
-                    delete document.setId;
+                    doc.importSetId = doc.setId;
+                    delete doc.setId;
+
+                    // Get rid of 'null' strings
+                    for (const attr in doc) {
+                        if (doc[attr] == 'null') {
+                            doc[attr] = null;
+                        }
+                    }
 
                     // Import the clue
-                    Clues.upsert({importId: document.importId}, {$setOnInsert: document});
+                    Clues.upsert({importId: doc.importId}, {$setOnInsert: doc});
 
-                    Logger.log(date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ': ' + document.description, 3);
+                    Logger.log(date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ': ' + doc.description, 3);
 
                 });
                 ImportSets.update(setId, {$set: {completedAt: new Date()}});

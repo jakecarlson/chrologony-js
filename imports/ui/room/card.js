@@ -45,9 +45,9 @@ Template.card.helpers({
     },
 
     cardClasses() {
-        let str = '';
+        let str = 'game-card ';
         if (this.compact) {
-            str += 'bg-light text-secondary';
+            str += 'compact bg-light text-secondary';
         } else {
             str += 'card board-card';
             if (isOwned(this.turn)) {
@@ -66,12 +66,26 @@ Template.card.helpers({
                         } else {
                             str += ' incorrect bg-danger text-white'
                         }
-
                     }
                 }
             }
         }
         return str;
+    },
+
+    showMoreInfo() {
+        const clue = Template.instance().clue.get();
+        return (
+            !isCurrent(this.turn, this.card) &&
+            (
+                clue.moreInfo ||
+                clue.externalUrl ||
+                clue.externalId ||
+                clue.imageUrl ||
+                clue.thumbnailUrl ||
+                (clue.latitude && clue.longitude)
+            )
+        );
     },
 
 });

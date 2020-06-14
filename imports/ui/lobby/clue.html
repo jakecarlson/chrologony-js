@@ -36,10 +36,11 @@
             {{/if}}
         </td>
 
-<!--        <td>-->
-<!--            <input class="attr form-control {{#if viewing}}d-none{{/if}}" type="text" name="hint" value="{{hint}}">-->
-<!--            <span class="{{#if editing}}d-none{{/if}}">{{hint}}</span>-->
-<!--        </td>-->
+        <td>
+            {{#if clue}}
+                <a href="#" class="more" data-id="{{id}}">More Info</a>
+            {{/if}}
+        </td>
 
         <td>
 

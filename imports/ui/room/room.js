@@ -22,6 +22,7 @@ Template.room.onCreated(function roomOnCreated() {
     this.room = new ReactiveVar(null);
     this.game = new ReactiveVar(null);
     this.turn = new ReactiveVar(null);
+    this.clueMore = new ReactiveVar(null);
 
     this.autorun((computation) => {
 
@@ -68,13 +69,20 @@ Template.room.onCreated(function roomOnCreated() {
 
                 if (this.subscriptionsReady()) {
 
+                    const self = this;
                     Tracker.afterFlush(() => {
+
                         let clipboards = new Clipboard('[data-clipboard-text]');
                         clipboards.on('success', function(e) {
                             let btn = $(e.trigger);
                             btn.popover('show');
                             setTimeout(function() {btn.popover('hide');},3000);
                         });
+
+                        $('#clueMore').on('hidden.bs.modal', function(e) {
+                            self.clueMore.set(null);
+                        });
+
                     });
 
                     this.initialized = true;
@@ -111,7 +119,6 @@ Template.room.onCreated(function roomOnCreated() {
 
         added: function(cardId, fields) {
             if (self.initialized && self.room.get()) {
-                // console.log(fields);
                 subscribe(Meteor, 'cards', self.room.get().currentGameId);
                 subscribe(Meteor, 'cardClues', self.room.get().currentGameId);
             }
@@ -120,10 +127,10 @@ Template.room.onCreated(function roomOnCreated() {
         changed(cardId, fields) {
             if (self.initialized && (fields.correct != null)) {
                 const card = Cards.findOne(cardId);
-                Meteor.call('clue.getDate', card.clueId, function(err, date) {
+                Meteor.call('clue.get', card.clueId, function(err, clue) {
                     if (!err) {
-                        Logger.log("Update Clue Date " + card.clueId + ": " + date);
-                        Clues._collection.update(card.clueId, {$set: {date: date}});
+                        Logger.log("Update Clue Data: " + card.clueId);
+                        Clues._collection.update(card.clueId, {$set: clue});
                     }
                 });
             }
@@ -175,6 +182,62 @@ Template.room.helpers({
         return Meteor.absoluteUrl(FlowRouter.path('joinByToken', {id: Template.instance().room.get()._id, token: Template.instance().room.get().token}));
     },
 
+    moreName() {
+        const clue = Template.instance().clueMore.get();
+        return (clue) ? Formatter.date(clue.date) : null;
+    },
+
+    hasMore() {
+        const i = Template.instance();
+        const clue = i.clueMore.get();
+        if (clue) {
+            return (
+                hasMoreAttr(i, 'moreInfo') ||
+                hasMoreAttr(i, 'externalUrl') ||
+                hasMoreImage(i) ||
+                hasMoreLocation(i)
+            );
+        }
+        return false;
+    },
+
+    moreAttr(attr) {
+        return moreAttr(Template.instance(), attr);
+    },
+
+    hasMoreAttr(attr) {
+        return hasMoreAttr(Template.instance(), attr);
+    },
+
+    hasMoreImage() {
+        return hasMoreImage(Template.instance());
+    },
+
+    moreImageUrl() {
+        const clue = Template.instance().clueMore.get();
+        return (clue.imageUrl) ? clue.imageUrl : clue.thumbnailUrl;
+    },
+
+    moreThumbnailUrl() {
+        const clue = Template.instance().clueMore.get();
+        return (clue.thumbnailUrl) ? clue.thumbnailUrl : clue.imageUrl;
+    },
+
+    hasMoreLocation() {
+        return hasMoreLocation(Template.instance());
+    },
+
+    moreMapUrl() {
+        const i = Template.instance();
+        const coords = moreAttr(i, 'latitude') + ',' + moreAttr(i, 'longitude');
+        let url = 'https://www.google.com/maps/embed/v1/place?key=' + Meteor.settings.public.maps.apiKey + '&';
+        url += 'zoom=' + Meteor.settings.public.maps.zoom + '&';
+        url += 'maptype=' + Meteor.settings.public.maps.type + '&';
+        url += 'center=' + coords + '&';
+        url += 'q=' + coords;
+        return url;
+    },
+
 });
 
 Template.room.events({
@@ -195,6 +258,15 @@ Template.room.events({
         });
     },
 
+    'click .more'(e, i) {
+        const card = $(e.target).closest('.game-card');
+        const id = card.attr('data-id');
+        i.clueMore.set(Cards.findOne(id).clue());
+        if (i.clueMore.get()) {
+            $('#clueMore').modal('show');
+        }
+    },
+
 });
 
 function leaveRoom() {
@@ -211,4 +283,34 @@ function leaveRoom() {
 function subscribe(ctx, name, arg) {
     Logger.log('Subscribe: ' + name);
     ctx.subscribe(name, arg);
+}
+
+function hasMoreImage(i) {
+    const clue = i.clueMore.get();
+    if (clue) {
+        return (clue.thumbnailUrl || clue.imageUrl);
+    }
+    return false;
+}
+
+function hasMoreLocation(i) {
+    const clue = i.clueMore.get();
+    if (clue) {
+        return (clue.latitude && clue.longitude);
+    }
+    return false;
+}
+
+function hasMoreAttr(i, attr) {
+    const clue = i.clueMore.get();
+    return (clue && clue[attr]);
+}
+
+function moreAttr(i, attr) {
+    const clue = i.clueMore.get();
+    if (clue) {
+        return clue[attr];
+    } else {
+        return null;
+    }
 }
