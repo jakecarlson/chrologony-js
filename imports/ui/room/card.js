@@ -32,10 +32,6 @@ Template.card.helpers({
         return Template.instance().clue.get().description;
     },
 
-    hint() {
-        return Template.instance().clue.get().hint;
-    },
-
     isCurrent() {
         return isCurrent(this.turn, this.card);
     },

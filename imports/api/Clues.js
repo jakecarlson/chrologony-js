@@ -124,7 +124,6 @@ Meteor.methods({
                 description: NonEmptyString,
                 date: NonEmptyString,
                 categoryId: RecordId,
-                hint: Match.OneOf(null, String),
             }
         );
         Permissions.authenticated();
@@ -139,7 +138,6 @@ Meteor.methods({
             description: attrs.description,
             date: attrs.date,
             categories: [attrs.categoryId],
-            // hint: attrs.hint,
         });
 
     },
@@ -153,7 +151,6 @@ Meteor.methods({
                 _id: RecordId,
                 description: NonEmptyString,
                 date: NonEmptyString,
-                hint: Match.OneOf(null, String),
                 categoryId: RecordId,
             }
         );
@@ -171,7 +168,6 @@ Meteor.methods({
                 $set: {
                     description: attrs.description,
                     date: attrs.date,
-                    // hint: attrs.hint,
                 }
             }
         );
