@@ -12,13 +12,13 @@ export const ModelEvents = {
     add(e, i) {
 
         LoadingState.start(e);
-        const attrs = this.getAttrs(i);
+        const attrs = ModelEvents.getAttrs(i.firstNode);
 
-        Meteor.call(this.getModelName(i) + '.create', attrs, function(err, id) {
+        Meteor.call(ModelEvents.getModelName(i) + '.create', attrs, function(err, id) {
             if (!err) {
                 Logger.log('Created ' + ModelEvents.capitalize(ModelEvents.getModelName(i)) + ': ' + id);
                 i.state.set('error', false);
-                ModelEvents.resetAttrs(i);
+                ModelEvents.resetAttrs(i.firstNode);
             } else {
                 i.state.set('error', true);
             }
@@ -31,7 +31,7 @@ export const ModelEvents = {
     save(e, i) {
 
         LoadingState.start(e);
-        const attrs = ModelEvents.getAttrs(i);
+        const attrs = ModelEvents.getAttrs(i.firstNode);
 
         Meteor.call(ModelEvents.getModelName(i) + '.update', attrs, function(err, updated) {
             if (!err) {
@@ -83,7 +83,7 @@ export const ModelEvents = {
     },
 
     resetAttrs(parent) {
-        const inputs = i.findAll('.attr');
+        const inputs = $(parent).find('.attr');
         for (input of inputs) {
             if (input.type == 'checkbox') {
                 input.checked = false;
