@@ -132,14 +132,11 @@ button.at-social-btn i {
 }
 
 /* card overrides */
-.card h1 {
-    margin-top: 0;
-}
 .card-title {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 }
 .card-body {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 }
 
 /* join */
