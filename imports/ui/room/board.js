@@ -25,17 +25,17 @@ Template.board.onCreated(function boardOnCreated() {
         if (this.subscriptionsReady()) {
             Tracker.afterFlush(() => {
                 const cardsSortable = new Sortable(
-                    document.getElementById('playerCards'),
+                    document.getElementById('boardCards'),
                     {
                         handle: '.board-card.current',
                         direction: 'horizontal',
                         filter: '.board-card .move',
                         forceFallback: true,
                         onStart: function (e) {
-                            $('#playerCards').removeClass('inactive');
+                            $('#boardCards').removeClass('inactive');
                         },
                         onEnd: function (e) {
-                            $('#playerCards').addClass('inactive');
+                            $('#boardCards').addClass('inactive');
                             saveCardPos();
                         },
                     }
@@ -143,7 +143,7 @@ Template.board.helpers({
     },
 
     boardClasses() {
-        let str = 'card mb-4 mb-lg-0';
+        let str = 'card mb-4';
         if (isCurrentPlayer(this.turn)) {
             str += ' border-' + getColor(this.turn);
         }
@@ -272,7 +272,7 @@ function getTurnCards(game, turn) {
 
 function saveCardPos() {
 
-    const cards = $('#playerCards').find('.board-card');
+    const cards = $('#boardCards').find('.board-card');
     let pos = {};
     cards.each(function(n, card) {
         pos[$(card).attr('data-id')] = n;

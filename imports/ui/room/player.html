@@ -1,43 +1,29 @@
 <template name="player">
 
     {{#if dataReady}}
-        <li class="list-group-item p-0 player {{#if isTurnOwner}}current{{/if}}">
+        <li class="list-group-item player {{#if isTurnOwner}}current{{/if}}">
 
-            <div class="player-name" id="playerName-{{id}}" data-toggle="collapse" data-target="#playerCards-{{id}}" aria-expanded="false" aria-controls="playerCards-{{id}}">
+            {{profileName}}
 
-                {{profileName}}
+            {{#if gameInProgress}}
 
-                {{#if gameInProgress}}
-
-                    <i class="fa fa-angle-{{#if expanded}}up{{else}}down{{/if}} float-right ml-2 expand" title="Player Card Clues"></i>
-
-                    {{#if isTurnOwner}}
-                        <span
-                            class="badge badge-warning float-right ml-2"
-                            title="{{numPendingCards}} Total Cards"
-                        >{{numPendingCards}}</span>
-                    {{/if}}
-
+                {{#if isTurnOwner}}
                     <span
-                        class="{{lockedBadgeClasses}}"
-                        title="{{numLockedCards}} Cards Locked In"
-                    >{{numLockedCards}}</span>
-
+                        class="badge badge-warning float-right ml-2"
+                        title="{{numPendingCards}} Total Cards"
+                    >{{numPendingCards}}</span>
                 {{/if}}
 
-                {{#if canEject}}
-                    <a href="#" class="float-right text-dark ml-2 eject" title="Eject Player">&times;</a>
-                {{/if}}
+                <span
+                    class="{{lockedBadgeClasses}}"
+                    title="{{numLockedCards}} Cards Locked In"
+                >{{numLockedCards}}</span>
 
-            </div>
+            {{/if}}
 
-            <div id="playerCards-{{id}}" class="collapse player-cards" aria-labelledby="playerName-{{id}}"><!-- data-parent="#playersAccordion" -->
-                <ol>
-                    {{#each playerCard in cards}}
-                        <li>{{> card card=playerCard turn=turn compact=true}}</li>
-                    {{/each}}
-                </ol>
-            </div>
+            {{#if canEject}}
+                <a href="#" class="float-right text-dark ml-2 eject" title="Eject Player">&times;</a>
+            {{/if}}
 
         </li>
     {{/if}}

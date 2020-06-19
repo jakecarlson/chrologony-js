@@ -39,11 +39,11 @@
 
             <div class="card-body">
                 <h3 class="card-subtitle text-secondary mb-2 prompt">{{prompt}}</h3>
-                <div class="board-cards clearfix" id="playerCardsWrapper">
-                    <ol style="width: {{timelineWidth}}" id="playerCards" class="inactive">
+                <div class="player-cards-wrapper clearfix">
+                    <ol style="width: {{timelineWidth}}" class="player-cards inactive" id="boardCards">
                         {{#each playerCard in currentPlayerCards}}
-                            <li class="clue-col {{#if isCurrentCard playerCard._id}}current-col{{/if}}">
-                                {{> card card=playerCard turn=turn}}
+                            <li class="clue-col board-clue-col {{#if isCurrentCard playerCard._id}}current-col{{/if}}">
+                                {{> card card=playerCard turn=turn board=true}}
                             </li>
                         {{/each}}
                     </ol>

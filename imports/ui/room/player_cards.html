@@ -1,0 +1,28 @@
+<template name="player_cards">
+
+    {{#if dataReady}}
+
+        <div class="card clearfix">
+
+            <header class="card-header player-name" id="playerName-{{id}}" data-toggle="collapse" data-target="#playerCards-{{id}}" aria-expanded="false" aria-controls="playerCards-{{id}}">
+                <h3 class="card-title text-muted float-left player-name-title">{{profileName}}</h3>
+                <i class="fa fa-angle-{{#if expanded}}up{{else}}down{{/if}} float-right ml-2 expand" title="See Player Cards"></i>
+            </header>
+
+            <div class="card-body collapse" id="playerCards-{{id}}" aria-labelledby="playerName-{{id}}" data-parent="#playerCards">
+                <div class="player-cards-wrapper">
+                    <ol style="width: {{timelineWidth}}" class="player-cards">
+                        {{#each playerCard in cards}}
+                            <li class="clue-col">
+                                {{> card card=playerCard turn=turn}}
+                            </li>
+                        {{/each}}
+                    </ol>
+                </div>
+            </div>
+
+        </div>
+
+    {{/if}}
+
+</template>

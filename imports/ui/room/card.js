@@ -37,31 +37,29 @@ Template.card.helpers({
     },
 
     canMoveCard() {
-        return (!this.compact && isOwned(this.turn) && isCurrent(this.turn, this.card));
+        return (isOwned(this.turn) && isCurrent(this.turn, this.card));
     },
 
     cardClasses() {
-        let str = 'game-card ';
-        if (this.compact) {
-            str += 'compact bg-light text-secondary';
+        let str = 'game-card card ';
+        if (this.board) {
+            str += 'board-card ';
+        }
+        if (isOwned(this.turn)) {
+            str += ' owned';
+        }
+        if (this.card.lockedAt != null) {
+            str += ' locked bg-success text-white';
         } else {
-            str += 'card board-card';
-            if (isOwned(this.turn)) {
-                str += ' owned';
-            }
-            if (this.card.lockedAt != null) {
-                str += ' locked bg-success text-white';
-            } else {
-                if (this.card.turnId == this.turn._id) {
-                    str += ' turn';
-                    if (isCurrent(this.turn, this.card)) {
-                        str += ' current bg-primary text-white'
+            if (this.card.turnId == this.turn._id) {
+                str += ' turn';
+                if (isCurrent(this.turn, this.card)) {
+                    str += ' current bg-primary text-white'
+                } else {
+                    if (this.card.correct) {
+                        str += ' correct bg-warning';
                     } else {
-                        if (this.card.correct) {
-                            str += ' correct bg-warning';
-                        } else {
-                            str += ' incorrect bg-danger text-white'
-                        }
+                        str += ' incorrect bg-danger text-white'
                     }
                 }
             }

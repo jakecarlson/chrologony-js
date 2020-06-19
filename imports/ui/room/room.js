@@ -11,8 +11,9 @@ import { Turns } from '../../api/Turns';
 import { Cards } from "../../api/Cards";
 
 import './room.html';
-import './players_list.js';
+import './player_cards.js';
 import './board.js';
+import './players_list.js';
 import './game.js';
 import Clipboard from "clipboard";
 
@@ -236,6 +237,14 @@ Template.room.helpers({
         url += 'center=' + coords + '&';
         url += 'q=' + coords;
         return url;
+    },
+
+    hasMultiplePlayers() {
+        return (Template.instance().room.get().players().count() > 1);
+    },
+
+    isNotCurrentPlayer(player) {
+        return (player._id != Template.instance().turn.get().ownerId);
     },
 
 });

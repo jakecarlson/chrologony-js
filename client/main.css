@@ -239,44 +239,14 @@ button.at-social-btn i {
     font-size: medium;
 }
 
-.player.current .player-name {
+.player.current {
     font-weight: bold;
 }
-.player .badge,
-.player .expand
-{
+.player .badge {
     margin-top: .2rem;
 }
-.player .player-name {
-    cursor: pointer;
+.player {
     padding: 0.75rem 1.25rem
-}
-.player-cards ol {
-    padding-left: 0;
-    list-style: none inside none;
-}
-.player-cards li .card-title,
-.player-cards li .card-body
-{
-    font-size: small;
-}
-.player-cards li .card-header,
-.player-cards li .card-body
-{
-    padding-top: .375rem;
-    padding-bottom: .375rem;
-}
-.player-cards .date {
-    display: block;
-}
-.player-cards .year {
-    display: none;
-}
-.player-cards .more {
-    float: right;
-    position: relative;
-    top: -.25rem;
-    color: #6c757d;
 }
 
 /* board */
@@ -297,25 +267,48 @@ button.at-social-btn i {
 #board .card-subtitle span {
     display: block;
 }
-#board > .card-body {
+#board > .card-body,
+#playerCards > .card > .card-body
+{
     padding: 0;
     padding-top: 1.25rem;
     overflow: hidden;
 }
-#playerCardsWrapper {
+.player-cards-wrapper {
     height: 19rem;
     text-align: center;
     position: relative;
     overflow: hidden;
     overflow-x: auto;
 }
-#playerCards {
+.player-cards {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
     margin: 0;
     list-style: none;
     height: 100%;
     width: 100%;
+    position: relative;
+}
+
+/* player cards */
+#playerCards {
+    opacity: .75;
+}
+#playerCards:hover {
+    opacity: 1;
+}
+#playerCardsTitle {
+    font-size: x-large;
+}
+.player-name {
+    cursor: pointer;
+}
+.player-name .expand {
+    margin-top: .2rem;
+}
+.player-name-title {
+    font-size: large;
 }
 
 /* More Clue Info modal */
@@ -341,55 +334,55 @@ button.at-social-btn i {
 }
 
 .clue-col {
+    float: left;
     width: 5.25rem;
     top: 0;
     height: 100%;
-    float: left;
 }
 .clue-col.current-col,
 .inactive .clue-col:hover
 {
     width: 16rem;
 }
-.board-card {
+.game-card {
     position: absolute;
-    top: 16rem;
     width: 16rem;
-    min-height: 20rem;
     text-align: left;
     transition: top .25s ease-in-out;
+    top: 16rem;
+    min-height: 20rem;
 }
-.inactive .clue-col:hover .board-card,
-.board-card.current
+.clue-col:hover .game-card,
+.game-card.current
 {
     top: 0;
 }
-.board-card.current .card-title {
+.game-card.current .card-title {
     text-align: center;
 }
-.clue-col .board-card .date {
+.clue-col .game-card .date {
     display: none;
 }
-.clue-col .board-card .year {
+.clue-col .game-card .year {
     display: block;
 }
-.inactive .clue-col:hover .board-card .date {
+.inactive .clue-col:hover .game-card .date {
     display: block;
 }
-.inactive .clue-col:hover .board-card .year {
+.inactive .clue-col:hover .game-card .year {
     display: none;
 }
-.board-card.current {
+.game-card.current {
     cursor: grab;
 }
-.board-card .card-header {
+.game-card .card-header {
     position: relative;
 }
-.board-card .card-title {
+.game-card .card-title {
     font-size: large;
 }
-.board-card .move,
-.board-card .more
+.game-card .move,
+.game-card .more
 {
     top: 0;
     font-size: 1.5rem;
@@ -398,22 +391,24 @@ button.at-social-btn i {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
 }
-.board-card .move-left {
+.game-card .move-left {
     left: 0;
 }
-.board-card .move-right,
-.board-card .more
+.game-card .move-right,
+.game-card .more
 {
     right: 0;
 }
-.board-card .more {
+.game-card .more {
     display: none;
     color: white;
 }
-.inactive .clue-col:hover .board-card .more {
+.inactive .clue-col:hover .game-card .more,
+#playerCards .clue-col:hover .game-card .more
+{
     display: inline;
 }
-.board-card.bg-warning .more {
+.game-card.bg-warning .more {
     color: #212529;
 }
 
