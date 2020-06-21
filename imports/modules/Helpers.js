@@ -10,9 +10,10 @@ Helpers = {
         return this.getValues(cursor, '_id');
     },
 
-    getCategoriesSelector(isPrivate = null, includeNonUser = false) {
-        let selector = {
-            active: true,
+    getCategoriesSelector(isPrivate = null, includeNonUser = false, showInactive = false) {
+        let selector = {};
+        if (!showInactive) {
+            selector.active = true;
         };
         if (isPrivate !== false) {
             selector.$or = [

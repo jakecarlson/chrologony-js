@@ -4,7 +4,7 @@
 
         <div class="form-group">
             <label class="sr-only" for="cluesFilterCategory">Category:</label>
-            {{> categories_selector val=categoryId id="cluesFilterCategory"}}
+            {{> categories_selector val=categoryId id="cluesFilterCategory" showInactive=true}}
         </div>
 
         {{#if categoryId}}

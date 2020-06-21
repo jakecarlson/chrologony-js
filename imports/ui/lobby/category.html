@@ -50,13 +50,13 @@
 
         <td>
             <span class="{{#if viewing}}d-none{{/if}}">
-                <input class="attr form-check-input" type="checkbox" name="active" value="true" checked="{{active}}" data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="secondary" data-size="small">
+                <input class="attr form-check-input" type="checkbox" name="active" value="true" checked="{{active}}" data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success" data-offstyle="secondary" data-size="small">
             </span>
             <span class="badge badge-{{#if active}}success{{else}}secondary{{/if}} {{#if editing}}d-none{{/if}}">
                 {{#if active}}
                     Active
                 {{else}}
-                    Disabled
+                    Inactive
                 {{/if}}
             </span>
         </td>

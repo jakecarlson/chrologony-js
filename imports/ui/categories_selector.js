@@ -25,15 +25,19 @@ Template.categories_selector.onCreated(function categories_selectorOnCreated() {
 Template.categories_selector.helpers({
 
     publicCategories() {
-        return Categories.find(Helpers.getCategoriesSelector(false, this.game), {sort: {name: 1}});
+        return Categories.find(Helpers.getCategoriesSelector(false, this.game, this.showInactive), {sort: {name: 1}});
     },
 
     privateCategories() {
-        return Categories.find(Helpers.getCategoriesSelector(true, this.game), {sort: {name: 1}});
+        return Categories.find(Helpers.getCategoriesSelector(true, this.game, this.showInactive), {sort: {name: 1}});
     },
 
     isUserSource(source) {
         return (source == 'user');
+    },
+
+    inactive(category) {
+        return !category.active;
     },
 
     unready() {

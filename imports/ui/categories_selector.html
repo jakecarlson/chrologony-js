@@ -6,7 +6,7 @@
             <optgroup label="Private">
                 {{#each category in privateCategories}}
                     <option value="{{category._id}}" selected="{{selectedValue category._id}}">
-                        {{category.theme}}: {{category.name}}
+                        {{category.theme}}: {{category.name}} {{#if inactive category}}(inactive){{/if}}
                     </option>
                 {{/each}}
             </optgroup>
@@ -17,7 +17,7 @@
                     {{#if isUserSource category.source}}
                         {{category.theme}}:
                     {{/if}}
-                    {{category.name}}
+                    {{category.name}} {{#if inactive category}}(inactive){{/if}}
                 </option>
             {{/each}}
         </optgroup>
