@@ -14,10 +14,12 @@ Helpers = {
         let selector = {
             active: true,
         };
-        selector.$or = [
-            {ownerId: Meteor.userId()},
-            {collaborators: Meteor.userId()},
-        ];
+        if (isPrivate !== false) {
+            selector.$or = [
+                {ownerId: Meteor.userId()},
+                {collaborators: Meteor.userId()},
+            ];
+        }
         if (isPrivate === null) {
             selector.$or.push({private: false});
         } else {
