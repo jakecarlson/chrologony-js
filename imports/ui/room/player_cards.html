@@ -14,7 +14,7 @@
                     <ol style="width: {{timelineWidth}}" class="player-cards">
                         {{#each playerCard in cards}}
                             <li class="clue-col">
-                                {{> card card=playerCard turn=turn}}
+                                {{> card card=playerCard turn=turn game=game}}
                             </li>
                         {{/each}}
                     </ol>

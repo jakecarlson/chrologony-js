@@ -99,7 +99,10 @@ Meteor.methods({
         check(id, RecordId);
         check(cardId, Match.OneOf(null, RecordId));
         check(lastCardCorrect, Match.OneOf(null, Boolean));
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        if (cardId) {
+            Permissions.check((Turns.findOne(id).ownerId == Cards.findOne(cardId).ownerId));
+        }
 
         Logger.log('Update Turn ' + id + ' Card to ' + cardId);
 
@@ -125,10 +128,15 @@ if (Meteor.isServer) {
         'turn.next'(gameId) {
 
             check(gameId, RecordId);
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
 
-            // Set the game
+            // Check that the user is allowed
             const game = Games.findOne(gameId);
+            const turn = game.currentTurn();
+            Permissions.check((
+                Permissions.owned(game.room()) ||
+                (turn && Permissions.owned(turn))
+            ));
 
             // End the current turn
             if (game.currentTurnId) {
@@ -149,7 +157,7 @@ if (Meteor.isServer) {
 
             // Lock all current turn cards
             if (game && game.currentTurnId) {
-                const turn = game.currentTurn();
+                // const turn = game.currentTurn();
                 const cards = turn.cards();
                 const correctCards = turn.cards(true);
                 if (cards.count() === correctCards.count()) {

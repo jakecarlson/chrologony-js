@@ -69,7 +69,6 @@ function getCards(game, player) {
                 }
             }
         );
-        console.log(cards.fetch());
         return cards;
     } else {
         return [];

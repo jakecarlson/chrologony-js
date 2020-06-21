@@ -77,6 +77,26 @@ Clues.helpers({
         return null;
     },
 
+    canEdit(categoryId) {
+        if (Permissions.owned(this)) {
+            return true;
+        }
+        const category = Categories.findOne(categoryId);
+        if (category && Permissions.owned(category)) {
+            return true;
+        }
+        return false;
+    },
+
+    canSetCategories(categories) {
+        const userCategories = Helpers.getIds(Categories.find(Helpers.getCategoriesSelector(null, false)));
+        const whitelistedCategories = this.categories.concat(userCategories);
+        const allowedCategories = categories.filter(function(item) {
+            return whitelistedCategories.includes(item);
+        });
+        return (categories.length == allowedCategories.length);
+    },
+
 });
 
 if (Meteor.isServer) {
@@ -126,7 +146,8 @@ Meteor.methods({
                 categoryId: RecordId,
             }
         );
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Categories.findOne(attrs.categoryId).canAddClue());
 
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
@@ -154,7 +175,8 @@ Meteor.methods({
                 categoryId: RecordId,
             }
         );
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Clues.findOne(attrs._id).canEdit(attrs.categoryId));
 
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
@@ -179,7 +201,8 @@ Meteor.methods({
 
         check(id, RecordId);
         check(categories, [RecordId]);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Clues.findOne(id).canSetCategories(categories))
 
         Logger.log('Update Clue Categories: ' + id + ' ' + JSON.stringify(categories));
 
@@ -187,7 +210,6 @@ Meteor.methods({
         Clues.update(
             {
                 _id: id,
-                ownerId: Meteor.userId(),
             },
             {
                 $set: {
@@ -218,7 +240,8 @@ Meteor.methods({
                 moreInfo: Match.OneOf(null, String),
             }
         );
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Clues.findOne(attrs._id).canEdit(attrs.categoryId));
 
         Logger.log('Update Clue: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
@@ -245,7 +268,8 @@ Meteor.methods({
     'clue.remove'(id) {
 
         check(id, RecordId);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Permissions.owned(Clues.findOne(id)));
 
         Logger.log('Delete Clue: ' + id);
 

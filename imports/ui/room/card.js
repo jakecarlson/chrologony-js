@@ -32,6 +32,10 @@ Template.card.helpers({
         return Template.instance().clue.get().description;
     },
 
+    clueId() {
+        return Template.instance().clue.get()._id;
+    },
+
     isCurrent() {
         return isCurrent(this.turn, this.card);
     },
@@ -67,7 +71,7 @@ Template.card.helpers({
         return str;
     },
 
-    showMoreInfo() {
+    hasMoreInfo() {
         const clue = Template.instance().clue.get();
         return (
             !isCurrent(this.turn, this.card) &&
@@ -80,6 +84,10 @@ Template.card.helpers({
                 (clue.latitude && clue.longitude)
             )
         );
+    },
+
+    canSetCategories() {
+        return !isCurrent(this.turn, this.card);
     },
 
 });

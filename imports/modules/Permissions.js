@@ -1,17 +1,20 @@
 import { Meteor } from 'meteor/meteor';
+import { Categories } from "../api/Categories";
 
 export const Permissions = {
 
-    authenticated() {
-        if (!Meteor.userId()) {
+    check(allowed) {
+        if (!allowed) {
             throw new Meteor.Error('not-authorized');
         }
     },
 
+    authenticated() {
+        return Meteor.userId();
+    },
+
     owned(item) {
-        if (item.ownerId != Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
-        }
+        return (item.ownerId == Meteor.userId());
     },
 
 };

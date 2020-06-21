@@ -86,10 +86,10 @@ Meteor.methods({
 
     // Update
     'game.setTurn'(id, turnId) {
-
         check(id, RecordId);
         check(turnId, RecordId);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        checkPlayerIsInRoom(id);
 
         Logger.log('Update Game Turn: ' + id + ': ' + turnId);
 
@@ -109,7 +109,8 @@ Meteor.methods({
     'game.end'(id) {
 
         check(id, RecordId);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        checkPlayerIsInRoom(id);
 
         const game = Games.findOne(id);
         let attrs = {
@@ -143,10 +144,13 @@ if (Meteor.isServer) {
                     roomId: RecordId,
                 }
             );
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
+
+            // Set the room
+            const room = Rooms.findOne(attrs.roomId);
+            Permissions.check(Permissions.owned(room));
 
             // End the previous game
-            const room = Rooms.findOne(attrs.roomId);
             if (room.currentGameId) {
                 const updated = Games.update(
                     room.currentGameId,
@@ -189,4 +193,9 @@ if (Meteor.isServer) {
 
     });
 
+}
+
+function checkPlayerIsInRoom(gameId) {
+    const roomPlayers = Helpers.getIds(Games.findOne(gameId).room().players());
+    Permissions.check(roomPlayers.includes(Meteor.userId()));
 }

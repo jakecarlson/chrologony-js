@@ -381,35 +381,45 @@ button.at-social-btn i {
 .game-card .card-title {
     font-size: large;
 }
-.game-card .move,
-.game-card .more
-{
-    top: 0;
+.game-card-action {
     font-size: 1.5rem;
-    position: absolute;
-    line-height: 2.75rem;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-}
-.game-card .move-left {
-    left: 0;
-}
-.game-card .move-right,
-.game-card .more
-{
-    right: 0;
-}
-.game-card .more {
-    display: none;
+    line-height: 1;
+    margin-top: -.15rem;
     color: white;
 }
-.inactive .clue-col:hover .game-card .more,
-#playerCards .clue-col:hover .game-card .more
+.game-card-action:hover,
+.game-card-action > a,
+.game-card-action > a:hover
 {
+    color: white;
+}
+.game-card-action.move {
+    top: 0;
+    position: absolute;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    line-height: 3rem;
+}
+.game-card-action.move-left {
+    left: 0;
+}
+.game-card-action.move-right {
+    right: 0;
+}
+.game-card.bg-warning .game-card-action {
+    color: #212529;
+}
+.game-card:not(.current) .game-card-action {
+    display: none;
+}
+.clue-col:hover .game-card:not(.current) .game-card-action {
     display: inline;
 }
-.game-card.bg-warning .more {
-    color: #212529;
+.game-card-action .dropdown-menu {
+    /*min-width: 12rem;*/
+    left: auto;
+    right: 0;
+    /*margin-right: -4rem;*/
 }
 
 /* loader */

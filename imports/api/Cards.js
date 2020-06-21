@@ -93,6 +93,7 @@ if (Meteor.isServer) {
                                 _id: 1,
                                 date: 1,
                                 description: 1,
+                                categories: 1,
                                 hint: 1,
                                 thumbnailUrl: 1,
                                 imageUrl: 1,
@@ -139,7 +140,7 @@ Meteor.methods({
     'card.setPositions'(cards) {
 
         check(cards, Object);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
 
         Logger.log("Card Positions: " + JSON.stringify(cards));
 
@@ -147,6 +148,7 @@ Meteor.methods({
         for (const [id, pos] of Object.entries(cards)) {
             check(id, RecordId);
             check(pos, Match.Integer);
+            Permissions.check(Permissions.owned(Cards.findOne(id)));
             numUpdated += Cards.update(
                 {
                     _id: id,
@@ -168,13 +170,11 @@ Meteor.methods({
     'card.lock'(id) {
 
         check(id, RecordId);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
 
         // Double check that the card was correct before locking
         const card = Cards.findOne(id);
-        if (!card.correct) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.check(card.correct);
 
         Logger.log('Lock Card: ' + id);
 
@@ -203,7 +203,8 @@ if (Meteor.isServer) {
         'card.draw'(turnId) {
 
             check(turnId, RecordId);
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
+            Permissions.check(Permissions.owned(Turns.findOne(turnId)));
 
             // Draw the card -- defer this to a helper defined below because it's recursive
             const cardId = drawCard(turnId);
@@ -224,10 +225,11 @@ if (Meteor.isServer) {
 
             check(id, RecordId);
             check(pos, Match.Integer);
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
 
             // Get the card and determine if the guess is correct
             const card = Cards.findOne(id);
+            Permissions.check(Permissions.owned(card));
             const correct = guessIsCorrect(card, pos);
 
             Logger.log("Card Guess Correct?: " + JSON.stringify(correct));

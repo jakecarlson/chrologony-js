@@ -43,7 +43,7 @@
                     <ol style="width: {{timelineWidth}}" class="player-cards inactive" id="boardCards">
                         {{#each playerCard in currentPlayerCards}}
                             <li class="clue-col board-clue-col {{#if isCurrentCard playerCard._id}}current-col{{/if}}">
-                                {{> card card=playerCard turn=turn board=true}}
+                                {{> card card=playerCard turn=turn game=game board=true}}
                             </li>
                         {{/each}}
                     </ol>

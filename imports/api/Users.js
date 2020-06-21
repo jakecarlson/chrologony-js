@@ -61,7 +61,7 @@ if (Meteor.isServer) {
 
     Meteor.methods({
 
-        'user.exists': function(username){
+        'user.exists'(username) {
             return !!Meteor.users.findOne({username: username});
         },
 
@@ -74,7 +74,7 @@ if (Meteor.isServer) {
 
             check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
 
             const regex = new RegExp("^" + query, 'i');
             return Meteor.users.find(
@@ -99,7 +99,7 @@ if (Meteor.isServer) {
             }
 
             check(ids, [RecordId]);
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
 
             return Meteor.users.find(
                 {

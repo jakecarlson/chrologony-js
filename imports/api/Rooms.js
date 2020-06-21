@@ -94,12 +94,13 @@ Meteor.methods({
         }
 
         check(userId, RecordId);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
 
         // Make sure the user is the owner of the room that the other user is in, or the user him/herself
-        if ((userId != Meteor.userId()) && (Meteor.user().currentRoom().ownerId != Meteor.userId())) {
-            throw new Meteor.Error('not-authorized');
-        }
+        Permissions.check((
+            (userId != Meteor.userId()) &&
+            Permissions.owned(Meteor.user().currentRoom())
+        ));
 
         // If the user isn't in a room, just pretend like it worked
         if (!Meteor.user().currentRoomId) {
@@ -133,7 +134,8 @@ Meteor.methods({
 
         check(id, RecordId);
         check(gameId, RecordId);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Permissions.owned(Rooms.findOne(id)));
 
         Logger.log('Set Room ' + id + ' Game to ' + gameId);
 
@@ -156,7 +158,8 @@ Meteor.methods({
     'room.remove'(id) {
 
         check(id, RecordId);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Permissions.owned(Rooms.findOne(id)));
 
         Logger.log('Delete Room: ' + id);
 
@@ -185,7 +188,7 @@ if (Meteor.isServer) {
 
             check(name, NonEmptyString);
             check(password, NonEmptyString);
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
 
             let roomId = false;
 
@@ -227,7 +230,7 @@ if (Meteor.isServer) {
 
             check(roomId, RecordId);
             check(token, NonEmptyString);
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
 
             if (Hasher.md5.hash(roomId) == token.trim()) {
                 setRoom(roomId);

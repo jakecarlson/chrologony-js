@@ -40,6 +40,10 @@ Categories.helpers({
         return Meteor.users.findOne(this.ownerId);
     },
 
+    canAddClue() {
+        return (Permissions.owned(this) || this.collaborators.includes(Meteor.userId()));
+    },
+
 });
 
 if (Meteor.isServer) {
@@ -84,7 +88,7 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
 
         Logger.log('Insert Category: ' + JSON.stringify(attrs));
 
@@ -111,7 +115,8 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Permissions.owned(Categories.findOne(attrs._id)));
 
         Logger.log('Update Category: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
@@ -138,7 +143,8 @@ Meteor.methods({
 
         check(id, RecordId);
         check(collaborators, [RecordId]);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Permissions.owned(Categories.findOne(id)));
 
         Logger.log('Update Category Collaborators: ' + id + ' ' + JSON.stringify(collaborators));
 
@@ -163,7 +169,8 @@ Meteor.methods({
     'category.remove'(id) {
 
         check(id, RecordId);
-        Permissions.authenticated();
+        Permissions.check(Permissions.authenticated());
+        Permissions.check(Permissions.owned(Categories.findOne(id)));
 
         Logger.log('Delete Category: ' + id);
 
@@ -192,7 +199,7 @@ if (Meteor.isServer) {
 
             check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
 
             const regex = new RegExp("^" + query, 'i');
             const selector ={
@@ -220,7 +227,7 @@ if (Meteor.isServer) {
             }
 
             check(ids, [RecordId]);
-            Permissions.authenticated();
+            Permissions.check(Permissions.authenticated());
 
             return Categories.find(
                 {

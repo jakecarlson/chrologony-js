@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
-import { LoadingState } from "../../modules/LoadingState";
+import { LoadingState } from "../modules/LoadingState";
 
 import './child_manager.html';
 
@@ -56,6 +56,14 @@ Template.child_manager.helpers({
 
     error() {
         return Template.instance().state.get('error');
+    },
+
+    removable(id) {
+        if (this.whitelist) {
+            return this.whitelist.includes(id);
+        } else {
+            return true;
+        }
     },
 
 });

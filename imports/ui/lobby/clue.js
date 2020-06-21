@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
 
-import { Categories } from '../../api/Categories';
 import { ModelEvents } from "../../modules/ModelEvents";
+import { Permissions } from "../../modules/Permissions";
 
 import './clue.html';
 
@@ -55,14 +55,7 @@ Template.clue.helpers({
         if (!this.clue) {
             return true;
         }
-        if (this.clue && (this.clue.ownerId == Meteor.userId())) {
-            return true;
-        }
-        const category = Categories.findOne(this.categoryId);
-        if (category && (category.ownerId == Meteor.userId())) {
-            return true;
-        }
-        return false;
+        return this.clue.canEdit(this.categoryId);
     },
 
 });

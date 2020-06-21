@@ -1,12 +1,31 @@
 <template name="layout_authenticated">
 
     <div id="layout">
+
         {{> header}}
+
         <main class="container-fluid">
+
             {{> flasher}}
+
             {{> Template.dynamic template=main}}
+
+            {{> child_manager
+                childrenName="Categories"
+                childType="category"
+                childMapper=categoryMapper
+                childItems=categories
+                parent=currentClue
+                parentName=currentClueName
+                parentType="Clue"
+                required=true
+                whitelist=whitelistedCategories
+            }}
+
         </main>
+
         {{> footer}}
+
     </div>
 
 </template>

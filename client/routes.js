@@ -135,7 +135,21 @@ FlowRouter.route('/clues/:categoryId', {
     name: 'clues.categoryId',
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
-        Logger.log("Route: clues.category");
+        Logger.log("Route: clues.categoryId");
+        BlazeLayout.render(
+            'layout_authenticated',
+            {
+                main: 'lobby',
+            }
+        );
+    }
+});
+
+FlowRouter.route('/clues/:categoryId/:clueId', {
+    name: 'clues.categoryId.clueId',
+    triggersEnter: [redirectToHome],
+    action(params, queryParams) {
+        Logger.log("Route: clues.categoryId.clueId");
         BlazeLayout.render(
             'layout_authenticated',
             {

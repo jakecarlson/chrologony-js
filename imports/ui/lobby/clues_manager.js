@@ -119,6 +119,11 @@ Template.clues_manager.helpers({
         return Template.instance().state.get('currentClue');
     },
 
+    currentClueName() {
+        const clue = Template.instance().state.get('currentClue');
+        return (clue) ? Formatter.date(clue.date) : null;
+    },
+
     currentClueAttr(attr) {
         const clue = Template.instance().state.get('currentClue');
         if (clue) {
@@ -126,19 +131,6 @@ Template.clues_manager.helpers({
         } else {
             return null;
         }
-    },
-
-    currentClueName() {
-        const clue = Template.instance().state.get('currentClue');
-        return (clue) ? Formatter.date(clue.date) : null;
-    },
-
-    categories() {
-        return Template.instance().state.get('categories');
-    },
-
-    categoryMapper() {
-        return getCategoryMapper();
     },
 
 });
@@ -160,24 +152,6 @@ Template.clues_manager.events({
     },
 
     'click .remove': ModelEvents.remove,
-
-    'click .categories'(e, i) {
-        const link = $(e.target);
-        const id = link.attr('data-id');
-        const clue = Clues.findOne(id);
-        i.state.set('currentClue', clue);
-        if (clue && clue.categories) {
-            Meteor.call('category.get', clue.categories, function(err, res) {
-                if (err) {
-                    Logger.log(err, 3);
-                    return;
-                }
-                launchCategoriesModal(i, res.map(getCategoryMapper()));
-            });
-        } else {
-            launchCategoriesModal(i, []);
-        }
-    },
 
     'click .more'(e, i) {
         e.preventDefault();
@@ -207,13 +181,3 @@ Template.clues_manager.events({
     },
 
 });
-
-function launchCategoriesModal(i, categories) {
-    i.state.set('categories', categories);
-    LoadingState.stop();
-    $('#manageChildCategories').modal('show');
-}
-
-function getCategoryMapper() {
-    return (function(category){ return {id: category._id, value: category.theme + ': ' + category.name} });
-}

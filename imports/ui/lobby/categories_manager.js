@@ -8,7 +8,6 @@ import { ModelEvents } from "../../modules/ModelEvents";
 
 import './categories_manager.html';
 import './category.js';
-import './child_manager.js';
 
 Template.categories_manager.onCreated(function categories_managerOnCreated() {
 
