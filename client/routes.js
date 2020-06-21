@@ -145,6 +145,20 @@ FlowRouter.route('/clues/:categoryId', {
     }
 });
 
+FlowRouter.route('/clues/:categoryId/:clueId', {
+    name: 'clues.categoryId.clueId',
+    triggersEnter: [redirectToHome],
+    action(params, queryParams) {
+        Logger.log("Route: clues.categoryId.clueId");
+        BlazeLayout.render(
+            'layout_authenticated',
+            {
+                main: 'lobby',
+            }
+        );
+    }
+});
+
 FlowRouter.route('/categories', {
     name: 'categories',
     triggersEnter: [redirectToHome],

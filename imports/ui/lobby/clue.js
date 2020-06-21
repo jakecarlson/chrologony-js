@@ -3,14 +3,21 @@ import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
 
 import { ModelEvents } from "../../modules/ModelEvents";
-import { Permissions } from "../../modules/Permissions";
 
 import './clue.html';
+import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 Template.clue.onCreated(function clueOnCreated() {
+
     this.state = new ReactiveDict();
     this.state.set('editing', (this.data.clue === false));
     this.state.set('error', false);
+
+    const clueId = FlowRouter.getParam('clueId');
+    if (clueId && (clueId == this.data.clue._id)) {
+        this.state.set('editing', true);
+    }
+
 });
 
 Template.clue.helpers({

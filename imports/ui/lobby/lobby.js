@@ -20,7 +20,7 @@ Template.lobby.helpers({
     },
 
     cluesIsActive() {
-        return ['clues', 'clues.categoryId'].includes(FlowRouter.getRouteName());
+        return ['clues', 'clues.categoryId', 'clues.categoryId.clueId'].includes(FlowRouter.getRouteName());
     },
 
     categoriesIsActive() {

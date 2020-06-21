@@ -21,7 +21,7 @@
     >
 
         <th scope="row">
-            <input class="attr form-control {{#if viewing}}d-none{{/if}}" type="text" name="description" value="{{description}}" required maxlength="240">
+            <textarea class="attr form-control {{#if viewing}}d-none{{/if}}" type="text" name="description" required maxlength="240" rows="1">{{description}}</textarea>
             <span class="{{#if editing}}d-none{{/if}}">{{description}}</span>
         </th>
 

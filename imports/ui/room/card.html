@@ -18,6 +18,9 @@
                                 <a class="dropdown-item more" href="#">More Info</a>
                                 <div class="dropdown-divider"></div>
                             {{/if}}
+                            {{#if canEdit}}
+                                <a class="dropdown-item" href="{{editClueLink}}" target="_blank">Edit Clue</a>
+                            {{/if}}
                             {{#if canSetCategories}}
                                 <a class="dropdown-item categories" href="#" data-id="{{clueId}}">Categories</a>
                             {{/if}}

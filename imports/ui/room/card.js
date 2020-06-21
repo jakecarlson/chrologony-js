@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import './card.html';
 
@@ -88,6 +89,15 @@ Template.card.helpers({
 
     canSetCategories() {
         return !isCurrent(this.turn, this.card);
+    },
+
+    canEdit() {
+        const clue = Template.instance().clue.get()
+        return clue && clue.canEdit(this.game.categoryId);
+    },
+
+    editClueLink() {
+        return FlowRouter.path('clues.categoryId.clueId', {categoryId: this.game.categoryId, clueId: this.card.clueId});
     },
 
 });

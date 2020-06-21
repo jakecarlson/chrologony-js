@@ -1,10 +1,14 @@
 <template name="clues_manager">
 
-    {{> clues_filter categoryId=categoryId}}
+    {{#if categoryView}}
+        {{> clues_filter categoryId=categoryId}}
+    {{/if}}
 
     {{#if categoryId}}
 
-        <h3 class="text-center text-muted mt-4 mb-0 results-count">{{numResults}}</h3>
+        {{#if categoryView}}
+            <h3 class="text-center text-muted mt-4 mb-0 results-count">{{numResults}}</h3>
+        {{/if}}
 
         <div class="table-responsive">
             <table id="cluesManager" class="table table-hover table-striped">
@@ -16,17 +20,19 @@
                     <col class="actions">
                 </colgroup>
                 <thead class="table-borderless">
-                <tr>
-                    <th scope="col">Clue</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Categories</th>
-                    <th scope="col">More Info</th>
-                    <th scope="col"></th>
-                </tr>
-                {{> clue clue=false categoryId=categoryId}}
+                    <tr>
+                        <th scope="col">Clue</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Categories</th>
+                        <th scope="col">More Info</th>
+                        <th scope="col"></th>
+                    </tr>
+                    {{#if categoryView}}
+                        {{> clue clue=false categoryId=categoryId}}
+                    {{/if}}
                 </thead>
                 <tbody>
-                {{#each clueCard in clueCards}}
+                {{#each clueCard in cards}}
                     {{> clue clue=clueCard categoryId=categoryId}}
                 {{/each}}
                 </tbody>

@@ -70,28 +70,41 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
 Template.clues_manager.helpers({
 
-    clueCards() {
+    categoryView() {
+        return ['clues', 'clues.categoryId'].includes(FlowRouter.getRouteName());
+    },
+
+    cards() {
         
         let selector = {};
 
-        // keyword
-        const keyword = Template.instance().state.get('keyword');
-        if (keyword.length > 2) {
-            selector.$or = [
-                {description: {$regex: keyword, $options: 'i'}},
-                {date: {$regex: keyword, $options: 'i'}},
-            ];
-        }
+        // If predefined clue, use only that
+        const clueId = FlowRouter.getParam('clueId');
+        if (clueId) {
+            selector._id = clueId;
 
-        // owned
-        if (Template.instance().state.get('owned')) {
-            selector.ownerId = Meteor.userId();
-        }
+        } else {
 
-        // category
-        const categoryId = Template.instance().state.get('categoryId');
-        if (categoryId) {
-            selector.categories = categoryId;
+            // keyword
+            const keyword = Template.instance().state.get('keyword');
+            if (keyword.length > 2) {
+                selector.$or = [
+                    {description: {$regex: keyword, $options: 'i'}},
+                    {date: {$regex: keyword, $options: 'i'}},
+                ];
+            }
+
+            // owned
+            if (Template.instance().state.get('owned')) {
+                selector.ownerId = Meteor.userId();
+            }
+
+            // category
+            const categoryId = Template.instance().state.get('categoryId');
+            if (categoryId) {
+                selector.categories = categoryId;
+            }
+
         }
 
         Logger.log('Filter Clues: ' + JSON.stringify(selector));

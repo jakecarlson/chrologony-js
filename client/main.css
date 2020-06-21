@@ -416,10 +416,8 @@ button.at-social-btn i {
     display: inline;
 }
 .game-card-action .dropdown-menu {
-    /*min-width: 12rem;*/
     left: auto;
     right: 0;
-    /*margin-right: -4rem;*/
 }
 
 /* loader */
