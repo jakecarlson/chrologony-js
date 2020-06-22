@@ -168,7 +168,7 @@ Template.clues_manager.events({
 
     'click .more'(e, i) {
         e.preventDefault();
-        const link = $(e.target);
+        const link = $(e.target).closest('a');
         const id = link.attr('data-id');
         const clue = Clues.findOne(id);
         i.state.set('currentClue', clue);

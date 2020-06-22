@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
-
+import { Permissions } from "../../modules/Permissions";
 import { ModelEvents } from "../../modules/ModelEvents";
 
 import './clue.html';
@@ -63,6 +63,10 @@ Template.clue.helpers({
             return true;
         }
         return this.clue.canEdit(this.categoryId);
+    },
+
+    canRemove() {
+        return Permissions.owned(this.clue);
     },
 
 });

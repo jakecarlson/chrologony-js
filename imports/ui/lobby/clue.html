@@ -21,7 +21,7 @@
     >
 
         <th scope="row">
-            <textarea class="attr form-control {{#if viewing}}d-none{{/if}}" type="text" name="description" required maxlength="240" rows="1">{{description}}</textarea>
+            <textarea class="attr form-control {{#if viewing}}d-none{{/if}}" name="description" required maxlength="240" rows="1">{{description}}</textarea>
             <span class="{{#if editing}}d-none{{/if}}">{{description}}</span>
         </th>
 
@@ -32,13 +32,13 @@
 
         <td>
             {{#if clue}}
-                <a href="#" class="categories" data-id="{{id}}">Categories</a>
+                <a href="#" class="categories" data-id="{{id}}" title="Manage Categories"><i class="fa fa-folder table-icon"></i></a>
             {{/if}}
         </td>
 
         <td>
             {{#if clue}}
-                <a href="#" class="more" data-id="{{id}}">More Info</a>
+                <a href="#" class="more" data-id="{{id}}" title="More Info"><i class="fa fa-info-circle table-icon"></i></a>
             {{/if}}
         </td>
 
@@ -63,16 +63,18 @@
                             <span class="d-none d-xl-inline">Cancel</span>
                         </button>
 
-                        <button
-                            type="button"
-                            class="btn btn-outline-danger ml-2 float-right"
-                            data-toggle="modal"
-                            data-target="#removeClue"
-                            data-id="{{id}}"
-                        >
-                            <i class="fa fa-trash"></i>
-                            <span class="d-none d-xl-inline">Remove</span>
-                        </button>
+                        {{#if canRemove}}
+                            <button
+                                type="button"
+                                class="btn btn-outline-danger ml-2 float-right"
+                                data-toggle="modal"
+                                data-target="#removeClue"
+                                data-id="{{id}}"
+                            >
+                                <i class="fa fa-trash"></i>
+                                <span class="d-none d-xl-inline">Remove</span>
+                            </button>
+                        {{/if}}
 
                     {{else}}
 

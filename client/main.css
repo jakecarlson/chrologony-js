@@ -209,8 +209,16 @@ button.at-social-btn i {
 #cluesManager {
     min-width: 60rem;
 }
+#cluesManager tbody th {
+    font-weight: normal;
+}
+#cluesManager input,
+#cluesManager textarea
+{
+    width: 100%;
+}
 #cluesManager .description {
-    width: 40%;
+    width: 45%;
 }
 #cluesManager .date {
     width: 10%;
@@ -218,18 +226,17 @@ button.at-social-btn i {
 #cluesManager .categories,
 #cluesManager .more
 {
-    width: 10%;
-    line-height: 2;
-    white-space: nowrap;
+    width: 5%;
 }
-#cluesManager .actions {
-    width: 30%;
+.clue .actions {
+    width: 35%;
 }
-#cluesManager tbody th {
-    font-weight: normal;
+#cluesManager .fa.table-icon {
+    line-height: 1.25;
+    font-size: x-large;
 }
-.clue.editing .categories {
-    line-height: 2.5;
+#cluesManager .editing .fa.table-icon {
+    line-height: 1.6;
 }
 #manageClueMore fieldset.form-group {
     margin: 0;
