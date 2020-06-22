@@ -11,8 +11,9 @@
             {{#if currentUser}}
 
                 <div class="dropdown mt-2 float-right" id="profile">
-                    <button class="btn btn-link dropdown-toggle text-muted" type="button" id="menuToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-link text-muted" type="button" id="menuToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{profileName}}
+                        <i class="fa fa-bars ml-2"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="menuToggle">
                         <a class="dropdown-item" href="{{lobbyLink}}">Lobby</a>

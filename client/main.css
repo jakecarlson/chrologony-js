@@ -19,7 +19,12 @@ html {
     padding-right: 15px;
 }
 #profile .btn-link {
-    font-weight: bold;
+    /*font-weight: bold;*/
+}
+#profile .btn-link i {
+    font-size: x-large;
+    position: relative;
+    top: .15rem;
 }
 #profile .dropdown-menu {
     min-width: 11.5rem;
