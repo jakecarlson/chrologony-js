@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { LoadingState } from "../../modules/LoadingState";
 
 import { Categories } from "../../api/Categories";
@@ -10,6 +11,15 @@ import './categories_manager.html';
 import './category.js';
 
 Template.categories_manager.onCreated(function categories_managerOnCreated() {
+
+    /*
+    TO DO: JANKY ALERT
+    There's a bug that prevents the bootstrap toggles working for adding a new category on first page load;
+    Reload the current route and all seems fine.
+    */
+    if (!FlowRouter.current().oldRoute) {
+        FlowRouter.reload();
+    }
 
     this.state = new ReactiveDict();
     this.state.set('currentCategory', null);
