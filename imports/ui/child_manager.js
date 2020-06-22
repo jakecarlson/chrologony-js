@@ -7,16 +7,25 @@ import './child_manager.html';
 
 Template.child_manager.onCreated(function child_managerOnCreated() {
 
-    this.state = new ReactiveDict();
-    this.state.set('error', false);
+    this.error = ReactiveVar(false);
+    this.children = ReactiveVar([]);
 
     this.autorun(() => {
 
-        this.state.set('children', this.view.templateInstance().data.childItems); // Hacky? Why does this re-evaluate but this.data.childItems doesn't?
+        this.children.set(this.view.templateInstance().data.childItems); // Hacky? Why does this re-evaluate but this.data.childItems doesn't?
 
         if (this.view.isRendered) {
             Meteor.typeahead.inject();
         }
+
+        Tracker.afterFlush(() => {
+
+            const self = this;
+            $('#manageChildCategories').on('hidden.bs.modal', function(e) {
+                self.error.set(false);
+            });
+
+        });
 
     });
 
@@ -26,7 +35,7 @@ Template.child_manager.helpers({
 
     searchChildren(query, sync, callback) {
         let children = [];
-        Template.instance().state.get('children').forEach(function(child) {
+        Template.instance().children.get().forEach(function(child) {
             children.push(child.id);
         });
         if (this.excludeId) {
@@ -43,19 +52,19 @@ Template.child_manager.helpers({
     },
 
     addChild(e, child, source) {
-        const children = Template.instance().state.get('children');
+        const children = Template.instance().children.get();
         children.push(child);
         setChildren(Template.instance(), children);
-        Template.instance().state.set('error', false);
+        Template.instance().error.set(false);
         $('#' + this.childType + 'Search').typeahead('val', '');
     },
 
     children() {
-        return Template.instance().state.get('children');
+        return Template.instance().children.get();
     },
 
     error() {
-        return Template.instance().state.get('error');
+        return Template.instance().error.get();
     },
 
     removable(id) {
@@ -73,7 +82,7 @@ Template.child_manager.events({
     'click .save'(e, i) {
         LoadingState.start(e);
         let children = [];
-        i.state.get('children').forEach(function(child) {
+        i.children.get().forEach(function(child) {
             children.push(child.id);
         });
         const childrenName = this.childrenName;
@@ -91,9 +100,9 @@ Template.child_manager.events({
         e.preventDefault();
         const link = $(e.target);
         const id = link.attr('data-id');
-        const children = i.state.get('children');
+        const children = i.children.get();
         if (this.required && children.length < 2) {
-            i.state.set('error', true);
+            i.error.set(true);
             return;
         }
         let removeKey = -1;
@@ -113,5 +122,5 @@ Template.child_manager.events({
 
 function setChildren(i, children) {
     children.sort((a, b) => (a.value > b.value) ? 1 : -1);
-    i.state.set('children', children);
+    i.children.set(children);
 }
