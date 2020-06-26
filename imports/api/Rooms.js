@@ -184,40 +184,16 @@ if (Meteor.isServer) {
 
     Meteor.methods({
 
-        'room.joinOrCreate'(name, password) {
+        'room.join'(name, password) {
 
-            check(name, NonEmptyString);
-            check(password, NonEmptyString);
-            Permissions.check(Permissions.authenticated());
+            const room = validateAndGetByName(name, password);
 
-            let roomId = false;
-
-            // If the room exists, validate the password
-            const room = Rooms.findOne(
-                {
-                    deletedAt: null,
-                    name: {
-                        $regex: new RegExp(`^${name}$`),
-                        $options: 'i',
-                    },
-                 },
-                {
-                    sort: {
-                        createdAt: -1,
-                    },
-                }
-            );
-
+            let roomId = null;
             if (room) {
-                if ((room.ownerId != this.userId) && !Hasher.bcrypt.match(password, room.password)) {
-                    throw new Meteor.Error('not-authorized');
-                }
+                Permissions.check(((room.ownerId == this.userId) || Hasher.bcrypt.match(password, room.password)));
                 roomId = room._id;
             } else {
-                roomId = Rooms.insert({
-                    name: name,
-                    password: Hasher.bcrypt.hash(password),
-                });
+                throw new Meteor.Error('not-found', 'Room does not exist.');
             }
 
             setRoom(roomId);
@@ -242,6 +218,25 @@ if (Meteor.isServer) {
 
         },
 
+        'room.create'(name, password) {
+
+            const room = validateAndGetByName(name, password);
+
+            if (room) {
+                throw new Meteor.Error('duplicate-object', 'A room with that name already exists.');
+            }
+
+            const roomId = Rooms.insert({
+                name: name,
+                password: Hasher.bcrypt.hash(password),
+            });
+
+            setRoom(roomId);
+
+            return roomId;
+
+        },
+
     });
 
 }
@@ -259,4 +254,29 @@ function setRoom(id, userId = null) {
             }
         }
     );
+}
+
+function validateAndGetByName(name, password) {
+
+    check(name, NonEmptyString);
+    check(password, NonEmptyString);
+    Permissions.check(Permissions.authenticated());
+
+    let roomId = false;
+
+    return Rooms.findOne(
+        {
+            deletedAt: null,
+            name: {
+                $regex: new RegExp(`^${name}$`),
+                $options: 'i',
+            },
+        },
+        {
+            sort: {
+                createdAt: -1,
+            },
+        }
+    );
+
 }

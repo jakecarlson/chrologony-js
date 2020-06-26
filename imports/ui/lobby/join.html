@@ -2,24 +2,15 @@
 
     <div id="join" class="card border-primary text-white mx-auto mb-4">
         <header class="card-header bg-primary">
-            <h1 class="card-title text-white">Create or Join a Room</h1>
+            <h1 class="card-title text-white">Join or Create a Room</h1>
         </header>
         <form class="card-body text-center" autocomplete="new-password">
-            <div class="form-inline justify-content-center">
-                <label class="sr-only" for="roomName">Room Name</label>
-                <input type="text" class="form-control mr-sm-3" name="name" id="roomName" aria-describedby="roomNameHelp" placeholder="Room Name" maxlength="40">
-                <label class="sr-only" for="roomPassword">Room Password</label>
-                <input type="password" class="form-control mt-3 mt-sm-0 mr-sm-3" name="password" id="roomPassword" aria-describedby="roomPasswordHelp" placeholder="Room Password" maxlength="40">
-                <button type="submit" class="btn btn-primary mt-3 mt-sm-0" disabled="{{loading}}">
-                    <i class="fa fa-sign-in"></i>
-                    <span>Go</span>
-                </button>
-            </div>
-            {{#if error}}
-                <small class="text-danger mt-0 mb-0">Enter the correct room password to enter, or change the room name to create a new room.</small>
-            {{else}}
-                <small id="roomNameHelp" class="form-text text-muted mt-2">If the room doesn't exist, it will be created.</small>
-            {{/if}}
+            <label class="sr-only" for="roomName">Room Name</label>
+            <input type="text" class="form-control mb-3" name="name" id="roomName" aria-describedby="roomNameHelp" placeholder="Room Name" maxlength="40">
+            <label class="sr-only" for="roomPassword">Room Password</label>
+            <input type="password" class="form-control mb-3" name="password" id="roomPassword" aria-describedby="roomPasswordHelp" placeholder="Room Password" maxlength="40">
+            <button type="submit" name="create" class="btn btn-secondary float-left create" disabled="{{loading}}">Create Room</button>
+            <button type="submit" name="join" class="btn btn-primary float-right join" disabled="{{loading}}">Join Room</button>
         </form>
     </div>
 

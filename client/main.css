@@ -146,16 +146,14 @@ button.at-social-btn i {
 
 /* join */
 #join {
-    max-width: 576px;
+    max-width: 20rem;
 }
 #join .card-title {
     font-size: x-large;
     text-align: center;
 }
-@media (min-width: 576px) {
-    #join .form-control {
-        max-width: 12rem;
-    }
+#join .form-control {
+    max-width: 100%;
 }
 
 /* child manager */

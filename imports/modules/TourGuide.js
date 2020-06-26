@@ -65,7 +65,7 @@ TourGuide = {
                     onShown: this.wait,
                     placement: "top",
                     title: "Create or Join a Room",
-                    content: "Let's jump right in and create a room! Enter a room name and password, then click / tap 'Go'.",
+                    content: "Let's jump right in and create a room! Enter a room name and password, then click / tap 'Create Room'.",
                 },
                 {
                     element: "#layout",
