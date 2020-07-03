@@ -2,6 +2,8 @@ import { LoadingState } from "../modules/LoadingState";
 import './layout_authenticated.js';
 import './layout_unauthenticated.js';
 
+import './body.html';
+
 Template.body.onCreated(function bodyOnCreated() {
 
     this.autorun(() => {

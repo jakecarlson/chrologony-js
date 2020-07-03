@@ -49,3 +49,5 @@ accounts-ui
 useraccounts:bootstrap
 mealsunite:flow-routing-extra
 email
+tmeasday:publish-counts
+numeral:numeral

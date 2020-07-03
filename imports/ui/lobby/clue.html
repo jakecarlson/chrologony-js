@@ -25,22 +25,19 @@
             <span class="{{#if editing}}d-none{{/if}}">{{description}}</span>
         </th>
 
-        <td>
+        <td colspan="{{#if clue}}1{{else}}3{{/if}}">
             <input class="attr form-control {{#if viewing}}d-none{{/if}}" type="date" name="date" value="{{date}}" required maxlength="10">
             <span class="{{#if editing}}d-none{{/if}}">{{date}}</span>
         </td>
 
-        <td>
-            {{#if clue}}
+        {{#if clue}}
+            <td>
                 <a href="#" class="categories" data-id="{{id}}" title="Manage Categories"><i class="fa fa-folder table-icon"></i></a>
-            {{/if}}
-        </td>
-
-        <td>
-            {{#if clue}}
+            </td>
+            <td>
                 <a href="#" class="more" data-id="{{id}}" title="More Info"><i class="fa fa-info-circle table-icon"></i></a>
-            {{/if}}
-        </td>
+            </td>
+        {{/if}}
 
         <td>
 

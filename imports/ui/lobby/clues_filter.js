@@ -13,4 +13,8 @@ Template.clues_filter.helpers({
 
 Template.clues_filter.events({
 
+    'submit #cluesFilter'(e, i) {
+        e.preventDefault();
+    },
+
 });

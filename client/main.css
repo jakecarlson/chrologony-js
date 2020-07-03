@@ -206,9 +206,6 @@ button.at-social-btn i {
 }
 
 /* clues manager */
-#clues .results-count {
-    font-size: medium !important;
-}
 #cluesManager {
     min-width: 60rem;
 }
@@ -243,6 +240,11 @@ button.at-social-btn i {
 }
 #manageClueMore fieldset.form-group {
     margin: 0;
+}
+
+/* pager */
+.pager-results {
+    font-size: medium !important;
 }
 
 /* Room */

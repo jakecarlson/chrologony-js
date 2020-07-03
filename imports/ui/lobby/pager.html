@@ -1,0 +1,40 @@
+<template name="pager">
+
+    {{#if dataReady}}
+
+        {{#if showResults}}
+            <h3 class="text-center text-muted mt-2 mb-3 pager-results">Showing {{first}} - {{last}} of {{total}} {{items}}</h3>
+        {{/if}}
+
+        {{#if showPages}}
+
+            <nav aria-label="{{items}} Pages" class="mt-3 mb-2 pager-pages">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {{#if disabled previous}}disabled{{/if}}">
+                        <a class="page-link" href="#" aria-label="Previous" data-page="{{previous}}">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    {{#each page in pages}}
+                        <li class="page-item {{#if isActive page}}active{{/if}}"><a class="page-link" href="#" data-page="{{page}}">
+                            {{page}}
+                            {{#if isActive page}}
+                                <span class="sr-only">(current)</span>
+                            {{/if}}
+                        </a></li>
+                    {{/each}}
+                    <li class="page-item {{#if disabled next}}disabled{{/if}}">
+                        <a class="page-link" href="#" aria-label="Next" data-page="{{next}}">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        {{/if}}
+
+    {{/if}}
+
+</template>

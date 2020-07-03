@@ -8,6 +8,10 @@ Template.registerHelper('loading', function() {
     return LoadingState.active();
 });
 
+Template.registerHelper('notLoading', function() {
+    return !LoadingState.active();
+});
+
 Template.registerHelper('selectedValue', function(id) {
     return (id == this.val);
 });

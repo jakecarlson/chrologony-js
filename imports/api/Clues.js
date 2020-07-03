@@ -110,13 +110,19 @@ Clues.helpers({
 
 if (Meteor.isServer) {
 
-    Meteor.publish('clues', function cluesPublication(categoryId) {
-        if (this.userId && categoryId) {
+    Meteor.publish('clues', function cluesPublication(filters) {
+        if (this.userId && filters) {
+
+            const selector = getCluePublicationSelector(filters);
+            const limit = filters.page * filters.pageSize;
+
+            Counts.publish(this, 'cluesCount', Clues.find(selector));
+
             return Clues.find(
+                selector,
                 {
-                    categories: categoryId,
-                },
-                {
+                    sort: {date: -1},
+                    limit: limit,
                     fields: {
                         _id: 1,
                         description: 1,
@@ -136,9 +142,11 @@ if (Meteor.isServer) {
                     },
                 }
             );
+
         } else {
             return this.ready();
         }
+
     });
 
 }
@@ -376,5 +384,38 @@ function getClueUpdateSelector(attrs) {
             selector.$or.push({categories: attrs.categoryId});
         }
     }
+    return selector;
+}
+
+function getCluePublicationSelector(filters) {
+
+    let selector = {};
+
+    // If predefined clue, use only that
+    if (filters.clueId) {
+        selector._id = filters.clueId;
+
+    } else {
+
+        // keyword
+        if (filters.keyword && (filters.keyword.length > 2)) {
+            selector.$or = [
+                {description: {$regex: filters.keyword, $options: 'i'}},
+                {date: {$regex: filters.keyword, $options: 'i'}},
+            ];
+        }
+
+        // owned
+        if (filters.owned) {
+            selector.ownerId = Meteor.userId();
+        }
+
+        // category
+        if (filters.categoryId) {
+            selector.categories = filters.categoryId;
+        }
+
+    }
+
     return selector;
 }

@@ -26,10 +26,14 @@ Helpers = {
         } else {
             selector.private = isPrivate;
         }
-        if (!includeNonUser) {
-            selector.source = 'user';
-        }
+        // if (!includeNonUser) {
+        //     selector.source = 'user';
+        // }
         return selector;
+    },
+
+    getPageStart(pageNum, pageSize) {
+        return (pageNum - 1) * pageSize;
     },
 
 };

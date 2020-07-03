@@ -7,7 +7,7 @@
     {{#if categoryId}}
 
         {{#if categoryView}}
-            <h3 class="text-center text-muted mt-4 mb-0 results-count">{{numResults}}</h3>
+            {{> pager page=page total=cluesCount size=pageSize displayed=pagesDisplayed items="Clues"}}
         {{/if}}
 
         <div class="table-responsive">
@@ -32,12 +32,18 @@
                     {{/if}}
                 </thead>
                 <tbody>
-                {{#each clueCard in cards}}
-                    {{> clue clue=clueCard categoryId=categoryId}}
-                {{/each}}
+                {{#if clues}}
+                    {{#each clueCard in clues}}
+                        {{> clue clue=clueCard categoryId=categoryId}}
+                    {{/each}}
+                {{else}}
+                    <tr><td colspan="5">Loading ...</td></tr>
+                {{/if}}
                 </tbody>
             </table>
         </div>
+
+        {{> pager page=page total=cluesCount size=pageSize displayed=pagesDisplayed hideResults=true items="Clues"}}
 
         <div class="modal fade" id="removeClue" tabindex="-1" role="dialog" aria-labelledby="removeClueTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">

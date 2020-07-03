@@ -11,30 +11,36 @@ import { Clues } from "../../api/Clues";
 import './clues_manager.html';
 import './clue.js';
 import './clues_filter.js';
+import './pager.js';
 
 Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
+    this.pageSize = 25;
+    this.pagesDisplayed = 7;
+
+    this.filters = new ReactiveDict();
+    this.filters.set('keyword', '');
+    this.filters.set('owned', false);
+    this.filters.set('categoryId', null);
+    this.filters.set('page', 1);
+    this.filters.set('pageSize', this.pageSize);
+
     this.state = new ReactiveDict();
-    this.state.set('keyword', '');
-    this.state.set('owned', false);
-    this.state.set('categoryId', null);
-    this.state.set('numResults', 0);
     this.state.set('currentClue', null);
     this.state.set('categories', []);
 
     this.autorun(() => {
 
-        LoadingState.start();
         FlowRouter.watchPathChange();
-        this.state.set('categoryId', FlowRouter.getParam('categoryId'));
+        this.filters.set('categoryId', FlowRouter.getParam('categoryId'));
+        this.filters.set('clueId', FlowRouter.getParam('clueId'));
 
-        if (Categories.findOne(this.state.get('categoryId'))) {
+        if (Categories.findOne(this.filters.get('categoryId'))) {
 
-            this.subscribe('clues', this.state.get('categoryId'));
+            LoadingState.start();
+            this.subscribe('clues', this.filters.all());
 
             if (this.subscriptionsReady()) {
-
-                this.state.set('numResults', Clues.find({categories: this.state.get('categoryId')}).count());
 
                 const self = this;
                 Tracker.afterFlush(() => {
@@ -74,58 +80,18 @@ Template.clues_manager.helpers({
         return ['clues', 'clues.categoryId'].includes(FlowRouter.getRouteName());
     },
 
-    cards() {
-        
-        let selector = {};
-
-        // If predefined clue, use only that
-        const clueId = FlowRouter.getParam('clueId');
-        if (clueId) {
-            selector._id = clueId;
-
-        } else {
-
-            // keyword
-            const keyword = Template.instance().state.get('keyword');
-            if (keyword.length > 2) {
-                selector.$or = [
-                    {description: {$regex: keyword, $options: 'i'}},
-                    {date: {$regex: keyword, $options: 'i'}},
-                ];
-            }
-
-            // owned
-            if (Template.instance().state.get('owned')) {
-                selector.ownerId = Meteor.userId();
-            }
-
-            // category
-            const categoryId = Template.instance().state.get('categoryId');
-            if (categoryId) {
-                selector.categories = categoryId;
-            }
-
-        }
-
-        Logger.log('Filter Clues: ' + JSON.stringify(selector));
-
-        const clues = Clues.find(selector, {sort:{date:-1}});
-        Template.instance().state.set('numResults', clues.count());
+    clues() {
+        const skip = Helpers.getPageStart(Template.instance().filters.get('page'), Template.instance().pageSize);
+        const clues = Clues.find({}, {skip: skip, limit: Template.instance().pageSize});
         return clues;
-
     },
 
     categoryId() {
-        return Template.instance().state.get('categoryId');
+        return Template.instance().filters.get('categoryId');
     },
 
-    numResults() {
-        const numResults = Template.instance().state.get('numResults');
-        let suffix = 'Results';
-        if (numResults == 1) {
-            suffix = 'Result';
-        }
-        return numResults + ' ' + suffix;
+    cluesCount() {
+        return Counts.get('cluesCount');
     },
 
     currentClue() {
@@ -146,12 +112,24 @@ Template.clues_manager.helpers({
         }
     },
 
+    page() {
+        return Template.instance().filters.get('page');
+    },
+
+    pageSize() {
+        return Template.instance().pageSize;
+    },
+
+    pagesDisplayed() {
+        return Template.instance().pagesDisplayed;
+    },
+
 });
 
 Template.clues_manager.events({
 
     'keyup #cluesFilter [name="keyword"]'(e, i) {
-        i.state.set('keyword', e.target.value);
+        i.filters.set('keyword', e.target.value);
     },
 
     'change #cluesFilter [name="categoryId"]'(e, i) {
@@ -161,7 +139,7 @@ Template.clues_manager.events({
     },
 
     'change #cluesFilter [name="owned"]'(e, i) {
-        i.state.set('owned', e.target.checked);
+        i.filters.set('owned', e.target.checked);
     },
 
     'click .remove': ModelEvents.remove,
@@ -191,6 +169,12 @@ Template.clues_manager.events({
             }
             LoadingState.stop();
         });
+    },
+
+    'click [data-page]'(e, i) {
+        e.preventDefault();
+        const page = parseInt($(e.target).closest('a').attr('data-page'));
+        i.filters.set('page', page);
     },
 
 });

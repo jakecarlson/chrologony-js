@@ -21,6 +21,11 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
         FlowRouter.reload();
     }
 
+    this.pageSize = 5;
+    this.pagesDisplayed = 7;
+
+    this.page = new ReactiveVar(1);
+
     this.state = new ReactiveDict();
     this.state.set('currentCategory', null);
     this.state.set('collaborators', []);
@@ -58,7 +63,14 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
 Template.categories_manager.helpers({
 
     ownedCategories() {
-        return Categories.find({ownerId: Meteor.userId()}, {sort: {theme: 1, name: 1}});
+        return Categories.find(
+            {ownerId: Meteor.userId()},
+            {
+                sort: {theme: 1, name: 1},
+                skip: Helpers.getPageStart(Template.instance().page.get(), Template.instance().pageSize),
+                limit: Template.instance().pageSize,
+            }
+        );
     },
 
     currentCategory() {
@@ -79,6 +91,22 @@ Template.categories_manager.helpers({
 
     userMapper() {
         return getUserMapper();
+    },
+
+    page() {
+        return Template.instance().page.get();
+    },
+
+    pageSize() {
+        return Template.instance().pageSize;
+    },
+
+    pagesDisplayed() {
+        return Template.instance().pagesDisplayed;
+    },
+
+    categoriesCount() {
+        return Categories.find({ownerId: Meteor.userId()}).count();
     },
 
 });
@@ -103,6 +131,12 @@ Template.categories_manager.events({
         } else {
             launchCollaboratorsModal(i, []);
         }
+    },
+
+    'click [data-page]'(e, i) {
+        e.preventDefault();
+        const page = parseInt($(e.target).closest('a').attr('data-page'));
+        i.page.set(page);
     },
 
 });
