@@ -112,6 +112,11 @@ Template.clues_manager.helpers({
         }
     },
 
+    cannotEditCurrentClue() {
+        const clue = Template.instance().state.get('currentClue');
+        return (!clue || !clue.canEdit || !clue.canEdit(Template.instance().filters.get('categoryId')));
+    },
+
     page() {
         return Template.instance().filters.get('page');
     },

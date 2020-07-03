@@ -82,18 +82,18 @@
                             <legend class="col-form-label">External References</legend>
                             <div class="form-row">
                                 <div class="form-group col col-9">
-                                    <input type="url" class="form-control attr" name="externalUrl" placeholder="External URL" maxlength="960" value="{{currentClueAttr 'externalUrl'}}">
+                                    <input type="url" class="form-control attr" name="externalUrl" placeholder="External URL" maxlength="960" value="{{currentClueAttr 'externalUrl'}}" readonly="{{cannotEditCurrentClue}}">
                                 </div>
                                 <div class="form-group col col-3">
-                                    <input type="text" class="form-control attr" name="externalId" placeholder="External ID" maxlength="40" value="{{currentClueAttr 'externalId'}}">
+                                    <input type="text" class="form-control attr" name="externalId" placeholder="External ID" maxlength="40" value="{{currentClueAttr 'externalId'}}" readonly="{{cannotEditCurrentClue}}">
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col col-6">
-                                    <input type="url" class="form-control attr" name="thumbnailUrl" placeholder="Thumbnail URL" maxlength="960" value="{{currentClueAttr 'thumbnailUrl'}}">
+                                    <input type="url" class="form-control attr" name="thumbnailUrl" placeholder="Thumbnail URL" maxlength="960" value="{{currentClueAttr 'thumbnailUrl'}}" readonly="{{cannotEditCurrentClue}}">
                                 </div>
                                 <div class="form-group col col-6">
-                                    <input type="url" class="form-control attr" name="imageUrl" placeholder="Full Image Url" maxlength="960" value="{{currentClueAttr 'imageUrl'}}">
+                                    <input type="url" class="form-control attr" name="imageUrl" placeholder="Full Image Url" maxlength="960" value="{{currentClueAttr 'imageUrl'}}" readonly="{{cannotEditCurrentClue}}">
                                 </div>
                             </div>
                         </fieldset>
@@ -102,10 +102,10 @@
                             <legend class="col-form-label">Location</legend>
                             <div class="form-row">
                                 <div class="form-group col col-6">
-                                    <input type="text" class="form-control attr" name="latitude" placeholder="Latitude" maxlength="8" value="{{currentClueAttr 'latitude'}}">
+                                    <input type="text" class="form-control attr" name="latitude" placeholder="Latitude" maxlength="8" value="{{currentClueAttr 'latitude'}}" readonly="{{cannotEditCurrentClue}}">
                                 </div>
                                 <div class="form-group col col-6">
-                                    <input type="text" class="form-control attr" name="longitude" placeholder="Longitude" maxlength="8" value="{{currentClueAttr 'longitude'}}">
+                                    <input type="text" class="form-control attr" name="longitude" placeholder="Longitude" maxlength="8" value="{{currentClueAttr 'longitude'}}" readonly="{{cannotEditCurrentClue}}">
                                 </div>
                             </div>
                         </fieldset>
@@ -114,12 +114,12 @@
                             <legend class="col-form-label">Additional Information</legend>
                             <div class="form-row">
                                 <div class="form-group col">
-                                    <textarea class="form-control attr" name="hint" placeholder="Hint" maxlength="960">{{currentClueAttr 'hint'}}</textarea>
+                                    <textarea class="form-control attr" name="hint" placeholder="Hint" maxlength="960" readonly="{{cannotEditCurrentClue}}">{{currentClueAttr 'hint'}}</textarea>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col">
-                                    <textarea class="form-control attr" name="moreInfo" placeholder="More Info" maxlength="3840">{{currentClueAttr 'moreInfo'}}</textarea>
+                                    <textarea class="form-control attr" name="moreInfo" placeholder="More Info" maxlength="3840" readonly="{{cannotEditCurrentClue}}">{{currentClueAttr 'moreInfo'}}</textarea>
                                 </div>
                             </div>
                         </fieldset>
@@ -129,7 +129,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
                         <input type="hidden" class="attr" name="categoryId" value="{{categoryId}}">
-                        <button type="submit" class="btn btn-primary save" data-id="" disabled="{{loading}}">Save</button>
+                        <button type="submit" class="btn btn-primary save" data-id="" disabled="{{cannotEditCurrentClue}}">Save</button>
                     </div>
 
                 </div>
