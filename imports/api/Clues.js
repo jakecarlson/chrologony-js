@@ -1,14 +1,18 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
+import { Promise } from "meteor/promise";
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
 import { Schemas } from "../modules/Schemas";
 
 import { Categories } from "./Categories";
+import { Votes } from "./Votes";
 
 export const Clues = new Mongo.Collection('clues');
+
+Clues.DEFAULT_SCORE = 10;
 
 Clues.schema = new SimpleSchema(
     {
@@ -27,6 +31,7 @@ Clues.schema = new SimpleSchema(
         moreInfo: {type: String, max: 3840, defaultValue: null},
         importId: {type: String, defaultValue: null, max: 27, optional: true},
         importSetId: {type: RecordId, defaultValue: null, optional: true},
+        score: {type: SimpleSchema.Integer, defaultValue: Clues.DEFAULT_SCORE},
     },
     {
         requiredByDefault: false,
@@ -77,6 +82,10 @@ Clues.helpers({
         return null;
     },
 
+    vote() {
+        return Votes.findOne({clueId: this._id, ownerId: Meteor.userId()});
+    },
+
     canEdit(categoryId) {
         if (Permissions.owned(this)) {
             return true;
@@ -115,6 +124,7 @@ if (Meteor.isServer) {
                         active: 1,
                         categories: 1,
                         ownerId: 1,
+                        score: 1,
                         hint: 1,
                         thumbnailUrl: 1,
                         imageUrl: 1,
@@ -322,6 +332,31 @@ if (Meteor.isServer) {
         'clue.get'(id) {
             const clue = Clues.findOne(id);
             return clue;
+        },
+
+        // Calculate the score
+        'clue.calculateScore'(clueId) {
+
+            check(clueId, RecordId);
+
+            // Get the sum of all votes
+            const votes = Promise.await(
+                Votes.rawCollection().aggregate(
+                    [
+                        {$match: {clueId: clueId}},
+                        {$group: {_id: null, sum: {$sum: "$value"}}},
+                        {$project: {_id: 0, sum: 1}},
+                    ]
+                ).toArray()
+            );
+            const score = votes[0].sum;
+
+            const updated = Clues.update(
+                {_id: clueId},
+                {$set: {score: score}}
+            );
+            return score;
+
         },
 
     });

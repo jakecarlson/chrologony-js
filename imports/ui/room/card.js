@@ -1,6 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { LoadingState } from "../../modules/LoadingState";
+
+import { Votes } from '../../api/Votes';
 
 import './card.html';
 
@@ -92,7 +95,7 @@ Template.card.helpers({
     },
 
     canEdit() {
-        const clue = Template.instance().clue.get()
+        const clue = Template.instance().clue.get();
         return clue && clue.canEdit(this.game.categoryId);
     },
 
@@ -100,9 +103,36 @@ Template.card.helpers({
         return FlowRouter.path('clues.categoryId.clueId', {categoryId: this.game.categoryId, clueId: this.card.clueId});
     },
 
+    isVoteValue(value) {
+        const clue = Template.instance().clue.get();
+        if (clue) {
+            const vote = clue.vote();
+            return (vote && (vote.value == value));
+        }
+        return false;
+    },
+
+    score() {
+        const clue = Template.instance().clue.get();
+        if (clue) {
+            return clue.score;
+        }
+        return null;
+    },
+
 });
 
 Template.card.events({
+
+    'click .upvote'(e, i) {
+        LoadingState.start(e);
+        return submitVote(this.card.clueId, 1);
+    },
+
+    'click .downvote'(e, i) {
+        LoadingState.start(e);
+        return submitVote(this.card.clueId, -1);
+    },
 
 });
 
@@ -112,4 +142,13 @@ function isOwned(turn) {
 
 function isCurrent(turn, card) {
     return (turn.currentCardId == card._id);
+}
+
+function submitVote(clueId, value) {
+    Meteor.call('vote.set', clueId, value, function(err, score) {
+        if (!err) {
+            Logger.log('Voted for Clue: ' + clueId);
+        }
+        LoadingState.stop();
+    });
 }

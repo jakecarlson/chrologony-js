@@ -60,6 +60,7 @@ Template.room.onCreated(function roomOnCreated() {
                     subscribe(this, 'turns', this.room.get().currentGameId);
                     subscribe(this, 'cards', this.room.get().currentGameId);
                     subscribe(this, 'cardClues', this.room.get().currentGameId);
+                    subscribe(this, 'votes', this.room.get().currentGameId);
 
                     this.game.set(Games.findOne(this.room.get().currentGameId));
                     if (this.game.get() && this.game.get().currentTurnId) {

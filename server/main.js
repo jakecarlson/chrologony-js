@@ -13,6 +13,7 @@ import '../imports/api/Rooms';
 import '../imports/api/Clues';
 import '../imports/api/Categories';
 import '../imports/api/Turns';
+import '../imports/api/Votes';
 
 Meteor.startup(() => {
 

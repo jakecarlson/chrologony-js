@@ -148,6 +148,11 @@ button.at-social-btn i {
 #join {
     max-width: 20rem;
 }
+@media (max-width: 576px) {
+    #join {
+        max-width: none;
+    }
+}
 #join .card-title {
     font-size: x-large;
     text-align: center;
@@ -428,6 +433,14 @@ button.at-social-btn i {
 .game-card-action .dropdown-menu {
     left: auto;
     right: 0;
+}
+.vote {
+    font-size: large;
+}
+.upvote:hover i,
+.downvote:hover i
+{
+    color: #007bff;
 }
 
 /* loader */

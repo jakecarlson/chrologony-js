@@ -1,0 +1,107 @@
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import { check, Match } from 'meteor/check';
+import { RecordId } from "../startup/validations";
+import { Permissions } from '../modules/Permissions';
+import SimpleSchema from 'simpl-schema';
+import { Schemas } from '../modules/Schemas';
+
+import { Clues } from "./Clues";
+import {Cards} from "./Cards";
+import {Promise} from "meteor/promise";
+
+export const Votes = new Mongo.Collection('votes');
+
+Votes.schema = new SimpleSchema({
+    clueId: {type: String, min: 17, max: 24},
+    ownerId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
+    value: {type: SimpleSchema.Integer, defaultValue: 0},
+});
+Votes.schema.extend(Schemas.timestampable);
+Votes.attachSchema(Votes.schema);
+
+Votes.helpers({
+
+    clue() {
+        return Clues.findOne(this.clueId);
+    },
+
+    owner() {
+        return Meteor.users.findOne(this.ownerId);
+    },
+
+});
+
+if (Meteor.isServer) {
+
+    Meteor.publish('votes', function votesPublication(gameId) {
+        if (this.userId && gameId) {
+            const clueIds = Promise.await(
+                Cards.rawCollection().distinct('clueId', {gameId: gameId})
+            );
+            return Votes.find(
+                {
+                    ownerId: Meteor.userId(),
+                    clueId: {$in: clueIds},
+                },
+                {
+                    fields: {
+                        _id: 1,
+                        clueId: 1,
+                        ownerId: 1,
+                        value: 1,
+                    }
+                }
+            );
+        } else {
+            return this.ready();
+        }
+    });
+
+    Votes.deny({
+        insert() { return true; },
+        update() { return true; },
+        remove() { return true; },
+    });
+
+}
+
+Meteor.methods({
+
+    // Set the clue vote
+    'vote.set'(clueId, value) {
+
+        check(clueId, RecordId);
+        check(value, Match.Integer);
+        Permissions.check(Permissions.authenticated());
+
+        Logger.log("Set Vote for " + clueId + ": " + value);
+
+        const updated = Votes.update(
+            {
+                clueId: clueId,
+                ownerId: Meteor.userId()
+            },
+            {
+                $set: {value: value}
+            }
+        );
+        if (!updated) {
+            Votes.insert({
+                ownerId: Meteor.userId(),
+                clueId: clueId,
+                value: value,
+            });
+        }
+
+        Meteor.call('clue.calculateScore', clueId, function(err, score) {
+            if (!err) {
+                Logger.log("Updated Clue Score: " + clueId);
+            }
+        });
+
+        return true;
+
+    },
+
+});
