@@ -205,6 +205,71 @@ button.at-social-btn i {
     line-height: 1;
 }
 
+/* cluesFilter */
+#cluesFilter {
+    text-align: center;
+}
+#cluesFilter .form-group select,
+#cluesFilter .form-group input
+{
+    width: 100%;
+}
+@media (min-width: 576px) {
+    #cluesFilter .form-group {
+        float: left;
+        width: 50%;
+    }
+    #cluesFilter .form-group-category {
+        padding-right: .75rem;
+    }
+    #cluesFilter .form-group-keyword {
+        padding-left: .75rem;
+    }
+    #cluesFilter .form-check,
+    #cluesFilter button
+    {
+        display: inline-block;
+    }
+    #cluesFilter .form-check {
+        margin-right: .75rem;
+    }
+}
+@media (min-width: 768px) {
+    #cluesFilter .form-group {
+        float: none;
+        width: auto;
+        display: inline-block;
+    }
+    #cluesFilter .form-group,
+    #cluesFilter .form-check
+    {
+        margin-left: .375rem;
+        margin-right: .375rem;
+    }
+    #cluesFilter .form-group:first-child {
+        margin-left: 0;
+    }
+    #cluesFilter .form-group-category {
+        padding-right: 0;
+    }
+    #cluesFilter .form-group-keyword {
+        padding-left: 0;
+    }
+    #cluesFilter .form-group select,
+    #cluesFilter .form-group input
+    {
+        width: 15rem;
+    }
+}
+
+
+
+#cluesFilterCategory,
+#cluesFilterKeyword
+{
+    width: 15rem;
+}
+
 /* clues manager */
 #cluesManager {
     min-width: 60rem;

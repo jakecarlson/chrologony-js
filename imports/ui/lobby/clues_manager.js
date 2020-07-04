@@ -138,18 +138,22 @@ Template.clues_manager.helpers({
 
 Template.clues_manager.events({
 
-    'keyup #cluesFilter [name="keyword"]'(e, i) {
-        i.filters.set('keyword', e.target.value);
+    'submit #cluesFilter'(e, i) {
+        LoadingState.start(e);
+        i.filters.set('page', 1);
+        i.filters.set('keyword', i.find('[name="keyword"]').value);
+        i.filters.set('owned', i.find('[name="owned"]').checked);
     },
 
     'change #cluesFilter [name="categoryId"]'(e, i) {
+        LoadingState.start(e);
         const categoryId = e.target.options[e.target.selectedIndex].value;
         FlowRouter.go('clues.categoryId', {categoryId: categoryId});
+        i.filters.set('categoryId', categoryId);
+        i.find('[name="keyword"]').value = '';
+        i.find('[name="owned"]').checked = false;
+        i.filters.set('page', 1);
         TourGuide.resume();
-    },
-
-    'change #cluesFilter [name="owned"]'(e, i) {
-        i.filters.set('owned', e.target.checked);
     },
 
     'click .remove': ModelEvents.remove,
