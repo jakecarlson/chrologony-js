@@ -80,6 +80,10 @@ Template.clues_manager.helpers({
         return ['clues', 'clues.categoryId'].includes(FlowRouter.getRouteName());
     },
 
+    canAddClue() {
+        return Categories.findOne(Template.instance().filters.get('categoryId')).canAddClue();
+    },
+
     clues() {
         const skip = Helpers.getPageStart(Template.instance().filters.get('page'), Template.instance().pageSize);
         const clues = Clues.find({}, {skip: skip, limit: Template.instance().pageSize});
