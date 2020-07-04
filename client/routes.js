@@ -100,7 +100,6 @@ FlowRouter.route('/logout', {
         Logger.log("Route: logout");
         AccountsTemplates.logout();
         FlowRouter.go('home');
-        LoadingState.stop();
     }
 });
 

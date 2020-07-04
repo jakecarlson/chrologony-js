@@ -60,9 +60,9 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                         self.state.set('currentClue', null);
                     });
 
-                });
+                    LoadingState.stop();
 
-                LoadingState.stop();
+                });
 
             }
 
@@ -81,7 +81,8 @@ Template.clues_manager.helpers({
     },
 
     canAddClue() {
-        return Categories.findOne(Template.instance().filters.get('categoryId')).canAddClue();
+        const category = Categories.findOne(Template.instance().filters.get('categoryId'));
+        return (category && category.canAddClue());
     },
 
     clues() {

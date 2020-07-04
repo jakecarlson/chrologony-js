@@ -1,4 +1,5 @@
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
+import { LoadingState } from "../modules/LoadingState";
 
 import './layout_unauthenticated.html';
 import './footer.js';
@@ -51,6 +52,8 @@ Template.layout_unauthenticated.onRendered(function layout_unauthenticatedOnCrea
 
     $(function() {
         $('[data-toggle="popover"]').popover();
-    })
+    });
+
+    LoadingState.stop();
 
 });
