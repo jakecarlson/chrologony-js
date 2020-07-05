@@ -411,7 +411,6 @@ function getCluePublicationSelector(filters, advancedSearch = false) {
 
             // If using text search, we need to pre-filter before doing the full text search
             if (advancedSearch) {
-                console.log("Search: advanced");
                 const prefilteredClueIds = Clues.find(selector).map(function(i) { return i._id; });
                 selector = {
                     _id: {$in: prefilteredClueIds},
@@ -420,7 +419,6 @@ function getCluePublicationSelector(filters, advancedSearch = false) {
 
             // Otherwise use straight-up regex
             } else {
-                console.log("Search: basic");
                 selector.$or = [
                     {description: {$regex: filters.keyword, $options: 'i'}},
                     {date: {$regex: filters.keyword, $options: 'i'}},
