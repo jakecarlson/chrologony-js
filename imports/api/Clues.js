@@ -110,10 +110,10 @@ Clues.helpers({
 
 if (Meteor.isServer) {
 
-    Meteor.publish('clues', function cluesPublication(filters) {
+    Meteor.publish('clues', function cluesPublication(filters, advancedSearch = false) {
         if (this.userId && filters) {
 
-            const selector = getCluePublicationSelector(filters);
+            const selector = getCluePublicationSelector(filters, advancedSearch);
             const limit = filters.page * filters.pageSize;
 
             Counts.publish(this, 'cluesCount', Clues.find(selector));
@@ -387,7 +387,7 @@ function getClueUpdateSelector(attrs) {
     return selector;
 }
 
-function getCluePublicationSelector(filters) {
+function getCluePublicationSelector(filters, advancedSearch = false) {
 
     let selector = {};
 
@@ -408,18 +408,25 @@ function getCluePublicationSelector(filters) {
         // keyword
         if (filters.keyword && (filters.keyword.length > 2)) {
 
-            // Pre-filter the clues and add text search
-            const prefilteredClueIds = Clues.find(selector).map(function(i) { return i._id; });
-            selector = {
-                _id: {$in: prefilteredClueIds},
-                $text: {$search: filters.keyword},
+            // If using text search, we need to pre-filter before doing the full text search
+            if (advancedSearch) {
+                console.log("Search: advanced");
+                const prefilteredClueIds = Clues.find(selector).map(function(i) { return i._id; });
+                selector = {
+                    _id: {$in: prefilteredClueIds},
+                    $text: {$search: filters.keyword},
+                }
+
+            // Otherwise use straight-up regex
+            } else {
+                console.log("Search: basic");
+                selector.$or = [
+                    {description: {$regex: filters.keyword, $options: 'i'}},
+                    {date: {$regex: filters.keyword, $options: 'i'}},
+                    {moreInfo: {$regex: filters.keyword, $options: 'i'}},
+                    {hint: {$regex: filters.keyword, $options: 'i'}},
+                ];
             }
-            /*selector.$or = [
-                {description: {$regex: filters.keyword, $options: 'i'}},
-                {date: {$regex: filters.keyword, $options: 'i'}},
-                {moreInfo: {$regex: filters.keyword, $options: 'i'}},
-                {hint: {$regex: filters.keyword, $options: 'i'}},
-            ];*/
 
         }
 

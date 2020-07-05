@@ -1,3 +1,5 @@
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+
 Logger = {
 
     _config: {
@@ -26,7 +28,7 @@ Logger = {
         if (typeof str !== 'string') {
             str = JSON.stringify(str);
         }
-        if (level >= this._config.level) {
+        if ((level >= this._config.level) || FlowRouter.getQueryParam('debug')) {
             if (this._config.prefix) {
                 str = this._config.prefix + ' ' + str;
             }

@@ -76,12 +76,12 @@ if (Meteor.isServer) {
             check(excludeIds, [RecordId]);
             Permissions.check(Permissions.authenticated());
 
-            const regex = new RegExp("^" + query, 'i');
+            const regex = new RegExp(query, 'i');
             return Meteor.users.find(
                 {
                     _id: {$nin: excludeIds},
-                    $text: {$search: query},
-                    // 'profile.name': {$regex: regex},
+                    // $text: {$search: query},
+                    'profile.name': {$regex: regex},
                 },
                 {
                     sort: {

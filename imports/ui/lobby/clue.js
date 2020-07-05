@@ -3,9 +3,9 @@ import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
 import { Permissions } from "../../modules/Permissions";
 import { ModelEvents } from "../../modules/ModelEvents";
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 
 import './clue.html';
-import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 Template.clue.onCreated(function clueOnCreated() {
 

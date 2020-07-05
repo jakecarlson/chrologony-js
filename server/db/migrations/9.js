@@ -56,13 +56,15 @@ const INDEXES = [
             collaborators: {
                 collaborators: 1,
             },
-            prefilter: {
-                active: 1,
-                ownerId: 1,
-            },
             search: {
-                name: "text",
-                theme: "text",
+                _id: 1,
+                active: 1,
+                source: 1,
+                name: 1,
+                theme: 1,
+                ownerId: 1,
+                private: 1,
+                collaborators: 1,
             },
             source: {
                 source: 1,
@@ -151,7 +153,7 @@ const INDEXES = [
                 currentRoomId: 1,
             },
             search: {
-                'profile.name': "text",
+                'profile.name': 1,
             },
         },
     },

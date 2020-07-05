@@ -28,6 +28,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state = new ReactiveDict();
     this.state.set('currentClue', null);
     this.state.set('categories', []);
+    this.state.set('filterChanged', false);
 
     this.autorun(() => {
 
@@ -38,7 +39,9 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
         if (Categories.findOne(this.filters.get('categoryId'))) {
 
             LoadingState.start();
-            this.subscribe('clues', this.filters.all());
+            const advanced = FlowRouter.getQueryParam('advanced');
+            let t0 = performance.now();
+            this.subscribe('clues', this.filters.all(), advanced);
 
             if (this.subscriptionsReady()) {
 
@@ -60,9 +63,13 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                         self.state.set('currentClue', null);
                     });
 
-                    LoadingState.stop();
+                    let t1 = performance.now();
+                    const searchType = (advanced) ? 'Advanced' : 'Basic';
+                    Logger.log("Filter Time (" + searchType + "): " + (t1 - t0) + "ms");
 
                 });
+
+                LoadingState.stop();
 
             }
 
@@ -137,6 +144,14 @@ Template.clues_manager.helpers({
 });
 
 Template.clues_manager.events({
+
+    'change #cluesFilter [name="keyword"]'(e, i) {
+        i.state.set('filterChanged', true);
+    },
+
+    'change #cluesFilter [name="owned"]'(e, i) {
+        i.state.set('filterChanged', true);
+    },
 
     'submit #cluesFilter'(e, i) {
         LoadingState.start(e);
