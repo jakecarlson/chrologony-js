@@ -165,7 +165,8 @@ Meteor.methods({
             }
         );
         Permissions.check(Permissions.authenticated());
-        Permissions.check(Categories.findOne(attrs.categoryId).canAddClue());
+        const category = Categories.findOne(attrs.categoryId);
+        Permissions.check((category && category.canAddClue()));
 
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);

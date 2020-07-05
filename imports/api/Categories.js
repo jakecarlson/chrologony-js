@@ -41,7 +41,7 @@ Categories.helpers({
     },
 
     canAddClue() {
-        return (Permissions.owned(this) || this.collaborators.includes(Meteor.userId()));
+        return (Permissions.owned(this) || (this.collaborators && this.collaborators.includes(Meteor.userId())));
     },
 
 });
