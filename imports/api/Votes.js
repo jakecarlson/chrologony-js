@@ -41,8 +41,8 @@ if (Meteor.isServer) {
             );
             return Votes.find(
                 {
-                    ownerId: Meteor.userId(),
                     clueId: {$in: clueIds},
+                    ownerId: Meteor.userId(),
                 },
                 {
                     fields: {

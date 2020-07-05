@@ -30,8 +30,8 @@ Template.player.helpers({
     numLockedCards() {
         return Cards.find(
             {
-                ownerId: this.player._id,
                 gameId: this.room.currentGameId,
+                ownerId: this.player._id,
                 lockedAt: {$ne: null},
             }
         ).count();
@@ -40,8 +40,8 @@ Template.player.helpers({
     numPendingCards() {
         return Cards.find(
             {
-                ownerId: this.player._id,
                 gameId: this.room.currentGameId,
+                ownerId: this.player._id,
                 $or: [
                     {lockedAt: {$ne: null}},
                     {turnId: this.turn._id, correct: true},

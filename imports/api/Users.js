@@ -79,8 +79,9 @@ if (Meteor.isServer) {
             const regex = new RegExp("^" + query, 'i');
             return Meteor.users.find(
                 {
-                    'profile.name': {$regex: regex},
                     _id: {$nin: excludeIds},
+                    $text: {$search: query},
+                    // 'profile.name': {$regex: regex},
                 },
                 {
                     sort: {

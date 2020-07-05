@@ -397,22 +397,30 @@ function getCluePublicationSelector(filters) {
 
     } else {
 
-        // keyword
-        if (filters.keyword && (filters.keyword.length > 2)) {
-            selector.$or = [
-                {description: {$regex: filters.keyword, $options: 'i'}},
-                {date: {$regex: filters.keyword, $options: 'i'}},
-            ];
-        }
+        // category
+        selector.categories = filters.categoryId;
 
         // owned
         if (filters.owned) {
             selector.ownerId = Meteor.userId();
         }
 
-        // category
-        if (filters.categoryId) {
-            selector.categories = filters.categoryId;
+        // keyword
+        if (filters.keyword && (filters.keyword.length > 2)) {
+
+            // Pre-filter the clues and add text search
+            const prefilteredClueIds = Clues.find(selector).map(function(i) { return i._id; });
+            selector = {
+                _id: {$in: prefilteredClueIds},
+                $text: {$search: filters.keyword},
+            }
+            /*selector.$or = [
+                {description: {$regex: filters.keyword, $options: 'i'}},
+                {date: {$regex: filters.keyword, $options: 'i'}},
+                {moreInfo: {$regex: filters.keyword, $options: 'i'}},
+                {hint: {$regex: filters.keyword, $options: 'i'}},
+            ];*/
+
         }
 
     }

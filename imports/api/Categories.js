@@ -201,13 +201,14 @@ if (Meteor.isServer) {
             check(excludeIds, [RecordId]);
             Permissions.check(Permissions.authenticated());
 
-            const regex = new RegExp("^" + query, 'i');
-            const selector ={
+            const regex = new RegExp(query, 'i');
+            const selector = {
                 $and: [
                     {active: true, source: 'user'},
+                    {_id: {$nin: excludeIds}},
+                    // {$text: {$search: query}},
                     {$or: [{theme: {$regex: regex}}, {name: {$regex: regex}}]},
                     {$or: getAllowedConditions()},
-                    {_id: {$nin: excludeIds}},
                 ],
             };
             return Categories.find(
@@ -246,8 +247,8 @@ if (Meteor.isServer) {
 
 function getAllowedConditions() {
     return [
-        {private: false},
         {ownerId: Meteor.userId()},
+        {private: false},
         {collaborators: Meteor.userId()},
     ];
 }
