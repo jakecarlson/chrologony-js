@@ -27,7 +27,7 @@ Template.pager.helpers({
     },
 
     last() {
-        return numeral(getLast(this.page, Template.instance().size), this.total).format('0,0');
+        return numeral(getLast(this.page, Template.instance().size, this.total)).format('0,0');
     },
 
     previous() {
