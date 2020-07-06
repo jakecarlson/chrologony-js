@@ -157,7 +157,6 @@ if (Meteor.isServer) {
 
             // Lock all current turn cards
             if (game && game.currentTurnId) {
-                // const turn = game.currentTurn();
                 const cards = turn.cards();
                 const correctCards = turn.cards(true);
                 if (cards.count() === correctCards.count()) {

@@ -204,7 +204,8 @@ if (Meteor.isServer) {
 
             check(turnId, RecordId);
             Permissions.check(Permissions.authenticated());
-            Permissions.check(Permissions.owned(Turns.findOne(turnId)));
+            const turn = Turns.findOne(turnId);
+            Permissions.check((turn.game().roomId == Meteor.user().currentRoomId));
 
             // Draw the card -- defer this to a helper defined below because it's recursive
             const cardId = drawCard(turnId);
@@ -281,7 +282,7 @@ if (Meteor.isServer) {
             Clues.rawCollection().aggregate(
                 [
                     {$match: selector},
-                    {$sample: {size: 1 }},
+                    {$sample: {size: 1}},
                 ]
             ).toArray()
         );
