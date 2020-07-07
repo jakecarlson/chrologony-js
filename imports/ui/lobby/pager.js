@@ -4,11 +4,6 @@ import './pager.html';
 
 Template.pager.onCreated(function pagerOnCreated() {
 
-    this.size = this.data.size;
-    if (!this.size) {
-        this.size = 25;
-    }
-
     this.displayed = this.data.displayed;
     if (!this.displayed) {
         this.displayed = 7;
@@ -23,11 +18,11 @@ Template.pager.helpers({
     },
 
     first() {
-        return numeral(getFirst(this.page, Template.instance().size) + 1).format('0,0');
+        return numeral(getFirst(this.page, this.size) + 1).format('0,0');
     },
 
     last() {
-        return numeral(getLast(this.page, Template.instance().size, this.total)).format('0,0');
+        return numeral(getLast(this.page, this.size, this.total)).format('0,0');
     },
 
     previous() {
@@ -39,7 +34,7 @@ Template.pager.helpers({
     },
 
     next() {
-        const numPages = getNumPages(this.total, Template.instance().size);
+        const numPages = getNumPages(this.total, this.size);
         let next = this.page + 1;
         if (next > numPages) {
             next = false;
@@ -60,12 +55,12 @@ Template.pager.helpers({
     },
 
     showPages() {
-        return (!this.hidePages && (getNumPages(this.total, Template.instance().size) > 1));
+        return (!this.hidePages && (getNumPages(this.total, this.size) > 1));
     },
 
     pages() {
 
-        const numPages = getNumPages(this.total, Template.instance().size);
+        const numPages = getNumPages(this.total, this.size);
         const sides = Math.floor(Template.instance().displayed / 2);
 
         let min = this.page - sides;
@@ -92,6 +87,18 @@ Template.pager.helpers({
 
     disabled(page) {
         return (page === false);
+    },
+
+    showSizer() {
+        return !this.hideSizer;
+    },
+
+    sizes() {
+        return [5,10,25,50,100];
+    },
+
+    sizeSelected(size) {
+        return (size == this.size);
     },
 
 });

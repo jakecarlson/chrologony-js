@@ -96,8 +96,8 @@ Template.clues_manager.helpers({
     },
 
     clues() {
-        const skip = Helpers.getPageStart(Template.instance().filters.get('page'), Template.instance().pageSize);
-        const clues = Clues.find({}, {skip: skip, limit: Template.instance().pageSize});
+        const skip = Helpers.getPageStart(Template.instance().filters.get('page'), Template.instance().filters.get('pageSize'));
+        const clues = Clues.find({}, {skip: skip, limit: Template.instance().filters.get('pageSize')});
         return clues;
     },
 
@@ -137,7 +137,7 @@ Template.clues_manager.helpers({
     },
 
     pageSize() {
-        return Template.instance().pageSize;
+        return Template.instance().filters.get('pageSize');
     },
 
     pagesDisplayed() {
@@ -280,6 +280,11 @@ Template.clues_manager.events({
 
     'change #cluesBulkActionCategory'(e, i) {
         i.state.set('bulkAddCategoryId', e.target.value);
+    },
+
+    'change .pager-size [name="size"]'(e, i) {
+        i.filters.set('pageSize', parseInt(e.target.value));
+        i.filters.set('page', 1);
     },
 
 });
