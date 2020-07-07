@@ -270,7 +270,7 @@ Template.clues_manager.events({
             $('#cluesBulkActionCategory')[0].selectedIndex = 0;
             i.state.set('bulkAddCategoryId', null);
         }
-        $('[name="id"]:checked').prop('checked', false).trigger('change');
+        $('[name="id"]:checked, [name="all"]:checked').prop('checked', false).trigger('change');
 
     },
 
