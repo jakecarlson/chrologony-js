@@ -89,6 +89,7 @@ Template.layout_authenticated.events({
     },
 
     'click .categories'(e, i) {
+        e.preventDefault();
         const link = $(e.target).closest('a');
         const id = link.attr('data-id');
         const clue = Clues.findOne(id);

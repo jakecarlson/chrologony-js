@@ -12,6 +12,7 @@ Template.clue.onCreated(function clueOnCreated() {
     this.state = new ReactiveDict();
     this.state.set('editing', (this.data.clue === false));
     this.state.set('error', false);
+    this.state.set('selected', false);
 
     const clueId = FlowRouter.getParam('clueId');
     if (clueId && (clueId == this.data.clue._id)) {
@@ -32,6 +33,10 @@ Template.clue.helpers({
 
     viewing() {
         return !Template.instance().state.get('editing');
+    },
+
+    selected() {
+        return Template.instance().state.get('selected');
     },
 
     id() {
@@ -72,8 +77,14 @@ Template.clue.helpers({
 });
 
 Template.clue.events({
+
     'click .edit': ModelEvents.edit,
     'click .add': ModelEvents.add,
     'click .save': ModelEvents.save,
     'click .cancel': ModelEvents.cancel,
+
+    'change [name="id"]'(e, i) {
+        i.state.set('selected', e.target.checked);
+    },
+
 });

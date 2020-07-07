@@ -16,17 +16,28 @@
                 {{/if}}
             {{else}}
                 viewing
+                {{#if selected}}
+                    table-primary
+                {{/if}}
             {{/if}}
         "
     >
 
-        <th scope="row">
-            <textarea class="attr form-control {{#if viewing}}d-none{{/if}}" name="description" required maxlength="240" rows="1">{{description}}</textarea>
-            <span class="{{#if editing}}d-none{{/if}}">{{description}}</span>
-        </th>
+        <td>
+            {{#if clue}}
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="id" id="clue-{{id}}" value="{{id}}" disabled="{{editing}}">
+                </div>
+            {{/if}}
+        </td>
+
+        <td>
+            <textarea class="attr form-control form-control-sm {{#if viewing}}d-none{{/if}}" name="description" required maxlength="240" rows="1">{{description}}</textarea>
+            <label class="{{#if editing}}d-none{{/if}}" for="clue-{{id}}">{{description}}</label>
+        </td>
 
         <td colspan="{{#if clue}}1{{else}}3{{/if}}">
-            <input class="attr form-control {{#if viewing}}d-none{{/if}}" type="date" name="date" value="{{date}}" required maxlength="10">
+            <input class="attr form-control form-control-sm {{#if viewing}}d-none{{/if}}" type="date" name="date" value="{{date}}" required maxlength="10">
             <span class="{{#if editing}}d-none{{/if}}">{{date}}</span>
         </td>
 
@@ -50,12 +61,12 @@
                     {{#if clue}}
 
                         <input class="attr" type="hidden" name="_id" value="{{id}}">
-                        <button type="submit" class="save btn btn-primary mr-0 mr-md-2" disabled="{{loading}}">
+                        <button type="submit" class="save btn btn-primary btn-sm mr-0 mr-md-2" disabled="{{loading}}">
                             <i class="fa fa-check"></i>
                             <span class="d-none d-xl-inline">Save</span>
                         </button>
 
-                        <button type="submit" class="cancel btn btn-light mr-0 mr-md-2">
+                        <button type="submit" class="cancel btn btn-light btn-sm mr-0 mr-md-2">
                             <i class="fa fa-times"></i>
                             <span class="d-none d-xl-inline">Cancel</span>
                         </button>
@@ -63,7 +74,7 @@
                         {{#if canRemove}}
                             <button
                                 type="button"
-                                class="btn btn-outline-danger ml-2 float-right"
+                                class="btn btn-outline-danger btn-sm ml-2 float-right"
                                 data-toggle="modal"
                                 data-target="#removeClue"
                                 data-id="{{id}}"
@@ -75,7 +86,7 @@
 
                     {{else}}
 
-                        <button type="submit" class="add btn btn-primary" disabled="{{loading}}">
+                        <button type="submit" class="add btn btn-primary btn-sm" disabled="{{loading}}">
                             <i class="fa fa-plus"></i>
                             <span class="d-none d-xl-inline">Add</span>
                         </button>
