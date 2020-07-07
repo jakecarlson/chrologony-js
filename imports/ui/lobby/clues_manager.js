@@ -29,6 +29,9 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('currentClue', null);
     this.state.set('categories', []);
     this.state.set('filterChanged', false);
+    this.state.set('bulkAction', null);
+    this.state.set('bulkAddCategoryId', null);
+    this.state.set('cluesSelected', false);
 
     this.autorun(() => {
 
@@ -141,6 +144,25 @@ Template.clues_manager.helpers({
         return Template.instance().pagesDisplayed;
     },
 
+    hasSelectedClues() {
+        return Template.instance().state.get('cluesSelected');
+    },
+
+    showCategorySelector() {
+        return (Template.instance().state.get('bulkAction') == 'add_category');
+    },
+
+    disableBulkSubmit() {
+        return (
+            LoadingState.active() ||
+            !Template.instance().state.get('bulkAction') ||
+            (
+                (Template.instance().state.get('bulkAction') == 'add_category') &&
+                !Template.instance().state.get('bulkAddCategoryId')
+            )
+        );
+    },
+
 });
 
 Template.clues_manager.events({
@@ -204,6 +226,60 @@ Template.clues_manager.events({
         e.preventDefault();
         const page = parseInt($(e.target).closest('a').attr('data-page'));
         i.filters.set('page', page);
+    },
+
+    'change .select-all'(e, i) {
+        const checkbox = e.target;
+        $('[name="id"]').prop('checked', checkbox.checked).trigger('change');
+    },
+
+    'change [name="id"]'(e, i) {
+        i.state.set('cluesSelected', ($('[name="id"]:checked').length > 0));
+    },
+
+    'submit #cluesBulkActions'(e, i) {
+
+        LoadingState.start(e);
+
+        let clueIds = [];
+        $('[name="id"]:checked').each(function() {
+            clueIds.push(this.value);
+        });
+
+        if (i.state.get('bulkAction') == 'add_category') {
+            const categoryId = i.state.get('bulkAddCategoryId');
+            Meteor.call('clue.addCategory', clueIds, categoryId, function(err, updated) {
+                if (!err) {
+                    Logger.log('Added Category to ' + updated + ' Clues: ' + categoryId);
+                }
+                LoadingState.stop();
+            });
+        } else if (i.state.get('bulkAction') == 'remove_category') {
+            const categoryId = i.filters.get('categoryId');
+            Meteor.call('clue.removeCategory', clueIds, categoryId, function(err, updated) {
+                if (!err) {
+                    Logger.log('Removed Category from ' + updated + ' Clues: ' + categoryId);
+                }
+                LoadingState.stop();
+            });
+        }
+
+        $('#cluesBulkAction')[0].selectedIndex = 0;
+        i.state.set('bulkAction', null);
+        if (i.state.get('bulkAddCategoryId')) {
+            $('#cluesBulkActionCategory')[0].selectedIndex = 0;
+            i.state.set('bulkAddCategoryId', null);
+        }
+        $('[name="id"]:checked').prop('checked', false).trigger('change');
+
+    },
+
+    'change #cluesBulkAction'(e, i) {
+        i.state.set('bulkAction', e.target.value);
+    },
+
+    'change #cluesBulkActionCategory'(e, i) {
+        i.state.set('bulkAddCategoryId', e.target.value);
     },
 
 });

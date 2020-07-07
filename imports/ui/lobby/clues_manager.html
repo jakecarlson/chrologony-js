@@ -12,34 +12,77 @@
 
         <div class="table-responsive">
             <table id="cluesManager" class="table table-hover table-striped">
+
                 <colgroup>
+                    <col class="select">
                     <col class="description">
                     <col class="date">
                     <col class="categories">
                     <col class="more">
                     <col class="actions">
                 </colgroup>
+
                 <thead class="table-borderless">
+
                     <tr>
+                        <th scope="col">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input select-all" name="all" title="Select All">
+                            </div>
+                        </th>
                         <th scope="col">Clue</th>
                         <th scope="col">Date</th>
                         <th scope="col"><i class="fa fa-folder table-icon" title="Manage Categories"></i></th>
                         <th scope="col"><i class="fa fa-info-circle table-icon" title="More Info"></i></th>
                         <th scope="col"></th>
                     </tr>
+
                     {{#if canAddClue}}
                         {{> clue clue=false categoryId=categoryId}}
                     {{/if}}
+
+                    {{#if hasSelectedClues}}
+                        <tr class="table-secondary">
+                            <td colspan="6">
+                                <form class="form-inline justify-content-center" id="cluesBulkActions">
+
+                                    <div class="form-group mr-3 bulk-action">
+                                        <label for="cluesBulkAction" class="sr-only">Bulk Action:</label>
+                                        <select name="action" class="form-control form-control-sm" id="cluesBulkAction">
+                                            <option disabled selected>Select a Bulk Action ...</option>
+                                            <option value="add_category">Add to a Category</option>
+                                            <option value="remove_category">Remove from this Category</option>
+                                            <!--                    <option value="remove_clues">Remove Clues</option>-->
+                                        </select>
+                                    </div>
+
+                                    {{#if showCategorySelector}}
+                                        <div class="form-group mr-3 bulk-action-category">
+                                            <label for="cluesBulkActionCategory" class="sr-only">Category to Add:</label>
+                                            {{> categories_selector id="cluesBulkActionCategory" showInactive=true excludeCategoryId=categoryId small=true}}
+                                        </div>
+                                    {{/if}}
+
+                                    <button type="submit" class="btn btn-primary btn-sm" disabled="{{disableBulkSubmit}}">Submit</button>
+
+                                </form>
+                            </td>
+                        </tr>
+
+                    {{/if}}
+
                 </thead>
+
                 <tbody>
-                {{#if clues}}
-                    {{#each clueCard in clues}}
-                        {{> clue clue=clueCard categoryId=categoryId}}
-                    {{/each}}
-                {{else}}
-                    <tr><td colspan="5">Loading ...</td></tr>
-                {{/if}}
+                    {{#if clues}}
+                        {{#each clueCard in clues}}
+                            {{> clue clue=clueCard categoryId=categoryId}}
+                        {{/each}}
+                    {{else}}
+                        <tr><td colspan="6">Loading ...</td></tr>
+                    {{/if}}
                 </tbody>
+
             </table>
         </div>
 

@@ -10,7 +10,7 @@ Helpers = {
         return this.getValues(cursor, '_id');
     },
 
-    getCategoriesSelector(isPrivate = null, includeNonUser = false, showInactive = false) {
+    getCategoriesSelector(isPrivate = null, hideNonUser = false, showInactive = false, excludeCategoryId = null) {
         let selector = {};
         if (!showInactive) {
             selector.active = true;
@@ -26,9 +26,12 @@ Helpers = {
         } else {
             selector.private = isPrivate;
         }
-        // if (!includeNonUser) {
-        //     selector.source = 'user';
-        // }
+        if (hideNonUser) {
+            selector.source = 'user';
+        }
+        if (excludeCategoryId) {
+            selector._id = {$ne: excludeCategoryId};
+        }
         return selector;
     },
 

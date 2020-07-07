@@ -215,7 +215,7 @@ Meteor.methods({
 
     },
 
-    // Categories
+    // Set Categories
     'clue.setCategories'(id, categories) {
 
         check(id, RecordId);
@@ -238,6 +238,56 @@ Meteor.methods({
         );
 
         return categories.length;
+
+    },
+
+    // Add Category
+    'clue.addCategory'(ids, categoryId) {
+
+        check(ids, [RecordId]);
+        check(categoryId, RecordId);
+        Permissions.check(Permissions.authenticated());
+        ids.forEach(function(id) {
+            Permissions.check(Clues.findOne(id).canSetCategories([categoryId]));
+        });
+
+        Logger.log('Add category ' + categoryId + ' to: ' + JSON.stringify(ids));
+
+        // Update the clue categories
+        return Clues.update(
+            {
+                _id: {$in: ids},
+            },
+            {
+                $push: {categories: categoryId}
+            },
+            {multi: true}
+        );
+
+    },
+
+    // Remove Category
+    'clue.removeCategory'(ids, categoryId) {
+
+        check(ids, [RecordId]);
+        check(categoryId, RecordId);
+        Permissions.check(Permissions.authenticated());
+        ids.forEach(function(id) {
+            Permissions.check(Clues.findOne(id).canSetCategories([categoryId]));
+        });
+
+        Logger.log('Remove category ' + categoryId + ' from: ' + JSON.stringify(ids));
+
+        // Update the clue categories
+        return Clues.update(
+            {
+                _id: {$in: ids},
+            },
+            {
+                $pull: {categories: categoryId}
+            },
+            {multi: true}
+        );
 
     },
 
@@ -309,34 +359,6 @@ if (Meteor.isServer) {
 
     Meteor.methods({
 
-        // Add a category to clues
-        'clue.addCategory'(selector, categoryId) {
-
-            check(selector, Object);
-            check(categoryId, RecordId);
-
-            return Clues.update(
-                selector,
-                {$push: {categories: categoryId}},
-                {multi: true}
-            );
-
-        },
-
-        // Remove a category from clues
-        'clue.removeCategory'(selector, categoryId) {
-
-            check(selector, Object);
-            check(categoryId, RecordId);
-
-            return Clues.update(
-                selector,
-                {$pull: {categories: categoryId}},
-                {multi: true}
-            );
-
-        },
-
         // Get the full clue data
         'clue.get'(id) {
             const clue = Clues.findOne(id);
@@ -365,6 +387,34 @@ if (Meteor.isServer) {
                 {$set: {score: score}}
             );
             return score;
+
+        },
+
+        // Add a category to clues from shell
+        'clue.shellAddCategory'(selector, categoryId) {
+
+            check(selector, Object);
+            check(categoryId, RecordId);
+
+            return Clues.update(
+                selector,
+                {$push: {categories: categoryId}},
+                {multi: true}
+            );
+
+        },
+
+        // Remove a category from clues from shell
+        'clue.shellRemoveCategory'(selector, categoryId) {
+
+            check(selector, Object);
+            check(categoryId, RecordId);
+
+            return Clues.update(
+                selector,
+                {$pull: {categories: categoryId}},
+                {multi: true}
+            );
 
         },
 
