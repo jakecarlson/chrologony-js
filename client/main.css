@@ -513,6 +513,12 @@ button.at-social-btn i {
 .game-card-action.move-right {
     right: 0;
 }
+.game-card-action.difficulty {
+    font-size: medium;
+    position: relative;
+    top: -.25rem;
+    mix-blend-mode: soft-light;
+}
 .game-card.bg-warning .game-card-action {
     color: #212529;
 }

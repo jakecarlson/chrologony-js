@@ -8,11 +8,13 @@ import SimpleSchema from "simpl-schema";
 import { Schemas } from "../modules/Schemas";
 
 import { Categories } from "./Categories";
+import { Cards } from "./Cards";
 import { Votes } from "./Votes";
 
 export const Clues = new Mongo.Collection('clues');
 
 Clues.DEFAULT_SCORE = 10;
+Clues.DEFAULT_DIFFICULTY = .5;
 
 Clues.schema = new SimpleSchema(
     {
@@ -32,6 +34,7 @@ Clues.schema = new SimpleSchema(
         importId: {type: String, defaultValue: null, max: 27, optional: true},
         importSetId: {type: RecordId, defaultValue: null, optional: true},
         score: {type: SimpleSchema.Integer, defaultValue: Clues.DEFAULT_SCORE},
+        difficulty: {type: Number, defaultValue: Clues.DEFAULT_DIFFICULTY},
     },
     {
         requiredByDefault: false,
@@ -131,6 +134,7 @@ if (Meteor.isServer) {
                         categories: 1,
                         ownerId: 1,
                         score: 1,
+                        difficulty: 1,
                         hint: 1,
                         thumbnailUrl: 1,
                         imageUrl: 1,
@@ -387,6 +391,25 @@ if (Meteor.isServer) {
                 {$set: {score: score}}
             );
             return score;
+
+        },
+
+        // Calculate the difficulty
+        'clue.calculateDifficulty'(clueId) {
+
+            check(clueId, RecordId);
+
+            // Get the total cards that have used this clue
+            const totalCards = Cards.find({clueId: clueId}).count();
+            const incorrectCards = Cards.find({clueId: clueId, correct: false}).count();
+
+            // Set the difficulty
+            const difficulty = numeral(incorrectCards / totalCards).format('0.00');
+            const updated = Clues.update(
+                {_id: clueId},
+                {$set: {difficulty: difficulty}}
+            );
+            return difficulty;
 
         },
 

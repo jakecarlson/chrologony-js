@@ -95,6 +95,7 @@ if (Meteor.isServer) {
                                 description: 1,
                                 categories: 1,
                                 hint: 1,
+                                difficulty: 1,
                                 thumbnailUrl: 1,
                                 imageUrl: 1,
                                 latitude: 1,
@@ -253,6 +254,12 @@ if (Meteor.isServer) {
                     }
                 }
             );
+
+            Meteor.call('clue.calculateDifficulty', card.clueId, function(err, difficulty) {
+                if (!err) {
+                    Logger.log("Updated Clue Difficulty: " + difficulty);
+                }
+            });
 
             return correct;
 

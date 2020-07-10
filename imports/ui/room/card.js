@@ -3,9 +3,13 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { LoadingState } from "../../modules/LoadingState";
 
-import { Votes } from '../../api/Votes';
-
 import './card.html';
+
+const DIFFICULTY_NAMES = [
+    'Easy',
+    'Moderate',
+    'Hard',
+];
 
 Template.card.onCreated(function boardOnCreated() {
     this.clue = new ReactiveVar(null);
@@ -120,6 +124,24 @@ Template.card.helpers({
         return null;
     },
 
+    difficulty() {
+        return getDifficultyLevel(Template);
+    },
+
+    difficultyName() {
+        const level = getDifficultyLevel(Template);
+        return DIFFICULTY_NAMES[level - 1];
+    },
+
+    difficultyDots() {
+        const level = getDifficultyLevel(Template);
+        let dots = [];
+        for (let i = 0; i < level; ++i) {
+            dots.push(i);
+        }
+        return dots;
+    },
+
 });
 
 Template.card.events({
@@ -151,4 +173,12 @@ function submitVote(clueId, value) {
         }
         LoadingState.stop();
     });
+}
+
+function getDifficultyLevel(template) {
+    const clue = template.instance().clue.get();
+    if (clue && clue.difficulty) {
+        return Math.round(clue.difficulty / .5) + 1;
+    }
+    return 1;
 }
