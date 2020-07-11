@@ -50,10 +50,6 @@ Template.layout_unauthenticated.onRendered(function layout_unauthenticatedOnCrea
         FlowRouter.go('lobby');
     }
 
-    $(function() {
-        $('[data-toggle="popover"]').popover();
-    });
-
     LoadingState.stop();
 
 });

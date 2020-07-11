@@ -39,4 +39,13 @@ Helpers = {
         return (pageNum - 1) * pageSize;
     },
 
+    toBool(val) {
+        if (val == 'true') {
+            return true;
+        } else if (parseInt(val) === 1) {
+            return true;
+        }
+        return false;
+    },
+
 };

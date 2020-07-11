@@ -170,56 +170,31 @@ if (Meteor.isServer) {
                 }
             }
 
-            // Create an array of user IDs of players currently in the room
-            let playerPool = [];
-            game.room().players().forEach(function(user) {
-                playerPool.push(user._id);
-            });
-
-            // Get turn counts for players who have had turns in the current game and are still in the room
-            const players = Promise.await(
-                Turns.rawCollection().aggregate(
-                    [
-                        {$match: {gameId: gameId, ownerId: {$in: playerPool}}},
-                        {$group: {_id: "$ownerId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
-                        {$sort: {turns: -1, lastTurn: -1}}
-                    ]
-                ).toArray()
-            );
-
-            // Create an array of users who have already had turns
-            const alreadyPlayed = [];
-            players.forEach(function(player) {
-                alreadyPlayed.push(player._id);
-            });
-
-            // Get all players in the room that haven't had turns yet
-            const users = Meteor.users.find(
-                {
-                    currentRoomId: game.roomId,
-                    _id: {$nin: alreadyPlayed},
-                },
-                {
-                    sort: {
-                        joinedRoomAt: 1,
-                    }
-                }
-            ).fetch();
-            users.forEach(function(user) {
-                players.push({
-                    _id: user._id,
-                    turns: 0,
-                });
-            });
-
-            // Sort the object by turn counts
+            // Get players sorted by turn count descending
+            const players = getPlayerTurnCounts(game);
             Logger.log('Player Turn Counts: ' + JSON.stringify(players));
 
-            const lastPlayer = players[players.length-1];
-            Logger.log("Next Turn Belongs To: " + lastPlayer._id);
+            // If the turn order is random, randomly select one of the players with the fewest turns
+            let nextPlayer = null;
+            if (game.turnOrder == 'random') {
+                let leastTurnPlayers = [];
+                const lastIndex = players.length-1;
+                const minTurns = players[players.length-1].turns;
+                for (let i = lastIndex; i >= 0; --i) {
+                    if (players[i].turns != minTurns) break;
+                    leastTurnPlayers.push(players[i]);
+                }
+                nextPlayer = leastTurnPlayers[Math.floor(Math.random() * leastTurnPlayers.length)];
+
+            // Otherwise just pluck the bottom player
+            } else {
+                nextPlayer = players[players.length-1];
+            }
+
+            Logger.log("Next Turn Belongs To: " + nextPlayer._id);
             const turnId = Turns.insert({
                 gameId: gameId,
-                ownerId: lastPlayer._id,
+                ownerId: nextPlayer._id,
                 startedAt: new Date(),
             });
 
@@ -240,5 +215,61 @@ if (Meteor.isServer) {
         },
 
     });
+
+}
+
+function getPlayerTurnCounts(game) {
+
+    // Create an array of user IDs of players currently in the room
+    let playerPool = [];
+    game.room().players().forEach(function(user) {
+        playerPool.push(user._id);
+    });
+
+    // Get turn counts for players who have had turns in the current game and are still in the room
+    let sort = {
+        turns: -1,
+    };
+    if (game.turnOrder != 'random') {
+        sort.lastTurn = (game.turnOrder == 'snake') ? 1 : -1;
+    }
+
+    const players = Promise.await(
+        Turns.rawCollection().aggregate(
+            [
+                {$match: {gameId: game._id, ownerId: {$in: playerPool}}},
+                {$group: {_id: "$ownerId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
+                {$sort: sort},
+            ]
+        ).toArray()
+    );
+
+    // Create an array of users who have already had turns
+    const alreadyPlayed = [];
+    players.forEach(function(player) {
+        alreadyPlayed.push(player._id);
+    });
+
+    // Get all players in the room that haven't had turns yet
+    const users = Meteor.users.find(
+        {
+            currentRoomId: game.roomId,
+            _id: {$nin: alreadyPlayed},
+        },
+        {
+            sort: {
+                joinedRoomAt: -1,
+            }
+        }
+    ).fetch();
+    users.forEach(function(user) {
+        players.push({
+            _id: user._id,
+            turns: 0,
+            lastTurn: null,
+        });
+    });
+
+    return players;
 
 }

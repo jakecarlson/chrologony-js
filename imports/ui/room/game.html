@@ -9,6 +9,77 @@
                 <label for="gameCategoryId">Category:</label>
                 {{> categories_selector id="gameCategoryId" val=categoryId}}
             </div>
+            <fieldset id="gameAdvanced">
+                <legend data-toggle="collapse" href="#gameOptions" role="button" aria-expanded="false" aria-controls="gameOptions" class="collapsed">
+                    <i class="fa fa-caret-right"></i>
+                    <i class="fa fa-caret-down"></i>
+                    Advanced Options
+                </legend>
+                <div class="collapse" id="gameOptions">
+                    <div class="form-group">
+                        <label for="gameOptionsWinPoints">
+                            Win Condition
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="How many cards do players need to have locked in to win?"></i>
+                        </label>
+                        <select name="winPoints" class="form-control" id="gameOptionsWinPoints">
+                            {{#each condition in winConditions}}
+                                <option value="{{condition.value}}">{{condition.display}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" name="equalTurns" value="1" class="form-check-input" id="gameOptionsEqualTurns">
+                            <label for="gameOptionsEqualTurns" class="form-check-label">
+                                Equal # Turns per Player
+                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if you want everyone to have a turn on the last round of the game. The player who locked in the most cards wins."></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gameOptionsGuessLimit">
+                            Card Limit per Turn
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="How many cards can a player guess on their turn?"></i>
+                        </label>
+                        <select name="cardLimit" class="form-control" id="gameOptionsGuessLimit">
+                            {{#each limit in guessLimits}}
+                                <option value="{{limit.value}}">{{limit.display}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gameOptionsCardTime">
+                            Card Guess Time Limit
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="How much time does a player have to make a guess? The player's turn will end if their time expires."></i>
+                        </label>
+                        <select name="cardTime" class="form-control" id="gameOptionsCardTime">
+                            {{#each time in timeLimits}}
+                                <option value="{{time.value}}">{{time.display}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gameOptionsTurnOrder">
+                            Player Turn Order
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="The method to determine which order players will take turns in a given round."></i>
+                        </label>
+                        <select name="turnOrder" class="form-control" id="gameOptionsTurnOrder">
+                            {{#each order in turnOrders}}
+                                <option value="{{order.value}}">{{order.display}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" name="recycleCards" value="1" class="form-check-input" id="gameOptionsRecycleCards">
+                            <label for="gameOptionsRecycleCards" class="form-check-label">
+                                Recycle Incorrect Cards
+                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if you want cards that are guessed wrong to go back into the deck to be drawn again during the same game."></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
             <button
                 type="submit"
                 class="

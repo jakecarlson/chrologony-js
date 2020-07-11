@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { Categories } from "../api/Categories";
 
 export const Permissions = {
 

@@ -77,8 +77,8 @@ Template.room.onCreated(function roomOnCreated() {
                         let clipboards = new Clipboard('[data-clipboard-text]');
                         clipboards.on('success', function(e) {
                             let btn = $(e.trigger);
-                            btn.popover('show');
-                            setTimeout(function() {btn.popover('hide');},3000);
+                            btn.tooltip('show');
+                            setTimeout(function() {btn.tooltip('hide');},3000);
                         });
 
                         $('#clueMore').on('hidden.bs.modal', function(e) {

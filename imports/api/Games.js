@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import { Match, check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
@@ -17,7 +17,12 @@ Games.schema = new SimpleSchema({
     streak: {type: Boolean, defaultValue: false},
     currentTurnId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     winnerId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
-    winner: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
+    winPoints: {type: SimpleSchema.Integer, defaultValue: 0},
+    equalTurns: {type: Boolean, defaultValue: false},
+    cardLimit: {type: SimpleSchema.Integer, defaultValue: 0},
+    cardTime: {type: SimpleSchema.Integer, defaultValue: 0},
+    turnOrder: {type: String, defaultValue: 'sequential'},
+    recycleCards: {type: Boolean, defaultValue: false},
 });
 Games.schema.extend(Schemas.timestampable);
 Games.schema.extend(Schemas.endable);
@@ -140,8 +145,14 @@ if (Meteor.isServer) {
             check(
                 attrs,
                 {
-                    categoryId: RecordId,
                     roomId: RecordId,
+                    categoryId: RecordId,
+                    winPoints: Match.Integer,
+                    equalTurns: Boolean,
+                    cardLimit: Match.Integer,
+                    cardTime: Match.Integer,
+                    turnOrder: String,
+                    recycleCards: Boolean,
                 }
             );
             Permissions.check(Permissions.authenticated());

@@ -19,6 +19,9 @@ Template.body.onCreated(function bodyOnCreated() {
                 $(function() {
                     $('[data-toggle="popover"]').popover();
                 });
+                $(function() {
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
             });
 
             LoadingState.stop();

@@ -541,6 +541,30 @@ button.at-social-btn i {
     color: #007bff;
 }
 
+/* game */
+#gameAdvanced legend {
+    font-size: medium;
+}
+#gameAdvanced legend .fa {
+    width: .5rem;
+}
+#gameAdvanced legend {
+    color: #212529;
+}
+#gameAdvanced legend.collapsed {
+    color: #6c757d;
+}
+#gameAdvanced legend .fa-caret-down,
+#gameAdvanced legend.collapsed .fa-caret-right
+{
+    display: inline-block;
+}
+#gameAdvanced legend.collapsed .fa-caret-down,
+#gameAdvanced legend .fa-caret-right
+{
+    display: none;
+}
+
 /* loader */
 #loader {
     position: fixed;
