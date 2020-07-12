@@ -7,9 +7,9 @@ import './game.html';
 Template.game.onCreated(function gameOnCreated() {
     this.autorun(() => {
         Tracker.afterFlush(() => {
-            this.easy = $('.difficulty .easy');
-            this.moderate = $('.difficulty .moderate');
-            this.hard = $('.difficulty .hard');
+            this.easy = $('.difficulty .easy input');
+            this.moderate = $('.difficulty .moderate input');
+            this.hard = $('.difficulty .hard input');
         });
     });
 });
@@ -77,29 +77,31 @@ Template.game.helpers({
 
 Template.game.events({
 
-    'click .difficulty label'(e, i) {
+    'change .difficulty input'(e, i) {
 
-        const clicked = $(e.target);
+        // Set timeout or this ends up in an infinite loop
+        Meteor.setTimeout(function() {
 
-        // Don't allow the moderate toggle to be off if easy and hard are selected
-        if (
-            clicked.hasClass('moderate') &&
-            i.easy.hasClass('active') &&
-            i.hard.hasClass('active')
-        ) {
-            i.moderate.button('toggle');
-        }
+            const changed = $(e.target);
+            const easy = i.easy.is(':checked');
+            const moderate = i.moderate.is(':checked');
+            const hard = i.hard.is(':checked');
 
-        // Disallow deselecting all difficulties
-        if (clicked.hasClass('active')) {
-            let numActive = 0;
-            if (i.easy.hasClass('active')) ++numActive;
-            if (i.moderate.hasClass('active')) ++numActive;
-            if (i.hard.hasClass('active')) ++numActive;
-            if (numActive < 2) {
-                clicked.button('toggle');
+            // Don't allow moderate to be disabled if easy and hard are enabled
+            if (!moderate && easy && hard) {
+                i.moderate.closest('label').button('toggle');
             }
-        }
+
+            // Force at least 1 difficulty to be toggled
+            let difficulties = 0;
+            if (easy) ++difficulties;
+            if (moderate) ++difficulties;
+            if (hard) ++difficulties;
+            if (difficulties < 1) {
+                changed.closest('label').button('toggle');
+            }
+
+        }, 100);
 
     },
 
