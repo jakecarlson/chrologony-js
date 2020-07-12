@@ -155,7 +155,7 @@ Template.room.helpers({
     },
 
     isOwner() {
-        return (Template.instance().room.get().ownerId == Meteor.userId());
+        return isOwner(Template);
     },
 
     currentRoom() {
@@ -167,7 +167,7 @@ Template.room.helpers({
     },
 
     currentTurn() {
-        return Template.instance().turn.get();
+        return getCurrentTurn(Template);
     },
 
     players() {
@@ -250,12 +250,16 @@ Template.room.helpers({
     },
 
     isNotCurrentPlayer(player) {
-        const turn = Template.instance().turn.get();
+        const turn = getCurrentTurn(Template);
         return (!turn || (player._id != turn.ownerId));
     },
 
     gameInProgress() {
-        return Template.instance().turn.get();
+        return getCurrentTurn(Template);
+    },
+
+    showGameEnd() {
+        return (isOwner(Template) && getCurrentTurn(Template));
     },
 
 });
@@ -352,4 +356,12 @@ function moreAttr(i, attr) {
     } else {
         return null;
     }
+}
+
+function getCurrentTurn(t) {
+    return t.instance().turn.get();
+}
+
+function isOwner(t) {
+    return (t.instance().room.get().ownerId == Meteor.userId())
 }

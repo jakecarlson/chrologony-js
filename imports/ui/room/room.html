@@ -62,7 +62,7 @@
 
                     {{> players_list room=currentRoom turn=currentTurn}}
 
-                    {{#if gameInProgress}}
+                    {{#if showGameEnd}}
                         <div class="text-center mb-4">
                             <button class="btn btn-sm btn-secondary mr-2 end-game" disabled="{{loading}}">
                                 <i class="fa fa-stop-circle"></i>
