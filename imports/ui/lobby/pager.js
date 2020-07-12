@@ -105,15 +105,6 @@ Template.pager.helpers({
 
 Template.pager.events({
 
-    /*
-    'click [data-page]'(e, i) {
-        e.preventDefault();
-        const page = parseInt($(e.target).closest('a').attr('data-page'));
-        console.log(page);
-        i.page.set(page);
-    },
-    */
-
 });
 
 function getFirst(pageNum, pageSize) {

@@ -1,6 +1,8 @@
 import { Games } from '../../../imports/api/Games';
 
 const DEFAULT_TURN_ORDER = 'sequential';
+const DEFAULT_MIN_DIFFICULTY = 1;
+const DEFAULT_MAX_DIFFICULTY = 3;
 
 // Set game advanced options for all existing games to how the game has worked until now.
 Migrations.add({
@@ -17,6 +19,12 @@ Migrations.add({
                     cardTime: 0,
                     turnOrder: DEFAULT_TURN_ORDER,
                     recycleCards: true,
+                    minDifficulty: DEFAULT_MIN_DIFFICULTY,
+                    maxDifficulty: DEFAULT_MAX_DIFFICULTY,
+                    minScore: 0,
+                },
+                $unset: {
+                    streak: 1,
                 },
             },
             {multi: true}
@@ -33,6 +41,12 @@ Migrations.add({
                     cardTime: 1,
                     turnOrder: 1,
                     recycleCards: 1,
+                    minDifficulty: 1,
+                    maxDifficulty: 1,
+                    minScore: 1,
+                },
+                $set: {
+                    streak: false,
                 },
             },
             {multi: true}

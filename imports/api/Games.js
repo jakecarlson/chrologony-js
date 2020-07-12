@@ -14,11 +14,13 @@ export const Games = new Mongo.Collection('games');
 Games.schema = new SimpleSchema({
     roomId: {type: String, regEx: SimpleSchema.RegEx.Id},
     categoryId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    streak: {type: Boolean, defaultValue: false},
     currentTurnId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     winnerId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     winPoints: {type: SimpleSchema.Integer, defaultValue: 0},
     equalTurns: {type: Boolean, defaultValue: false},
+    minDifficulty: {type: Number, defaultValue: 0},
+    maxDifficulty: {type: Number, defaultValue: 0},
+    minScore: {type: SimpleSchema.Integer, defaultValue: 0},
     cardLimit: {type: SimpleSchema.Integer, defaultValue: 0},
     cardTime: {type: SimpleSchema.Integer, defaultValue: 0},
     turnOrder: {type: String, defaultValue: 'sequential'},
@@ -65,7 +67,6 @@ if (Meteor.isServer) {
                         _id: 1,
                         roomId: 1,
                         categoryId: 1,
-                        streak: 1,
                         currentTurnId: 1,
                         winnerId: 1,
                     },
@@ -149,6 +150,9 @@ if (Meteor.isServer) {
                     categoryId: RecordId,
                     winPoints: Match.Integer,
                     equalTurns: Boolean,
+                    minDifficulty: Number,
+                    maxDifficulty: Number,
+                    minScore: Match.Integer,
                     cardLimit: Match.Integer,
                     cardTime: Match.Integer,
                     turnOrder: String,
@@ -184,6 +188,15 @@ if (Meteor.isServer) {
             const gameId = Games.insert({
                 roomId: attrs.roomId,
                 categoryId: attrs.categoryId,
+                winPoints: attrs.winPoints,
+                equalTurns: attrs.equalTurns,
+                minDifficulty: attrs.minDifficulty,
+                maxDifficulty: attrs.maxDifficulty,
+                minScore: attrs.minScore,
+                cardLimit: attrs.cardLimit,
+                cardTime: attrs.cardTime,
+                turnOrder: attrs.turnOrder,
+                recycleCards: attrs.recycleCards,
             });
 
             Meteor.call('room.setGame', attrs.roomId, gameId, function(err, updated) {

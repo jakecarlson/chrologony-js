@@ -95,6 +95,7 @@ if (Meteor.isServer) {
                                 description: 1,
                                 categories: 1,
                                 hint: 1,
+                                score: 1,
                                 difficulty: 1,
                                 thumbnailUrl: 1,
                                 imageUrl: 1,
@@ -209,7 +210,8 @@ if (Meteor.isServer) {
             Permissions.check((turn.game().roomId == Meteor.user().currentRoomId));
 
             // Draw the card -- defer this to a helper defined below because it's recursive
-            const cardId = drawCard(turnId);
+            const game = turn.game();
+            const cardId = drawCard(turn, game);
             Logger.log("Card ID: " + cardId);
 
             Meteor.call('turn.setCard', turnId, cardId, null, function(err, updated) {
@@ -268,23 +270,52 @@ if (Meteor.isServer) {
     });
 
     // Draw a new card
-    function drawCard(turnId) {
+    function drawCard(turn, game) {
 
-        // Get a random card that hasn't been drawn this game
-        const turn = Turns.findOne(turnId);
-        const lockedCards = Cards.find({gameId: turn.gameId, lockedAt: {$ne: null}}).map(function(i) { return i.clueId; });
-        const turnCards = Cards.find({turnId: turnId}).map(function(i) { return i.clueId; });
-        const usedCards = lockedCards.concat(turnCards);
+        // Initialize selector for past clues in the current game
+        let usedSelector = {
+            gameId: game._id,
+        };
 
-        Logger.log('Used Cards: ' + JSON.stringify(usedCards));
+        // If the recycle cards options is set, only exclude locked and current turn cards
+        if (game.recycleCards) {
+            usedSelector.$or = [
+                {lockedAt: {$ne: null}},
+                {turnId: turn._id},
+            ];
+        }
 
+        // Get an array of clue IDs that have been used already for this game
+        const usedClueIds = Cards.find(usedSelector).map(function(i) { return i.clueId; });
+
+        Logger.log('Used Clues: ' + JSON.stringify(usedClueIds));
+
+        // Initialize the selector
         let selector = {
             active: true,
-            categories: turn.game().categoryId,
+            categories: game.categoryId,
         };
-        if (usedCards.length > 0) {
-            selector._id = {$nin: usedCards};
+        if (usedClueIds.length > 0) {
+            selector._id = {$nin: usedClueIds};
         }
+
+        // Narrow by difficulty
+        const difficulties = {
+            1: {min: 0, max: .33},
+            2: {min: .34, max: .66},
+            3: {min: .67, max: 1},
+        }
+        selector.difficulty = {
+            $gte: difficulties[game.minDifficulty].min,
+            $lte: difficulties[game.maxDifficulty].max,
+        };
+
+        // Narrow by score
+        if (game.minScore) {
+            selector.score = {$gte: game.minScore};
+        }
+
+        // Query for a random eligible clue
         const possibleClues = Promise.await(
             Clues.rawCollection().aggregate(
                 [
@@ -302,11 +333,9 @@ if (Meteor.isServer) {
         // Set the card doc
         const card = {
             gameId: turn.gameId,
-            turnId: turnId,
+            turnId: turn._id,
             clueId: randomClue._id,
             ownerId: turn.ownerId,
-            correct: null,
-            lockedAt: null,
         };
 
         // Figure out whether this is the first card
@@ -331,7 +360,7 @@ if (Meteor.isServer) {
 
         // If it's the first card, draw another
         if (firstCard) {
-            return drawCard(turnId);
+            return drawCard(turn, game);
         } else {
             return cardId;
         }

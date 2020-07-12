@@ -3,11 +3,14 @@ import { Template } from 'meteor/templating';
 import { LoadingState } from '../../modules/LoadingState';
 
 import './game.html';
-import SimpleSchema from "simpl-schema";
 
 Template.game.onCreated(function gameOnCreated() {
     this.autorun(() => {
-
+        Tracker.afterFlush(() => {
+            this.easy = $('.difficulty .easy');
+            this.moderate = $('.difficulty .moderate');
+            this.hard = $('.difficulty .hard');
+        });
     });
 });
 
@@ -59,25 +62,72 @@ Template.game.helpers({
         ];
     },
 
+    scoreThresholds() {
+        return [
+            {display: 'No Restriction', value: 0},
+            {display: '1+ (Any Positive)', value: 1},
+            {display: '10+', value: 10},
+            {display: '25+', value: 25},
+            {display: '50+', value: 50},
+            {display: '100+', value: 100},
+        ];
+    },
+
 });
 
 Template.game.events({
 
+    'click .difficulty label'(e, i) {
+
+        const clicked = $(e.target);
+
+        // Don't allow the moderate toggle to be off if easy and hard are selected
+        if (
+            clicked.hasClass('moderate') &&
+            i.easy.hasClass('active') &&
+            i.hard.hasClass('active')
+        ) {
+            i.moderate.button('toggle');
+        }
+
+        // Disallow deselecting all difficulties
+        if (clicked.hasClass('active')) {
+            let numActive = 0;
+            if (i.easy.hasClass('active')) ++numActive;
+            if (i.moderate.hasClass('active')) ++numActive;
+            if (i.hard.hasClass('active')) ++numActive;
+            if (numActive < 2) {
+                clicked.button('toggle');
+            }
+        }
+
+    },
+
     'submit #game'(e, i) {
 
         LoadingState.start(e);
+        const form = e.target;
 
-        // Get value from form element
-        const target = e.target;
+        let difficulties = [];
+        form.difficulty.forEach(function(input) {
+            if (input.checked) {
+                difficulties.push(parseInt(input.value));
+            }
+        });
+
+        // Get values from form element
         const attrs = {
             roomId: this.room._id,
-            categoryId: getSelectValue(target.categoryId),
-            winPoints: parseInt(getSelectValue(target.winPoints)),
-            equalTurns: Helpers.toBool(target.equalTurns),
-            cardLimit: parseInt(getSelectValue(target.cardLimit)),
-            cardTime: parseInt(getSelectValue(target.cardTime)),
-            turnOrder: getSelectValue(target.turnOrder),
-            recycleCards: Helpers.toBool(target.recycleCards),
+            categoryId: Helpers.getSelectValue(form.categoryId),
+            winPoints: parseInt(Helpers.getSelectValue(form.winPoints)),
+            equalTurns: form.equalTurns.checked,
+            minDifficulty: difficulties[0],
+            maxDifficulty: difficulties[difficulties.length-1],
+            minScore: parseInt(Helpers.getSelectValue(form.minScore)),
+            cardLimit: parseInt(Helpers.getSelectValue(form.cardLimit)),
+            cardTime: parseInt(Helpers.getSelectValue(form.cardTime)),
+            turnOrder: Helpers.getSelectValue(form.turnOrder),
+            recycleCards: form.recycleCards.checked,
         };
 
         Meteor.call('game.create', attrs, function(err, id) {
@@ -91,7 +141,3 @@ Template.game.events({
     },
 
 });
-
-function getSelectValue(select) {
-    return select.options[select.selectedIndex].value;
-}

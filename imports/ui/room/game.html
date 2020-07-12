@@ -37,6 +37,28 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="gameOptionsDifficulty">
+                            Clue Difficulty
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Difficulty ratings are based on the historical percentage of correct guesses."></i>
+                        </label>
+                        <div class="difficulty">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-sm btn-light easy active">
+                                    <input type="checkbox" name="difficulty" autocomplete="off" value="1" checked>
+                                    Easy
+                                </label>
+                                <label class="btn btn-sm btn-light moderate active">
+                                    <input type="checkbox" name="difficulty" autocomplete="off" value="2" checked>
+                                    Moderate
+                                </label>
+                                <label class="btn btn-sm btn-light hard active">
+                                    <input type="checkbox" name="difficulty" autocomplete="off" value="3" checked>
+                                    Hard
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="gameOptionsGuessLimit">
                             Card Limit per Turn
                             <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="How many cards can a player guess on their turn?"></i>
@@ -44,6 +66,17 @@
                         <select name="cardLimit" class="form-control" id="gameOptionsGuessLimit">
                             {{#each limit in guessLimits}}
                                 <option value="{{limit.value}}">{{limit.display}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gameOptionsMinScore">
+                            Clue Score Threshold
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="The score is the cumulative score from all upvotes and downvotes. Clues start at a score of 10."></i>
+                        </label>
+                        <select name="minScore" class="form-control" id="gameOptionsMinScore">
+                            {{#each score in scoreThresholds}}
+                                <option value="{{score.value}}">{{score.display}}</option>
                             {{/each}}
                         </select>
                     </div>
