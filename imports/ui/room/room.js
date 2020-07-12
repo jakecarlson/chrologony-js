@@ -40,7 +40,6 @@ Template.room.onCreated(function roomOnCreated() {
         const user = Meteor.user({fields: {currentRoomId: 1}});
         if (user) {
 
-            // console.log('GET SUBSCRIPTIONS');
             const roomId = user.currentRoomId;
 
             // Redirect the user back to lobby if they aren't authenticated to this room

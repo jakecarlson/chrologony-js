@@ -79,6 +79,53 @@ Games.helpers({
         );
     },
 
+    playersWithCounts() {
+        const userIds = Meteor.users.find({currentRoomId: this.roomId}).map(function(i) { return i._id; });
+        const players = Promise.await(
+            Cards.rawCollection().aggregate(
+                [
+                    {
+                        $match: {
+                            gameId: this._id,
+                            ownerId: {$in: userIds},
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$ownerId",
+                            lastCardTime: {$max: "$createdAt"},
+                            lockedCards: {$addToSet: "$lockedAt"},
+                            uniqueTurns: {$addToSet: "$turnId"},
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            lastCardTime: 1,
+                            turns: {$size:"$uniqueTurns"},
+                            cards: {
+                                $size: {
+                                    $filter: {
+                                        input: "$lockedCards",
+                                        as: "item",
+                                        cond: {$ne: ["$$item", null]}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        $sort: {
+                            cards: -1,
+                            lastCardTime: 1,
+                        }
+                    },
+                ]
+            ).toArray()
+        );
+        return players;
+    },
+
 });
 
 if (Meteor.isServer) {
@@ -229,16 +276,7 @@ if (Meteor.isServer) {
 
             // Only award a win if there were actually any turns and someone met the criteria
             } else if (game.currentTurnId) {
-                const userIds = Meteor.users.find({currentRoomId: game.roomId}).map(function(i) { return i._id; });
-                const players = Promise.await(
-                    Cards.rawCollection().aggregate(
-                        [
-                            {$match: {gameId: game._id, ownerId: {$in: userIds}}},
-                            {$group: {_id: "$ownerId", cards: {$sum: 1}, lastCardTime: {$max: "$createdAt"}}},
-                            {$sort: {cards: -1, lastCardTime: 1}},
-                        ]
-                    ).toArray()
-                );
+                const players = game.playersWithCounts();
                 const winner = players[0];
                 if (!game.winPoints || (winner.cards >= game.winPoints)) {
                     attrs.winnerId = winner._id;

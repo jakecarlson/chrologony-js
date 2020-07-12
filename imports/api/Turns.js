@@ -177,19 +177,40 @@ if (Meteor.isServer) {
 
             // If a win condition is defined, see if we've met it
             if (turn && game.winPoints) {
-                const numLockedCards = game.playerCards(turn.ownerId, true).count();
-                if (numLockedCards >= game.winPoints) {
 
+                let endGame = false;
+
+                // If we need to have equal turns, find out if anyone has won and if everyone has had equal turns
+                if (game.equalTurns) {
+                    const players = game.playersWithCounts();
+                    const leader = players[0];
+                    if (leader.cards >= game.winPoints) {
+                        let equalTurns = true;
+                        players.forEach(function(player) {
+                            if (player.turns < leader.turns) {
+                                equalTurns = false;
+                                return;
+                            }
+                        });
+                        endGame = equalTurns;
+                    }
+
+                // Otherwise end the game if the current player has enough cards
+                } else {
+                    const numLockedCards = game.playerCards(turn.ownerId, true).count();
+                    endGame = (numLockedCards >= game.winPoints);
+                }
+
+                // End the game if the conditions are met
+                if (endGame) {
                     Meteor.call('game.end', game._id, false, function(err, updated) {
                         if (!err) {
                             Logger.log("Ended Game: " + game._id);
                         }
                     });
-
-                    // Short circuit with game end
                     return null;
-
                 }
+
             }
 
             // If not short-circuited by game end, continue on to start the next turn ...
