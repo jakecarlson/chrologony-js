@@ -69,6 +69,7 @@ if (Meteor.isServer) {
                         categoryId: 1,
                         currentTurnId: 1,
                         winnerId: 1,
+                        cardLimit: 1,
                     },
                     sort: {
                         createdAt: -1,

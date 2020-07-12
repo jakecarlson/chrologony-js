@@ -209,6 +209,9 @@ if (Meteor.isServer) {
             const turn = Turns.findOne(turnId);
             Permissions.check((turn.game().roomId == Meteor.user().currentRoomId));
 
+            // If the game has a turn card limit, check whether the user is allowed to draw
+            Permissions.check(!turn.hasReachedCardLimit());
+
             // Draw the card -- defer this to a helper defined below because it's recursive
             const game = turn.game();
             const cardId = drawCard(turn, game);

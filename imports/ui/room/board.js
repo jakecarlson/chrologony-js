@@ -73,7 +73,7 @@ Template.board.helpers({
     },
 
     currentPlayerCards() {
-        return getTurnCards(this.game, this.turn);
+        return getPlayerCards(this.game, this.turn);
     },
 
     isCurrentCard(cardId) {
@@ -92,7 +92,8 @@ Template.board.helpers({
         return (
             LoadingState.active() ||
             !isCurrentPlayer(this.turn) ||
-            ['waiting', 'guessing', 'incorrect', 'empty'].includes(getStatus(this.turn))
+            ['waiting', 'guessing', 'incorrect', 'empty'].includes(getStatus(this.turn)) ||
+            this.turn.hasReachedCardLimit()
         );
     },
 
@@ -119,7 +120,13 @@ Template.board.helpers({
                 return "Move the blue card into the correct spot on the timeline.";
                 break;
             case 'correct':
-                return "Correct! Draw another card if you're feeling lucky, or end your turn to lock in your cards.";
+                let str = "Correct! ";
+                if (this.turn.hasReachedCardLimit()) {
+                    str += "You've reached your card limit. Please end your turn.";
+                } else {
+                    str += "Draw another card if you're feeling lucky, or end your turn to lock in your cards.";
+                }
+                return str;
                 break;
             case 'incorrect':
                 // return "Wrong! " + Insult() + " End your turn.";
@@ -133,7 +140,7 @@ Template.board.helpers({
     },
 
     timelineWidth() {
-        const cards = getTurnCards(this.game, this.turn);
+        const cards = getPlayerCards(this.game, this.turn);
         if (cards.count) {
             const numCards = cards.count()-2;
             return ((numCards * 5.25) + 45) + 'rem';
@@ -247,17 +254,18 @@ function isRoomOwner(room) {
     return (room.ownerId == Meteor.userId());
 }
 
-function getTurnCards(game, turn) {
+function getPlayerCards(game, turn) {
     if (game && turn) {
+        let selector = {
+            gameId: game._id,
+            ownerId: turn.ownerId,
+            $or: [
+                {turnId: turn._id},
+                {lockedAt: {$ne: null}},
+            ],
+        };
         return Cards.find(
-            {
-                gameId: game._id,
-                ownerId: turn.ownerId,
-                $or: [
-                    {turnId: turn._id},
-                    {lockedAt: {$ne: null}},
-                ]
-            },
+            selector,
             {
                 sort: {
                     pos: 1,

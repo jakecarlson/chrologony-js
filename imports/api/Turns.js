@@ -55,6 +55,11 @@ Turns.helpers({
         return Meteor.users.findOne(this.ownerId);
     },
 
+    hasReachedCardLimit() {
+        const game = this.game();
+        return (game.cardLimit && this.cards().count() >= game.cardLimit);
+    },
+
 });
 
 if (Meteor.isServer) {
