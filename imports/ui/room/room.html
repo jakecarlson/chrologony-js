@@ -11,7 +11,7 @@
                 <div class="float-right mb-2" id="roomMenu">
 
                     <button
-                            class="btn btn-secondary float-right leave"
+                            class="btn btn-light float-right leave"
                             disabled="{{loading}}"
                             title="Leave Room"
                     >
@@ -40,7 +40,7 @@
 
                     {{> board room=currentRoom game=currentGame turn=currentTurn}}
 
-                    {{#if hasMultiplePlayers}}
+                    {{#if showPlayerCards}}
                         <div id="playerCards" class="mb-4 mb-lg-0">
                             <h2 id="playerCardsTitle" class="text-muted mb-2">
                                 {{#if gameInProgress}}
@@ -59,14 +59,35 @@
                 </div>
 
                 <div class="col-lg-3" id="roomSide">
+
                     {{> players_list room=currentRoom turn=currentTurn}}
-                    {{#if isOwner}}
-                        {{> game room=currentRoom game=currentGame}}
-                        <button class="btn btn-outline-danger float-right destroy" disabled="{{loading}}">
-                            <i class="fa fa-trash"></i>
-                            <span>Delete Room</span>
-                        </button>
+
+                    {{#if gameInProgress}}
+                        <div class="text-center mb-4">
+                            <button class="btn btn-sm btn-secondary mr-2 end-game" disabled="{{loading}}">
+                                <i class="fa fa-stop-circle"></i>
+                                <span>End Game</span>
+                            </button>
+                            <button class="btn btn-sm btn-light abandon-game" disabled="{{loading}}">
+                                <i class="fa fa-remove"></i>
+                                <span>Abandon Game</span>
+                            </button>
+                        </div>
                     {{/if}}
+
+                    {{#if isOwner}}
+
+                        {{> game room=currentRoom game=currentGame turn=currentTurn}}
+
+                        <div class="text-center">
+                            <button class="btn btn-outline-danger destroy" disabled="{{loading}}">
+                                <i class="fa fa-trash"></i>
+                                <span>Delete Room</span>
+                            </button>
+                        </div>
+
+                    {{/if}}
+
                 </div>
 
             </div>

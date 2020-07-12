@@ -17,7 +17,7 @@ Template.game.onCreated(function gameOnCreated() {
 Template.game.helpers({
 
     gameInProgress() {
-        return this.game;
+        return this.turn;
     },
 
     categoryId() {

@@ -176,11 +176,11 @@ if (Meteor.isServer) {
             }
 
             // If a win condition is defined, see if we've met it
-            if (game.winPoints) {
+            if (turn && game.winPoints) {
                 const numLockedCards = game.playerCards(turn.ownerId, true).count();
                 if (numLockedCards >= game.winPoints) {
 
-                    Meteor.call('game.end', game._id, function(err, updated) {
+                    Meteor.call('game.end', game._id, false, function(err, updated) {
                         if (!err) {
                             Logger.log("Ended Game: " + game._id);
                         }

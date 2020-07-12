@@ -56,4 +56,12 @@ export const Schemas = {
         },
     }),
 
+    softDeletable: new SimpleSchema({
+        deletedAt: {
+            type: Date,
+            defaultValue: null,
+            optional: true,
+        },
+    }),
+
 };

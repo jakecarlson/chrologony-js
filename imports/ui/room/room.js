@@ -67,6 +67,9 @@ Template.room.onCreated(function roomOnCreated() {
                         this.turn.set(Turns.findOne(this.game.get().currentTurnId));
                     }
 
+                } else {
+                    this.game.set(null);
+                    this.turn.set(null);
                 }
 
                 if (this.subscriptionsReady()) {
@@ -240,8 +243,11 @@ Template.room.helpers({
         return url;
     },
 
-    hasMultiplePlayers() {
-        return (Template.instance().room.get().players().count() > 1);
+    showPlayerCards() {
+        return (
+            Template.instance().game.get() &&
+            (Template.instance().room.get().players().count() > 1)
+        );
     },
 
     isNotCurrentPlayer(player) {
@@ -262,7 +268,7 @@ Template.room.events({
     },
 
     'click .destroy'(e, i) {
-        LoadingState.start();
+        LoadingState.start(e);
         Meteor.call('room.remove', i.room.get()._id, function(err, id) {
             if (!err) {
                 Logger.log("Room Deleted: " + id);
@@ -270,6 +276,25 @@ Template.room.events({
                 FlowRouter.go('lobby');
             }
             LoadingState.stop();
+        });
+    },
+
+    'click .end-game'(e, i) {
+        LoadingState.start(e);
+        Meteor.call('game.end', i.game.get()._id, false, function(err, updated) {
+            if (!err) {
+                Logger.log("Ended Game: " + i.game.get()._id);
+            }
+        });
+    },
+
+    'click .abandon-game'(e, i) {
+        LoadingState.start(e);
+        const gameId = i.game.get()._id;
+        Meteor.call('game.end', gameId, true, function(err, updated) {
+            if (!err) {
+                Logger.log("Abandoned Game: " + gameId);
+            }
         });
     },
 

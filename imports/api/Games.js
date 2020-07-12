@@ -30,6 +30,7 @@ Games.schema = new SimpleSchema({
 });
 Games.schema.extend(Schemas.timestampable);
 Games.schema.extend(Schemas.endable);
+Games.schema.extend(Schemas.softDeletable);
 Games.attachSchema(Games.schema);
 
 Games.helpers({
@@ -121,8 +122,11 @@ Meteor.methods({
 
     // Update
     'game.setTurn'(id, turnId) {
+
         check(id, RecordId);
-        check(turnId, RecordId);
+        if (turnId) {
+            check(turnId, RecordId);
+        }
         Permissions.check(Permissions.authenticated());
         checkPlayerIsInRoom(id);
 
@@ -205,7 +209,7 @@ if (Meteor.isServer) {
         },
 
         // End
-        'game.end'(id) {
+        'game.end'(id, abandon = false) {
 
             check(id, RecordId);
             Permissions.check(Permissions.authenticated());
@@ -219,8 +223,12 @@ if (Meteor.isServer) {
                 currentTurnId: null,
             }
 
+            // Treat the game as deleted if it is being abandoned
+            if (abandon) {
+                attrs.deletedAt = new Date();
+
             // Only award a win if there were actually any turns and someone met the criteria
-            if (game.currentTurnId) {
+            } else if (game.currentTurnId) {
                 const userIds = Meteor.users.find({currentRoomId: game.roomId}).map(function(i) { return i._id; });
                 const players = Promise.await(
                     Cards.rawCollection().aggregate(
@@ -238,12 +246,28 @@ if (Meteor.isServer) {
             }
 
             // Update the game
-            return Games.update(
+            const updated = Games.update(
                 id,
                 {
                     $set: attrs,
                 }
             );
+
+            // If the game was abandoned, null out the room's current game
+            if (abandon) {
+                Meteor.call('game.setTurn', game._id, null, function(err, updated) {
+                    if (!err) {
+                        Logger.log("Updated Game: " + updated);
+                    }
+                });
+                Meteor.call('room.setGame', game.roomId, null, function(err, updated) {
+                    if (!err) {
+                        Logger.log("Updated Room: " + updated);
+                    }
+                });
+            }
+
+            return updated;
 
         },
 

@@ -16,10 +16,10 @@ Rooms.schema = new SimpleSchema({
     name: {type: String, max: 40},
     password: {type: String, max: 72},
     currentGameId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
-    deletedAt: {type: Date, defaultValue: null, optional: true},
 });
 Rooms.schema.extend(Schemas.timestampable);
 Rooms.schema.extend(Schemas.ownable);
+Rooms.schema.extend(Schemas.softDeletable);
 Rooms.attachSchema(Rooms.schema);
 
 Rooms.helpers({
@@ -133,7 +133,9 @@ Meteor.methods({
     'room.setGame'(id, gameId) {
 
         check(id, RecordId);
-        check(gameId, RecordId);
+        if (gameId) {
+            check(gameId, RecordId);
+        }
         Permissions.check(Permissions.authenticated());
         Permissions.check(Permissions.owned(Rooms.findOne(id)));
 
