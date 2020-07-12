@@ -25,7 +25,7 @@ Template.board.onCreated(function boardOnCreated() {
                 const cardsSortable = new Sortable(
                     document.getElementById('boardCards'),
                     {
-                        handle: '.board-card.current',
+                        handle: '.board-card.current.owned',
                         direction: 'horizontal',
                         filter: '.board-card .move',
                         forceFallback: true,
