@@ -8,6 +8,8 @@ import { Schemas } from "../modules/Schemas";
 
 import { Rooms } from './Rooms';
 import { Turns } from './Turns';
+import {Cards} from "./Cards";
+import {Promise} from "meteor/promise";
 
 export const Games = new Mongo.Collection('games');
 
@@ -52,6 +54,30 @@ Games.helpers({
         return Meteor.users.findOne(this.winnerId);
     },
 
+    playerCards(userId, lockedOnly = false) {
+        let selector = {
+            gameId: this._id,
+            ownerId: userId,
+        };
+        if (lockedOnly) {
+            selector.lockedAt = {$ne: null};
+        } else {
+            selector.$or = [
+                {lockedAt: {$ne: null}},
+                {turnId: this.currentTurnId},
+            ];
+        }
+        return Cards.find(
+            selector,
+            {
+                sort: {
+                    pos: 1,
+                    createdAt: -1,
+                }
+            }
+        );
+    },
+
 });
 
 if (Meteor.isServer) {
@@ -70,6 +96,8 @@ if (Meteor.isServer) {
                         currentTurnId: 1,
                         winnerId: 1,
                         cardLimit: 1,
+                        startedAt: 1,
+                        endedAt: 1,
                     },
                     sort: {
                         createdAt: -1,
@@ -112,29 +140,6 @@ Meteor.methods({
 
     },
 
-    // End
-    'game.end'(id) {
-
-        check(id, RecordId);
-        Permissions.check(Permissions.authenticated());
-        checkPlayerIsInRoom(id);
-
-        const game = Games.findOne(id);
-        let attrs = {
-            endedAt: new Date(),
-        }
-        if (game.currentTurnId) {
-            // attrs.winnerId = game.currentTurn().ownerId;
-        }
-        return Games.update(
-            id,
-            {
-                $set: attrs,
-            }
-        );
-
-    },
-
 });
 
 if (Meteor.isServer) {
@@ -166,23 +171,6 @@ if (Meteor.isServer) {
             const room = Rooms.findOne(attrs.roomId);
             Permissions.check(Permissions.owned(room));
 
-            // End the previous game
-            if (room.currentGameId) {
-                const updated = Games.update(
-                    room.currentGameId,
-                    {
-                        $set: {
-                            endedAt: new Date(),
-                        }
-                    }
-                );
-                if (updated) {
-                    Logger.log('Ended Game: ' + room.currentGameId)
-                } else {
-                    Logger.log('Error Ending Game: ' + room.currentGameId, 3);
-                }
-            }
-
             Logger.log('Create Game: ' + JSON.stringify(attrs));
 
             // Create the new game
@@ -213,6 +201,49 @@ if (Meteor.isServer) {
             });
 
             return gameId;
+
+        },
+
+        // End
+        'game.end'(id) {
+
+            check(id, RecordId);
+            Permissions.check(Permissions.authenticated());
+            checkPlayerIsInRoom(id);
+            const game = Games.findOne(id);
+            Permissions.check((id == game.room().currentGameId));
+
+            // Initialize game end attributes
+            let attrs = {
+                endedAt: new Date(),
+                currentTurnId: null,
+            }
+
+            // Only award a win if there were actually any turns and someone met the criteria
+            if (game.currentTurnId) {
+                const userIds = Meteor.users.find({currentRoomId: game.roomId}).map(function(i) { return i._id; });
+                const players = Promise.await(
+                    Cards.rawCollection().aggregate(
+                        [
+                            {$match: {gameId: game._id, ownerId: {$in: userIds}}},
+                            {$group: {_id: "$ownerId", cards: {$sum: 1}, lastCardTime: {$max: "$createdAt"}}},
+                            {$sort: {cards: -1, lastCardTime: 1}},
+                        ]
+                    ).toArray()
+                );
+                const winner = players[0];
+                if (!game.winPoints || (winner.cards >= game.winPoints)) {
+                    attrs.winnerId = winner._id;
+                }
+            }
+
+            // Update the game
+            return Games.update(
+                id,
+                {
+                    $set: attrs,
+                }
+            );
 
         },
 

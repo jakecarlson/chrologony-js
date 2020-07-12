@@ -57,7 +57,7 @@ Turns.helpers({
 
     hasReachedCardLimit() {
         const game = this.game();
-        return (game.cardLimit && this.cards().count() >= game.cardLimit);
+        return ((game.cardLimit > 0) && (this.cards().count() >= game.cardLimit));
     },
 
 });
@@ -174,6 +174,25 @@ if (Meteor.isServer) {
                     });
                 }
             }
+
+            // If a win condition is defined, see if we've met it
+            if (game.winPoints) {
+                const numLockedCards = game.playerCards(turn.ownerId, true).count();
+                if (numLockedCards >= game.winPoints) {
+
+                    Meteor.call('game.end', game._id, function(err, updated) {
+                        if (!err) {
+                            Logger.log("Ended Game: " + game._id);
+                        }
+                    });
+
+                    // Short circuit with game end
+                    return null;
+
+                }
+            }
+
+            // If not short-circuited by game end, continue on to start the next turn ...
 
             // Get players sorted by turn count descending
             const players = getPlayerTurnCounts(game);

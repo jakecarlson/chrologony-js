@@ -4,8 +4,6 @@ import { Sortable } from 'sortablejs';
 import { LoadingState } from '../../modules/LoadingState';
 // import { Insult } from "insult";
 
-import { Cards } from '../../api/Cards';
-
 import './board.html';
 import './card.js';
 
@@ -67,13 +65,18 @@ Template.board.helpers({
             }
             title += ' Turn';
             return title;
+        } else if (gameHasEnded(this.game)) {
+            return 'Game has Ended';
         } else {
             return 'No Game in Progress';
         }
     },
 
     currentPlayerCards() {
-        return getPlayerCards(this.game, this.turn);
+        if (this.game && this.turn) {
+            return this.game.playerCards(this.turn.ownerId);
+        }
+        return [];
     },
 
     isCurrentCard(cardId) {
@@ -84,6 +87,7 @@ Template.board.helpers({
         return (
             LoadingState.active() ||
             !isCurrentPlayer(this.turn) ||
+            gameHasEnded(this.game) ||
             ['waiting', 'correct', 'incorrect', 'empty'].includes(getStatus(this.turn))
         );
     },
@@ -91,7 +95,9 @@ Template.board.helpers({
     cannotDrawCard() {
         return (
             LoadingState.active() ||
+            !this.turn ||
             !isCurrentPlayer(this.turn) ||
+            gameHasEnded(this.game) ||
             ['waiting', 'guessing', 'incorrect', 'empty'].includes(getStatus(this.turn)) ||
             this.turn.hasReachedCardLimit()
         );
@@ -99,14 +105,17 @@ Template.board.helpers({
 
     cannotEndTurn() {
         return (
+            gameHasEnded(this.game) ||
             (
-                !isRoomOwner(this.room) ||
-                TourGuide.isActive()
-            ) &&
-            (
-                LoadingState.active() ||
-                !isCurrentPlayer(this.turn) ||
-                ['waiting', 'guessing'].includes(getStatus(this.turn))
+                (
+                    !isRoomOwner(this.room) ||
+                    TourGuide.isActive()
+                ) &&
+                (
+                    LoadingState.active() ||
+                    !isCurrentPlayer(this.turn) ||
+                    ['waiting', 'guessing'].includes(getStatus(this.turn))
+                )
             )
         );
     },
@@ -140,26 +149,39 @@ Template.board.helpers({
     },
 
     timelineWidth() {
-        const cards = getPlayerCards(this.game, this.turn);
-        if (cards.count) {
-            const numCards = cards.count()-2;
-            return ((numCards * 5.25) + 45) + 'rem';
-        } else {
-            return '100%';
+        if (this.game && this.turn) {
+            const cards = this.game.playerCards(this.turn.ownerId);
+            if (cards.count) {
+                const numCards = cards.count() - 2;
+                return ((numCards * 5.25) + 45) + 'rem';
+            }
         }
+        return '100%';
     },
 
     boardClasses() {
-        let str = 'card mb-4';
-        if (isCurrentPlayer(this.turn)) {
-            str += ' border-' + getColor(this.turn);
+        let str = 'card mb-4 ';
+        if (gameHasEnded(this.game)) {
+            if (isGameWinner(this.game)) {
+                str += 'border-success';
+            } else {
+                str += 'border-danger';
+            }
+        } else if (isCurrentPlayer(this.turn)) {
+            str += 'border-' + getColor(this.turn);
         }
         return str;
     },
 
     headerClasses() {
         let str = 'card-header ';
-        if (isCurrentPlayer(this.turn)) {
+        if (gameHasEnded(this.game)) {
+            if (isGameWinner(this.game)) {
+                str += 'bg-success';
+            } else {
+                str += 'bg-danger';
+            }
+        } else if (isCurrentPlayer(this.turn)) {
             str += 'bg-' + getColor(this.turn);
         } else {
             str += 'bg-light';
@@ -168,14 +190,45 @@ Template.board.helpers({
     },
 
     buttonClasses(disabled) {
-        let str = 'btn';
-        if (disabled && isCurrentPlayer(this.turn)) {
-            str += ' btn-' + getColor(this.turn);
+        let str = 'btn ';
+        if (gameHasEnded(this.game)) {
+            if (isGameWinner(this.game)) {
+                str += 'btn-success';
+            } else {
+                str += 'btn-danger';
+            }
+        } else if (disabled && isCurrentPlayer(this.turn)) {
+            str += 'btn-' + getColor(this.turn);
         } else {
-            str += ' btn-light';
+            str += 'btn-light';
         }
         str += ' float-right ml-2';
         return str;
+    },
+
+    winnerClasses() {
+        let str = 'fa fa-certificate bg-winner '
+        if (isGameWinner(this.game)) {
+            str += 'text-success';
+        } else {
+            str += 'text-danger';
+        }
+        return str;
+    },
+
+    gameHasEnded() {
+        return gameHasEnded(this.game);
+    },
+
+    winner() {
+        if (this.game && this.game.winnerId) {
+            if (this.game.winnerId == Meteor.userId()) {
+                return 'You';
+            } else {
+                return this.game.winner().profile.name;
+            }
+        }
+        return 'Nobody';
     },
 
 });
@@ -254,30 +307,6 @@ function isRoomOwner(room) {
     return (room.ownerId == Meteor.userId());
 }
 
-function getPlayerCards(game, turn) {
-    if (game && turn) {
-        let selector = {
-            gameId: game._id,
-            ownerId: turn.ownerId,
-            $or: [
-                {turnId: turn._id},
-                {lockedAt: {$ne: null}},
-            ],
-        };
-        return Cards.find(
-            selector,
-            {
-                sort: {
-                    pos: 1,
-                    createdAt: -1,
-                }
-            }
-        );
-    } else {
-        return [];
-    }
-}
-
 function saveCardPos() {
 
     const cards = $('#boardCards').find('.board-card');
@@ -342,3 +371,11 @@ function getColor(turn) {
             return "light";
     }
 };
+
+function gameHasEnded(game) {
+    return (game && game.endedAt);
+}
+
+function isGameWinner(game) {
+    return (game && (game.winnerId == Meteor.userId()));
+}

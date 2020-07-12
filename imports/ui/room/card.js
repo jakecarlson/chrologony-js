@@ -159,11 +159,11 @@ Template.card.events({
 });
 
 function isOwned(turn) {
-    return (turn.ownerId == Meteor.userId());
+    return (turn && (turn.ownerId == Meteor.userId()));
 }
 
 function isCurrent(turn, card) {
-    return (turn.currentCardId == card._id);
+    return (turn && (turn.currentCardId == card._id));
 }
 
 function submitVote(clueId, value) {

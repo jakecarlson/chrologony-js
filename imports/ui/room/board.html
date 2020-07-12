@@ -38,16 +38,29 @@
             </header>
 
             <div class="card-body">
-                <h3 class="card-subtitle text-secondary mb-2 prompt">{{prompt}}</h3>
-                <div class="player-cards-wrapper clearfix">
-                    <ol style="width: {{timelineWidth}}" class="player-cards inactive" id="boardCards">
-                        {{#each playerCard in currentPlayerCards}}
-                            <li class="clue-col board-clue-col {{#if isCurrentCard playerCard._id}}current-col{{/if}}">
-                                {{> card card=playerCard turn=turn game=game board=true}}
-                            </li>
-                        {{/each}}
-                    </ol>
-                </div>
+
+                {{#if gameHasEnded}}
+
+                    <h3 class="winner">
+                        <span class="winner-player">{{winner}}</span> won the game!
+                    </h3>
+                    <i class="{{winnerClasses}}"></i>
+
+                {{else}}
+
+                    <h3 class="card-subtitle text-secondary mb-2 prompt">{{prompt}}</h3>
+                    <div class="player-cards-wrapper clearfix">
+                        <ol style="width: {{timelineWidth}}" class="player-cards inactive" id="boardCards">
+                            {{#each playerCard in currentPlayerCards}}
+                                <li class="clue-col board-clue-col {{#if isCurrentCard playerCard._id}}current-col{{/if}}">
+                                    {{> card card=playerCard turn=turn game=game board=true}}
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </div>
+
+                {{/if}}
+
             </div>
 
         </div>

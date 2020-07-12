@@ -29,17 +29,18 @@ Template.player_cards.helpers({
     },
 
     cards() {
-        return getCards(this.game, this.player);
+        return this.game.playerCards(this.player._id, true);
     },
 
     timelineWidth() {
-        const cards = getCards(this.game, this.player);
-        if (cards.count) {
-            const numCards = cards.count()-2;
-            return ((numCards * 5.25) + 45) + 'rem';
-        } else {
-            return '100%';
+        if (this.game && this.player) {
+            const cards = this.game.playerCards(this.player._id, true);
+            if (cards.count) {
+                const numCards = cards.count() - 2;
+                return ((numCards * 5.25) + 45) + 'rem';
+            }
         }
+        return '100%';
     },
 
 });
@@ -51,25 +52,3 @@ Template.player_cards.events({
     },
 
 });
-
-
-function getCards(game, player) {
-    if (game && player) {
-        const cards = Cards.find(
-            {
-                gameId: game._id,
-                ownerId: player._id,
-                lockedAt: {$ne: null},
-            },
-            {
-                sort: {
-                    pos: 1,
-                    createdAt: -1,
-                }
-            }
-        );
-        return cards;
-    } else {
-        return [];
-    }
-}

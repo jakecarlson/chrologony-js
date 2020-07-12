@@ -51,7 +51,7 @@ Template.player.helpers({
     },
 
     gameInProgress() {
-        return this.turn;
+        return this.room.currentGameId;
     },
 
     canEject() {

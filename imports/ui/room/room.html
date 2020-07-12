@@ -42,7 +42,12 @@
 
                     {{#if hasMultiplePlayers}}
                         <div id="playerCards" class="mb-4 mb-lg-0">
-                            <h2 id="playerCardsTitle" class="text-muted mb-2">Other Player Cards</h2>
+                            <h2 id="playerCardsTitle" class="text-muted mb-2">
+                                {{#if gameInProgress}}
+                                    Other
+                                {{/if}}
+                                Player Cards
+                            </h2>
                             {{#each player in players}}
                                 {{#if isNotCurrentPlayer player}}
                                     {{> player_cards game=currentGame turn=currentTurn player=player}}

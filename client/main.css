@@ -541,6 +541,28 @@ button.at-social-btn i {
     color: #007bff;
 }
 
+/* winner */
+.winner {
+    position: absolute;
+    top: 14.5rem;
+    left: 50%;
+    width: 20rem;
+    margin-left: -10rem;
+    text-align: center;
+    color: white;
+    font-size: large;
+}
+.winner-player {
+    font-size: xx-large;
+    display: block;
+}
+.bg-winner {
+    width: 100%;
+    font-size: 25rem;
+    text-align: center;
+    margin-top: -1.25rem;
+}
+
 /* game */
 #gameAdvanced legend {
     font-size: medium;

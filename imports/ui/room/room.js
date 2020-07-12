@@ -246,7 +246,11 @@ Template.room.helpers({
 
     isNotCurrentPlayer(player) {
         const turn = Template.instance().turn.get();
-        return (turn && (player._id != turn.ownerId));
+        return (!turn || (player._id != turn.ownerId));
+    },
+
+    gameInProgress() {
+        return Template.instance().turn.get();
     },
 
 });
