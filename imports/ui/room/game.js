@@ -25,52 +25,77 @@ Template.game.helpers({
     },
 
     winConditions() {
+        const selected = (this.game) ? this.game.winPoints : 0;
         return [
-            {display: 'None (Owner Decides)', value: 0},
-            {display: '25 Cards', value: 25},
-            {display: '10 Cards', value: 10},
-            {display: '5 Cards', value: 5},
+            {display: 'None (Owner Decides)', value: 0, selected: (0 == selected)},
+            {display: '25 Cards', value: 25, selected: (25 == selected)},
+            {display: '10 Cards', value: 10, selected: (10 == selected)},
+            {display: '5 Cards', value: 5, selected: (5 == selected)},
         ];
     },
 
     guessLimits() {
+        const selected = (this.game) ? this.game.cardLimit : 0;
         return [
-            {display: 'Unlimited (Streak)', value: 0},
-            {display: '10', value: 10},
-            {display: '5', value: 5},
-            {display: '3', value: 3},
-            {display: '1', value: 1},
+            {display: 'Unlimited (Streak)', value: 0, selected: (0 == selected)},
+            {display: '10', value: 10, selected: (10 == selected)},
+            {display: '5', value: 5, selected: (5 == selected)},
+            {display: '3', value: 3, selected: (3 == selected)},
+            {display: '1', value: 1, selected: (1 == selected)},
         ];
     },
 
     turnOrders() {
+        const selected = (this.game) ? this.game.turnOrder : 'sequential';
         return [
-            {display: 'Sequential', value: 'sequential'},
-            {display: 'Snake', value: 'snake'},
-            {display: 'Random', value: 'random'},
+            {display: 'Sequential', value: 'sequential', selected: ('sequential' == selected)},
+            {display: 'Snake', value: 'snake', selected: ('snake' == selected)},
+            {display: 'Random', value: 'random', selected: ('random' == selected)},
         ];
     },
 
     timeLimits() {
+        const selected = (this.game) ? this.game.cardTime : 0;
         return [
-            {display: 'No Limit', value: 0},
-            {display: '3 Minutes', value: 180},
-            {display: '2 Minutes', value: 120},
-            {display: '1 Minute', value: 60},
-            {display: '30 Seconds', value: 30},
-            {display: '15 Seconds', value: 15},
+            {display: 'No Limit', value: 0, selected: (0 == selected)},
+            {display: '3 Minutes', value: 180, selected: (180 == selected)},
+            {display: '2 Minutes', value: 120, selected: (120 == selected)},
+            {display: '1 Minute', value: 60, selected: (60 == selected)},
+            {display: '30 Seconds', value: 30, selected: (30 == selected)},
+            {display: '15 Seconds', value: 15, selected: (15 == selected)},
         ];
     },
 
     scoreThresholds() {
+        const selected = (this.game) ? this.game.minScore : 0;
         return [
-            {display: 'No Restriction', value: 0},
-            {display: '1+ (Any Positive)', value: 1},
-            {display: '10+', value: 10},
-            {display: '25+', value: 25},
-            {display: '50+', value: 50},
-            {display: '100+', value: 100},
+            {display: 'No Restriction', value: 0, selected: (0 == selected)},
+            {display: '1+ (Any Positive)', value: 1, selected: (1 == selected)},
+            {display: '10+', value: 10, selected: (10 == selected)},
+            {display: '25+', value: 25, selected: (25 == selected)},
+            {display: '50+', value: 50, selected: (50 == selected)},
+            {display: '100+', value: 100, selected: (100 == selected)},
         ];
+    },
+
+    equalTurns() {
+        return (this.game && this.game.equalTurns);
+    },
+
+    recycleCards() {
+        return (this.game && this.game.recycleCards);
+    },
+
+    easy() {
+        return (this.game && (this.game.minDifficulty == 1));
+    },
+
+    hard() {
+        return (this.game && (this.game.maxDifficulty == 3));
+    },
+
+    moderate() {
+        return (this.game && (this.game.minDifficulty <= 2) && (this.game.maxDifficulty >= 2));
     },
 
 });

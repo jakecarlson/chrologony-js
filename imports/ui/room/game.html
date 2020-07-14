@@ -30,14 +30,14 @@
                         </label>
                         <select name="winPoints" class="form-control" id="gameOptionsWinPoints">
                             {{#each condition in winConditions}}
-                                <option value="{{condition.value}}">{{condition.display}}</option>
+                                <option value="{{condition.value}}" selected="{{condition.selected}}">{{condition.display}}</option>
                             {{/each}}
                         </select>
                     </div>
 
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="checkbox" name="equalTurns" value="1" class="form-check-input" id="gameOptionsEqualTurns">
+                            <input type="checkbox" name="equalTurns" value="1" checked="{{equalTurns}}" class="form-check-input" id="gameOptionsEqualTurns">
                             <label for="gameOptionsEqualTurns" class="form-check-label">
                                 Equal # Turns per Player
                                 <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if you want everyone to have a turn on the last round of the game. The player who locked in the most cards wins."></i>
@@ -52,16 +52,16 @@
                         </label>
                         <div class="difficulty">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-sm btn-light easy active">
-                                    <input type="checkbox" name="difficulty" autocomplete="off" value="1" checked>
+                                <label class="btn btn-sm btn-light easy {{#if easy}}active{{/if}}">
+                                    <input type="checkbox" name="difficulty" autocomplete="off" value="1" checked="{{easy}}">
                                     Easy
                                 </label>
-                                <label class="btn btn-sm btn-light moderate active">
-                                    <input type="checkbox" name="difficulty" autocomplete="off" value="2" checked>
+                                <label class="btn btn-sm btn-light moderate {{#if moderate}}active{{/if}}">
+                                    <input type="checkbox" name="difficulty" autocomplete="off" value="2" checked="{{moderate}}">
                                     Moderate
                                 </label>
-                                <label class="btn btn-sm btn-light hard active">
-                                    <input type="checkbox" name="difficulty" autocomplete="off" value="3" checked>
+                                <label class="btn btn-sm btn-light hard {{#if hard}}active{{/if}}">
+                                    <input type="checkbox" name="difficulty" autocomplete="off" value="3" checked="{{hard}}">
                                     Hard
                                 </label>
                             </div>
@@ -75,7 +75,7 @@
                         </label>
                         <select name="cardLimit" class="form-control" id="gameOptionsGuessLimit">
                             {{#each limit in guessLimits}}
-                                <option value="{{limit.value}}">{{limit.display}}</option>
+                                <option value="{{limit.value}}" selected="{{limit.selected}}">{{limit.display}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -87,7 +87,7 @@
                         </label>
                         <select name="minScore" class="form-control" id="gameOptionsMinScore">
                             {{#each score in scoreThresholds}}
-                                <option value="{{score.value}}">{{score.display}}</option>
+                                <option value="{{score.value}}" selected="{{score.selected}}">{{score.display}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -99,7 +99,7 @@
                         </label>
                         <select name="cardTime" class="form-control" id="gameOptionsCardTime">
                             {{#each time in timeLimits}}
-                                <option value="{{time.value}}">{{time.display}}</option>
+                                <option value="{{time.value}}" selected="{{time.selected}}">{{time.display}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -111,14 +111,14 @@
                         </label>
                         <select name="turnOrder" class="form-control" id="gameOptionsTurnOrder">
                             {{#each order in turnOrders}}
-                                <option value="{{order.value}}">{{order.display}}</option>
+                                <option value="{{order.value}}" selected="{{order.selected}}">{{order.display}}</option>
                             {{/each}}
                         </select>
                     </div>
 
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="checkbox" name="recycleCards" value="1" class="form-check-input" id="gameOptionsRecycleCards">
+                            <input type="checkbox" name="recycleCards" value="1" checked="{{recycleCards}}" class="form-check-input" id="gameOptionsRecycleCards">
                             <label for="gameOptionsRecycleCards" class="form-check-label">
                                 Recycle Incorrect Cards
                                 <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if you want cards that are guessed wrong to go back into the deck to be drawn again during the same game."></i>
