@@ -21,6 +21,7 @@ Cards.schema = new SimpleSchema({
     ownerId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     correct: {type: Boolean, defaultValue: null, optional: true},
+    guessedAt: {type: Date, defaultValue: null, optional: true},
     lockedAt: {type: Date, defaultValue: null, optional: true},
     pos: {type: SimpleSchema.Integer, defaultValue: 0},
 });
@@ -256,6 +257,7 @@ if (Meteor.isServer) {
                 {
                     $set: {
                         correct: correct,
+                        guessedAt: new Date(),
                     }
                 }
             );
