@@ -479,7 +479,7 @@ button.at-social-btn i {
 .inactive .clue-col:hover .game-card .year {
     display: none;
 }
-.game-card.current {
+.game-card.current.owned {
     cursor: grab;
 }
 .game-card .card-header {
