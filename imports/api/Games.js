@@ -146,6 +146,7 @@ if (Meteor.isServer) {
                         cardLimit: 1,
                         startedAt: 1,
                         endedAt: 1,
+                        cardTime: 1,
                     },
                     sort: {
                         createdAt: -1,

@@ -1,13 +1,26 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { Sortable } from 'sortablejs';
 import { LoadingState } from '../../modules/LoadingState';
+
+import { Cards } from "../../api/Cards";
+
 // import { Insult } from "insult";
 
 import './board.html';
 import './card.js';
+import {Clues} from "../../api/Clues";
 
 Template.board.onCreated(function boardOnCreated() {
+
+    // this.cardTimeout = new ReactiveVar(null);
+    // this.cardNumSeconds = new ReactiveVar(null);
+    // this.previousCardId = new ReactiveVar(null);
+    // this.currentCardId = new ReactiveVar(null);
+    // this.turn = new ReactiveVar(null);
+    // this.cardCountdown = new ReactiveVar(null);
+    // this.cardTimer = null;
 
     this.autorun(() => {
 
@@ -38,6 +51,7 @@ Template.board.onCreated(function boardOnCreated() {
                         },
                     }
                 );
+                this.cardTimer = $('.card-timer');
             });
         }
 
@@ -126,6 +140,9 @@ Template.board.helpers({
                 return "Waiting for a game to start ...";
                 break;
             case 'guessing':
+                if (this.game.cardTime) {
+                    return '';
+                }
                 return "Move the blue card into the correct spot on the timeline.";
                 break;
             case 'correct':
@@ -230,6 +247,20 @@ Template.board.helpers({
         }
         return 'Nobody';
     },
+
+    showCardTimer() {
+        return (this.game && this.game.cardTime && this.turn && !cardIsGuessed(this.turn.currentCard()));
+    },
+
+    cardTimer() {
+        if (this.game && this.game.cardTime && this.turn && (getStatus(this.turn) == 'guessing')) {
+            if (!cardIsGuessed(this.turn.currentCard())) {
+                Template.instance().cardTimer.text(formatCountdown(this.game.cardTime));
+                countdownCard(Template.instance());
+            }
+        }
+        return '';
+    }
 
 });
 
@@ -378,4 +409,35 @@ function gameHasEnded(game) {
 
 function isGameWinner(game) {
     return (game && (game.winnerId == Meteor.userId()));
+}
+
+function formatCountdown(s) {
+    if (s < 0) {
+        return '';
+    }
+    return Math.floor(s/60) + ':' + ("00" + (s % 60)).slice(-2);
+}
+
+function countdownCard(i) {
+    Meteor.setTimeout(function() {
+        const card = i.data.turn.currentCard();
+        if (!cardIsGuessed(card)) {
+            const seconds = moment.utc(card.createdAt).unix() + i.data.game.cardTime - moment.utc().unix();
+            i.cardTimer.text(formatCountdown(seconds));
+            if (seconds <= 0) {
+                if (i.data.turn.ownerId == Meteor.userId()) {
+                    i.cardTimer.text('');
+                    endTurn(i.data.game);
+                }
+            } else {
+                countdownCard(i);
+            }
+        } else {
+            i.cardTimer.text('');
+        }
+    }, 1000);
+}
+
+function cardIsGuessed(card) {
+    return (card && (card.correct !== null));
 }
