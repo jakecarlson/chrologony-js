@@ -284,9 +284,10 @@ Template.room.events({
 
     'click .end-game'(e, i) {
         LoadingState.start(e);
-        Meteor.call('game.end', i.game.get()._id, false, function(err, updated) {
+        const gameId = i.game.get()._id;
+        Meteor.call('game.end', gameId, false, function(err, updated) {
             if (!err) {
-                Logger.log("Ended Game: " + i.game.get()._id);
+                Logger.log("Ended Game: " + gameId);
             }
         });
     },

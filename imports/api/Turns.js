@@ -176,9 +176,8 @@ if (Meteor.isServer) {
             }
 
             // If a win condition is defined, see if we've met it
+            let endGame = false;
             if (turn && game.winPoints) {
-
-                let endGame = false;
 
                 // If we need to have equal turns, find out if anyone has won and if everyone has had equal turns
                 if (game.equalTurns) {
@@ -208,54 +207,61 @@ if (Meteor.isServer) {
                             Logger.log("Ended Game: " + game._id);
                         }
                     });
-                    return null;
                 }
 
+            // If the game already ended, don't try to end it again
+            } else if (game.endedAt) {
+                endGame = true;
             }
 
             // If not short-circuited by game end, continue on to start the next turn ...
+            if (!endGame) {
 
-            // Get players sorted by turn count descending
-            const players = getPlayerTurnCounts(game);
-            Logger.log('Player Turn Counts: ' + JSON.stringify(players));
+                // Get players sorted by turn count descending
+                const players = getPlayerTurnCounts(game);
+                Logger.log('Player Turn Counts: ' + JSON.stringify(players));
 
-            // If the turn order is random, randomly select one of the players with the fewest turns
-            let nextPlayer = null;
-            if (game.turnOrder == 'random') {
-                let leastTurnPlayers = [];
-                const lastIndex = players.length-1;
-                const minTurns = players[players.length-1].turns;
-                for (let i = lastIndex; i >= 0; --i) {
-                    if (players[i].turns != minTurns) break;
-                    leastTurnPlayers.push(players[i]);
+                // If the turn order is random, randomly select one of the players with the fewest turns
+                let nextPlayer = null;
+                if (game.turnOrder == 'random') {
+                    let leastTurnPlayers = [];
+                    const lastIndex = players.length-1;
+                    const minTurns = players[players.length-1].turns;
+                    for (let i = lastIndex; i >= 0; --i) {
+                        if (players[i].turns != minTurns) break;
+                        leastTurnPlayers.push(players[i]);
+                    }
+                    nextPlayer = leastTurnPlayers[Math.floor(Math.random() * leastTurnPlayers.length)];
+
+                    // Otherwise just pluck the bottom player
+                } else {
+                    nextPlayer = players[players.length-1];
                 }
-                nextPlayer = leastTurnPlayers[Math.floor(Math.random() * leastTurnPlayers.length)];
 
-            // Otherwise just pluck the bottom player
-            } else {
-                nextPlayer = players[players.length-1];
+                Logger.log("Next Turn Belongs To: " + nextPlayer._id);
+                const turnId = Turns.insert({
+                    gameId: gameId,
+                    ownerId: nextPlayer._id,
+                    startedAt: new Date(),
+                });
+
+                Meteor.call('game.setTurn', gameId, turnId, function(err, updated) {
+                    if (!err) {
+                        Logger.log("Updated Game: " + updated);
+                    }
+                });
+
+                Meteor.call('card.draw', turnId, function(err, id) {
+                    if (!err) {
+                        Logger.log("Created Card: " + id);
+                    }
+                });
+
+                return turnId;
+
             }
 
-            Logger.log("Next Turn Belongs To: " + nextPlayer._id);
-            const turnId = Turns.insert({
-                gameId: gameId,
-                ownerId: nextPlayer._id,
-                startedAt: new Date(),
-            });
-
-            Meteor.call('game.setTurn', gameId, turnId, function(err, updated) {
-                if (!err) {
-                    Logger.log("Updated Game: " + updated);
-                }
-            });
-
-            Meteor.call('card.draw', turnId, function(err, id) {
-                if (!err) {
-                    Logger.log("Created Card: " + id);
-                }
-            });
-
-            return turnId;
+            return null;
 
         },
 

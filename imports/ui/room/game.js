@@ -87,15 +87,15 @@ Template.game.helpers({
     },
 
     easy() {
-        return (this.game && (this.game.minDifficulty == 1));
+        return (!this.game || (this.game && (this.game.minDifficulty == 1)));
     },
 
     hard() {
-        return (this.game && (this.game.maxDifficulty == 3));
+        return (!this.game || (this.game && (this.game.maxDifficulty == 3)));
     },
 
     moderate() {
-        return (this.game && (this.game.minDifficulty <= 2) && (this.game.maxDifficulty >= 2));
+        return (!this.game || (this.game && (this.game.minDifficulty <= 2) && (this.game.maxDifficulty >= 2)));
     },
 
 });

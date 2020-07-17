@@ -291,6 +291,8 @@ if (Meteor.isServer) {
                 }
             }
 
+            Logger.log('End Game: ' + id);
+
             // Update the game
             const updated = Games.update(
                 id,
@@ -301,11 +303,6 @@ if (Meteor.isServer) {
 
             // If the game was abandoned, null out the room's current game
             if (abandon) {
-                Meteor.call('game.setTurn', game._id, null, function(err, updated) {
-                    if (!err) {
-                        Logger.log("Updated Game: " + updated);
-                    }
-                });
                 Meteor.call('room.setGame', game.roomId, null, function(err, updated) {
                     if (!err) {
                         Logger.log("Updated Room: " + updated);

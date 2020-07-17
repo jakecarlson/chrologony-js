@@ -1,10 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
 import { Sortable } from 'sortablejs';
 import { LoadingState } from '../../modules/LoadingState';
-
-import { Cards } from "../../api/Cards";
 
 // import { Insult } from "insult";
 
@@ -13,14 +10,6 @@ import './card.js';
 import {Clues} from "../../api/Clues";
 
 Template.board.onCreated(function boardOnCreated() {
-
-    // this.cardTimeout = new ReactiveVar(null);
-    // this.cardNumSeconds = new ReactiveVar(null);
-    // this.previousCardId = new ReactiveVar(null);
-    // this.currentCardId = new ReactiveVar(null);
-    // this.turn = new ReactiveVar(null);
-    // this.cardCountdown = new ReactiveVar(null);
-    // this.cardTimer = null;
 
     this.autorun(() => {
 
@@ -421,7 +410,7 @@ function formatCountdown(s) {
 function countdownCard(i) {
     Meteor.setTimeout(function() {
         const card = i.data.turn.currentCard();
-        if (!cardIsGuessed(card)) {
+        if (!cardIsGuessed(card) && (!i.data.game.endedAt)) {
             const seconds = moment.utc(card.createdAt).unix() + i.data.game.cardTime - moment.utc().unix();
             i.cardTimer.text(formatCountdown(seconds));
             if (seconds <= 0) {
