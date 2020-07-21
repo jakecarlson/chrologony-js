@@ -44,12 +44,15 @@ Template.header.helpers({
         return FlowRouter.path('logout');
     },
 
+    isMuted() {
+        return Session.get('muted');
+    },
+
 });
 
 Template.header.events({
 
     'click a'(e, i) {
-
         if (TourGuide.isActive()) {
             if ($(e.target).hasClass('category-link')) {
                 FlowRouter.go('categories');
@@ -58,7 +61,11 @@ Template.header.events({
                 e.preventDefault();
             }
         }
+    },
 
+    'click #mute'(e, i) {
+        e.preventDefault();
+        Session.set('muted', !Session.get('muted'));
     },
 
 });

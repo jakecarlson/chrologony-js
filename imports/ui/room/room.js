@@ -138,16 +138,16 @@ Template.room.onCreated(function roomOnCreated() {
         added: function(gameId, fields) {
             if (self.initialized) {
                 self.game.set(Games.findOne(gameId));
-                self.sounds.game.start.play();
+                playSound(self.sounds.game.start);
             }
         },
 
         changed(gameId, fields) {
             if (self.initialized && (fields.endedAt != null)) {
                 if (fields.winnerId == Meteor.userId()) {
-                    self.sounds.game.win.play();
+                    playSound(self.sounds.game.win);
                 } else {
-                    self.sounds.game.lose.play();
+                    playSound(self.sounds.game.lose);
                 }
             }
         },
@@ -161,14 +161,14 @@ Template.room.onCreated(function roomOnCreated() {
                 const turn = Turns.findOne(turnId);
                 self.turn.set(turn);
                 if (turn.ownerId == Meteor.userId()) {
-                    self.sounds.turn.start.play();
+                    playSound(self.sounds.turn.start);
                 }
             }
         },
 
         changed(turnId, fields) {
             if (self.initialized && (fields.endedAt != null)) {
-                self.sounds.turn.end.play();
+                playSound(self.sounds.turn.end);
             }
         },
 
@@ -180,7 +180,7 @@ Template.room.onCreated(function roomOnCreated() {
             if (self.initialized && self.room.get()) {
                 subscribe(Meteor, 'cards', self.room.get().currentGameId);
                 subscribe(Meteor, 'cardClues', self.room.get().currentGameId);
-                self.sounds.card.draw.play();
+                playSound(self.sounds.card.draw);
             }
         },
 
@@ -192,9 +192,9 @@ Template.room.onCreated(function roomOnCreated() {
                         Logger.log("Update Clue Data: " + card.clueId);
                         Clues._collection.update(card.clueId, {$set: clue});
                         if (card.correct) {
-                            self.sounds.card.right.play();
+                            playSound(self.sounds.card.right);
                         } else {
-                            self.sounds.card.wrong.play();
+                            playSound(self.sounds.card.wrong);
                         }
                     }
                 });
@@ -426,4 +426,10 @@ function getCurrentTurn(t) {
 
 function isOwner(t) {
     return (t.instance().room.get().ownerId == Meteor.userId())
+}
+
+function playSound(sound) {
+    if (!Session.get('muted')) {
+        sound.play();
+    }
 }

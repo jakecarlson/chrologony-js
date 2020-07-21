@@ -10,6 +10,10 @@
 
             {{#if currentUser}}
 
+                <button class="btn btn-link text-muted mt-2" type="button" id="mute">
+                    <i class="fa fa-volume-{{#if isMuted}}off{{else}}up{{/if}}"></i>
+                </button>
+
                 <div class="dropdown mt-2 float-right" id="profile">
                     <button class="btn btn-link text-muted" type="button" id="menuToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{profileName}}
