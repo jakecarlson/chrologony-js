@@ -77,6 +77,7 @@ if (Meteor.isServer) {
                         currentCardId: 1,
                         ownerId: 1,
                         lastCardCorrect: 1,
+                        endedAt: 1,
                     },
                     sort: {
                         createdAt: -1,

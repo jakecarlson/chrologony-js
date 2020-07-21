@@ -17,6 +17,28 @@ import './players_list.js';
 import './game.js';
 import Clipboard from "clipboard";
 
+// GAME SOUNDS
+const AUDIO = {
+
+    game: {
+        start: '/game-start.mp4',
+        win: '/game-win.mp4',
+        lose: '/game-lose.mp4',
+    },
+
+    turn: {
+        start: '/turn-start.mp4',
+        end: '/turn-end.mp4',
+    },
+
+    card: {
+        draw: '/card-draw.mp4',
+        right: '/card-right.mp4',
+        wrong: '/card-wrong.mp4',
+    },
+
+};
+
 Template.room.onCreated(function roomOnCreated() {
 
     this.initialized = false;
@@ -102,21 +124,54 @@ Template.room.onCreated(function roomOnCreated() {
 
     });
 
+    this.sounds = {};
+    for (const type in AUDIO) {
+        this.sounds[type] = {};
+        for (const sound in AUDIO[type]) {
+            this.sounds[type][sound] = new buzz.sound(AUDIO[type][sound]);
+        }
+    }
+
     let self = this;
     Games.find().observeChanges({
+
         added: function(gameId, fields) {
             if (self.initialized) {
                 self.game.set(Games.findOne(gameId));
+                self.sounds.game.start.play();
             }
-        }
+        },
+
+        changed(gameId, fields) {
+            if (self.initialized && (fields.endedAt != null)) {
+                if (fields.winnerId == Meteor.userId()) {
+                    self.sounds.game.win.play();
+                } else {
+                    self.sounds.game.lose.play();
+                }
+            }
+        },
+
     });
 
     Turns.find().observeChanges({
+
         added: function(turnId, fields) {
             if (self.initialized) {
-                self.turn.set(Turns.findOne(turnId));
+                const turn = Turns.findOne(turnId);
+                self.turn.set(turn);
+                if (turn.ownerId == Meteor.userId()) {
+                    self.sounds.turn.start.play();
+                }
             }
-        }
+        },
+
+        changed(turnId, fields) {
+            if (self.initialized && (fields.endedAt != null)) {
+                self.sounds.turn.end.play();
+            }
+        },
+
     });
 
     Cards.find().observeChanges({
@@ -125,6 +180,7 @@ Template.room.onCreated(function roomOnCreated() {
             if (self.initialized && self.room.get()) {
                 subscribe(Meteor, 'cards', self.room.get().currentGameId);
                 subscribe(Meteor, 'cardClues', self.room.get().currentGameId);
+                self.sounds.card.draw.play();
             }
         },
 
@@ -135,6 +191,11 @@ Template.room.onCreated(function roomOnCreated() {
                     if (!err) {
                         Logger.log("Update Clue Data: " + card.clueId);
                         Clues._collection.update(card.clueId, {$set: clue});
+                        if (card.correct) {
+                            self.sounds.card.right.play();
+                        } else {
+                            self.sounds.card.wrong.play();
+                        }
                     }
                 });
             }
