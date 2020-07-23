@@ -36,10 +36,38 @@
             <label class="{{#if editing}}d-none{{/if}}" for="clue-{{id}}">{{description}}</label>
         </td>
 
-        <td colspan="{{#if clue}}1{{else}}3{{/if}}">
+        <td colspan="{{#if clue}}1{{else}}4{{/if}}">
             <input class="attr form-control form-control-sm {{#if viewing}}d-none{{/if}}" type="date" name="date" value="{{date}}" required maxlength="10">
             <span class="{{#if editing}}d-none{{/if}}">{{date}}</span>
         </td>
+
+        {{#if clue}}
+            <td>
+                <span class="{{#if viewing}}d-none{{/if}}">
+                    <input
+                        class="attr form-check-input"
+                        type="checkbox"
+                        name="active"
+                        value="true"
+                        checked="{{active}}"
+                        data-toggle="toggle"
+                        data-on="Active"
+                        data-off="Inactive"
+                        data-onstyle="success"
+                        data-offstyle="secondary"
+                        data-size="mini"
+                    >
+                </span>
+                <span class="badge badge-{{#if active}}success{{else}}secondary{{/if}} {{#if editing}}d-none{{/if}}">
+                    {{#if active}}
+                        Active
+                    {{else}}
+                        Inactive
+                    {{/if}}
+                </span>
+
+            </td>
+        {{/if}}
 
         {{#if clue}}
             <td>

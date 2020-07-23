@@ -311,10 +311,13 @@ button.at-social-btn i {
     margin-top: .75rem;
 }
 #cluesManager .description {
-    width: 40%;
+    width: 35%;
 }
 #cluesManager .date {
     width: 15%;
+}
+#cluesManager .status {
+    width: 7.5%;
 }
 #cluesManager .categories,
 #cluesManager .more
@@ -323,6 +326,17 @@ button.at-social-btn i {
 }
 .clue .actions {
     width: 32.5%;
+}
+.clue .toggle.btn {
+    min-width: 4.5rem;
+}
+#cluesManager .toggle.btn label {
+    padding-top: .35rem;
+}
+.clue .badge {
+    font-size: .9rem;
+    font-weight: normal;
+    margin-top: .25rem;
 }
 #cluesManager .fa.table-icon {
     line-height: 1.25;

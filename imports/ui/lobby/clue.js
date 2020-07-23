@@ -21,6 +21,10 @@ Template.clue.onCreated(function clueOnCreated() {
 
 });
 
+Template.clue.onRendered(function clueOnRendered() {
+    this.$('[data-toggle="toggle"]').bootstrapToggle();
+});
+
 Template.clue.helpers({
 
     editing() {
@@ -49,6 +53,10 @@ Template.clue.helpers({
 
     date() {
         return Formatter.date(this.clue.date);
+    },
+
+    active() {
+        return this.clue.active;
     },
 
     categoryId() {

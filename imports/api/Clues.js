@@ -196,6 +196,7 @@ Meteor.methods({
                 description: NonEmptyString,
                 date: NonEmptyString,
                 categoryId: RecordId,
+                active: Boolean,
             }
         );
         Permissions.check(Permissions.authenticated());
@@ -213,6 +214,7 @@ Meteor.methods({
                 $set: {
                     description: attrs.description,
                     date: attrs.date,
+                    active: attrs.active,
                 }
             }
         );
