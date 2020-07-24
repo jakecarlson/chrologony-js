@@ -27,6 +27,7 @@ Games.schema = new SimpleSchema({
     cardTime: {type: SimpleSchema.Integer, defaultValue: 0},
     turnOrder: {type: String, defaultValue: 'sequential'},
     recycleCards: {type: Boolean, defaultValue: false},
+    showHints: {type: Boolean, defaultValue: false},
 });
 Games.schema.extend(Schemas.timestampable);
 Games.schema.extend(Schemas.endable);
@@ -154,6 +155,7 @@ if (Meteor.isServer) {
                         recycleCards: 1,
                         cardLimit: 1,
                         cardTime: 1,
+                        showHints: 1,
                     },
                     sort: {
                         createdAt: -1,
@@ -222,6 +224,7 @@ if (Meteor.isServer) {
                     cardTime: Match.Integer,
                     turnOrder: String,
                     recycleCards: Boolean,
+                    showHints: Boolean,
                 }
             );
             Permissions.check(Permissions.authenticated());
@@ -245,6 +248,7 @@ if (Meteor.isServer) {
                 cardTime: attrs.cardTime,
                 turnOrder: attrs.turnOrder,
                 recycleCards: attrs.recycleCards,
+                showHints: attrs.showHints,
             });
 
             Meteor.call('room.setGame', attrs.roomId, gameId, function(err, updated) {

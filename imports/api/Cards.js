@@ -85,6 +85,7 @@ if (Meteor.isServer) {
                     const unsubmittedClueIds = Promise.await(
                         Cards.rawCollection().distinct('clueId', {gameId: gameId, correct: null})
                     );
+                    const game = Games.findOne(gameId);
                     return Clues.find(
                         {
                             _id: {$in: clueIds},
@@ -109,7 +110,9 @@ if (Meteor.isServer) {
                             transform: function(doc) {
                                 if (unsubmittedClueIds.includes(doc._id)) {
                                     doc.date = null;
-                                    doc.hint = null;
+                                    if (!game.showHints) {
+                                        doc.hint = null;
+                                    }
                                     doc.thumbnailUrl = null;
                                     doc.imageUrl = null;
                                     doc.latitude = null;

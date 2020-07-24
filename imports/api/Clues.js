@@ -90,14 +90,7 @@ Clues.helpers({
     },
 
     canEdit(categoryId) {
-        if (Permissions.owned(this)) {
-            return true;
-        }
-        const category = Categories.findOne(categoryId);
-        if (category && Permissions.owned(category)) {
-            return true;
-        }
-        return false;
+        return Permissions.clue.canEdit(this, categoryId);
     },
 
     canSetCategories(categories) {

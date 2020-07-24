@@ -4,6 +4,7 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { ModelEvents } from "../../modules/ModelEvents";
 import { LoadingState } from "../../modules/LoadingState";
+import { Permissions } from '../../modules/Permissions';
 
 import { Categories } from "../../api/Categories";
 import { Clues } from "../../api/Clues";
@@ -129,7 +130,7 @@ Template.clues_manager.helpers({
 
     cannotEditCurrentClue() {
         const clue = Template.instance().state.get('currentClue');
-        return (!clue || !clue.canEdit || !clue.canEdit(Template.instance().filters.get('categoryId')));
+        return (!clue || !Permissions.clue.canEdit(clue, Template.instance().filters.get('categoryId')));
     },
 
     page() {

@@ -484,6 +484,10 @@ button.at-social-btn i {
 .game-card.current .card-title {
     text-align: center;
 }
+.game-card.current .card-title .hint {
+    cursor: help;
+    display: block;
+}
 .clue-col .game-card .date {
     display: none;
 }

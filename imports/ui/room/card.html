@@ -5,49 +5,72 @@
         <div class="{{cardClasses}}" data-id="{{id}}">
 
             <header class="card-header">
+
                 {{#if canMoveCard}}
+
                     <a href="#" class="game-card-action move move-left"><i class="fa fa-arrow-circle-left" title="Move Left"></i></a>
                     <a href="#" class="game-card-action move move-right"><i class="fa fa-arrow-circle-right" title="Move Right"></i></a>
+
                 {{else}}
+
                     {{#unless isCurrent}}
+
                         <div class="dropdown menu ml-2 float-right">
+
                             <span class="game-card-action difficulty" title="Difficulty: {{difficultyName}}">
                                 {{#each difficultyDots}}
                                     <i class="fa fa-asterisk"></i>
                                 {{/each}}
                             </span>
+
                             <a href="#" id="cardMenu-{{id}}" class="game-card-action ml-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-ellipsis-h" title="Card Options"></i>
                             </a>
+
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cardMenu-{{id}}">
+
                                 <div class="text-center vote">
                                     <a href="#" class="upvote pl-2 pr-2 {{#if isVoteValue 1}}text-primary{{else}}text-muted{{/if}}" title="Upvote"><i class="fa fa-thumbs-up"></i></a>
                                     <span class="vote-divider text-muted ml-2 mr-2">/</span>
                                     <a href="#" class="downvote pl-2 pr-2 {{#if isVoteValue -1}}text-primary{{else}}text-muted{{/if}}" title="Downvote"><i class="fa fa-thumbs-down"></i></a>
                                 </div>
+
                                 <div class="dropdown-divider"></div>
+
                                 {{#if hasMoreInfo}}
                                     <a class="dropdown-item more" href="#">More Info</a>
                                     <div class="dropdown-divider"></div>
                                 {{/if}}
+
                                 {{#if canEdit}}
                                     <a class="dropdown-item" href="{{editClueLink}}" target="_blank">Edit Clue</a>
                                 {{/if}}
+
                                 {{#if canSetCategories}}
                                     <a class="dropdown-item categories" href="#" data-id="{{clueId}}">Categories</a>
                                 {{/if}}
+
                             </div>
+
                         </div>
+
                     {{/unless}}
+
                 {{/if}}
+
                 <h3 class="card-title">
                     {{#if isCurrent}}
-                        ???
+                        {{#if showHint}}
+                            <span class="hint" data-toggle="tooltip" data-placement="top" title="{{hint}}">???</span>
+                        {{else}}
+                            ???
+                        {{/if}}
                     {{else}}
                         <span class="date">{{date}}</span>
                         <span class="year">{{year}}</span>
                     {{/if}}
                 </h3>
+
             </header>
 
             <p class="card-body clue">

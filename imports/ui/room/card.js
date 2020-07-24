@@ -15,6 +15,11 @@ Template.card.onCreated(function boardOnCreated() {
     this.clue = new ReactiveVar(null);
     this.autorun(() => {
         this.clue.set(this.data.card.clue());
+        Tracker.afterFlush(() => {
+            $(function() {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        });
     });
 });
 
@@ -42,6 +47,14 @@ Template.card.helpers({
 
     clueId() {
         return Template.instance().clue.get()._id;
+    },
+
+    hint() {
+        return Template.instance().clue.get().hint;
+    },
+
+    showHint() {
+        return (this.game && this.game.showHints && Template.instance().clue.get().hint);
     },
 
     isCurrent() {

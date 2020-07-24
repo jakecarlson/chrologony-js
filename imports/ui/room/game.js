@@ -82,6 +82,10 @@ Template.game.helpers({
         return (this.game && this.game.equalTurns);
     },
 
+    showHints() {
+        return (this.game && this.game.showHints);
+    },
+
     recycleCards() {
         return (this.game && this.game.recycleCards);
     },
@@ -155,6 +159,7 @@ Template.game.events({
             cardTime: parseInt(Helpers.getSelectValue(form.cardTime)),
             turnOrder: Helpers.getSelectValue(form.turnOrder),
             recycleCards: form.recycleCards.checked,
+            showHints: form.showHints.checked,
         };
 
         Meteor.call('game.create', attrs, function(err, id) {

@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import {Categories} from "../api/Categories";
 
 export const Permissions = {
 
@@ -14,6 +15,21 @@ export const Permissions = {
 
     owned(item) {
         return (item.ownerId == Meteor.userId());
+    },
+
+    clue: {
+
+        canEdit(clue, categoryId) {
+            if (Permissions.owned(clue)) {
+                return true;
+            }
+            const category = Categories.findOne(categoryId);
+            if (category && Permissions.owned(category)) {
+                return true;
+            }
+            return false;
+        },
+
     },
 
 };
