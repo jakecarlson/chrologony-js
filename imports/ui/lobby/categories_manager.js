@@ -15,6 +15,7 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
     this.pageSize = 5;
     this.pagesDisplayed = 7;
 
+    this.pageSize = new ReactiveVar(this.pageSize);
     this.page = new ReactiveVar(1);
 
     this.state = new ReactiveDict();
@@ -58,8 +59,8 @@ Template.categories_manager.helpers({
             {ownerId: Meteor.userId()},
             {
                 sort: {theme: 1, name: 1},
-                skip: Helpers.getPageStart(Template.instance().page.get(), Template.instance().pageSize),
-                limit: Template.instance().pageSize,
+                skip: Helpers.getPageStart(Template.instance().page.get(), Template.instance().pageSize.get()),
+                limit: Template.instance().pageSize.get(),
             }
         );
     },
@@ -89,7 +90,7 @@ Template.categories_manager.helpers({
     },
 
     pageSize() {
-        return Template.instance().pageSize;
+        return Template.instance().pageSize.get();
     },
 
     pagesDisplayed() {
@@ -128,6 +129,11 @@ Template.categories_manager.events({
         e.preventDefault();
         const page = parseInt($(e.target).closest('a').attr('data-page'));
         i.page.set(page);
+    },
+
+    'change .pager-size [name="size"]'(e, i) {
+        i.pageSize.set(parseInt(e.target.value));
+        i.page.set(1);
     },
 
 });
