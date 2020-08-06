@@ -25,15 +25,24 @@ Template.categories_selector.onCreated(function categories_selectorOnCreated() {
 Template.categories_selector.helpers({
 
     publicCategories() {
-        return Categories.find(Helpers.getCategoriesSelector(false, this.hideNonUser, this.showInactive, this.excludeCategoryId), {sort: {name: 1}});
+        return Categories.find(
+            Helpers.getCategoriesSelector({private: false, user: true, active: this.showInactive, exclude: this.excludeCategoryId}),
+            {sort: {name: 1}}
+        );
     },
 
     privateCategories() {
-        return Categories.find(Helpers.getCategoriesSelector(true, this.hideNonUser, this.showInactive, this.excludeCategoryId), {sort: {name: 1}});
+        return Categories.find(
+            Helpers.getCategoriesSelector({private: true, user: true, active: this.showInactive, exclude: this.excludeCategoryId}),
+            {sort: {name: 1}}
+        );
     },
 
-    isUserSource(source) {
-        return (source == 'user');
+    systemCategories() {
+        return Categories.find(
+            Helpers.getCategoriesSelector({private: false, user: false, active: this.showInactive, exclude: this.excludeCategoryId}),
+            {sort: {name: 1}}
+        );
     },
 
     inactive(category) {

@@ -10,27 +10,29 @@ Helpers = {
         return this.getValues(cursor, '_id');
     },
 
-    getCategoriesSelector(isPrivate = null, hideNonUser = false, showInactive = false, excludeCategoryId = null) {
+    getCategoriesSelector(filters) {
         let selector = {};
-        if (!showInactive) {
+        if (filters.active) {
             selector.active = true;
         };
-        if (isPrivate !== false) {
+        if (filters.private !== false) {
             selector.$or = [
                 {ownerId: Meteor.userId()},
                 {collaborators: Meteor.userId()},
             ];
         }
-        if (isPrivate === null) {
+        if (filters.private === null) {
             selector.$or.push({private: false});
         } else {
-            selector.private = isPrivate;
+            selector.private = filters.private;
         }
-        if (hideNonUser) {
+        if (filters.user) {
             selector.source = 'user';
+        } else {
+            selector.source = {$ne: 'user'};
         }
-        if (excludeCategoryId) {
-            selector._id = {$ne: excludeCategoryId};
+        if (filters.exclude) {
+            selector._id = {$ne: filters.exclude};
         }
         return selector;
     },
