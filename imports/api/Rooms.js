@@ -49,8 +49,11 @@ if (Meteor.isServer) {
 
     publishComposite('rooms', {
         find() {
-            const roomId = Meteor.user().currentRoomId;
-            if (this.userId && roomId) {
+            let roomId = false;
+            if (this.userId) {
+                roomId = Meteor.user().currentRoomId;
+            }
+            if (roomId) {
                 return Rooms.find(
                     {
                         _id: roomId,

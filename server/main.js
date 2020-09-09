@@ -3,6 +3,9 @@ import '../imports/modules/Logger';
 import '../imports/modules/Hasher';
 import '../imports/modules/Formatter';
 import '../imports/modules/Helpers';
+import '../imports/startup/accounts/config';
+import '../imports/startup/accounts/email';
+
 import './db/migrations';
 import './db/importer';
 

@@ -1,5 +1,9 @@
 {
   "public": {
+    "app": {
+      "name": "Chrologony",
+      "email": "no-reply@chrologony.com"
+    },
     "themes": [
       "Arts",
       "Business",
