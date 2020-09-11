@@ -1,39 +1,44 @@
 import { Accounts } from "meteor/accounts-base";
+import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { SSR, Template } from 'meteor/meteorhacks:ssr';
+import {Meteor} from "meteor/meteor";
 
-function stripHtml(str) {
-    return str.replace(/(<([^>]+)>)/gi, "");
-}
-
-function snakeToCamel(str) {
-    return str.replace(
-        /([-_][a-z])/g,
-        (group) => group.toUpperCase()
-            .replace('-', '')
-            .replace('_', '')
-    );
-}
-
-function getUrl(template, url) {
-    if (template.url) {
-        return template.url;
-    } else if (url) {
-        return url;
-    } else {
-        return '';
-    }
-}
-
+// Set sender info
 Accounts.emailTemplates.siteName = Meteor.settings.public.app.name;
 Accounts.emailTemplates.from = Meteor.settings.public.app.name + ' <' + Meteor.settings.public.app.email + '>';
 
-const emails = {
+// Set the password reset URL
+Accounts.urls.resetPassword = function(token) {
+    return Meteor.absoluteUrl('reset-password/' + token);
+};
 
-    enroll_account: {
-        subject: 'Welcome to ' + Meteor.settings.public.app.name,
-        preview: 'You have created a ' + Meteor.settings.public.app.name + ' account.',
-        url: Meteor.absoluteUrl('/lobby#tour'),
+// Set the verify email URL
+Accounts.urls.verifyEmail = function(token) {
+    return Meteor.absoluteUrl('verify-email/' + token);
+};
+
+AccountsTemplates.configure({
+    postSignUpHook(userId, info) {
+        Accounts.sendVerificationEmail(userId);
     },
+});
+
+Accounts.validateLoginAttempt(function(parameters) {
+    if (parameters.user && parameters.user.emails && (parameters.user.emails.length > 0)) {
+        let found = _.find(
+            parameters.user.emails,
+            function(thisEmail) { return thisEmail.verified }
+        );
+        if (!found) {
+            throw new Meteor.Error(403, "Please verify your email prior to logging in.");
+        }
+        return found && parameters.allowed;
+    } else {
+        return parameters.allowed;
+    }
+});
+
+const emails = {
 
     reset_password: {
         subject: 'Reset Your Password',
@@ -74,4 +79,17 @@ for (const [template, data] of Object.entries(emails)) {
             );
         },
     };
+}
+
+function stripHtml(str) {
+    return str.replace(/(<([^>]+)>)/gi, "");
+}
+
+function snakeToCamel(str) {
+    return str.replace(
+        /([-_][a-z])/g,
+        (group) => group.toUpperCase()
+            .replace('-', '')
+            .replace('_', '')
+    );
 }

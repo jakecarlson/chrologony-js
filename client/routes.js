@@ -58,12 +58,34 @@ AccountsTemplates.configureRoute('forgotPwd', {
     },
 });
 
+AccountsTemplates.configureRoute('verifyEmail', {
+    name: 'verifyEmail',
+    path: '/verify-email',
+    redirect: function() {
+        if (Meteor.user()) {
+            Flasher.set('success', 'You have successfully verified your email address.');
+            FlowRouter.go('lobby');
+        }
+    },
+});
+
+AccountsTemplates.configureRoute('resendVerificationEmail', {
+    name: 'resendVerificationEmail',
+    path: '/send-again',
+    redirect: function() {
+        if (Meteor.user()) {
+            FlowRouter.go('home');
+        }
+    },
+});
+
 AccountsTemplates.configureRoute('resetPwd', {
     name: 'resetPassword',
     path: '/reset-password',
     redirect: function() {
         if (Meteor.user()) {
-            FlowRouter.go('home');
+            Flasher.set('success', 'You have successfully reset your password.');
+            FlowRouter.go('lobby');
         }
     },
 });

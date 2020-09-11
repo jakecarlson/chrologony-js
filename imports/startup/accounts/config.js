@@ -1,8 +1,8 @@
 import { Accounts } from 'meteor/accounts-base';
 
 Accounts.config({
-    // sendVerificationEmail: true,
-    ambiguousErrorMessages: true,
+    sendVerificationEmail: true,
+    ambiguousErrorMessages: false,
     defaultFieldSelector: {
         username: 1,
         emails: 1,

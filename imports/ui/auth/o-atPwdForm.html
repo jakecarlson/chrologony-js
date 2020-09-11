@@ -3,16 +3,23 @@
     <div class="at-pwd-form clearfix">
         <form role="form" id="at-pwd-form" novalidate action="#" method="POST" class="form-inline mt-0 mt-sm-3">
             <fieldset {{disabled}} class="text-center">
+
                 {{#each fields}}
                     {{> atInput}}
                 {{/each}}
+
                 {{#if showReCaptcha}}
                     {{> atReCaptcha}}
                 {{/if}}
+
                 {{> atPwdFormBtn}}
+
                 {{#if showForgotPasswordLink}}
-                    {{> atPwdLink}}
+                    <div class="at-pwd-link mt-3 text-muted">
+                        {{> atPwdLink}} &nbsp;|&nbsp; {{> atResendVerificationEmailLink}}
+                    </div>
                 {{/if}}
+
             </fieldset>
         </form>
     </div>
