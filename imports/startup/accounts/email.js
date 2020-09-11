@@ -30,7 +30,7 @@ Accounts.validateLoginAttempt(function(parameters) {
             function(thisEmail) { return thisEmail.verified }
         );
         if (!found) {
-            throw new Meteor.Error(403, "Please verify your email prior to logging in.");
+            throw new Meteor.Error(403, AccountsTemplates.texts.errors.verifyEmailFirst);
         }
         return found && parameters.allowed;
     } else {

@@ -84,7 +84,7 @@ AccountsTemplates.configure({
             mustBeLoggedIn: "error.accounts.Must be logged in",
             pwdMismatch: "error.pwdsDontMatch",
             validationErrors: "Validation Errors",
-            verifyEmailFirst: "Please verify your email first. Check the email and follow the link.",
+            verifyEmailFirst: "Please verify your email prior to logging in by clicking on the link that was sent to you via email.",
         },
 
     }

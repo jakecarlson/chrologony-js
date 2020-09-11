@@ -18,9 +18,10 @@ Template.body.onCreated(function bodyOnCreated() {
             Tracker.afterFlush(() => {
                 $(function() {
                     $('[data-toggle="popover"]').popover();
-                });
-                $(function() {
                     $('[data-toggle="tooltip"]').tooltip();
+                    $('.alert-dismissible').fadeTo(2000, 500).slideUp(500, function(){
+                        $('.alert-dismissible').alert('close');
+                    });
                 });
             });
 
