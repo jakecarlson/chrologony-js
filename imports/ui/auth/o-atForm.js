@@ -32,7 +32,15 @@ Template.atForm.helpers({
             return false;
         }
         let state = next_state || this.state || AccountsTemplates.getState();
-        return (!AccountsTemplates.options.forbidClientAccountCreation && !Meteor.user() && (state !== "signIn"));
+        return (!AccountsTemplates.options.forbidClientAccountCreation && !Meteor.userId() && (state !== "signIn"));
+    },
+
+    showSignUpLink: function(next_state){
+        if  (AccountsTemplates.options.hideSignUpLink) {
+            return false;
+        }
+        let state = next_state || this.state || AccountsTemplates.getState();
+        return (!AccountsTemplates.options.forbidClientAccountCreation && !Meteor.user() && (state !== "signUp"));
     },
 
 });
