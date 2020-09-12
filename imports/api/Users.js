@@ -60,7 +60,7 @@ Meteor.users.helpers({
     email() {
         if (this.emails && (this.emails.length > 0)) {
             return this.emails[0].address;
-        } else if (this.services && (Object.keys(this.services).length > 0)) {
+        } else if (this.services) {
             for (const [service, data] of Object.entries(this.services)) {
                 if (data.email) {
                     return data.email;
