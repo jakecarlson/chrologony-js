@@ -58,7 +58,7 @@ TourGuide = {
                     preventInteraction: true,
                     placement: "right",
                     title: "The Lobby",
-                    content: "Welcome to Chrologony, the game where players sequence events into a timeline. This is the Lobby, the first screen you will see after logging in. From here you can create a new room or join an existing room.",
+                    content: "Welcome to " + Meteor.settings.public.app.name + ", the game where players sequence events into a timeline. This is the Lobby, the first screen you will see after logging in. From here you can create a new room or join an existing room.",
                 },
                 {
                     element: "#join",

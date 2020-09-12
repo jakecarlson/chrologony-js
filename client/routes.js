@@ -3,6 +3,7 @@ import { Session } from 'meteor/session';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { Flasher } from "../imports/ui/flasher";
+import {Meteor} from "meteor/meteor";
 
 AccountsTemplates.configure({
     defaultTemplate: 'atForm',
@@ -29,6 +30,7 @@ AccountsTemplates.configureRoute('signUp', {
             const username = Meteor.user().username;
             if (username) {
                 Meteor.users.update(Meteor.userId(), {$set: {'profile.name': username}});
+                Meteor.call('user.sendWelcome');
             }
             Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>');
             redirectToPrevious('lobby');

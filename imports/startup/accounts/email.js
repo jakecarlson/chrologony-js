@@ -5,7 +5,7 @@ import { SSR, Template } from 'meteor/meteorhacks:ssr';
 
 // Set sender info
 Accounts.emailTemplates.siteName = Meteor.settings.public.app.name;
-Accounts.emailTemplates.from = Meteor.settings.public.app.name + ' <' + Meteor.settings.public.app.email + '>';
+Accounts.emailTemplates.from = Meteor.settings.public.app.sendEmail;
 
 // Set the password reset URL
 Accounts.urls.resetPassword = function(token) {
@@ -65,38 +65,21 @@ Template.layout_email.helpers({
 });
 
 for (const [template, data] of Object.entries(emails)) {
-    let templateCamel = snakeToCamel(template);
+    let templateCamel = Helpers.snakeToCamel(template);
     SSR.compileTemplate(template, Assets.getText('email/' + template + '.html'));
     Accounts.emailTemplates[templateCamel] = {
         subject() { return data.subject; },
         text(user, url) {
-            return stripHtml(SSR.render(template, {user: user, url: url}));
+            return Helpers.stripHtml(SSR.render(template, {user: user, url: url}));
         },
         html(user, url) {
-            return SSR.render(
-                'layout_email',
-                {
-                    subject: data.subject,
-                    preview: data.preview,
-                    message: SSR.render(template, {user: user, url: url, app_name: Meteor.settings.public.app.name}),
-                    app_name: Meteor.settings.public.app.name,
-                    app_url: Meteor.absoluteUrl(),
-                    logo_url: Meteor.absoluteUrl('/logo.png'),
-                }
-            );
+            const email = Helpers.renderHtmlEmail({
+                subject: data.subject,
+                preview: data.preview,
+                template: template,
+                data: {user: user, url: url}
+            });
+            return email.html;
         },
     };
-}
-
-function stripHtml(str) {
-    return str.replace(/(<([^>]+)>)/gi, "");
-}
-
-function snakeToCamel(str) {
-    return str.replace(
-        /([-_][a-z])/g,
-        (group) => group.toUpperCase()
-            .replace('-', '')
-            .replace('_', '')
-    );
 }

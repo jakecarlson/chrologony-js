@@ -1,15 +1,15 @@
 <template name="layout_unauthenticated">
 
     <main id="auth" class="container mb-4">
-        <h1 id="title" class="mb-4"><a href="{{homeLink}}">Chrologony</a></h1>
+        <h1 id="title" class="mb-4"><a href="{{homeLink}}">{{appName}}</a></h1>
         <h2
             id="tagline"
             class="h6 text-muted mb-4"
             data-toggle="popover"
             data-placement="top"
-            data-content="Chrologony is a game where players sequence events into a timeline. You can build your own categories or use ones created by the community. Play by yourself or challenge friends."
+            data-content="{{appDescription}}"
         >
-            Best Game of All Time
+            {{appTagline}}
             <i class="fa fa-question-circle"></i>
         </h2>
         {{> flasher}}

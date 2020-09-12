@@ -2,8 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
+import { SSR, Template } from 'meteor/meteorhacks:ssr';
 
 import { Rooms } from "./Rooms";
+import {Accounts} from "meteor/accounts-base";
 
 if (Meteor.isServer) {
 
@@ -53,6 +55,19 @@ Meteor.users.helpers({
 
     currentRoom() {
         return Rooms.findOne({_id: this.currentRoomId, deletedAt: null});
+    },
+
+    email() {
+        if (this.emails && (this.emails.length > 0)) {
+            return this.emails[0].address;
+        } else if (this.services && (this.services.length > 0)) {
+            for (const [service, data] of Object.entries(this.services)) {
+                if (data.email) {
+                    return data.email;
+                }
+            }
+        }
+        return false;
     },
 
 });
@@ -112,6 +127,36 @@ if (Meteor.isServer) {
                     },
                 }
             ).fetch();
+
+        },
+
+        // Send welcome email
+        'user.sendWelcome'() {
+
+            const userEmail = Meteor.user().email();
+            if (userEmail) {
+
+                const email = Helpers.renderHtmlEmail({
+                    subject: Meteor.settings.public.app.welcome.subject,
+                    preview: Meteor.settings.public.app.welcome.preview,
+                    template: 'account_welcome',
+                    data: {
+                        user: Meteor.user(),
+                        appUrl: Meteor.absoluteUrl(),
+                        tourUrl: Meteor.absoluteUrl('lobby#tour'),
+                        feedbackEmail: Meteor.settings.public.app.feedbackEmail,
+                    },
+                });
+
+                Email.send({
+                    from: Meteor.settings.public.app.sendEmail,
+                    to: userEmail,
+                    subject: Meteor.settings.public.app.welcome.subject,
+                    text: email.text,
+                    html: email.html,
+                });
+
+            }
 
         },
 

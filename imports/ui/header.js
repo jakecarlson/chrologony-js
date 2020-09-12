@@ -12,6 +12,10 @@ Template.header.onCreated(function headerOnCreated() {
 
 Template.header.helpers({
 
+    appName() {
+        return Meteor.settings.public.app.name;
+    },
+
     profileName() {
         return Meteor.user({fields: {"profile.name": 1}}).profile.name;
     },

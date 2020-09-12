@@ -1,4 +1,5 @@
-import {Meteor} from "meteor/meteor";
+import { Meteor } from "meteor/meteor";
+import { SSR, Template } from 'meteor/meteorhacks:ssr';
 
 Helpers = {
 
@@ -45,4 +46,37 @@ Helpers = {
         return select.options[select.selectedIndex].value;
     },
 
+    stripHtml(str) {
+        return str.replace(/(<([^>]+)>)/gi, "");
+    },
+
+    snakeToCamel(str) {
+        return str.replace(
+            /([-_][a-z])/g,
+            (group) => group.toUpperCase()
+                .replace('-', '')
+                .replace('_', '')
+        );
+    },
+
+    renderHtmlEmail(params) {
+        SSR.compileTemplate(params.template, Assets.getText('email/' + params.template + '.html'));
+        const html = SSR.render(params.template, params.data);
+        return {
+            text: Helpers.stripHtml(html),
+            html: SSR.render(
+                'layout_email',
+                {
+                    subject: params.subject,
+                    preview: params.preview,
+                    message: html,
+                    appName: Meteor.settings.public.app.name,
+                    appUrl: Meteor.absoluteUrl(),
+                    logoUrl: Meteor.absoluteUrl('/logo.png'),
+                }
+            ),
+        }
+    },
+
 };
+
