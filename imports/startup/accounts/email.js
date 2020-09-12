@@ -1,7 +1,7 @@
+import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { SSR, Template } from 'meteor/meteorhacks:ssr';
-import {Meteor} from "meteor/meteor";
 
 // Set sender info
 Accounts.emailTemplates.siteName = Meteor.settings.public.app.name;
@@ -23,19 +23,26 @@ AccountsTemplates.configure({
     },
 });
 
-Accounts.validateLoginAttempt(function(parameters) {
-    if (parameters.user && parameters.user.emails && (parameters.user.emails.length > 0)) {
-        let found = _.find(
-            parameters.user.emails,
-            function(thisEmail) { return thisEmail.verified }
-        );
-        if (!found) {
-            throw new Meteor.Error(403, AccountsTemplates.texts.errors.verifyEmailFirst);
+Accounts.validateLoginAttempt(function(params) {
+
+    // Only validate verified email for password logins
+    if (params.type == 'password') {
+        const newSignup = (params.user.profile && !params.user.profile.name);
+        if (!newSignup && params.user.emails && (params.user.emails.length > 0)) {
+            let found = _.find(
+                params.user.emails,
+                function(thisEmail) { return thisEmail.verified }
+            );
+            if (!found) {
+                throw new Meteor.Error(403, "Please verify your email by clicking on the link that was sent to you via email.");
+            }
+            return found && params.allowed;
         }
-        return found && parameters.allowed;
-    } else {
-        return parameters.allowed;
     }
+
+    // Fallback to allowed
+    return params.allowed;
+
 });
 
 const emails = {
