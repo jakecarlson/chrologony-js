@@ -2,10 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
-import { SSR, Template } from 'meteor/meteorhacks:ssr';
 
 import { Rooms } from "./Rooms";
-import {Accounts} from "meteor/accounts-base";
 
 if (Meteor.isServer) {
 
