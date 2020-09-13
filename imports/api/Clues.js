@@ -35,6 +35,7 @@ Clues.schema = new SimpleSchema(
         importSetId: {type: RecordId, defaultValue: null, optional: true},
         score: {type: SimpleSchema.Integer, defaultValue: Clues.DEFAULT_SCORE},
         difficulty: {type: Number, defaultValue: Clues.DEFAULT_DIFFICULTY},
+        approximation: {type: Boolean, defaultValue: false},
     },
     {
         requiredByDefault: false,

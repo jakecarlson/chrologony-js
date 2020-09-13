@@ -28,6 +28,8 @@ Games.schema = new SimpleSchema({
     turnOrder: {type: String, defaultValue: 'sequential'},
     recycleCards: {type: Boolean, defaultValue: false},
     showHints: {type: Boolean, defaultValue: false},
+    displayPrecision: {type: String, defaultValue: 'date', optional: true},
+    comparisonPrecision: {type: String, defaultValue: 'date', optional: true},
 });
 Games.schema.extend(Schemas.timestampable);
 Games.schema.extend(Schemas.endable);
