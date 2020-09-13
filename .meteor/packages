@@ -8,7 +8,7 @@ meteor-base@1.4.0             # Packages every Meteor app needs to have
 mobile-experience@1.1.0       # Packages for a great mobile UX
 mongo@1.10.0                   # The database Meteor supports right now
 blaze-html-templates    # Compile .html files into Meteor Blaze views
-reactive-var            # Reactive variable for tracker
+reactive-var@1.0.11            # Reactive variable for tracker
 tracker@1.2.0                 # Meteor's client-side reactive programming library
 
 standard-minifier-css@1.6.0   # CSS minifier run for production mode
@@ -19,7 +19,7 @@ typescript@3.7.6              # Enable TypeScript syntax in .ts and .tsx modules
 shell-server@0.5.0            # Server-side component of the `meteor shell` command
 
 reactive-dict@1.3.0
-accounts-password
+accounts-password@1.6.2
 meteortesting:mocha
 session@1.2.0
 momentjs:moment
@@ -33,8 +33,8 @@ google-config-ui@1.0.1
 twitter-config-ui@1.0.0
 dburles:collection-helpers
 okgrow:analytics
-underscore
-ejson
+underscore@1.0.10
+ejson@1.1.1
 fortawesome:fontawesome
 sergeyt:typeahead
 aldeed:collection2
@@ -44,11 +44,11 @@ kadira:blaze-layout
 reywood:publish-composite
 useraccounts:core
 aldeed:template-extension
-service-configuration
-accounts-ui
+service-configuration@1.0.11
+accounts-ui@1.3.1
 useraccounts:bootstrap
 mealsunite:flow-routing-extra
-email
+email@2.0.0
 tmeasday:publish-counts
 numeral:numeral
 brentjanderson:buzz
