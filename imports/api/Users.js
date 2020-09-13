@@ -61,7 +61,6 @@ Meteor.users.helpers({
         if (this.emails && (this.emails.length > 0)) {
             return this.emails[0].address;
         } else if (this.services) {
-            console.log(this.services);
             for (const [service, data] of Object.entries(this.services)) {
                 if (data.email) {
                     return data.email;
