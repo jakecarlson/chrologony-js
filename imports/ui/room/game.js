@@ -159,8 +159,8 @@ Template.game.events({
         const form = e.target.form;
         const categoryId = Helpers.getSelectValue(e.target);
         const category = Categories.findOne(categoryId);
-        Helpers.setSelectValue(form.comparisonPrecision, category.comparisonPrecision);
-        Helpers.setSelectValue(form.displayPrecision, category.displayPrecision);
+        Helpers.setSelectValue(form.comparisonPrecision, category.precision);
+        Helpers.setSelectValue(form.displayPrecision, category.precision);
     },
 
     'submit #game'(e, i) {
