@@ -90,12 +90,15 @@ Clues.helpers({
     },
 
     formattedDate(precision) {
-        let str = null;
+        let str = '';
         if (this.date) {
+            if (this.approximation) {
+                str += 'c. ';
+            }
             if (Helpers.isTimePrecision(precision)) {
                 precision = 'date';
             }
-            str = Formatter[precision](this.dateObj());
+            str += Formatter[precision](this.dateObj());
         }
         return str;
     },
@@ -169,6 +172,7 @@ if (Meteor.isServer) {
                         externalId: 1,
                         externalUrl: 1,
                         moreInfo: 1,
+                        approximation: 1,
                     },
                 }
             );
@@ -339,6 +343,7 @@ Meteor.methods({
                 longitude: Match.OneOf(null, Number),
                 hint: Match.OneOf(null, String),
                 moreInfo: Match.OneOf(null, String),
+                approximation: Match.OneOf(null, Boolean),
             }
         );
         Permissions.check(Permissions.authenticated());
@@ -359,6 +364,7 @@ Meteor.methods({
                     longitude: attrs.longitude,
                     hint: attrs.hint,
                     moreInfo: attrs.moreInfo,
+                    approximation: attrs.approximation,
                 }
             }
         );

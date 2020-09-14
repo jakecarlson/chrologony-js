@@ -106,6 +106,7 @@ if (Meteor.isServer) {
                                 externalId: 1,
                                 externalUrl: 1,
                                 moreInfo: 1,
+                                approximation: 1,
                             },
                             transform: function(doc) {
                                 if (unsubmittedClueIds.includes(doc._id)) {
@@ -120,6 +121,7 @@ if (Meteor.isServer) {
                                     doc.externalId = null;
                                     doc.externalUrl = null;
                                     doc.moreInfo = null;
+                                    doc.approximation = null;
                                 }
                                 return doc;
                             },
