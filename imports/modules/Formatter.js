@@ -46,4 +46,8 @@ Formatter = {
         return Formatter.year(date, hideEra, 1000);
     },
 
+    capitalize(str) {
+        return str[0].toUpperCase() + str.slice(1);
+    },
+
 };

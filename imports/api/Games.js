@@ -241,6 +241,8 @@ if (Meteor.isServer) {
                     turnOrder: String,
                     recycleCards: Boolean,
                     showHints: Boolean,
+                    comparisonPrecision: String,
+                    displayPrecision: String,
                 }
             );
             Permissions.check(Permissions.authenticated());
@@ -248,6 +250,10 @@ if (Meteor.isServer) {
             // Set the room
             const room = Rooms.findOne(attrs.roomId);
             Permissions.check(Permissions.owned(room));
+
+            // Check the precision values
+            Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.comparisonPrecision));
+            Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.displayPrecision));
 
             Logger.log('Create Game: ' + JSON.stringify(attrs));
 
@@ -265,6 +271,8 @@ if (Meteor.isServer) {
                 turnOrder: attrs.turnOrder,
                 recycleCards: attrs.recycleCards,
                 showHints: attrs.showHints,
+                comparisonPrecision: attrs.comparisonPrecision,
+                displayPrecision: attrs.displayPrecision,
             });
 
             Meteor.call('room.setGame', attrs.roomId, gameId, function(err, updated) {

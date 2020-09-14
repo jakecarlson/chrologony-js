@@ -66,6 +66,8 @@ if (Meteor.isServer) {
                         source: 1,
                         collaborators: 1,
                         ownerId: 1,
+                        comparisonPrecision: 1,
+                        displayPrecision: 1,
                     },
                 }
             );

@@ -45,6 +45,10 @@ Helpers = {
         return select.options[select.selectedIndex].value;
     },
 
+    setSelectValue(select, value) {
+        return select.value = value;
+    },
+
     isTimePrecision(precision) {
         return ['second', 'minute', 'hour'].includes(precision);
     },
