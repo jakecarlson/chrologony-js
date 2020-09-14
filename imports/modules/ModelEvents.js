@@ -16,7 +16,7 @@ export const ModelEvents = {
 
         Meteor.call(ModelEvents.getModelName(i) + '.create', attrs, function(err, id) {
             if (!err) {
-                Logger.log('Created ' + ModelEvents.capitalize(ModelEvents.getModelName(i)) + ': ' + id);
+                Logger.log('Created ' + Formatter.capitalize(ModelEvents.getModelName(i)) + ': ' + id);
                 i.state.set('error', false);
                 ModelEvents.resetAttrs(i.firstNode);
             } else {
@@ -35,7 +35,7 @@ export const ModelEvents = {
 
         Meteor.call(ModelEvents.getModelName(i) + '.update', attrs, function(err, updated) {
             if (!err) {
-                Logger.log('Updated ' + ModelEvents.capitalize(ModelEvents.getModelName(i)) + ': ' + updated);
+                Logger.log('Updated ' + Formatter.capitalize(ModelEvents.getModelName(i)) + ': ' + updated);
                 i.state.set('editing', false);
                 i.state.set('error', false);
             } else {
@@ -60,7 +60,7 @@ export const ModelEvents = {
         const modelName = button.attr('data-model');
         Meteor.call(modelName + '.remove', id, function(err, deleted) {
             if (!err) {
-                Logger.log('Deleted ' + ModelEvents.capitalize(modelName) + ': ' + deleted);
+                Logger.log('Deleted ' + Formatter.capitalize(modelName) + ': ' + deleted);
             }
             LoadingState.stop();
         });
@@ -95,10 +95,6 @@ export const ModelEvents = {
 
     getModelName(i) {
         return i.view.name.substr(9);
-    },
-
-    capitalize(str) {
-        return str[0].toUpperCase() + str.slice(1);
     },
 
 };

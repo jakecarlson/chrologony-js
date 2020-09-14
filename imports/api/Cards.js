@@ -396,11 +396,11 @@ if (Meteor.isServer) {
         ).fetch();
 
         // Save the guess date
-        const guessDate = cards[pos].clue().dateObj();
+        const guessDate = cards[pos].clue().dateObj(card.game().comparisonPrecision);
 
         // If there is a previous card, validate the guess against it
         if (pos > 0) {
-            const previousDate = cards[pos-1].clue().dateObj();
+            const previousDate = cards[pos-1].clue().dateObj(card.game().comparisonPrecision);
             if (guessDate.isBefore(previousDate)) {
                 return false;
             }
@@ -408,7 +408,7 @@ if (Meteor.isServer) {
 
         // If there is a next card, validate the guess against it
         if (pos < (cards.length-1)) {
-            const nextDate = cards[pos+1].clue().dateObj();
+            const nextDate = cards[pos+1].clue().dateObj(card.game().comparisonPrecision);
             if (guessDate.isAfter(nextDate)) {
                 return false;
             }

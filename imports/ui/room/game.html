@@ -15,11 +15,11 @@
 
             <fieldset id="gameAdvanced" class="mb-2">
 
-                <legend data-toggle="collapse" href="#gameOptions" role="button" aria-expanded="false" aria-controls="gameOptions" class="collapsed">
+                <a class="collapsed" id="gameOptionsToggle" data-toggle="collapse" href="#gameOptions" role="button" aria-expanded="false" aria-controls="gameOptions">
                     <i class="fa fa-caret-right"></i>
                     <i class="fa fa-caret-down"></i>
                     Advanced Options
-                </legend>
+                </a>
 
                 <div class="collapse" id="gameOptions">
 
@@ -110,6 +110,30 @@
                         <select name="cardTime" class="form-control" id="gameOptionsCardTime">
                             {{#each time in timeLimits}}
                                 <option value="{{time.value}}" selected="{{time.selected}}">{{time.display}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gameOptionsComparisonPrecision">
+                            Guess Datetime Precision
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="The guess datetime comparison precision is how close the guess needs to be to be considered correct."></i>
+                        </label>
+                        <select name="comparisonPrecision" class="form-control" id="gameOptionsComparisonPrecision">
+                            {{#each precision in comparisonPrecisions}}
+                                <option value="{{precision.value}}" selected="{{precision.selected}}">{{precision.display}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gameOptionsDisplayPrecision">
+                            Display Datetime Precision
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="The clue datetime display precision is how detailed the clue datetime is displayed on guessed cards."></i>
+                        </label>
+                        <select name="displayPrecision" class="form-control" id="gameOptionsDisplayPrecision">
+                            {{#each precision in displayPrecisions}}
+                                <option value="{{precision.value}}" selected="{{precision.selected}}">{{precision.display}}</option>
                             {{/each}}
                         </select>
                     </div>

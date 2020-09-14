@@ -496,6 +496,10 @@ button.at-social-btn i {
 .clue-col .game-card .date {
     display: none;
 }
+.clue-col .game-card .time {
+    display: block;
+    font-size: small;
+}
 .clue-col .game-card .year {
     display: block;
 }
@@ -510,6 +514,10 @@ button.at-social-btn i {
 }
 .game-card .card-header {
     position: relative;
+}
+.game-card .card-header .menu {
+    max-height: 1.25rem;
+    margin-bottom: 0;
 }
 .game-card .card-title {
     font-size: large;
@@ -539,6 +547,7 @@ button.at-social-btn i {
 .game-card-action.move-right {
     right: 0;
 }
+
 .game-card-action.difficulty {
     font-size: medium;
     position: relative;
@@ -590,25 +599,26 @@ button.at-social-btn i {
 }
 
 /* game */
-#gameAdvanced legend {
+#gameOptionsToggle {
     font-size: medium;
+    display: block;
+    color: #212529;
+    text-decoration: none;
+    margin-bottom: 1rem;
 }
-#gameAdvanced legend .fa {
+#gameOptionsToggle .fa {
     width: .5rem;
 }
-#gameAdvanced legend {
-    color: #212529;
-}
-#gameAdvanced legend.collapsed {
+#gameOptionsToggle.collapsed {
     color: #6c757d;
 }
-#gameAdvanced legend .fa-caret-down,
-#gameAdvanced legend.collapsed .fa-caret-right
+#gameOptionsToggle .fa-caret-down,
+#gameOptionsToggle.collapsed .fa-caret-right
 {
     display: inline-block;
 }
-#gameAdvanced legend.collapsed .fa-caret-down,
-#gameAdvanced legend .fa-caret-right
+#gameOptionsToggle.collapsed .fa-caret-down,
+#gameOptionsToggle .fa-caret-right
 {
     display: none;
 }

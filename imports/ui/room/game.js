@@ -2,6 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { LoadingState } from '../../modules/LoadingState';
 
+import { Categories } from '../../api/Categories';
+import { Games } from '../../api/Games';
+
 import './game.html';
 
 Template.game.onCreated(function gameOnCreated() {
@@ -90,6 +93,24 @@ Template.game.helpers({
         return (this.game && this.game.recycleCards);
     },
 
+    comparisonPrecisions() {
+        const selected = (this.game) ? this.game.comparisonPrecision : 'date';
+        let options = [];
+        Games.PRECISION_OPTIONS.forEach(function(precision) {
+            options.push({display: Formatter.capitalize(precision), value: precision, selected: (precision == selected)});
+        });
+        return options;
+    },
+
+    displayPrecisions() {
+        const selected = (this.game) ? this.game.displayPrecision : 'date';
+        let options = [];
+        Games.PRECISION_OPTIONS.forEach(function(precision) {
+            options.push({display: Formatter.capitalize(precision), value: precision, selected: (precision == selected)});
+        });
+        return options;
+    },
+
     easy() {
         return (!this.game || (this.game && (this.game.minDifficulty == 1)));
     },
@@ -134,6 +155,14 @@ Template.game.events({
 
     },
 
+    'change #gameCategoryId'(e, i) {
+        const form = e.target.form;
+        const categoryId = Helpers.getSelectValue(e.target);
+        const category = Categories.findOne(categoryId);
+        Helpers.setSelectValue(form.comparisonPrecision, category.comparisonPrecision);
+        Helpers.setSelectValue(form.displayPrecision, category.displayPrecision);
+    },
+
     'submit #game'(e, i) {
 
         LoadingState.start(e);
@@ -160,6 +189,8 @@ Template.game.events({
             turnOrder: Helpers.getSelectValue(form.turnOrder),
             recycleCards: form.recycleCards.checked,
             showHints: form.showHints.checked,
+            comparisonPrecision: Helpers.getSelectValue(form.comparisonPrecision),
+            displayPrecision: Helpers.getSelectValue(form.displayPrecision),
         };
 
         Meteor.call('game.create', attrs, function(err, id) {

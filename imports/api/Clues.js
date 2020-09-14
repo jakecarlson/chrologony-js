@@ -8,6 +8,7 @@ import SimpleSchema from "simpl-schema";
 import { Schemas } from "../modules/Schemas";
 
 import { Categories } from "./Categories";
+import { Games } from "./Games";
 import { Cards } from "./Cards";
 import { Votes } from "./Votes";
 
@@ -65,25 +66,56 @@ Clues.helpers({
         return Meteor.users.findOne(this.ownerId);
     },
 
-    dateObj() {
+    dateObj(precision) {
         if (this.date) {
-            return moment.utc(this.date);
+            const dateObj = moment.utc(this.date);
+            if (precision) {
+                const precisionIndex = Games.PRECISION_OPTIONS.indexOf(precision);
+                const second = (precisionIndex <= 0) ? dateObj.get('second') : 0;
+                const minute = (precisionIndex <= 1) ? dateObj.get('minute') : 0;
+                const hour = (precisionIndex <= 2) ? dateObj.get('hour') : 0;
+                const date = (precisionIndex <= 3) ? dateObj.get('date') : 1;
+                const month = (precisionIndex <= 4) ? dateObj.get('month') : 0;
+                let year = dateObj.get('year');
+                if (precisionIndex > 5) {
+                    let factor = Math.pow(10, precisionIndex - 5);
+                    year = (Math.floor(year / factor) * factor)
+                }
+                return moment.utc(new Date(year, month, date, hour, minute, second));
+            } else {
+                return dateObj;
+            }
         }
         return null;
     },
 
-    formattedDate() {
+    formattedDate(precision) {
+        let str = null;
         if (this.date) {
-            return Formatter.date(this.dateObj());
+            if (Helpers.isTimePrecision(precision)) {
+                precision = 'date';
+            }
+            str = Formatter[precision](this.dateObj());
+        }
+        return str;
+    },
+
+    shortDate(precision) {
+        if (this.date) {
+            if (!Helpers.isYearPrecision(precision)) {
+                precision = 'year';
+            }
+            return Formatter[precision](this.dateObj(), true);
         }
         return null;
     },
 
-    year() {
-        if (this.date) {
-            return Formatter.year(this.dateObj());
+    formattedTime(precision) {
+        let str = null;
+        if (this.date && Helpers.isTimePrecision(precision)) {
+            str = Formatter[precision](this.dateObj());
         }
-        return null;
+        return str;
     },
 
     vote() {
