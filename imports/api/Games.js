@@ -238,11 +238,11 @@ if (Meteor.isServer) {
                     minScore: Match.Integer,
                     cardLimit: Match.Integer,
                     cardTime: Match.Integer,
-                    turnOrder: String,
+                    turnOrder: NonEmptyString,
                     recycleCards: Boolean,
                     showHints: Boolean,
-                    comparisonPrecision: String,
-                    displayPrecision: String,
+                    comparisonPrecision: NonEmptyString,
+                    displayPrecision: NonEmptyString,
                 }
             );
             Permissions.check(Permissions.authenticated());

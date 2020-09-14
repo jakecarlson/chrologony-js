@@ -31,6 +31,11 @@
         </td>
 
         <td>
+            {{> precisions_selector val=precision name="precision" hide=viewing}}
+            <span class="{{#if editing}}d-none{{/if}}">{{formattedPrecision}}</span>
+        </td>
+
+        <td>
             <span class="{{#if viewing}}d-none{{/if}}">
                 <input class="attr form-check-input {{#if viewing}}d-none{{/if}}" type="checkbox" name="private" value="true" checked="{{private}}" data-toggle="toggle" data-on="Private" data-off="Public" data-onstyle="success" data-offstyle="secondary" data-size="small">
             </span>

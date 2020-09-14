@@ -6,6 +6,8 @@ import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
 import { Schemas } from "../modules/Schemas";
 
+import { Games } from "./Games";
+
 export const Categories = new Mongo.Collection('categories');
 
 Categories.schema = new SimpleSchema({
@@ -16,9 +18,7 @@ Categories.schema = new SimpleSchema({
     source: {type: String, max: 40, defaultValue: 'user'},
     collaborators: {type: Array, defaultValue: [], optional: true},
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
-    displayPrecision: {type: String, defaultValue: 'date', optional: true},
-    comparisonPrecision: {type: String, defaultValue: 'date', optional: true},
-    precision: {type: String, defaultValue: 'date', optional: true},
+    precision: {type: String, defaultValue: 'date'},
 });
 Categories.schema.extend(Schemas.timestampable);
 Categories.schema.extend(Schemas.ownable);
@@ -88,11 +88,13 @@ Meteor.methods({
             {
                 name: NonEmptyString,
                 theme: NonEmptyString,
+                precision: NonEmptyString,
                 private: Boolean,
                 active: Boolean,
             }
         );
         Permissions.check(Permissions.authenticated());
+        Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.precision));
 
         Logger.log('Insert Category: ' + JSON.stringify(attrs));
 
@@ -100,6 +102,7 @@ Meteor.methods({
         return Categories.insert({
             name: attrs.name,
             theme: attrs.theme,
+            precision: attrs.precision,
             private: attrs.private,
             active: attrs.active,
         });
@@ -115,12 +118,14 @@ Meteor.methods({
                 _id: RecordId,
                 name: NonEmptyString,
                 theme: NonEmptyString,
+                precision: NonEmptyString,
                 private: Boolean,
                 active: Boolean,
             }
         );
         Permissions.check(Permissions.authenticated());
         Permissions.check(Permissions.owned(Categories.findOne(attrs._id)));
+        Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.precision));
 
         Logger.log('Update Category: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
@@ -134,6 +139,7 @@ Meteor.methods({
                 $set: {
                     name: attrs.name,
                     theme: attrs.theme,
+                    precision: attrs.precision,
                     private: attrs.private,
                     active: attrs.active,
                 }

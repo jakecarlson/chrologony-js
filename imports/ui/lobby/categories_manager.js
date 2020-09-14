@@ -12,6 +12,15 @@ import './category.js';
 
 Template.categories_manager.onCreated(function categories_managerOnCreated() {
 
+    /*
+    TO DO: JANKY ALERT
+    There's a bug that prevents the bootstrap toggles working for adding a new category on first page load;
+    Reload the current route and all seems fine.
+    */
+    if (!FlowRouter.current().oldRoute) {
+        FlowRouter.reload();
+    }
+
     this.pageSize = 5;
     this.pagesDisplayed = 7;
 

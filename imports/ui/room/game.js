@@ -6,6 +6,7 @@ import { Categories } from '../../api/Categories';
 import { Games } from '../../api/Games';
 
 import './game.html';
+import '../precisions_selector.js';
 
 Template.game.onCreated(function gameOnCreated() {
     this.autorun(() => {
@@ -93,22 +94,12 @@ Template.game.helpers({
         return (this.game && this.game.recycleCards);
     },
 
-    comparisonPrecisions() {
-        const selected = (this.game) ? this.game.comparisonPrecision : 'date';
-        let options = [];
-        Games.PRECISION_OPTIONS.forEach(function(precision) {
-            options.push({display: Formatter.capitalize(precision), value: precision, selected: (precision == selected)});
-        });
-        return options;
+    comparisonPrecision() {
+        return (this.game) ? this.game.comparisonPrecision : 'date';
     },
 
-    displayPrecisions() {
-        const selected = (this.game) ? this.game.displayPrecision : 'date';
-        let options = [];
-        Games.PRECISION_OPTIONS.forEach(function(precision) {
-            options.push({display: Formatter.capitalize(precision), value: precision, selected: (precision == selected)});
-        });
-        return options;
+    displayPrecision() {
+        return (this.game) ? this.game.displayPrecision : 'date';
     },
 
     easy() {

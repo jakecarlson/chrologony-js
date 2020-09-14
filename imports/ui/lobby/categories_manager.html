@@ -7,24 +7,26 @@
             <colgroup>
                 <col class="name">
                 <col class="theme">
+                <col class="precision">
                 <col class="private">
                 <col class="status">
                 <col class="actions">
             </colgroup>
             <thead class="table-borderless">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Theme</th>
-                <th scope="col">Private</th>
-                <th scope="col">Status</th>
-                <th scope="col"></th>
-            </tr>
-            {{> category category=false}}
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Theme</th>
+                    <th scope="col">Precision</th>
+                    <th scope="col">Private</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+                {{> category category=false}}
             </thead>
             <tbody>
-            {{#each ownedCategory in ownedCategories}}
-                {{> category category=ownedCategory}}
-            {{/each}}
+                {{#each ownedCategory in ownedCategories}}
+                    {{> category category=ownedCategory}}
+                {{/each}}
             </tbody>
         </table>
     </div>

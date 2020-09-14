@@ -182,10 +182,13 @@ button.at-social-btn i {
     min-width: 60rem;
 }
 #categoriesManager .name {
-    width: 30%;
+    width: 25%;
 }
 #categoriesManager .theme {
-    width: 20%;
+    width: 15%;
+}
+#categoriesManager .precision {
+    width: 10%;
 }
 #categoriesManager .private {
     width: 10%;

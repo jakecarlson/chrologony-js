@@ -3,7 +3,7 @@ import { Template } from 'meteor/templating';
 
 import './themes_selector.html';
 
-Template.themes_selector.onCreated(function categories_selectorOnCreated() {
+Template.themes_selector.onCreated(function themes_selectorOnCreated() {
 
 });
 

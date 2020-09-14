@@ -4,6 +4,7 @@ import { ModelEvents } from "../../modules/ModelEvents";
 
 import './category.html';
 import './themes_selector.js';
+import '../precisions_selector.js';
 
 Template.category.onCreated(function categoryOnCreated() {
     this.state = new ReactiveDict();
@@ -49,8 +50,12 @@ Template.category.helpers({
         return this.category.theme;
     },
 
-    categoryThemes() {
-        return Meteor.settings.public.themes;
+    precision() {
+        return (this.category) ? this.category.precision : 'date';
+    },
+
+    formattedPrecision() {
+        return Formatter.capitalize((this.category) ? this.category.precision : 'date');
     },
 
 });

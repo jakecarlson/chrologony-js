@@ -1,0 +1,9 @@
+<template name="precisions_selector">
+
+    <select class="attr form-control {{#if hide}}d-none{{/if}}" name="{{name}}" id="{{#if id}}{{id}}{{/if}}">
+        {{#each precision in precisions}}
+            <option value="{{precision}}" selected="{{selectedValue precision}}">{{capitalize precision}}</option>
+        {{/each}}
+    </select>
+
+</template>
