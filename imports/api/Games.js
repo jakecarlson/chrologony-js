@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Match, check } from 'meteor/check';
+import { Promise } from "meteor/promise";
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
@@ -8,10 +9,21 @@ import { Schemas } from "../modules/Schemas";
 
 import { Rooms } from './Rooms';
 import { Turns } from './Turns';
-import {Cards} from "./Cards";
-import {Promise} from "meteor/promise";
+import { Cards } from "./Cards";
 
 export const Games = new Mongo.Collection('games');
+
+Games.PRECISION_OPTIONS = [
+    'second',
+    'minute',
+    'hour',
+    'date',
+    'month',
+    'year',
+    'decade',
+    'century',
+    'millennium',
+];
 
 Games.schema = new SimpleSchema({
     roomId: {type: String, regEx: SimpleSchema.RegEx.Id},
@@ -28,8 +40,8 @@ Games.schema = new SimpleSchema({
     turnOrder: {type: String, defaultValue: 'sequential'},
     recycleCards: {type: Boolean, defaultValue: false},
     showHints: {type: Boolean, defaultValue: false},
-    displayPrecision: {type: String, defaultValue: 'date', optional: true},
-    comparisonPrecision: {type: String, defaultValue: 'date', optional: true},
+    displayPrecision: {type: String, defaultValue: 'date'},
+    comparisonPrecision: {type: String, defaultValue: 'date'},
 });
 Games.schema.extend(Schemas.timestampable);
 Games.schema.extend(Schemas.endable);
@@ -158,6 +170,8 @@ if (Meteor.isServer) {
                         cardLimit: 1,
                         cardTime: 1,
                         showHints: 1,
+                        comparisonPrecision: 1,
+                        displayPrecision: 1,
                     },
                     sort: {
                         createdAt: -1,

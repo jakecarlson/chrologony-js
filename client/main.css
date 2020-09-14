@@ -496,6 +496,10 @@ button.at-social-btn i {
 .clue-col .game-card .date {
     display: none;
 }
+.clue-col .game-card .time {
+    display: block;
+    font-size: small;
+}
 .clue-col .game-card .year {
     display: block;
 }
@@ -510,6 +514,10 @@ button.at-social-btn i {
 }
 .game-card .card-header {
     position: relative;
+}
+.game-card .card-header .menu {
+    max-height: 1.25rem;
+    margin-bottom: 0;
 }
 .game-card .card-title {
     font-size: large;
@@ -539,6 +547,7 @@ button.at-social-btn i {
 .game-card-action.move-right {
     right: 0;
 }
+
 .game-card-action.difficulty {
     font-size: medium;
     position: relative;

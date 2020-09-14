@@ -16,8 +16,8 @@ Categories.schema = new SimpleSchema({
     source: {type: String, max: 40, defaultValue: 'user'},
     collaborators: {type: Array, defaultValue: [], optional: true},
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
-    displayPrecision: {type: String, defaultValue: 'date', optional: true},
-    comparisonPrecision: {type: String, defaultValue: 'date', optional: true},
+    displayPrecision: {type: String, defaultValue: 'date'},
+    comparisonPrecision: {type: String, defaultValue: 'date'},
 });
 Categories.schema.extend(Schemas.timestampable);
 Categories.schema.extend(Schemas.ownable);

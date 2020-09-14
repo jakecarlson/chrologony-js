@@ -45,4 +45,12 @@ Helpers = {
         return select.options[select.selectedIndex].value;
     },
 
+    isTimePrecision(precision) {
+        return ['second', 'minute', 'hour'].includes(precision);
+    },
+
+    isYearPrecision(precision) {
+        return ['year', 'decade', 'century', 'millennium'].includes(precision);
+    },
+
 };

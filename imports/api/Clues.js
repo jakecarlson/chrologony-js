@@ -72,18 +72,33 @@ Clues.helpers({
         return null;
     },
 
-    formattedDate() {
+    formattedDate(precision) {
+        let str = null;
         if (this.date) {
-            return Formatter.date(this.dateObj());
+            if (Helpers.isTimePrecision(precision)) {
+                precision = 'date';
+            }
+            str = Formatter[precision](this.dateObj());
+        }
+        return str;
+    },
+
+    shortDate(precision) {
+        if (this.date) {
+            if (!Helpers.isYearPrecision(precision)) {
+                precision = 'year';
+            }
+            return Formatter[precision](this.dateObj(), true);
         }
         return null;
     },
 
-    year() {
-        if (this.date) {
-            return Formatter.year(this.dateObj());
+    formattedTime(precision) {
+        let str = null;
+        if (this.date && Helpers.isTimePrecision(precision)) {
+            str = Formatter[precision](this.dateObj());
         }
-        return null;
+        return str;
     },
 
     vote() {

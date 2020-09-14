@@ -34,11 +34,19 @@ Template.card.helpers({
     },
 
     date() {
-        return Template.instance().clue.get().formattedDate();
+        return Template.instance().clue.get().formattedDate(this.game.displayPrecision);
     },
 
     year() {
-        return Template.instance().clue.get().year();
+        return Template.instance().clue.get().shortDate(this.game.displayPrecision);
+    },
+
+    showTime() {
+        return Helpers.isTimePrecision(this.game.displayPrecision);
+    },
+
+    time() {
+        return Template.instance().clue.get().formattedTime(this.game.displayPrecision);
     },
 
     description() {
