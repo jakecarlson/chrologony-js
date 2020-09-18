@@ -25,6 +25,8 @@ html {
 }
 #mute {
     font-size: large;
+    width: 2.5rem;
+    text-align: left;
 }
 #profile .btn-link {
     /*font-weight: bold;*/
