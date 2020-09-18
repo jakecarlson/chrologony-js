@@ -31,6 +31,7 @@ AccountsTemplates.configureRoute('signUp', {
             if (username) {
                 Meteor.users.update(Meteor.userId(), {$set: {'profile.name': username}});
             }
+            console.log('SIGN UP REDIRECT');
             Meteor.call('user.sendWelcome');
             Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>');
             redirectToPrevious('lobby');

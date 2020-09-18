@@ -3,6 +3,8 @@
 
 # Deployment
 production.json
+private/localhost.cert
+private/localhost.key
 
 # Logs
 logs
