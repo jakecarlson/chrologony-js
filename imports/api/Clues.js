@@ -81,7 +81,9 @@ Clues.helpers({
                     let factor = Math.pow(10, precisionIndex - 5);
                     year = (Math.floor(year / factor) * factor)
                 }
-                return moment.utc(new Date(year, month, date, hour, minute, second));
+                const jsDate = new Date(Date.UTC(year, month, date, hour, minute, second));
+                jsDate.setUTCFullYear(year);
+                return moment.utc(jsDate);
             } else {
                 return dateObj;
             }

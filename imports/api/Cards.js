@@ -397,27 +397,39 @@ if (Meteor.isServer) {
             }
         ).fetch();
 
+        let correct = true;
+        let comparisonStr = 'Comparison: ';
+
         // Save the guess date
-        const guessDate = cards[pos].clue().dateObj(card.game().comparisonPrecision);
+        const currentClue = cards[pos].clue();
+        const precision = card.game().comparisonPrecision;
+        const guessDate = currentClue.dateObj(precision);
 
         // If there is a previous card, validate the guess against it
         if (pos > 0) {
-            const previousDate = cards[pos-1].clue().dateObj(card.game().comparisonPrecision);
+            const previousClue = cards[pos-1].clue();
+            const previousDate = previousClue.dateObj(precision);
+            comparisonStr += previousDate.utc().format() + ' <= ';
             if (guessDate.isBefore(previousDate)) {
-                return false;
+                correct = false;
             }
         }
+
+        comparisonStr += guessDate.utc().format();
 
         // If there is a next card, validate the guess against it
-        if (pos < (cards.length-1)) {
-            const nextDate = cards[pos+1].clue().dateObj(card.game().comparisonPrecision);
+        if (correct && (pos < (cards.length-1))) {
+            const nextClue = cards[pos+1].clue();
+            const nextDate = nextClue.dateObj(precision);
+            comparisonStr += ' <= ' + nextDate.utc().format();
             if (guessDate.isAfter(nextDate)) {
-                return false;
+                correct = false;
             }
         }
 
-        // If both validations passed, this is correct!
-        return true;
+        Logger.log(comparisonStr);
+
+        return correct
 
     }
 
