@@ -1,0 +1,37 @@
+html {
+    font-size: 16px;
+}
+
+@import "../node_modules/bootswatch/dist/pulse/_variables.scss";
+@import "../imports/ui/_header.scss";
+@import "../imports/ui/_overrides.scss";
+@import "../imports/ui/auth/_auth.scss";
+@import "../imports/ui/lobby/_lobby.scss";
+@import "../imports/ui/room/_room.scss";
+
+/* loader */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5);
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+}
+#loader .spinner {
+    height: 5rem;
+    width: 5rem;
+}
+
+
+$primary:       $purple !default;
+$secondary:     #A991D4 !default;
+$success:       $green !default;
+$info:          $cyan !default;
+$warning:       $yellow !default;
+$danger:        $red !default;
+$light:         $gray-200 !default;
+$dark:          $gray-900 !default;

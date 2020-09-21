@@ -1,0 +1,209 @@
+/* join */
+#join {
+  max-width: 20rem;
+}
+@media (max-width: 576px) {
+  #join {
+    max-width: none;
+  }
+}
+#join .card-title {
+  font-size: x-large;
+  text-align: center;
+}
+#join .form-control {
+  max-width: 100%;
+}
+
+/* child manager */
+.child-manager .list-group-item:last-child {
+  border-bottom: none;
+}
+.child-manager .twitter-typeahead {
+  width: 100%;
+}
+
+/* categories manager */
+#categoriesManager {
+  min-width: 60rem;
+}
+#categoriesManager .name {
+  width: 25%;
+}
+#categoriesManager .theme {
+  width: 15%;
+}
+#categoriesManager .precision {
+  width: 10%;
+}
+#categoriesManager .private {
+  width: 10%;
+}
+#categoriesManager .status {
+  width: 10%;
+}
+#categoriesManager .actions {
+  width: 30%;
+}
+.category.viewing {
+  line-height: 2.5em;
+}
+.category .toggle.btn {
+  min-width: 5rem;
+  margin-top: .25rem;
+}
+.category .badge {
+  font-size: .9rem;
+  font-weight: normal;
+}
+.category .collaborators {
+  font-size: small;
+  display: block;
+  line-height: 1;
+}
+
+/* cluesFilter */
+#cluesFilter {
+  text-align: center;
+}
+#cluesFilter .form-group select,
+#cluesFilter .form-group input
+{
+  width: 100%;
+}
+@media (min-width: 576px) {
+  #cluesFilter .form-group {
+    float: left;
+    width: 50%;
+  }
+  #cluesFilter .form-group-category {
+    padding-right: .75rem;
+  }
+  #cluesFilter .form-group-keyword {
+    padding-left: .75rem;
+  }
+  #cluesFilter .form-check,
+  #cluesFilter button
+  {
+    display: inline-block;
+  }
+  #cluesFilter .form-check {
+    margin-right: .75rem;
+  }
+}
+@media (min-width: 768px) {
+  #cluesFilter .form-group {
+    float: none;
+    width: auto;
+    display: inline-block;
+  }
+  #cluesFilter .form-group,
+  #cluesFilter .form-check
+  {
+    margin-left: .375rem;
+    margin-right: .375rem;
+  }
+  #cluesFilter .form-group:first-child {
+    margin-left: 0;
+  }
+  #cluesFilter .form-group-category {
+    padding-right: 0;
+  }
+  #cluesFilter .form-group-keyword {
+    padding-left: 0;
+  }
+  #cluesFilter .form-group select,
+  #cluesFilter .form-group input
+  {
+    width: 15rem;
+  }
+}
+#cluesFilterCategory,
+#cluesFilterKeyword
+{
+  width: 15rem;
+}
+
+/* clues bulk action */
+#cluesBulkAction,
+#cluesBulkActionCategory
+{
+  width: 15rem;
+}
+
+/* clues manager */
+#cluesManager {
+  min-width: 60rem;
+}
+#cluesManager label,
+#cluesManager span
+{
+  display: block;
+  padding-top: .2rem;
+  margin-bottom: 0;
+}
+#cluesManager input[type="date"],
+#cluesManager textarea
+{
+  width: 100%;
+}
+#cluesManager .form-check-input,
+#cluesManager label
+{
+  cursor: pointer;
+}
+#cluesManager .form-check-input {
+  margin-top: .5rem;
+}
+#cluesManager .select {
+  width: 2.5%;
+}
+#cluesManager.table thead th:first-child {
+  vertical-align: top;
+}
+#cluesManager.table thead th:first-child .form-check-input {
+  margin-top: .75rem;
+}
+#cluesManager .description {
+  width: 35%;
+}
+#cluesManager .date {
+  width: 15%;
+}
+#cluesManager .status {
+  width: 7.5%;
+}
+#cluesManager .categories,
+#cluesManager .more
+{
+  width: 5%;
+}
+.clue .actions {
+  width: 32.5%;
+}
+.clue .toggle.btn {
+  min-width: 4.5rem;
+}
+#cluesManager .toggle.btn label {
+  padding-top: .35rem;
+}
+.clue .badge {
+  font-size: .9rem;
+  font-weight: normal;
+  margin-top: .25rem;
+}
+#cluesManager .fa.table-icon {
+  line-height: 1.25;
+  font-size: x-large;
+}
+#cluesManager .editing .fa.table-icon {
+  padding-top: .1rem;
+}
+#manageClueMore fieldset.form-group {
+  margin: 0;
+}
+
+/* pager */
+.pager-results {
+  font-size: medium !important;
+}

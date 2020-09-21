@@ -1,0 +1,283 @@
+/* Room */
+.room-title {
+  font-size: xx-large;
+  margin-bottom: 0;
+}
+#roomSide .card-title {
+  font-size: medium;
+}
+
+.player.current {
+  font-weight: bold;
+}
+.player .badge {
+  margin-top: .2rem;
+}
+.player {
+  padding: 0.75rem 1.25rem
+}
+
+/* board */
+.turn-title {
+  font-size: xx-large;
+  color: $white;
+}
+#board .bg-light .turn-title {
+  color: $light;
+}
+#board .card-subtitle {
+  font-size: x-large;
+  text-align: center;
+  min-height: 3.5rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+#board .card-subtitle span {
+  display: block;
+}
+#board > .card-body,
+#playerCards > .card > .card-body
+{
+  padding: 0;
+  padding-top: 1.25rem;
+  overflow: hidden;
+}
+.player-cards-wrapper {
+  height: 19rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  overflow-x: auto;
+}
+.player-cards {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  margin: 0;
+  list-style: none;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+/* player cards */
+#playerCards {
+  opacity: .75;
+}
+#playerCards:hover {
+  opacity: 1;
+}
+#playerCardsTitle {
+  font-size: x-large;
+}
+.player-name {
+  cursor: pointer;
+}
+.player-name .expand {
+  margin-top: .2rem;
+}
+.player-name-title {
+  font-size: large;
+}
+
+/* More Clue Info modal */
+.more-img {
+  max-height: 8rem;
+}
+.more-map {
+  height: 24rem;
+}
+
+/* Sortable overrides */
+.sortable-chosen,
+.sortable-ghost,
+.sortable-fallback
+{
+  cursor: grabbing;
+}
+.sortable-fallback {
+  opacity: 1 !important;
+}
+.sortable-ghost {
+  opacity: 0 !important;
+}
+
+.clue-col {
+  float: left;
+  width: 5.25rem;
+  top: 0;
+  height: 100%;
+}
+.clue-col.current-col,
+.inactive .clue-col:hover
+{
+  width: 16rem;
+}
+.game-card {
+  position: absolute;
+  width: 16rem;
+  text-align: left;
+  transition: top .25s ease-in-out;
+  top: 16rem;
+  min-height: 20rem;
+}
+.clue-col:hover .game-card,
+.game-card.current
+{
+  top: 0;
+}
+.game-card.current .card-title {
+  text-align: center;
+}
+.game-card.current .card-title .hint {
+  cursor: help;
+  display: block;
+}
+.clue-col .game-card .date {
+  display: none;
+}
+.clue-col .game-card .time {
+  display: block;
+  font-size: small;
+}
+.clue-col .game-card .year {
+  display: block;
+}
+.inactive .clue-col:hover .game-card .date {
+  display: block;
+}
+.inactive .clue-col:hover .game-card .year {
+  display: none;
+}
+.game-card.current.owned {
+  cursor: grab;
+}
+.game-card .card-header {
+  position: relative;
+}
+.game-card .card-header .menu {
+  max-height: 1.25rem;
+  margin-bottom: 0;
+}
+.game-card .card-title {
+  font-size: large;
+}
+.game-card-action {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-top: -.15rem;
+  color: $white;
+}
+.game-card-action:hover,
+.game-card-action > a,
+.game-card-action > a:hover
+{
+  color: $white;
+}
+.game-card-action.move {
+  top: 0;
+  position: absolute;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  line-height: 3rem;
+}
+.game-card-action.move-left {
+  left: 0;
+}
+.game-card-action.move-right {
+  right: 0;
+}
+
+.game-card-action.difficulty {
+  font-size: medium;
+  position: relative;
+  top: -.25rem;
+  mix-blend-mode: soft-light;
+}
+.game-card.bg-warning .game-card-action {
+  color: $dark;
+}
+.game-card:not(.current) .game-card-action {
+  display: none;
+}
+.clue-col:hover .game-card:not(.current) .game-card-action {
+  display: inline;
+}
+.game-card-action .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+.vote {
+  font-size: large;
+}
+.upvote:hover i,
+.downvote:hover i
+{
+  color: $primary;
+}
+
+/* winner */
+.winner {
+  position: absolute;
+  top: 14.5rem;
+  left: 50%;
+  width: 20rem;
+  margin-left: -10rem;
+  text-align: center;
+  color: $white;
+  font-size: large;
+}
+.winner-player {
+  font-size: xx-large;
+  display: block;
+}
+.bg-winner {
+  width: 100%;
+  font-size: 25rem;
+  text-align: center;
+  margin-top: -1.25rem;
+}
+
+/* game */
+#gameOptionsToggle {
+  font-size: medium;
+  display: block;
+  color: $dark;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+#gameOptionsToggle .fa {
+  width: .5rem;
+}
+#gameOptionsToggle.collapsed {
+  color: $dark;
+}
+#gameOptionsToggle .fa-caret-down,
+#gameOptionsToggle.collapsed .fa-caret-right
+{
+  display: inline-block;
+}
+#gameOptionsToggle.collapsed .fa-caret-down,
+#gameOptionsToggle .fa-caret-right
+{
+  display: none;
+}
+
+.difficulty-label {
+  display: inline-block;
+  width: 4rem;
+}
+.difficulty .easy.btn-light:not(:disabled):not(.disabled).active {
+  background: $success;
+  border-color: $success;
+  color: $white;
+}
+.difficulty .moderate.btn-light:not(:disabled):not(.disabled).active {
+  background: $warning;
+  border-color: $warning;
+  color: $dark;
+}
+.difficulty .hard.btn-light:not(:disabled):not(.disabled).active {
+  background: $danger;
+  border-color: $danger;
+  color: $white;
+}

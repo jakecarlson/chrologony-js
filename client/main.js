@@ -9,7 +9,7 @@ import './routes';
 import '../imports/ui/body';
 
 import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootswatch/dist/pulse/bootstrap.min.css';
 import 'bootstrap4-toggle';
 import 'bootstrap4-toggle/css/bootstrap4-toggle.min.css';
 

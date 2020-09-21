@@ -1,0 +1,103 @@
+/* auth screens */
+#auth {
+  margin-top: 4rem;
+  text-align: center;
+  transition: margin-top .5s ease-out;
+  max-width: 960px;
+}
+#auth #title {
+  width: auto;
+  height: 8rem;
+  background-position: center center;
+  font-weight: normal;
+  margin-bottom: 6rem;
+}
+#tagline {
+  position: absolute;
+  top: 9.5rem;
+  left: 50%;
+  margin-left: -10.35rem;
+  font-size: small;
+  cursor: pointer;
+}
+
+/* authentication */
+.at-form {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.at-title {
+  font-size: large;
+  text-align: center;
+}
+.at-form .alert p {
+  margin: 0;
+}
+button.at-social-btn {
+  border-radius: 0;
+}
+button.at-social-btn i {
+  padding-left: 0;
+  padding-right: 10px;
+  width: 30px;
+}
+
+/* Meteor accounts overrides */
+.at-pwd-form fieldset {
+  width: 100%;
+}
+.at-pwd-form .at-input.form-group {
+  width: 6rem;
+  margin-bottom: 1rem;
+}
+@media (min-width: 576px) {
+  .at-form-signUp .at-pwd-form .at-input.form-group:nth-child(odd):before {
+    content: "\A\A";
+    white-space: pre;
+  }
+  .at-form-signUp .at-pwd-form .at-input.form-group:first-child:before {
+    content: none;
+    white-space: normal;
+  }
+  .at-form-signUp .at-pwd-form .at-input.form-group:first-child {
+    margin-left: .75rem;
+  }
+}
+.at-pwd-form .at-input.form-group,
+.at-pwd-form #at-btn
+{
+  display: inline;
+  margin-left: .5rem;
+  margin-right: .5rem;
+}
+.at-form-changePwd .at-pwd-form .at-input.form-group {
+  width: auto;
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+}
+.at-pwd-form #at-btn {
+  margin-top: 0;
+  padding: .375rem .75rem;
+}
+.at-form-changePwd .at-pwd-form #at-btn {
+  margin-top: 0 !important;
+}
+.at-pwd-link p {
+  margin-bottom: 0;
+}
+.at-signup-link p:first-child,
+.at-signin-link p:first-child
+{
+  font-size: large;
+  margin: 0;
+}
+.g-recaptcha {
+  max-width: 302px;
+}
+#login-dropdown-list .login-text-and-button,
+#login-dropdown-list .or
+{
+  display: none;
+}
