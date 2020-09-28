@@ -1,8 +1,11 @@
+@import "../node_modules/bootswatch/dist/pulse/_variables.scss";
+
 html {
     font-size: 16px;
 }
 
-@import "../node_modules/bootswatch/dist/pulse/_variables.scss";
+$muted: $gray-600;
+
 @import "../imports/ui/_header.scss";
 @import "../imports/ui/_overrides.scss";
 @import "../imports/ui/auth/_auth.scss";
