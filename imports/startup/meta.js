@@ -69,11 +69,6 @@ let config = {
             value: '@jakecarlson'
         },
 
-        'http-equiv': {
-            'http-equiv': 'X-UA-Compatible',
-            content: 'IE=edge,chrome=1'
-        },
-
         robots: 'index, follow',
         google: 'notranslate',
 
