@@ -56,18 +56,6 @@ Template.layout_unauthenticated.onRendered(function layout_unauthenticatedOnCrea
 
 Template.layout_unauthenticated.helpers({
 
-    appName() {
-        return Meteor.settings.public.app.name;
-    },
-
-    appDescription() {
-        return Meteor.settings.public.app.description;
-    },
-
-    appTagline() {
-        return Meteor.settings.public.app.tagline;
-    },
-
     homeLink() {
         return FlowRouter.path('home');
     },
