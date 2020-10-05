@@ -1,9 +1,11 @@
+import { Meteor } from "meteor/meteor";
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
+import { FlowRouterMeta, FlowRouterTitle } from 'meteor/ostrio:flow-router-meta';
+import '../imports/startup/meta';
 import { Session } from 'meteor/session';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { Flasher } from "../imports/ui/flasher";
-import {Meteor} from "meteor/meteor";
 
 AccountsTemplates.configure({
     defaultTemplate: 'atForm',
@@ -230,6 +232,9 @@ FlowRouter.route('/join/:id/:token', {
         });
     }
 });
+
+new FlowRouterMeta(FlowRouter);
+new FlowRouterTitle(FlowRouter);
 
 function redirectToHome(ctx, redirect) {
     if (!Meteor.userId()) {
