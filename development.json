@@ -52,7 +52,8 @@
     "ua": "bot|facebook|twitter|pinterest|google|baidu|bing|msn|duckduckgo|teoma|slurp|yandex",
     "keywords": "historical trivia, event sequence, chronology, history game, online educational game, web-based historical trivia, best game of all time",
     "author": "@jakecarlson",
-    "color": "#593196"
+    "color": "#593196",
+    "facebookAppId": 237901244101201
   },
   "reCaptcha": {
     "secretKey": "6LfjB_EUAAAAAOnpHYYTiBz_DwcFW2QzHGPWyJIu"

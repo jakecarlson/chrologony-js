@@ -56,3 +56,7 @@ Template.registerHelper('gaPropertyId', function() {
 Template.registerHelper('gaScriptUrl', function() {
     return 'https://www.googletagmanager.com/gtag/js?id=' + Meteor.settings.public.analyticsSettings['Google Analytics'].trackingId;
 });
+
+Template.registerHelper('fbAppId', function() {
+    return Meteor.settings.robots.facebookAppId;
+});
