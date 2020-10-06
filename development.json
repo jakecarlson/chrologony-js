@@ -5,7 +5,6 @@
       "sendEmail": "Chrologony <no-reply@chrologony.com>",
       "description": "Chrologony is a game where players sequence events into a timeline. You can build your own categories or use ones created by the community. Play by yourself or challenge friends.",
       "tagline": "Best Game of All Time",
-      "keywords": "historical trivia, event sequence, chronology, history game, online educational game, web-based historical trivia, best game of all time",
       "welcome": {
         "subject": "Welcome to Chrologony!",
         "preview": "Chrologony is a game where players sequence events into a timeline."
@@ -48,6 +47,12 @@
       "zoom": 4,
       "type": "satellite"
     }
+  },
+  "robots": {
+    "ua": "bot|facebook|twitter|pinterest|google|baidu|bing|msn|duckduckgo|teoma|slurp|yandex",
+    "keywords": "historical trivia, event sequence, chronology, history game, online educational game, web-based historical trivia, best game of all time",
+    "author": "@jakecarlson",
+    "color": "#593196"
   },
   "reCaptcha": {
     "secretKey": "6LfjB_EUAAAAAOnpHYYTiBz_DwcFW2QzHGPWyJIu"

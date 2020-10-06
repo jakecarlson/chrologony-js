@@ -1,0 +1,76 @@
+{{{docType}}}
+<html lang="en">
+    <head>
+
+        <meta charset="utf-8">
+
+        <title>{{appName}}: {{appTagline}}</title>
+        <meta name="description" content="{{appDescription}}">
+        <meta name="keywords" content="{{appKeywords}}">
+
+        <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+
+        <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+        <link rel="manifest" href="/manifest.json">
+
+        <meta name="msapplication-TileColor" content="{{appColor}}">
+        <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+        <meta name="theme-color" content="{{appColor}}">
+
+        <!-- Google+ -->
+        <meta itemprop="name" content="{{appName}}">
+        <meta itemprop="description" content="{{appDescription}}">
+        <meta itemprop="image" content="{{appImage}}">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image">
+<!--        <meta name="twitter:site" content="{{appAuthor}}">-->
+        <meta name="twitter:title" content="{{appName}}">
+        <meta name="twitter:description" content="{{appDescription}}">
+        <meta name="twitter:creator" content="{{appAuthor}}">
+        <meta name="twitter:image:src" content="{{appImage}}">
+
+        <!-- Open Graph -->
+        <meta property="og:title" content="{{appName}}">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{appUrl}}">
+        <meta property="og:image" content="{{appImage}}">
+        <meta property="og:description" content="{{appDescription}}" />
+        <meta property="og:site_name" content="{{appName}}">
+
+        <meta content="index, follow" name="robots">
+        <meta content="notranslate" name="google">
+
+        <link href="{{appUrl}}" rel="publisher">
+        <link rel="shortcut icon" type="image/x-icon" href="/apple-icon-180x180.png">
+
+        {{#if gaPropertyId}}
+            <script async src="{{gaScriptUrl}}"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '{{gaPropertyId}}');
+            </script>
+        {{/if}}
+
+    </head>
+
+    <body>
+        <h1>{{appName}}: {{appTagline}}</h1>
+        <p>{{appDescription}}</p>
+    </body>
+
+</html>

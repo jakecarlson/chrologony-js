@@ -1,7 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { FlowRouterMeta, FlowRouterTitle } from 'meteor/ostrio:flow-router-meta';
-import '../imports/startup/meta';
 import { Session } from 'meteor/session';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { AccountsTemplates } from 'meteor/useraccounts:core';

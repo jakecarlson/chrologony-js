@@ -36,3 +36,23 @@ Template.registerHelper('appImage', function() {
 Template.registerHelper('appUrl', function() {
     return Meteor.absoluteUrl();
 });
+
+Template.registerHelper('appKeywords', function() {
+    return Meteor.settings.robots.keywords;
+});
+
+Template.registerHelper('appAuthor', function() {
+    return Meteor.settings.robots.author;
+});
+
+Template.registerHelper('appColor', function() {
+    return Meteor.settings.robots.color;
+});
+
+Template.registerHelper('gaPropertyId', function() {
+    return Meteor.settings.public.analyticsSettings['Google Analytics'].trackingId;
+});
+
+Template.registerHelper('gaScriptUrl', function() {
+    return 'https://www.googletagmanager.com/gtag/js?id=' + Meteor.settings.public.analyticsSettings['Google Analytics'].trackingId;
+});
