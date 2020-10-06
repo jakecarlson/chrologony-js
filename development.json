@@ -3,11 +3,11 @@
     "app": {
       "name": "Chrologony",
       "sendEmail": "Chrologony <no-reply@chrologony.com>",
-      "description": "Chrologony is a game where players sequence events into a timeline. You can build your own categories or use ones created by the community. Play by yourself or challenge friends.",
+      "description": "Chrologony is a game where players sequence historical events into a timeline. You can build your own categories or use ones created by the community. Play by yourself or challenge friends.",
       "tagline": "Best Game of All Time",
       "welcome": {
         "subject": "Welcome to Chrologony!",
-        "preview": "Chrologony is a game where players sequence events into a timeline."
+        "preview": "Chrologony is a game where players sequence historical events into a timeline."
       },
       "feedbackEmail": "chrologony@carlsonville.com"
     },
