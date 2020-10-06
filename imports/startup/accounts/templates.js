@@ -23,7 +23,7 @@ AccountsTemplates.configure({
         navSignIn: "Login",
         navSignOut: "Logout",
         pwdLink_pre: "",
-        pwdLink_link: "forgotPassword",
+        pwdLink_link: "Forgot Password?",
         pwdLink_suff: "",
         resendVerificationEmailLink_pre: "",
         resendVerificationEmailLink_link: "Re-send Verification Email",
