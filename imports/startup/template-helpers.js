@@ -30,7 +30,7 @@ Template.registerHelper('appTagline', function() {
 });
 
 Template.registerHelper('appImage', function() {
-    return Meteor.absoluteUrl('logo.png');
+    return Meteor.absoluteUrl('share.png');
 });
 
 Template.registerHelper('appUrl', function() {
