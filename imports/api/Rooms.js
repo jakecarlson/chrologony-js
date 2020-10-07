@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { publishComposite } from 'meteor/reywood:publish-composite';
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
@@ -41,6 +42,10 @@ Rooms.helpers({
 
     owner() {
         return Meteor.users.findOne(this.ownerId);
+    },
+
+    link() {
+        return Meteor.absoluteUrl(FlowRouter.path('joinByToken', {id: this._id, token: this.token}));
     },
 
 });
@@ -239,6 +244,41 @@ if (Meteor.isServer) {
             setRoom(roomId);
 
             return roomId;
+
+        },
+
+        'room.invite'(email, id, url) {
+
+            const room = Rooms.findOne(id);
+            if (room) {
+
+                Permissions.check(Permissions.authenticated());
+                Permissions.check(Permissions.owned(room));
+
+                const invite = Helpers.renderHtmlEmail({
+                    subject: Meteor.settings.public.app.invite.subject,
+                    preview: Meteor.settings.public.app.invite.preview,
+                    template: 'room_invite',
+                    data: {
+                        name: room.name,
+                        url: url,
+                        inviter: Meteor.user().profile.name,
+                    },
+                });
+
+                Email.send({
+                    from: Meteor.settings.public.app.sendEmail,
+                    to: email,
+                    subject: Meteor.settings.public.app.invite.subject,
+                    text: invite.text,
+                    html: invite.html,
+                });
+
+                return room._id;
+
+            } else {
+                throw new Meteor.Error('not-found', 'Room does not exist.');
+            }
 
         },
 

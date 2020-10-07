@@ -2,6 +2,7 @@ import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { SSR, Template } from 'meteor/meteorhacks:ssr';
+import '../template-helpers';
 
 // Set sender info
 Accounts.emailTemplates.siteName = Meteor.settings.public.app.name;
@@ -60,9 +61,6 @@ const emails = {
 };
 
 SSR.compileTemplate('layout_email', Assets.getText('email/layout_email.html'));
-Template.layout_email.helpers({
-    doctype() { return "<!DOCTYPE html>"; }
-});
 
 for (const [template, data] of Object.entries(emails)) {
     let templateCamel = Helpers.snakeToCamel(template);

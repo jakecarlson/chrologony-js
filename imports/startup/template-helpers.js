@@ -60,3 +60,7 @@ Template.registerHelper('gaScriptUrl', function() {
 Template.registerHelper('fbAppId', function() {
     return Meteor.settings.robots.facebookAppId;
 });
+
+Template.registerHelper('doctype', function() {
+    return "<!DOCTYPE html>";
+});

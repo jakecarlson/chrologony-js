@@ -45,11 +45,6 @@ const serverRendering = function(req, res, next) {
         if (robots.test(ua)) {
 
             SSR.compileTemplate('robots', Assets.getText('robots.html'));
-            Template.robots.helpers({
-                docType: function() {
-                    return "<!DOCTYPE html>";
-                }
-            });
 
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/html');

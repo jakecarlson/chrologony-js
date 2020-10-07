@@ -244,7 +244,7 @@ Template.room.helpers({
     },
 
     link() {
-        return Meteor.absoluteUrl(FlowRouter.path('joinByToken', {id: Template.instance().room.get()._id, token: Template.instance().room.get().token}));
+        return Template.instance().room.get().link();
     },
 
     moreName() {
@@ -370,6 +370,30 @@ Template.room.events({
         if (i.clueMore.get()) {
             $('#clueMore').modal('show');
         }
+    },
+
+    'submit #invitePlayer'(e, i) {
+
+        LoadingState.start(e);
+
+        const target = e.target;
+        const email = target.email.value;
+        const room = i.room.get();
+
+        Meteor.call('room.invite', email, room._id, room.link(), function(err, id) {
+            if (!err) {
+                Logger.log(email + ' invited to room: ' + id);
+                Flasher.set('success', "You have successfully invited " + email + " to join this room.");
+                target.email.value = '';
+                $('.invite-modal').modal('hide');
+                LoadingState.stop();
+            }
+        });
+
+    },
+
+    'click .link'(e, i) {
+        e.preventDefault();
     },
 
 });
