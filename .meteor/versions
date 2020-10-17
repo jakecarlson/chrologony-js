@@ -62,6 +62,7 @@ livedata@1.0.18
 lmieulet:meteor-coverage@3.2.0
 localstorage@1.2.0
 logging@1.1.20
+matb33:collection-hooks@1.0.1
 mealsunite:flow-routing-extra@2.0.2
 meteor@1.9.3
 meteor-base@1.4.0

@@ -7,6 +7,7 @@ import SimpleSchema from "simpl-schema";
 import { Schemas } from "../modules/Schemas";
 
 import { Games } from "./Games";
+import {Clues} from "./Clues";
 
 export const Categories = new Mongo.Collection('categories');
 
@@ -19,6 +20,7 @@ Categories.schema = new SimpleSchema({
     collaborators: {type: Array, defaultValue: [], optional: true},
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
     precision: {type: String, defaultValue: 'date'},
+    cluesCount: {type: SimpleSchema.Integer, defaultValue: 0, optional: true},
 });
 Categories.schema.extend(Schemas.timestampable);
 Categories.schema.extend(Schemas.ownable);
@@ -26,7 +28,7 @@ Categories.attachSchema(Categories.schema);
 
 Categories.helpers({
 
-    colabborators() {
+    collaborators() {
         return Meteor.users.find(
             {
                 _id: {$in: this.collaborators},
@@ -68,6 +70,7 @@ if (Meteor.isServer) {
                         collaborators: 1,
                         ownerId: 1,
                         precision: 1,
+                        cluesCount: 1,
                     },
                 }
             );
@@ -193,6 +196,19 @@ Meteor.methods({
         );
 
     },
+
+    'category.updateClueCounts'(ids) {
+
+        Permissions.check(Permissions.authenticated());
+
+        ids.forEach(function(id) {
+            const cluesCount = Clues.find({categories: id, active: true}).count();
+            Categories.update(id, {$set: {cluesCount: cluesCount}});
+        });
+
+        return ids.length;
+
+    }
 
 });
 

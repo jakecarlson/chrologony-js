@@ -21,7 +21,7 @@ Migrations.add({
         Categories.update(
             {},
             {
-                $unset: {precision: 'date'},
+                $unset: {precision: 1},
                 $set: {
                     comparisonPrecision: 'date',
                     displayPrecision: 'date',

@@ -45,16 +45,24 @@ Template.categories_selector.helpers({
         );
     },
 
-    inactive(category) {
-        return !category.active;
-    },
-
     unready() {
         return !Template.instance().loaded.get();
     },
 
     small() {
         return this.small;
+    },
+
+    categoryLabel(category) {
+        let str = '';
+        if (category.source == 'user') {
+            str += category.theme + ': '
+        }
+        str += category.name + ' (' + numeral(category.cluesCount).format('0,0') + ')';
+        if (!category.active) {
+            str += ' [inactive]';
+        }
+        return str;
     },
 
 });

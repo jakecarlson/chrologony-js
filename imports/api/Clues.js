@@ -46,6 +46,17 @@ Clues.schema.extend(Schemas.timestampable);
 Clues.schema.extend(Schemas.ownable);
 Clues.attachSchema(Clues.schema);
 
+// Collection hooks to update category clue counts
+Clues.after.insert(function(id, clue) {
+    updateClueCounts(clue.categories);
+});
+Clues.after.update(function(id, clue) {
+    updateClueCounts([...clue.categories, ...this.previous.categories]);
+});
+Clues.after.remove(function(id, clue) {
+    updateClueCounts(clue.categories);
+});
+
 Clues.helpers({
 
     categories() {
@@ -537,4 +548,13 @@ function getCluePublicationSelector(filters, advancedSearch = false) {
     }
 
     return selector;
+
+}
+
+function updateClueCounts(categoryIds) {
+    Meteor.call('category.updateClueCounts', categoryIds, function(err, updated) {
+        if (!err) {
+            Logger.log("Updated Category Clue Counts: " + updated);
+        }
+    });
 }
