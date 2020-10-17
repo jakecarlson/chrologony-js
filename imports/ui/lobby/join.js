@@ -75,6 +75,7 @@ Template.join.events({
 function processSuccessfulSubmit(form, roomId) {
     Logger.log("Room Set: " + roomId);
     Meteor.subscribe('rooms');
+    Session.set('roomPassword', form.password.value);
     form.name.value = '';
     form.password.value = '';
     Flasher.set('success', "Success! Invite others to join using the Room Link.");

@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Session } from 'meteor/session';
 import { Flasher } from '../flasher';
 import { LoadingState } from '../../modules/LoadingState';
 
@@ -236,7 +237,7 @@ Template.room.helpers({
     },
 
     password() {
-        return Template.instance().room.get().password;
+        return Session.get('roomPassword');
     },
 
     owner() {
@@ -252,6 +253,7 @@ Template.room.helpers({
         return (clue) ? Formatter.date(clue.date) : null;
     },
 
+    /*
     hasMore() {
         const i = Template.instance();
         const clue = i.clueMore.get();
@@ -265,6 +267,7 @@ Template.room.helpers({
         }
         return false;
     },
+     */
 
     moreAttr(attr) {
         return moreAttr(Template.instance(), attr);
@@ -396,6 +399,10 @@ Template.room.events({
         e.preventDefault();
     },
 
+    'click .password'(e, i) {
+        e.preventDefault();
+    },
+
 });
 
 function leaveRoom() {
@@ -405,6 +412,7 @@ function leaveRoom() {
             Logger.log("Player Left Room: " + id);
         }
         Flasher.clear();
+        delete Session.keys['roomPassword'];
         FlowRouter.go('lobby');
     });
 }
