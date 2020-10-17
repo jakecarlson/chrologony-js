@@ -253,22 +253,6 @@ Template.room.helpers({
         return (clue) ? Formatter.date(clue.date) : null;
     },
 
-    /*
-    hasMore() {
-        const i = Template.instance();
-        const clue = i.clueMore.get();
-        if (clue) {
-            return (
-                hasMoreAttr(i, 'moreInfo') ||
-                hasMoreAttr(i, 'externalUrl') ||
-                hasMoreImage(i) ||
-                hasMoreLocation(i)
-            );
-        }
-        return false;
-    },
-     */
-
     moreAttr(attr) {
         return moreAttr(Template.instance(), attr);
     },
