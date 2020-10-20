@@ -94,6 +94,10 @@ Template.game.helpers({
         return (this.game && this.game.recycleCards);
     },
 
+    autoProceed() {
+        return (this.game && this.game.autoProceed);
+    },
+
     comparisonPrecision() {
         return (this.game) ? this.game.comparisonPrecision : 'date';
     },
@@ -176,6 +180,7 @@ Template.game.events({
             maxDifficulty: difficulties[difficulties.length-1],
             minScore: parseInt(Helpers.getSelectValue(form.minScore)),
             cardLimit: parseInt(Helpers.getSelectValue(form.cardLimit)),
+            autoProceed: form.autoProceed.checked,
             cardTime: parseInt(Helpers.getSelectValue(form.cardTime)),
             turnOrder: Helpers.getSelectValue(form.turnOrder),
             recycleCards: form.recycleCards.checked,

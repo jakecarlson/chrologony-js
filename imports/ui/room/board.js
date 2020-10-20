@@ -270,9 +270,17 @@ Template.board.events({
             }
         });
 
+        const self = this;
         Meteor.call('card.submitGuess', currentCardId, currentCardPos, function(err, correct) {
             if (!err) {
                 Logger.log('Guess Correct for ' + currentCardId + ': ' + correct);
+                if (correct && self.game.autoProceed) {
+                    if (self.turn.hasReachedCardLimit()) {
+                        endTurn(self.game);
+                    } else {
+                        drawCard(self.game);
+                    }
+                }
             }
             LoadingState.stop();
             TourGuide.resume();
@@ -281,15 +289,7 @@ Template.board.events({
     },
 
     'click .draw-card'(e, i) {
-        LoadingState.start();
-        const gameId = this.game._id;
-        Meteor.call('card.draw', this.game.currentTurnId, function(err, id) {
-            if (!err) {
-                Logger.log("Created Card: " + id);
-            }
-            saveCardPos();
-            LoadingState.stop();
-        });
+        drawCard(this.game.currentTurnId);
     },
 
     'click .end-turn'(e, i) {
@@ -341,6 +341,17 @@ function saveCardPos() {
         }
     });
 
+}
+
+function drawCard(game) {
+    LoadingState.start();
+    Meteor.call('card.draw', game.currentTurnId, function(err, id) {
+        if (!err) {
+            Logger.log("Created Card: " + id);
+        }
+        saveCardPos();
+        LoadingState.stop();
+    });
 }
 
 function endTurn(game) {
