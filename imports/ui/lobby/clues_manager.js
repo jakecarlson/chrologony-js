@@ -16,7 +16,7 @@ import './pager.js';
 
 Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
-    this.pageSize = 25;
+    Session.setDefault('pageSize', 25);
     this.pagesDisplayed = 7;
 
     this.filters = new ReactiveDict();
@@ -24,7 +24,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.filters.set('owned', false);
     this.filters.set('categoryId', null);
     this.filters.set('page', 1);
-    this.filters.set('pageSize', this.pageSize);
+    this.filters.set('pageSize', Session.get('pageSize'));
 
     this.state = new ReactiveDict();
     this.state.set('currentClue', null);
@@ -97,8 +97,8 @@ Template.clues_manager.helpers({
     },
 
     clues() {
-        const skip = Helpers.getPageStart(Template.instance().filters.get('page'), Template.instance().filters.get('pageSize'));
-        const clues = Clues.find({}, {skip: skip, limit: Template.instance().filters.get('pageSize')});
+        const skip = Helpers.getPageStart(Template.instance().filters.get('page'), Session.get('pageSize'));
+        const clues = Clues.find({}, {skip: skip, limit: Session.get('pageSize')});
         return clues;
     },
 
@@ -138,7 +138,7 @@ Template.clues_manager.helpers({
     },
 
     pageSize() {
-        return Template.instance().filters.get('pageSize');
+        return Session.get('pageSize');
     },
 
     pagesDisplayed() {
@@ -284,7 +284,9 @@ Template.clues_manager.events({
     },
 
     'change .pager-size [name="size"]'(e, i) {
-        i.filters.set('pageSize', parseInt(e.target.value));
+        const pageSize = parseInt(e.target.value);
+        Session.set('pageSize', pageSize);
+        i.filters.set('pageSize', pageSize);
         i.filters.set('page', 1);
     },
 
