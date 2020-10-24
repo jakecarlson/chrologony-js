@@ -188,9 +188,7 @@ Template.board.helpers({
                 str += 'bg-danger';
             }
         } else if (isCurrentPlayer(this.turn)) {
-            str += 'bg-' + getColor(this.turn) + ' text-white';
-        } else {
-            str += 'text-muted';
+            str += 'bg-' + getColor(this.turn);
         }
         return str;
     },

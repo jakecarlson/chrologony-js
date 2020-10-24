@@ -27,6 +27,16 @@
 /* board */
 .turn-title {
   font-size: xx-large;
+  color: $muted;
+}
+.bg-success .turn-title,
+.bg-danger .turn-title,
+.bg-primary .turn-title
+{
+  color: $white;
+}
+.bg-warning .turn-title {
+  color: $dark;
 }
 #board .card-subtitle {
   font-size: x-large;

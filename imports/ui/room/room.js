@@ -310,6 +310,14 @@ Template.room.helpers({
         return (isOwner(Template) && getCurrentTurn(Template));
     },
 
+    fullBoard() {
+        return Session.get('fullBoard');
+    },
+
+    columnBoard() {
+        return !Session.get('fullBoard');
+    },
+
 });
 
 Template.room.events({
@@ -385,6 +393,14 @@ Template.room.events({
 
     'click .password'(e, i) {
         e.preventDefault();
+    },
+
+    'click .board-full'(e, i) {
+        Session.set('fullBoard', true);
+    },
+
+    'click .board-columns'(e, i) {
+        Session.set('fullBoard', false);
     },
 
 });
