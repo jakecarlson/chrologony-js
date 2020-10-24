@@ -30,6 +30,7 @@ Games.schema = new SimpleSchema({
     categoryId: {type: String, regEx: SimpleSchema.RegEx.Id},
     currentTurnId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     currentRound: {type: Number, defaultValue: 1},
+    currentLeaderId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     winnerId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     winPoints: {type: SimpleSchema.Integer, defaultValue: 0},
     equalTurns: {type: Boolean, defaultValue: false},
@@ -66,6 +67,10 @@ Games.helpers({
 
     turns() {
         return Turns.find({gameId: this._id});
+    },
+
+    currentLeader() {
+        return (this.currentLeaderId ? Meteor.users.findOne(this.currentLeaderId) : null);
     },
 
     winner() {
@@ -143,6 +148,99 @@ Games.helpers({
         return players;
     },
 
+    calculateCurrentLeader() {
+        const players = this.playersWithCounts();
+        return players[0];
+    },
+
+    calculateCurrentRound() {
+        const players = this.getPlayerTurnCounts();
+        return players[0].turns;
+    },
+
+    getPlayerTurnCounts() {
+
+        // Create an array of user IDs of players currently in the room
+        let playerPool = [];
+        this.room().players().forEach(function(user) {
+            playerPool.push(user._id);
+        });
+
+        // Get turn counts for players who have had turns in the current game and are still in the room
+        let sort = {
+            turns: -1,
+        };
+        if (this.turnOrder != 'random') {
+            sort.lastTurn = (this.turnOrder == 'snake') ? 1 : -1;
+        }
+
+        const players = Promise.await(
+            Turns.rawCollection().aggregate(
+                [
+                    {$match: {gameId: this._id, ownerId: {$in: playerPool}}},
+                    {$group: {_id: "$ownerId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
+                    {$sort: sort},
+                ]
+            ).toArray()
+        );
+
+        // Create an array of users who have already had turns
+        const alreadyPlayed = [];
+        players.forEach(function(player) {
+            alreadyPlayed.push(player._id);
+        });
+
+        // Get all players in the room that haven't had turns yet
+        const users = Meteor.users.find(
+            {
+                currentRoomId: this.roomId,
+                _id: {$nin: alreadyPlayed},
+            },
+            {
+                sort: {
+                    joinedRoomAt: -1,
+                }
+            }
+        ).fetch();
+        users.forEach(function(user) {
+            players.push({
+                _id: user._id,
+                turns: 0,
+                lastTurn: null,
+            });
+        });
+
+        return players;
+
+    },
+
+    getNextPlayer() {
+
+        // Get players sorted by turn count descending
+        const players = this.getPlayerTurnCounts();
+        Logger.log('Player Turn Counts: ' + JSON.stringify(players));
+
+        // If the turn order is random, randomly select one of the players with the fewest turns
+        let nextPlayer = null;
+        if (this.turnOrder == 'random') {
+            let leastTurnPlayers = [];
+            const lastIndex = players.length-1;
+            const minTurns = players[players.length-1].turns;
+            for (let i = lastIndex; i >= 0; --i) {
+                if (players[i].turns != minTurns) break;
+                leastTurnPlayers.push(players[i]);
+            }
+            nextPlayer = leastTurnPlayers[Math.floor(Math.random() * leastTurnPlayers.length)];
+
+            // Otherwise just pluck the bottom player
+        } else {
+            nextPlayer = players[players.length-1];
+        }
+
+        return nextPlayer;
+
+    },
+
 });
 
 if (Meteor.isServer) {
@@ -160,6 +258,7 @@ if (Meteor.isServer) {
                         categoryId: 1,
                         currentTurnId: 1,
                         currentRound: 1,
+                        currentLeaderId: 1,
                         winnerId: 1,
                         startedAt: 1,
                         endedAt: 1,
@@ -198,33 +297,24 @@ if (Meteor.isServer) {
 Meteor.methods({
 
     // Update
-    'game.setTurn'(id, turn) {
+    'game.update'(id, attrs) {
 
         check(id, RecordId);
-        if (turn) {
-            check(
-                turn,
-                {
-                    id: RecordId,
-                    round: Match.Integer,
-                }
-            );
-        }
+        check(
+            attrs,
+            {
+                currentTurnId: RecordId,
+                currentRound: Match.Integer,
+                currentLeaderId: Match.OneOf(RecordId, null),
+            }
+        );
         Permissions.check(Permissions.authenticated());
         checkPlayerIsInRoom(id);
 
-        Logger.log('Update Game Turn: ' + id + ': ' + turn.id);
+        Logger.log('Update Game: ' + id + ': ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
-        return Games.update(
-            id,
-            {
-                $set: {
-                    currentTurnId: turn.id,
-                    currentRound: turn.round,
-                }
-            }
-        );
+        return Games.update(id, {$set: attrs});
 
     },
 
@@ -325,8 +415,7 @@ if (Meteor.isServer) {
 
             // Only award a win if there were actually any turns and someone met the criteria
             } else if (game.currentTurnId) {
-                const players = game.playersWithCounts();
-                const winner = players[0];
+                const winner = game.calculateCurrentLeader();
                 if (!game.winPoints || (winner.cards >= game.winPoints)) {
                     attrs.winnerId = winner._id;
                 }

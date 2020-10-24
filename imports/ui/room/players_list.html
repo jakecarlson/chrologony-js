@@ -3,7 +3,7 @@
     {{#if dataReady}}
         <div id="players" class="card mb-4">
             <div class="card-header">
-                <h2 class="card-title">Players in this Room ({{ numPlayers }})</h2>
+                <h2 class="card-title">Players in this Room ({{numPlayers}})</h2>
             </div>
             <ul id="playersAccordion" class="list-group list-group-flush">
                 {{#each currentPlayer in players}}
@@ -11,6 +11,7 @@
                 {{/each}}
             </ul>
             <div class="card-footer text-muted">
+                <p class="float-left mb-0">Leader: {{currentLeader}}</p>
                 <p class="float-right mb-0">Round: {{currentRound}}</p>
             </div>
         </div>
