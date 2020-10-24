@@ -182,6 +182,11 @@ Template.room.onCreated(function roomOnCreated() {
                 subscribe(Meteor, 'cards', self.room.get().currentGameId);
                 subscribe(Meteor, 'cardClues', self.room.get().currentGameId);
                 playSound(self.sounds.card.draw);
+                if (fields.ownerId == Meteor.userId()) {
+                    $('.player-cards-wrapper').animate({
+                        scrollLeft: 0
+                    }, 250);
+                }
             }
         },
 
@@ -457,7 +462,7 @@ function getCurrentTurn(t) {
 }
 
 function isOwner(t) {
-    return (t.instance().room.get().ownerId == Meteor.userId())
+    return (t.instance().room.get() && (t.instance().room.get().ownerId == Meteor.userId()));
 }
 
 function playSound(sound) {
