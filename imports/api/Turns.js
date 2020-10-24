@@ -222,6 +222,12 @@ if (Meteor.isServer) {
                 const players = getPlayerTurnCounts(game);
                 Logger.log('Player Turn Counts: ' + JSON.stringify(players));
 
+                // Figure out the current round
+                let currentRound = players[0].turns;
+                if ((players.length == 1) || (players[0].turns == players[1].turns)) {
+                    ++currentRound;
+                }
+
                 // If the turn order is random, randomly select one of the players with the fewest turns
                 let nextPlayer = null;
                 if (game.turnOrder == 'random') {
@@ -246,7 +252,7 @@ if (Meteor.isServer) {
                     startedAt: new Date(),
                 });
 
-                Meteor.call('game.setTurn', gameId, turnId, function(err, updated) {
+                Meteor.call('game.setTurn', gameId, {id: turnId, round: currentRound}, function(err, updated) {
                     if (!err) {
                         Logger.log("Updated Game: " + updated);
                     }

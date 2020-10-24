@@ -21,6 +21,17 @@ Template.players_list.helpers({
         return (this.turn.ownerId == userId);
     },
 
+    numPlayers() {
+        return this.room.players().count();
+    },
+
+    currentRound() {
+        if (this.game) {
+            return this.game.currentRound;
+        }
+        return '-';
+    },
+
 });
 
 Template.players_list.events({

@@ -29,6 +29,7 @@ Games.schema = new SimpleSchema({
     roomId: {type: String, regEx: SimpleSchema.RegEx.Id},
     categoryId: {type: String, regEx: SimpleSchema.RegEx.Id},
     currentTurnId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
+    currentRound: {type: Number, defaultValue: 1},
     winnerId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     winPoints: {type: SimpleSchema.Integer, defaultValue: 0},
     equalTurns: {type: Boolean, defaultValue: false},
@@ -158,6 +159,7 @@ if (Meteor.isServer) {
                         roomId: 1,
                         categoryId: 1,
                         currentTurnId: 1,
+                        currentRound: 1,
                         winnerId: 1,
                         startedAt: 1,
                         endedAt: 1,
@@ -196,23 +198,30 @@ if (Meteor.isServer) {
 Meteor.methods({
 
     // Update
-    'game.setTurn'(id, turnId) {
+    'game.setTurn'(id, turn) {
 
         check(id, RecordId);
-        if (turnId) {
-            check(turnId, RecordId);
+        if (turn) {
+            check(
+                turn,
+                {
+                    id: RecordId,
+                    round: Match.Integer,
+                }
+            );
         }
         Permissions.check(Permissions.authenticated());
         checkPlayerIsInRoom(id);
 
-        Logger.log('Update Game Turn: ' + id + ': ' + turnId);
+        Logger.log('Update Game Turn: ' + id + ': ' + turn.id);
 
         // If there is an ID, this is an update
         return Games.update(
             id,
             {
                 $set: {
-                    currentTurnId: turnId,
+                    currentTurnId: turn.id,
+                    currentRound: turn.round,
                 }
             }
         );
@@ -235,8 +244,8 @@ if (Meteor.isServer) {
                     categoryId: RecordId,
                     winPoints: Match.Integer,
                     equalTurns: Boolean,
-                    minDifficulty: Number,
-                    maxDifficulty: Number,
+                    minDifficulty: Match.Integer,
+                    maxDifficulty: Match.Integer,
                     minScore: Match.Integer,
                     cardLimit: Match.Integer,
                     autoProceed: Boolean,
