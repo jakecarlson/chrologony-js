@@ -152,7 +152,7 @@
 {
   cursor: pointer;
 }
-#cluesManager .form-check-input {
+#cluesManager tbody .form-check-input {
   margin-top: .5rem;
 }
 #cluesManager .select {
@@ -162,7 +162,7 @@
   vertical-align: top;
 }
 #cluesManager.table thead th:first-child .form-check-input {
-  margin-top: .75rem;
+  margin-top: .8rem;
 }
 #cluesManager .description {
   width: 35%;
@@ -195,6 +195,10 @@
 #cluesManager .fa.table-icon {
   line-height: 1.25;
   font-size: x-large;
+}
+#cluesManager thead .fa.table-icon {
+  position: relative;
+  top: .3rem;
 }
 #cluesManager .editing .fa.table-icon {
   padding-top: .1rem;
