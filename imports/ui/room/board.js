@@ -276,7 +276,7 @@ Template.board.events({
                     if (self.turn.hasReachedCardLimit()) {
                         endTurn(self.game);
                     } else {
-                        drawCard(self.game);
+                        drawCard(self.game.currentTurnId);
                     }
                 }
             }
@@ -341,9 +341,9 @@ function saveCardPos() {
 
 }
 
-function drawCard(game) {
+function drawCard(turnId) {
     LoadingState.start();
-    Meteor.call('card.draw', game.currentTurnId, function(err, id) {
+    Meteor.call('card.draw', turnId, function(err, id) {
         if (!err) {
             Logger.log("Created Card: " + id);
         }
