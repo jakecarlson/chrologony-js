@@ -1,12 +1,12 @@
 <template name="room">
 
-    <section id="room">
+    <section id="room" class="{{#if fullBoard}}full-width{{else}}columns{{/if}}">
 
         {{#if dataReady}}
 
             <header class="clearfix mb-2">
 
-                <h1 class="room-title float-left">{{name}}</h1>
+                <h1 class="float-left" id="roomTitle">{{name}}</h1>
 
                 <div class="float-right mb-2" id="roomMenu">
 
@@ -84,9 +84,9 @@
 
             </header>
 
-            <div class="row">
+            <div class="{{#if columnsBoard}}row{{/if}}">
 
-                <div class="{{#if fullBoard}}col-12{{else}}col-lg-9{{/if}}" id="roomMain">
+                <div class="{{#if columnsBoard}}col-lg-9{{/if}}" id="roomMain">
 
                     {{> board room=currentRoom game=currentGame turn=currentTurn}}
 
@@ -108,7 +108,7 @@
 
                 </div>
 
-                <div class="{{#if fullBoard}}col-12{{else}}col-lg-3{{/if}}" id="roomSide">
+                <div class="{{#if columnsBoard}}col-lg-3{{/if}}" id="roomSide">
 
                     {{> players_list room=currentRoom turn=currentTurn}}
 

@@ -319,7 +319,7 @@ Template.room.helpers({
         return Session.get('fullBoard');
     },
 
-    columnBoard() {
+    columnsBoard() {
         return !Session.get('fullBoard');
     },
 

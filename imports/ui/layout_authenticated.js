@@ -17,6 +17,7 @@ import './flasher.js';
 
 import { Clues } from "../api/Clues";
 import { Categories } from "../api/Categories";
+import {Session} from "meteor/session";
 
 Template.layout_authenticated.onCreated(function layout_authenticatedOnCreated() {
 
@@ -76,6 +77,10 @@ Template.layout_authenticated.helpers({
     whitelistedCategories() {
         const categories = Categories.find({source: 'user'});
         return categories.fetch().map(function(category) { return category._id; });
+    },
+
+    columnsBoard() {
+        return ((FlowRouter.getRouteName() != 'room') || !Session.get('fullBoard'));
     },
 
 })
