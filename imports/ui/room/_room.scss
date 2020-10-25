@@ -1,7 +1,5 @@
 /* Room */
-.full-width #roomMain > .card
-.full-width #roomSide > .card
-{
+.full-width .card:not(.game-card) {
   border-left-width: 0 !important;
   border-right-width: 0 !important;
 }
