@@ -83,8 +83,6 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
             }
 
-        } else {
-            LoadingState.stop();
         }
 
     });
