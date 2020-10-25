@@ -6,34 +6,38 @@
 
             <header class="{{headerClasses}}">
 
-                <h2 class="card-title float-left turn-title">{{turnTitle}}</h2>
+                <h2 class="card-title board-title float-left">{{boardTitle}}</h2>
 
-                <button
-                    class="{{buttonClasses cannotEndTurn}} end-turn"
-                    disabled="{{cannotEndTurn}}"
-                    title="End Turn"
-                >
-                    <i class="fa fa-lock"></i>
-                    <span class="d-none d-md-inline">End Turn</span>
-                </button>
+                <div class="board-menu float-right">
 
-                <button
-                    class="{{buttonClasses cannotDrawCard}} draw-card"
-                    disabled="{{cannotDrawCard}}"
-                    title="Draw Card"
-                >
-                    <i class="fa fa-clone"></i>
-                    <span class="d-none d-md-inline">Draw Card</span>
-                </button>
+                    <button
+                            class="{{buttonClasses cannotEndTurn}} end-turn"
+                            disabled="{{cannotEndTurn}}"
+                            title="End Turn"
+                    >
+                        <i class="fa fa-lock"></i>
+                        <span class="d-none d-md-inline">End Turn</span>
+                    </button>
 
-                <button
-                    class="{{buttonClasses cannotSubmitGuess}} submit-guess"
-                    disabled="{{cannotSubmitGuess}}"
-                    title="Submit Guess"
-                >
-                    <i class="fa fa-external-link"></i>
-                    <span class="d-none d-md-inline">Submit Guess</span>
-                </button>
+                    <button
+                            class="{{buttonClasses cannotDrawCard}} draw-card"
+                            disabled="{{cannotDrawCard}}"
+                            title="Draw Card"
+                    >
+                        <i class="fa fa-clone"></i>
+                        <span class="d-none d-md-inline">Draw Card</span>
+                    </button>
+
+                    <button
+                            class="{{buttonClasses cannotSubmitGuess}} submit-guess"
+                            disabled="{{cannotSubmitGuess}}"
+                            title="Submit Guess"
+                    >
+                        <i class="fa fa-external-link"></i>
+                        <span class="d-none d-md-inline">Submit Guess</span>
+                    </button>
+
+                </div>
 
             </header>
 

@@ -9,7 +9,9 @@
   font-size: xx-large;
   margin-bottom: 0;
 }
-.full-width #roomTitle {
+.full-width #roomTitle,
+.full-width #playerCardsTitle
+{
   padding-left: 1.25rem;
 }
 #roomSide .card-title {
@@ -36,18 +38,21 @@
 }
 
 /* board */
-.turn-title {
+.board-title {
   font-size: xx-large;
   color: $muted;
 }
-.bg-success .turn-title,
-.bg-danger .turn-title,
-.bg-primary .turn-title
+.bg-success .board-title,
+.bg-danger .board-title,
+.bg-primary .board-title
 {
   color: $white;
 }
-.bg-warning .turn-title {
+.bg-warning .board-title {
   color: $dark;
+}
+.board-menu {
+  padding-top: .1rem;
 }
 #board .card-subtitle {
   font-size: x-large;

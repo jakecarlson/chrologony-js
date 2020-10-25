@@ -91,7 +91,7 @@
                     {{> board room=currentRoom game=currentGame turn=currentTurn}}
 
                     {{#if showPlayerCards}}
-                        <div id="playerCards" class="mb-4 mb-lg-0">
+                        <div id="playerCards" class="mb-4 {{#if columnsBoard}}mb-lg-0{{/if}}">
                             <h2 id="playerCardsTitle" class="text-muted mb-2">
                                 {{#if gameInProgress}}
                                     Other

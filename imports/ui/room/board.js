@@ -54,7 +54,7 @@ Template.board.helpers({
         return this.room;
     },
 
-    turnTitle() {
+    boardTitle() {
         if (this.turn) {
             let title = '';
             if (this.turn.ownerId == Meteor.userId()) {
