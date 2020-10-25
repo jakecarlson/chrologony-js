@@ -34,9 +34,12 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('bulkAddCategoryId', null);
     this.state.set('cluesSelected', false);
 
+    this.dataReady = new ReactiveVar(false);
+
     this.autorun(() => {
 
         FlowRouter.watchPathChange();
+        this.dataReady.set(false);
         this.filters.set('categoryId', FlowRouter.getParam('categoryId'));
         this.filters.set('clueId', FlowRouter.getParam('clueId'));
 
@@ -48,6 +51,8 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
             this.subscribe('clues', this.filters.all(), advanced);
 
             if (this.subscriptionsReady()) {
+
+                Logger.log('Clues Loaded: ' + Clues.find({}).count());
 
                 const self = this;
                 Tracker.afterFlush(() => {
@@ -73,6 +78,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
                 });
 
+                this.dataReady.set(true);
                 LoadingState.stop();
 
             }
@@ -97,9 +103,13 @@ Template.clues_manager.helpers({
     },
 
     clues() {
-        const skip = Helpers.getPageStart(Template.instance().filters.get('page'), Session.get('pageSize'));
-        const clues = Clues.find({}, {skip: skip, limit: Session.get('pageSize')});
-        return clues;
+        const i = Template.instance();
+        if (i.dataReady.get()) {
+            const skip = Helpers.getPageStart(i.filters.get('page'), Session.get('pageSize'));
+            const clues = Clues.find({}, {skip: skip, limit: Session.get('pageSize')});
+            return clues;
+        }
+        return false;
     },
 
     categoryId() {
