@@ -4,6 +4,8 @@ import { FlowRouterMeta, FlowRouterTitle } from 'meteor/ostrio:flow-router-meta'
 import { Session } from 'meteor/session';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
+import { Categories } from '../imports/api/Categories';
+import { Rooms } from '../imports/api/Rooms';
 import { Flasher } from "../imports/ui/flasher";
 
 AccountsTemplates.configure({
@@ -16,6 +18,7 @@ AccountsTemplates.configure({
 AccountsTemplates.configureRoute('signIn', {
     name: 'home',
     path: '/',
+    title: getTitle(Meteor.settings.public.app.tagline),
     redirect: function() {
         if (Meteor.user()) {
             redirectToPrevious('lobby');
@@ -26,6 +29,7 @@ AccountsTemplates.configureRoute('signIn', {
 AccountsTemplates.configureRoute('signUp', {
     name: 'signUp',
     path: '/sign-up',
+    title: getTitle('Sign Up'),
     redirect: function() {
         if (Meteor.user()) {
             const username = Meteor.user().username;
@@ -42,6 +46,7 @@ AccountsTemplates.configureRoute('signUp', {
 AccountsTemplates.configureRoute('changePwd', {
     name: 'changePassword',
     path: '/change-password',
+    title: getTitle('Change Your Password'),
     layoutTemplate: 'layout_authenticated',
     redirect: function() {
         if (Meteor.user()) {
@@ -54,6 +59,7 @@ AccountsTemplates.configureRoute('changePwd', {
 AccountsTemplates.configureRoute('forgotPwd', {
     name: 'forgotPassword',
     path: '/forgot-password',
+    title: getTitle('Forgot Your Password?'),
     redirect: function() {
         if (Meteor.user()) {
             FlowRouter.go('home');
@@ -64,6 +70,7 @@ AccountsTemplates.configureRoute('forgotPwd', {
 AccountsTemplates.configureRoute('verifyEmail', {
     name: 'verifyEmail',
     path: '/verify-email',
+    title: getTitle('Verify Your Email Address'),
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully verified your email address.');
@@ -75,6 +82,7 @@ AccountsTemplates.configureRoute('verifyEmail', {
 AccountsTemplates.configureRoute('resendVerificationEmail', {
     name: 'resendVerificationEmail',
     path: '/send-again',
+    title: getTitle('Send Email Verification Email Again'),
     redirect: function() {
         if (Meteor.user()) {
             FlowRouter.go('home');
@@ -85,6 +93,7 @@ AccountsTemplates.configureRoute('resendVerificationEmail', {
 AccountsTemplates.configureRoute('resetPwd', {
     name: 'resetPassword',
     path: '/reset-password',
+    title: getTitle('Reset Your Password'),
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully reset your password.');
@@ -95,6 +104,7 @@ AccountsTemplates.configureRoute('resetPwd', {
 
 FlowRouter.route('/privacy', {
     name: 'privacy',
+    title: getTitle('Privacy Policy'),
     action(params, queryParams) {
         Logger.log("Route: privacy");
         BlazeLayout.render(
@@ -108,6 +118,7 @@ FlowRouter.route('/privacy', {
 
 FlowRouter.route('/terms', {
     name: 'terms',
+    title: getTitle('Terms of Use'),
     action(params, queryParams) {
         Logger.log("Route: terms");
         BlazeLayout.render(
@@ -121,6 +132,7 @@ FlowRouter.route('/terms', {
 
 FlowRouter.route('/logout', {
     name: 'logout',
+    title: getTitle('Logout'),
     action(params, queryParams) {
         Logger.log("Route: logout");
         AccountsTemplates.logout();
@@ -130,6 +142,7 @@ FlowRouter.route('/logout', {
 
 FlowRouter.route('/lobby', {
     name: 'lobby',
+    title: getTitle('Lobby'),
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: lobby");
@@ -144,6 +157,7 @@ FlowRouter.route('/lobby', {
 
 FlowRouter.route('/clues', {
     name: 'clues',
+    title: getTitle('Manage Clues'),
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: clues");
@@ -155,9 +169,12 @@ FlowRouter.route('/clues', {
         );
     }
 });
-
+console.log();
 FlowRouter.route('/clues/:categoryId', {
     name: 'clues.categoryId',
+    title(params, query, data) {
+        return getTitle('Manage Clues: ' + Categories.findOne(params.categoryId).name);
+    },
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: clues.categoryId");
@@ -172,6 +189,9 @@ FlowRouter.route('/clues/:categoryId', {
 
 FlowRouter.route('/clues/:categoryId/:clueId', {
     name: 'clues.categoryId.clueId',
+    title(params, query, data) {
+        return getTitle('Manage Clues: ' + Categories.findOne(params.categoryId).name);
+    },
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: clues.categoryId.clueId");
@@ -186,6 +206,7 @@ FlowRouter.route('/clues/:categoryId/:clueId', {
 
 FlowRouter.route('/categories', {
     name: 'categories',
+    title: getTitle('Manage Categories'),
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: categories");
@@ -200,6 +221,9 @@ FlowRouter.route('/categories', {
 
 FlowRouter.route('/rooms/:id', {
     name: 'room',
+    title(params, query, data) {
+        return getTitle(Rooms.findOne(params.id).name);
+    },
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: room");
@@ -214,6 +238,7 @@ FlowRouter.route('/rooms/:id', {
 
 FlowRouter.route('/join/:id/:token', {
     name: 'joinByToken',
+    title: getTitle('Join Room by Token'),
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: joinByToken");
@@ -249,4 +274,8 @@ function redirectToPrevious(defaultRoute = 'lobby') {
         FlowRouter.go(redirect);
     }
     FlowRouter.go(defaultRoute);
+}
+
+function getTitle(page) {
+    return Meteor.settings.public.app.name + ': ' + page;
 }
