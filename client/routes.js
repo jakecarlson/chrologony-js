@@ -21,6 +21,7 @@ AccountsTemplates.configureRoute('signIn', {
     title: getTitle(Meteor.settings.public.app.tagline),
     redirect: function() {
         if (Meteor.user()) {
+            Logger.track('login');
             redirectToPrevious('lobby');
         }
     },
@@ -38,6 +39,7 @@ AccountsTemplates.configureRoute('signUp', {
             }
             Meteor.call('user.sendWelcome');
             Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>');
+            Logger.track('signUp');
             redirectToPrevious('lobby');
         }
     },
@@ -51,6 +53,7 @@ AccountsTemplates.configureRoute('changePwd', {
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully changed your password.');
+            Logger.track('changePassword');
             FlowRouter.go('lobby');
         }
     },
@@ -74,6 +77,7 @@ AccountsTemplates.configureRoute('verifyEmail', {
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully verified your email address.');
+            Logger.track('verifyEmail');
             FlowRouter.go('lobby');
         }
     },
@@ -97,6 +101,7 @@ AccountsTemplates.configureRoute('resetPwd', {
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully reset your password.');
+            Logger.track('resetPassword');
             FlowRouter.go('lobby');
         }
     },
@@ -135,6 +140,7 @@ FlowRouter.route('/logout', {
     title: getTitle('Logout'),
     action(params, queryParams) {
         Logger.log("Route: logout");
+        Logger.track('logout');
         AccountsTemplates.logout();
         FlowRouter.go('home');
     }
@@ -173,11 +179,13 @@ console.log();
 FlowRouter.route('/clues/:categoryId', {
     name: 'clues.categoryId',
     title(params, query, data) {
-        return getTitle('Manage Clues: ' + Categories.findOne(params.categoryId).name);
+        const category = Categories.findOne(params.categoryId);
+        return getTitle('Manage Clues: ' + (category ? category.name : 'unknown'));
     },
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: clues.categoryId");
+        Logger.track('manageClues', {categoryId: params.categoryId});
         BlazeLayout.render(
             'layout_authenticated',
             {
@@ -190,11 +198,13 @@ FlowRouter.route('/clues/:categoryId', {
 FlowRouter.route('/clues/:categoryId/:clueId', {
     name: 'clues.categoryId.clueId',
     title(params, query, data) {
-        return getTitle('Manage Clues: ' + Categories.findOne(params.categoryId).name);
+        const category = Categories.findOne(params.categoryId);
+        return getTitle('Manage Clues: ' + (category ? category.name : 'unknown'));
     },
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: clues.categoryId.clueId");
+        Logger.track('manageClues', {categoryId: params.categoryId, clueId: params.clueId});
         BlazeLayout.render(
             'layout_authenticated',
             {
@@ -222,11 +232,13 @@ FlowRouter.route('/categories', {
 FlowRouter.route('/rooms/:id', {
     name: 'room',
     title(params, query, data) {
-        return getTitle(Rooms.findOne(params.id).name);
+        const room = Rooms.findOne(params.id);
+        return getTitle(room ? room.name : 'unknown');
     },
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: room");
+        Logger.track('joinRoom', {roomId: params.id});
         BlazeLayout.render(
             'layout_authenticated',
             {
@@ -251,6 +263,7 @@ FlowRouter.route('/join/:id/:token', {
                 Logger.log("Room Set: " + id);
                 Meteor.subscribe('rooms');
                 Flasher.set('success', "Success! Invite others to join.");
+                Logger.track('joinRoomByToken', {roomId: params.id});
                 FlowRouter.go('room', {id: id});
             }
         });

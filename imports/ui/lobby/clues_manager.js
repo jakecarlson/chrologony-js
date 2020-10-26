@@ -74,7 +74,11 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
                     let t1 = performance.now();
                     const searchType = (advanced) ? 'Advanced' : 'Basic';
-                    Logger.log("Filter Time (" + searchType + "): " + (t1 - t0) + "ms");
+                    const ms = (t1 - t0);
+                    Logger.log("Filter Time (" + searchType + "): " + ms + "ms");
+                    let eventData = this.filters.all();
+                    eventData.ms = ms;
+                    Logger.track('filterClues', eventData);
 
                 });
 

@@ -1,3 +1,4 @@
+import { Meteor } from "meteor/meteor";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 
 Logger = {
@@ -37,6 +38,14 @@ Logger = {
             }
             console.log(str);
         }
+    },
+
+    track(event, params = {}) {
+        if (Meteor.userId()) {
+            params.userId = Meteor.userId();
+        }
+        this.log('Log Event: ' + event + '; ' + JSON.stringify(params));
+        analytics.track(event, params);
     },
 
 };
