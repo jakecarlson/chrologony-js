@@ -7,7 +7,7 @@ import SimpleSchema from "simpl-schema";
 import { Schemas } from "../modules/Schemas";
 
 import { Games } from "./Games";
-import {Clues} from "./Clues";
+import { Clues } from "./Clues";
 
 export const Categories = new Mongo.Collection('categories');
 
@@ -25,6 +25,17 @@ Categories.schema = new SimpleSchema({
 Categories.schema.extend(Schemas.timestampable);
 Categories.schema.extend(Schemas.ownable);
 Categories.attachSchema(Categories.schema);
+
+// Collection hooks
+Categories.after.insert(function(id, category) {
+    Logger.auditCreate('Categories', id, category);
+});
+Categories.after.update(function(id, category) {
+    Logger.auditUpdate('Categories', id, this.previous, category, ['clueCount']);
+});
+Categories.after.remove(function(id, category) {
+    Logger.auditDelete('Categories', id);
+});
 
 Categories.helpers({
 

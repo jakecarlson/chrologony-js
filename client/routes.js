@@ -21,6 +21,7 @@ AccountsTemplates.configureRoute('signIn', {
     title: getTitle(Meteor.settings.public.app.tagline),
     redirect: function() {
         if (Meteor.user()) {
+            Logger.audit('login');
             Logger.track('login');
             redirectToPrevious('lobby');
         }
@@ -39,6 +40,7 @@ AccountsTemplates.configureRoute('signUp', {
             }
             Meteor.call('user.sendWelcome');
             Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>');
+            Logger.audit('signUp');
             Logger.track('signUp');
             redirectToPrevious('lobby');
         }
@@ -53,6 +55,7 @@ AccountsTemplates.configureRoute('changePwd', {
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully changed your password.');
+            Logger.audit('changePassword');
             Logger.track('changePassword');
             FlowRouter.go('lobby');
         }
@@ -77,6 +80,7 @@ AccountsTemplates.configureRoute('verifyEmail', {
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully verified your email address.');
+            Logger.audit('verifyEmail');
             Logger.track('verifyEmail');
             FlowRouter.go('lobby');
         }
@@ -101,7 +105,6 @@ AccountsTemplates.configureRoute('resetPwd', {
     redirect: function() {
         if (Meteor.user()) {
             Flasher.set('success', 'You have successfully reset your password.');
-            Logger.track('resetPassword');
             FlowRouter.go('lobby');
         }
     },
@@ -140,6 +143,7 @@ FlowRouter.route('/logout', {
     title: getTitle('Logout'),
     action(params, queryParams) {
         Logger.log("Route: logout");
+        Logger.audit('logout');
         Logger.track('logout');
         AccountsTemplates.logout();
         FlowRouter.go('home');
@@ -175,7 +179,7 @@ FlowRouter.route('/clues', {
         );
     }
 });
-console.log();
+
 FlowRouter.route('/clues/:categoryId', {
     name: 'clues.categoryId',
     title(params, query, data) {
@@ -238,6 +242,7 @@ FlowRouter.route('/rooms/:id', {
     triggersEnter: [redirectToHome],
     action(params, queryParams) {
         Logger.log("Route: room");
+        Logger.audit('join', {collection: 'Rooms', documentId: params.id});
         Logger.track('joinRoom', {roomId: params.id});
         BlazeLayout.render(
             'layout_authenticated',
@@ -263,6 +268,7 @@ FlowRouter.route('/join/:id/:token', {
                 Logger.log("Room Set: " + id);
                 Meteor.subscribe('rooms');
                 Flasher.set('success', "Success! Invite others to join.");
+                Logger.audit('joinByToken', {collection: 'Rooms', documentId: params.id});
                 Logger.track('joinRoomByToken', {roomId: params.id});
                 FlowRouter.go('room', {id: id});
             }

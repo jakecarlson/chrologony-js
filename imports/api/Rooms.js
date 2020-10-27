@@ -23,6 +23,17 @@ Rooms.schema.extend(Schemas.ownable);
 Rooms.schema.extend(Schemas.softDeletable);
 Rooms.attachSchema(Rooms.schema);
 
+// Collection hooks
+Rooms.after.insert(function(id, room) {
+    Logger.auditCreate('Rooms', id, room);
+});
+Rooms.after.update(function(id, room) {
+    Logger.auditUpdate('Rooms', id, this.previous, room, ['currentGameId']);
+});
+Rooms.after.remove(function(id, room) {
+    Logger.auditDelete('Rooms', id);
+});
+
 Rooms.helpers({
 
     currentGame() {
@@ -103,6 +114,8 @@ Meteor.methods({
 
         check(userId, RecordId);
         Permissions.check(Permissions.authenticated());
+
+        Logger.audit('leave', {collection: 'Rooms', documentId: Meteor.user().currentRoomId});
 
         // Make sure the user is the owner of the room that the other user is in, or the user him/herself
         Permissions.check((
@@ -265,6 +278,8 @@ if (Meteor.isServer) {
                         inviter: Meteor.user().profile.name,
                     },
                 });
+
+                Logger.audit('invite', {collection: 'Rooms', documentId: id, attrs: {email: email}});
 
                 Email.send({
                     from: Meteor.settings.public.app.sendEmail,

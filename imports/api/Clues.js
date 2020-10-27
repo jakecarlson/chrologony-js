@@ -46,15 +46,18 @@ Clues.schema.extend(Schemas.timestampable);
 Clues.schema.extend(Schemas.ownable);
 Clues.attachSchema(Clues.schema);
 
-// Collection hooks to update category clue counts
+// Collection hooks
 Clues.after.insert(function(id, clue) {
     updateClueCounts(clue.categories);
+    Logger.auditCreate('Clues', id, clue);
 });
 Clues.after.update(function(id, clue) {
     updateClueCounts([...clue.categories, ...this.previous.categories]);
+    Logger.auditUpdate('Clues', id, this.previous, clue, ['difficulty', 'score']);
 });
 Clues.after.remove(function(id, clue) {
     updateClueCounts(clue.categories);
+    Logger.auditDelete('Clues', id);
 });
 
 Clues.helpers({

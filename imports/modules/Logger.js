@@ -48,4 +48,47 @@ Logger = {
         analytics.track(event, params);
     },
 
+    audit(action, attrs = {}) {
+        attrs.action = action;
+        Meteor.call('log', attrs, function(err, success) {});
+    },
+
+    auditCreate(collection, id, document, exclude = []) {
+        return this.audit(
+            'create',
+            {
+                collection: 'Categories',
+                documentId: id,
+                attrs: _.omit(document, exclude),
+            }
+        );
+    },
+
+    auditUpdate(collection, id, from, to, exclude = []) {
+        const diff = Helpers.diffKeys(from, to, exclude);
+        if (diff.includes('deletedAt')) {
+            this.auditDelete(to, id);
+        } else if (diff.length > 0) {
+            this.audit(
+                'update',
+                {
+                    collection: collection,
+                    documentId: id,
+                    previousAttrs: _.pick(from, diff),
+                    attrs: _.pick(to, diff),
+                }
+            );
+        }
+    },
+
+    auditDelete(collection, id) {
+        this.audit(
+            'delete',
+            {
+                collection: collection,
+                documentId: id,
+            }
+        );
+    },
+
 };

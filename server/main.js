@@ -20,6 +20,7 @@ import '../imports/api/Clues';
 import '../imports/api/Categories';
 import '../imports/api/Turns';
 import '../imports/api/Votes';
+import '../imports/api/Logs';
 
 Meteor.startup(() => {
 

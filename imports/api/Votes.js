@@ -7,8 +7,8 @@ import SimpleSchema from 'simpl-schema';
 import { Schemas } from '../modules/Schemas';
 
 import { Clues } from "./Clues";
-import {Cards} from "./Cards";
-import {Promise} from "meteor/promise";
+import { Cards } from "./Cards";
+import { Promise } from "meteor/promise";
 
 export const Votes = new Mongo.Collection('votes');
 

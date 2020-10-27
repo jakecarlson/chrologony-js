@@ -378,6 +378,8 @@ if (Meteor.isServer) {
                 displayPrecision: attrs.displayPrecision,
             });
 
+            Logger.audit('start', {collection: 'Games', documentId: gameId});
+
             Meteor.call('room.setGame', attrs.roomId, gameId, function(err, updated) {
                 if (!err) {
                     Logger.log("Updated Room: " + updated);
@@ -421,8 +423,6 @@ if (Meteor.isServer) {
                 }
             }
 
-            Logger.log('End Game: ' + id);
-
             // Update the game
             const updated = Games.update(
                 id,
@@ -430,6 +430,9 @@ if (Meteor.isServer) {
                     $set: attrs,
                 }
             );
+
+            Logger.log('End Game: ' + id);
+            Logger.audit((abandon ? 'abandon' : 'end'), {collection: 'Games', documentId: id});
 
             // If the game was abandoned, null out the room's current game
             if (abandon) {
