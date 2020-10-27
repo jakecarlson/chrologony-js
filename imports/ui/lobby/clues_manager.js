@@ -39,7 +39,6 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.autorun(() => {
 
         FlowRouter.watchPathChange();
-        this.dataReady.set(false);
         this.filters.set('categoryId', FlowRouter.getParam('categoryId'));
         this.filters.set('clueId', FlowRouter.getParam('clueId'));
 
@@ -78,7 +77,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                     Logger.log("Filter Time (" + searchType + "): " + ms + "ms");
                     let eventData = this.filters.all();
                     eventData.ms = ms;
-                    Logger.track('filterClues', eventData);
+                    // Logger.track('filterClues', eventData);
 
                 });
 
