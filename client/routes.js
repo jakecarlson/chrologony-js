@@ -174,7 +174,7 @@ FlowRouter.route('/clues', {
         BlazeLayout.render(
             'layout_authenticated',
             {
-                main: 'lobby',
+                main: 'clues_manager',
             }
         );
     }
@@ -193,7 +193,7 @@ FlowRouter.route('/clues/:categoryId', {
         BlazeLayout.render(
             'layout_authenticated',
             {
-                main: 'lobby',
+                main: 'clues_manager',
             }
         );
     }
@@ -212,7 +212,7 @@ FlowRouter.route('/clues/:categoryId/:clueId', {
         BlazeLayout.render(
             'layout_authenticated',
             {
-                main: 'lobby',
+                main: 'clues_manager',
             }
         );
     }
@@ -227,7 +227,7 @@ FlowRouter.route('/categories', {
         BlazeLayout.render(
             'layout_authenticated',
             {
-                main: 'lobby',
+                main: 'categories_manager',
             }
         );
     }

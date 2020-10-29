@@ -6,18 +6,21 @@
   max-width: 960px;
 }
 #auth #title {
+  margin: 0 auto;
   width: auto;
+  max-width: 30rem;
   height: 8rem;
   background-position: center center;
+  background-size: 100% auto;
   font-weight: normal;
   margin-bottom: 6rem;
 }
 #tagline {
   position: absolute;
-  top: 9.5rem;
+  top: 10.5rem;
   left: 50%;
-  margin-left: -10.35rem;
-  font-size: small;
+  margin-left: -12.25rem;
+  font-size: medium;
   cursor: pointer;
 }
 
@@ -25,22 +28,25 @@
 .at-form {
   margin-top: 0;
   margin-bottom: 0;
-  padding-bottom: 0;
+  border-radius: 0;
+  width: 100%;
 }
-.at-title {
-  font-size: large;
-  text-align: center;
+.at-sep:before {
+  left: -77.5%;
 }
-.at-form .alert p {
-  margin: 0;
+.at-sep:after {
+  right: -77.5%;
 }
 button.at-social-btn {
   border-radius: 0;
 }
 button.at-social-btn i {
   padding-left: 0;
-  padding-right: 10px;
+  //padding-right: 10px;
   width: 30px;
+}
+button.at-social-btn i.fa-facebook {
+  width: 20px;
 }
 
 /* Meteor accounts overrides */

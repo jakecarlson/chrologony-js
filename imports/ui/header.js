@@ -54,8 +54,11 @@ Template.header.events({
 
     'click a'(e, i) {
         if (TourGuide.isActive()) {
-            if ($(e.target).hasClass('category-link')) {
+            if ($(e.target).hasClass('categories-link')) {
                 FlowRouter.go('categories');
+                TourGuide.resume();
+            } else if ($(e.target).hasClass('clues-link')) {
+                FlowRouter.go('clues');
                 TourGuide.resume();
             } else {
                 e.preventDefault();

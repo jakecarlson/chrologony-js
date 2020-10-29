@@ -23,6 +23,13 @@ Template.atForm.onRendered(function atFormOnCreated() {
 
 Template.atForm.helpers({
 
+    size() {
+        if (['signIn', 'signUp', 'forgotPwd', 'resetPwd', 'resendVerificationEmail'].includes(AccountsTemplates.getState())) {
+            return 'medium';
+        }
+        return 'small';
+    },
+
     currentRoute() {
         return AccountsTemplates.getState();
     },

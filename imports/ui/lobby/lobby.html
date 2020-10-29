@@ -1,33 +1,5 @@
 <template name="lobby">
 
-    {{#if joinIsActive}}
-        {{> join}}
-    {{/if}}
-
-    <div id="managers">
-
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link {{#if cluesIsActive}}active{{/if}}" id="cluesTab" data-toggle="tab" href="#clues" role="tab" aria-controls="clues" aria-selected="{{cluesIsActive}}">Clues</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{#if categoriesIsActive}}active{{/if}}" id="categoriesTab" data-toggle="tab" href="#categories" role="tab" aria-controls="categories" aria-selected="{{categoriesIsActive}}">Categories</a>
-            </li>
-        </ul>
-
-        <div class="tab-content pt-2">
-            <div class="tab-pane fade {{#if cluesIsActive}}show active{{/if}}" id="clues" role="tabpanel" aria-labelledby="clues-tab">
-                {{#if cluesIsActive}}
-                    {{> clues_manager}}
-                {{/if}}
-            </div>
-            <div class="tab-pane fade {{#if categoriesIsActive}}show active{{/if}}" id="categories" role="tabpanel" aria-labelledby="categories-tab">
-                {{#if categoriesIsActive}}
-                    {{> categories_manager}}
-                {{/if}}
-            </div>
-        </div>
-
-    </div>
+    {{> join}}
 
 </template>

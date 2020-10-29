@@ -1,56 +1,68 @@
 <template name="categories_manager">
 
-    {{> pager page=page total=categoriesCount size=pageSize displayed=pagesDisplayed hidePages=true items="Categories"}}
+    <div class="card card-full border-primary mb-4" id="categoriesManagerWrapper">
 
-    <div class="table-responsive">
-        <table id="categoriesManager" class="table table-hover table-striped">
-            <colgroup>
-                <col class="name">
-                <col class="theme">
-                <col class="precision">
-                <col class="private">
-                <col class="status">
-                <col class="actions">
-            </colgroup>
-            <thead class="table-borderless">
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Theme</th>
-                    <th scope="col">Precision</th>
-                    <th scope="col">Private</th>
-                    <th scope="col">Status</th>
-                    <th scope="col"></th>
-                </tr>
-                {{> category category=false}}
-            </thead>
-            <tbody>
-                {{#each ownedCategory in ownedCategories}}
-                    {{> category category=ownedCategory}}
-                {{/each}}
-            </tbody>
-        </table>
-    </div>
+        <header class="card-header bg-primary">
+            <h2 class="card-title text-white text-center">Manage Categories</h2>
+        </header>
 
-    {{> pager page=page total=categoriesCount size=pageSize displayed=pagesDisplayed hideResults=true items="Categories"}}
+        <div class="card-body px-0">
 
-    <div class="modal fade" id="removeCategory" tabindex="-1" role="dialog" aria-labelledby="removeCategoryTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeCategoryTitle">Are you sure?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p class="mb-0">The category will be permanently deleted.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="remove btn btn-danger" data-dismiss="modal" data-id="" data-model="category" disabled="{{loading}}">Confirm</button>
+            {{> pager page=page total=categoriesCount size=pageSize displayed=pagesDisplayed hidePages=true items="Categories"}}
+
+            <div class="table-responsive">
+                <table id="categoriesManager" class="table table-hover table-striped">
+                    <colgroup>
+                        <col class="name">
+                        <col class="theme">
+                        <col class="precision">
+                        <col class="private">
+                        <col class="status">
+                        <col class="actions">
+                    </colgroup>
+                    <thead class="table-borderless">
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Theme</th>
+                            <th scope="col">Precision</th>
+                            <th scope="col">Private</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"></th>
+                        </tr>
+                        {{> category category=false}}
+                    </thead>
+                    <tbody>
+                        {{#each ownedCategory in ownedCategories}}
+                            {{> category category=ownedCategory}}
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            {{> pager page=page total=categoriesCount size=pageSize displayed=pagesDisplayed hideResults=true hideSizer=true items="Categories"}}
+
+            <div class="modal fade" id="removeCategory" tabindex="-1" role="dialog" aria-labelledby="removeCategoryTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="removeCategoryTitle">Are you sure?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="mb-0">The category will be permanently deleted.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="remove btn btn-danger" data-dismiss="modal" data-id="" data-model="category" disabled="{{loading}}">Confirm</button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
+
     </div>
 
     {{> child_manager

@@ -1,20 +1,3 @@
-/* join */
-#join {
-  max-width: 20rem;
-}
-@media (max-width: 576px) {
-  #join {
-    max-width: none;
-  }
-}
-#join .card-title {
-  font-size: x-large;
-  text-align: center;
-}
-#join .form-control {
-  max-width: 100%;
-}
-
 /* child manager */
 .child-manager .list-group-item:last-child {
   border-bottom: none;

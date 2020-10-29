@@ -6,6 +6,11 @@ html {
 
 $muted: $gray-600;
 
+body#__blaze-root {
+    background: $primary url("/background.png") no-repeat center center;
+    background-size: 75% auto;
+}
+
 @import "../imports/ui/_header.scss";
 @import "../imports/ui/_overrides.scss";
 @import "../imports/ui/auth/_auth.scss";

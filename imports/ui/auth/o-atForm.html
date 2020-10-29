@@ -1,42 +1,50 @@
 <template name="o-atForm">
 
     {{#unless hide}}
-        <div class="at-form container at-form-{{currentRoute}}">
+
+        {{#if showError}}
+            {{> atError}}
+        {{/if}}
+
+        <div class="card card-{{size}} border-primary mx-auto mb-4">
 
             {{#if showTitle}}
                 {{> atTitle}}
             {{/if}}
-            {{#if showError}}
-                {{> atError}}
-            {{/if}}
-            {{#if showResult}}
-                {{> atResult}}
-            {{/if}}
-            {{#if showMessage}}
-                {{> atMessage}}
-            {{/if}}
-            {{#if showPwdForm}}
-                {{> atPwdForm}}
-            {{/if}}
 
-            {{#if showServicesSeparator}}
-                {{> atSep}}
-            {{/if}}
-            {{#if showOauthServices}}
-                {{> atOauth}}
-            {{/if}}
+            <div class="card-body at-form at-form-{{currentRoute}}">
 
-            {{#if showTermsLink}}
-                {{> atTermsLink}}
-            {{/if}}
-            {{#if showSignInLink}}
-                {{> atSigninLink}}
-            {{/if}}
-            {{#if showSignUpLink}}
-                {{> atSignupLink}}
-            {{/if}}
+                {{#if showResult}}
+                    {{> atResult}}
+                {{/if}}
+                {{#if showMessage}}
+                    {{> atMessage}}
+                {{/if}}
+                {{#if showPwdForm}}
+                    {{> atPwdForm}}
+                {{/if}}
+
+                {{#if showServicesSeparator}}
+                    {{> atSep}}
+                {{/if}}
+                {{#if showOauthServices}}
+                    {{> atOauth}}
+                {{/if}}
+
+                {{#if showTermsLink}}
+                    {{> atTermsLink}}
+                {{/if}}
+                {{#if showSignInLink}}
+                    {{> atSigninLink}}
+                {{/if}}
+                {{#if showSignUpLink}}
+                    {{> atSignupLink}}
+                {{/if}}
+
+            </div>
 
         </div>
+
     {{/unless}}
 
 </template>

@@ -24,48 +24,8 @@ Template.lobby.onCreated(function lobbyOnCreated() {
 
 Template.lobby.helpers({
 
-    joinIsActive() {
-        return (FlowRouter.getRouteName() == 'lobby');
-    },
-
-    cluesIsActive() {
-        return ['clues', 'clues.categoryId', 'clues.categoryId.clueId'].includes(FlowRouter.getRouteName());
-    },
-
-    categoriesIsActive() {
-        return (FlowRouter.getRouteName() == 'categories');
-    },
-
 });
 
 Template.lobby.events({
-
-    'click #cluesTab'(e, i) {
-        if (
-            !TourGuide.isActive() ||
-            (TourGuide.isActive() && TourGuide.isCluesStep())
-        ) {
-            FlowRouter.go('clues');
-            if (TourGuide.isActive()) {
-                TourGuide.resume();
-            }
-        } else {
-            e.preventDefault();
-        }
-    },
-
-    'click #categoriesTab'(e, i) {
-        if (
-            !TourGuide.isActive() ||
-            (TourGuide.isActive() && TourGuide.isCategoriesStep())
-        ) {
-            FlowRouter.go('categories');
-            if (TourGuide.isActive()) {
-                TourGuide.resume();
-            }
-        } else {
-            e.preventDefault();
-        }
-    },
 
 });

@@ -4,9 +4,9 @@
 
         {{#if dataReady}}
 
-            <header class="clearfix mb-2">
+            <header class="clearfix mb-4">
 
-                <h1 class="float-left" id="roomTitle">{{name}}</h1>
+                <h1 class="float-left text-white" id="roomTitle">{{name}}</h1>
 
                 <div class="float-right mb-2" id="roomMenu">
 
@@ -92,7 +92,7 @@
 
                     {{#if showPlayerCards}}
                         <div id="playerCards" class="mb-4 {{#if columnsBoard}}mb-lg-0{{/if}}">
-                            <h2 id="playerCardsTitle" class="text-muted mb-2">
+                            <h2 id="playerCardsTitle" class="text-white mb-2">
                                 {{#if gameInProgress}}
                                     Other
                                 {{/if}}
@@ -129,8 +129,8 @@
 
                         {{> game room=currentRoom game=currentGame turn=currentTurn}}
 
-                        <div class="text-center">
-                            <button class="btn btn-outline-danger destroy" disabled="{{loading}}">
+                        <div class="text-center pt-4">
+                            <button class="btn btn-danger destroy" disabled="{{loading}}">
                                 <i class="fa fa-trash"></i>
                                 <span>Delete Room</span>
                             </button>

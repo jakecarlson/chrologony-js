@@ -1,9 +1,9 @@
 <template name="players_list">
 
     {{#if dataReady}}
-        <div id="players" class="card mb-4">
-            <div class="card-header">
-                <h2 class="card-title">Players in this Room ({{numPlayers}})</h2>
+        <div id="players" class="card border-primary mb-4">
+            <div class="card-header bg-primary">
+                <h2 class="card-title text-white">Players in this Room ({{numPlayers}})</h2>
             </div>
             <ul id="playersAccordion" class="list-group list-group-flush">
                 {{#each currentPlayer in players}}

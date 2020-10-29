@@ -1,196 +1,208 @@
 <template name="clues_manager">
 
-    {{#if categoryView}}
-        {{> clues_filter categoryId=categoryId}}
-    {{/if}}
+    <div class="card card-full border-primary mb-4" id="cluesManagerWrapper">
 
-    {{#if categoryId}}
+        <header class="card-header bg-primary">
+            <h2 class="card-title text-white text-center">Manage Clues</h2>
+        </header>
 
-        {{#if categoryView}}
-            {{> pager page=page total=cluesCount size=pageSize displayed=pagesDisplayed items="Clues"}}
-        {{/if}}
+        <div class="card-body px-0">
 
-        <div class="table-responsive">
-            <table id="cluesManager" class="table table-hover table-striped">
+            {{#if categoryView}}
+                {{> clues_filter categoryId=categoryId}}
+            {{/if}}
 
-                <colgroup>
-                    <col class="select">
-                    <col class="description">
-                    <col class="date">
-                    <col class="status">
-                    <col class="categories">
-                    <col class="more">
-                    <col class="actions">
-                </colgroup>
+            {{#if categoryId}}
 
-                <thead class="table-borderless">
+                {{#if categoryView}}
+                    {{> pager page=page total=cluesCount size=pageSize displayed=pagesDisplayed items="Clues"}}
+                {{/if}}
 
-                    <tr>
-                        <th scope="col">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input select-all" name="all" title="Select All">
-                            </div>
-                        </th>
-                        <th scope="col">Clue</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Active</th>
-                        <th scope="col"><i class="fa fa-folder table-icon" title="Manage Categories"></i></th>
-                        <th scope="col"><i class="fa fa-info-circle table-icon" title="More Info"></i></th>
-                        <th scope="col"></th>
-                    </tr>
+                <div class="table-responsive">
+                    <table id="cluesManager" class="table table-hover table-striped">
 
-                    {{#if canAddClue}}
-                        {{> clue clue=false categoryId=categoryId}}
-                    {{/if}}
+                        <colgroup>
+                            <col class="select">
+                            <col class="description">
+                            <col class="date">
+                            <col class="status">
+                            <col class="categories">
+                            <col class="more">
+                            <col class="actions">
+                        </colgroup>
 
-                    {{#if hasSelectedClues}}
-                        <tr class="table-secondary">
-                            <td colspan="7">
-                                <form class="form-inline justify-content-center" id="cluesBulkActions">
+                        <thead class="table-borderless">
 
-                                    <div class="form-group mr-3 bulk-action">
-                                        <label for="cluesBulkAction" class="sr-only">Bulk Action:</label>
-                                        <select name="action" class="form-control form-control-sm" id="cluesBulkAction">
-                                            <option disabled selected>Select a Bulk Action ...</option>
-                                            <option value="add_category">Add to a Category</option>
-                                            <option value="remove_category">Remove from this Category</option>
-                                            <!--                    <option value="remove_clues">Remove Clues</option>-->
-                                        </select>
-                                    </div>
-
-                                    {{#if showCategorySelector}}
-                                        <div class="form-group mr-3 bulk-action-category">
-                                            <label for="cluesBulkActionCategory" class="sr-only">Category to Add:</label>
-                                            {{> categories_selector id="cluesBulkActionCategory" showInactive=true excludeCategoryId=categoryId small=true}}
-                                        </div>
-                                    {{/if}}
-
-                                    <button type="submit" class="btn btn-primary btn-sm" disabled="{{disableBulkSubmit}}">Submit</button>
-
-                                </form>
-                            </td>
+                        <tr>
+                            <th scope="col">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input select-all" name="all" title="Select All">
+                                </div>
+                            </th>
+                            <th scope="col">Clue</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Active</th>
+                            <th scope="col"><i class="fa fa-folder table-icon" title="Manage Categories"></i></th>
+                            <th scope="col"><i class="fa fa-info-circle table-icon" title="More Info"></i></th>
+                            <th scope="col"></th>
                         </tr>
 
-                    {{/if}}
+                        {{#if canAddClue}}
+                            {{> clue clue=false categoryId=categoryId}}
+                        {{/if}}
 
-                </thead>
+                        {{#if hasSelectedClues}}
+                            <tr class="table-secondary">
+                                <td colspan="7">
+                                    <form class="form-inline justify-content-center" id="cluesBulkActions">
 
-                <tbody>
+                                        <div class="form-group mr-3 bulk-action">
+                                            <label for="cluesBulkAction" class="sr-only">Bulk Action:</label>
+                                            <select name="action" class="form-control form-control-sm" id="cluesBulkAction">
+                                                <option disabled selected>Select a Bulk Action ...</option>
+                                                <option value="add_category">Add to a Category</option>
+                                                <option value="remove_category">Remove from this Category</option>
+                                                <!--                    <option value="remove_clues">Remove Clues</option>-->
+                                            </select>
+                                        </div>
 
-                    {{#if clues}}
-                        {{#each clueCard in clues}}
-                            {{> clue clue=clueCard categoryId=categoryId}}
-                        {{/each}}
-                    {{else}}
-                        <tr><td colspan="7">Loading ...</td></tr>
-                    {{/if}}
-                </tbody>
+                                        {{#if showCategorySelector}}
+                                            <div class="form-group mr-3 bulk-action-category">
+                                                <label for="cluesBulkActionCategory" class="sr-only">Category to Add:</label>
+                                                {{> categories_selector id="cluesBulkActionCategory" showInactive=true excludeCategoryId=categoryId small=true}}
+                                            </div>
+                                        {{/if}}
 
-            </table>
-        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm" disabled="{{disableBulkSubmit}}">Submit</button>
 
-        {{> pager page=page total=cluesCount size=pageSize displayed=pagesDisplayed hideResults=true hideSizer=true items="Clues"}}
+                                    </form>
+                                </td>
+                            </tr>
 
-        <div class="modal fade" id="removeClue" tabindex="-1" role="dialog" aria-labelledby="removeClueTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="removeClueTitle">Are you sure?</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="mb-0">The clue will be permanently deleted.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="remove btn btn-danger" data-dismiss="modal" data-id="" data-model="clue" disabled="{{loading}}">Confirm</button>
-                    </div>
+                        {{/if}}
+
+                        </thead>
+
+                        <tbody>
+
+                        {{#if clues}}
+                            {{#each clueCard in clues}}
+                                {{> clue clue=clueCard categoryId=categoryId}}
+                            {{/each}}
+                        {{else}}
+                            <tr><td colspan="7">Loading ...</td></tr>
+                        {{/if}}
+                        </tbody>
+
+                    </table>
                 </div>
-            </div>
-        </div>
 
-        <form class="modal fade" id="manageClueMore" tabindex="-1" role="dialog" aria-labelledby="manageClueMoreTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
+                {{> pager page=page total=cluesCount size=pageSize displayed=pagesDisplayed hideResults=true hideSizer=true items="Clues"}}
 
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="manageClueMoreTitle">{{currentClueName}}: More Info</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input type="checkbox" name="approximation" value="1" checked="{{currentClueAttr 'approximation'}}" class="form-check-input attr" disabled="{{cannotEditCurrentClue}}" id="clueApproximation">
-                                <label for="clueApproximation" class="form-check-label">
-                                    Date is approximate
-                                </label>
+                <div class="modal fade" id="removeClue" tabindex="-1" role="dialog" aria-labelledby="removeClueTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="removeClueTitle">Are you sure?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="mb-0">The clue will be permanently deleted.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="remove btn btn-danger" data-dismiss="modal" data-id="" data-model="clue" disabled="{{loading}}">Confirm</button>
                             </div>
                         </div>
-
-                        <fieldset class="form-group">
-                            <legend class="col-form-label">External References</legend>
-                            <div class="form-row">
-                                <div class="form-group col col-9">
-                                    <input type="url" class="form-control attr" name="externalUrl" placeholder="External URL" maxlength="960" value="{{currentClueAttr 'externalUrl'}}" readonly="{{cannotEditCurrentClue}}">
-                                </div>
-                                <div class="form-group col col-3">
-                                    <input type="text" class="form-control attr" name="externalId" placeholder="External ID" maxlength="40" value="{{currentClueAttr 'externalId'}}" readonly="{{cannotEditCurrentClue}}">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col col-6">
-                                    <input type="url" class="form-control attr" name="thumbnailUrl" placeholder="Thumbnail URL" maxlength="960" value="{{currentClueAttr 'thumbnailUrl'}}" readonly="{{cannotEditCurrentClue}}">
-                                </div>
-                                <div class="form-group col col-6">
-                                    <input type="url" class="form-control attr" name="imageUrl" placeholder="Full Image Url" maxlength="960" value="{{currentClueAttr 'imageUrl'}}" readonly="{{cannotEditCurrentClue}}">
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        <fieldset class="form-group">
-                            <legend class="col-form-label">Location</legend>
-                            <div class="form-row">
-                                <div class="form-group col col-6">
-                                    <input type="text" class="form-control attr" name="latitude" placeholder="Latitude" maxlength="8" value="{{currentClueAttr 'latitude'}}" readonly="{{cannotEditCurrentClue}}">
-                                </div>
-                                <div class="form-group col col-6">
-                                    <input type="text" class="form-control attr" name="longitude" placeholder="Longitude" maxlength="8" value="{{currentClueAttr 'longitude'}}" readonly="{{cannotEditCurrentClue}}">
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        <fieldset class="form-group">
-                            <legend class="col-form-label">Additional Information</legend>
-                            <div class="form-row">
-                                <div class="form-group col">
-                                    <textarea class="form-control attr" name="hint" placeholder="Hint" maxlength="960" readonly="{{cannotEditCurrentClue}}">{{currentClueAttr 'hint'}}</textarea>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col">
-                                    <textarea class="form-control attr" name="moreInfo" placeholder="More Info" maxlength="3840" readonly="{{cannotEditCurrentClue}}">{{currentClueAttr 'moreInfo'}}</textarea>
-                                </div>
-                            </div>
-                        </fieldset>
-
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                        <input type="hidden" class="attr" name="categoryId" value="{{categoryId}}">
-                        <button type="submit" class="btn btn-primary save" data-id="" disabled="{{cannotEditCurrentClue}}">Save</button>
-                    </div>
-
                 </div>
-            </div>
-        </form>
 
-    {{/if}}
+                <form class="modal fade" id="manageClueMore" tabindex="-1" role="dialog" aria-labelledby="manageClueMoreTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="manageClueMoreTitle">{{currentClueName}}: More Info</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="approximation" value="1" checked="{{currentClueAttr 'approximation'}}" class="form-check-input attr" disabled="{{cannotEditCurrentClue}}" id="clueApproximation">
+                                        <label for="clueApproximation" class="form-check-label">
+                                            Date is approximate
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <fieldset class="form-group">
+                                    <legend class="col-form-label">External References</legend>
+                                    <div class="form-row">
+                                        <div class="form-group col col-9">
+                                            <input type="url" class="form-control attr" name="externalUrl" placeholder="External URL" maxlength="960" value="{{currentClueAttr 'externalUrl'}}" readonly="{{cannotEditCurrentClue}}">
+                                        </div>
+                                        <div class="form-group col col-3">
+                                            <input type="text" class="form-control attr" name="externalId" placeholder="External ID" maxlength="40" value="{{currentClueAttr 'externalId'}}" readonly="{{cannotEditCurrentClue}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col col-6">
+                                            <input type="url" class="form-control attr" name="thumbnailUrl" placeholder="Thumbnail URL" maxlength="960" value="{{currentClueAttr 'thumbnailUrl'}}" readonly="{{cannotEditCurrentClue}}">
+                                        </div>
+                                        <div class="form-group col col-6">
+                                            <input type="url" class="form-control attr" name="imageUrl" placeholder="Full Image Url" maxlength="960" value="{{currentClueAttr 'imageUrl'}}" readonly="{{cannotEditCurrentClue}}">
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <legend class="col-form-label">Location</legend>
+                                    <div class="form-row">
+                                        <div class="form-group col col-6">
+                                            <input type="text" class="form-control attr" name="latitude" placeholder="Latitude" maxlength="8" value="{{currentClueAttr 'latitude'}}" readonly="{{cannotEditCurrentClue}}">
+                                        </div>
+                                        <div class="form-group col col-6">
+                                            <input type="text" class="form-control attr" name="longitude" placeholder="Longitude" maxlength="8" value="{{currentClueAttr 'longitude'}}" readonly="{{cannotEditCurrentClue}}">
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <legend class="col-form-label">Additional Information</legend>
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <textarea class="form-control attr" name="hint" placeholder="Hint" maxlength="960" readonly="{{cannotEditCurrentClue}}">{{currentClueAttr 'hint'}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <textarea class="form-control attr" name="moreInfo" placeholder="More Info" maxlength="3840" readonly="{{cannotEditCurrentClue}}">{{currentClueAttr 'moreInfo'}}</textarea>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                <input type="hidden" class="attr" name="categoryId" value="{{categoryId}}">
+                                <button type="submit" class="btn btn-primary save" data-id="" disabled="{{cannotEditCurrentClue}}">Save</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+            {{/if}}
+
+        </div>
+
+    </div>
 
 </template>

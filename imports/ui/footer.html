@@ -1,25 +1,31 @@
 <template name="footer">
 
-    <div class="mt-4">
-        <p class="text-center text-muted mb-2">Share {{appName}}</p>
-        <div
-            class="sharethis-inline-share-buttons"
-            data-url="{{appUrl}}"
-            data-title="{{appTitle}}"
-            data-image="{{appImage}}"
-            data-description="{{appDescription}}"
-            data-message="{{appDescription}} Play now at {{appUrl}}!"
-        ></div>
+    <div id="footer">
+
+        <div class="mt-4 pt-2">
+            <p class="text-center text-secondary mb-2">Share {{appName}}</p>
+            <div
+                    class="sharethis-inline-share-buttons"
+                    data-url="{{appUrl}}"
+                    data-title="{{appTitle}}"
+                    data-image="{{appImage}}"
+                    data-description="{{appDescription}}"
+                    data-message="{{appDescription}} Play now at {{appUrl}}!"
+            ></div>
+        </div>
+
+        <p class="text-secondary text-center mt-4 mb-0">
+            Made with &#9889; by <a href="https://jakecarlson.com" class="text-secondary" target="_blank">Jake Carlson</a>. &copy; {{copyright}}.
+        </p>
+
+        <div id="footerLinks" class=" pb-4 text-secondary text-center">
+            <a href="{{privacyLink}}" class="text-secondary">Privacy Policy</a> |
+            <a href="{{termsLink}}" class="text-secondary">Terms of Use</a> |
+            <a href="https://chrologony.com/documentation/" class="text-secondary" target="_blank">Documentation</a>
+        </div>
+
     </div>
 
-    <p class="text-muted text-center mt-4 mb-0">
-        Made with &#9889; by <a href="https://jakecarlson.com" class="text-muted" target="_blank">Jake Carlson</a>. &copy; {{copyright}}.
-    </p>
 
-    <div id="footerLinks" class=" pb-4 text-muted text-center">
-        <a href="{{privacyLink}}" class="text-muted">Privacy Policy</a> |
-        <a href="{{termsLink}}" class="text-muted">Terms of Use</a> |
-        <a href="https://chrologony.com/documentation/" class="text-muted" target="_blank">Documentation</a>
-    </div>
 
 </template>
