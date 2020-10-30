@@ -132,7 +132,7 @@ Template.board.helpers({
                 if (this.game.cardTime) {
                     return '';
                 }
-                return "Move the purple card into the correct spot on the timeline.";
+                return "Move the purple card to the correct spot on the timeline.";
                 break;
             case 'correct':
                 let str = "Correct! ";
