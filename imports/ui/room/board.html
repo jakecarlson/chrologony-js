@@ -6,12 +6,12 @@
 
             <header class="{{headerClasses}}">
 
-                <h2 class="card-title board-title float-left">{{boardTitle}}</h2>
+                <h2 class="card-title text-center float-sm-left mb-2 mb-sm-0 board-title">{{boardTitle}}</h2>
 
-                <div class="board-menu float-right">
+                <div class="board-menu text-center float-sm-right">
 
                     <button
-                            class="{{buttonClasses cannotEndTurn}} end-turn"
+                            class="{{buttonClasses cannotEndTurn}} mr-2 end-turn"
                             disabled="{{cannotEndTurn}}"
                             title="End Turn"
                     >
@@ -20,7 +20,7 @@
                     </button>
 
                     <button
-                            class="{{buttonClasses cannotDrawCard}} draw-card"
+                            class="{{buttonClasses cannotDrawCard}} mr-2 draw-card"
                             disabled="{{cannotDrawCard}}"
                             title="Draw Card"
                     >

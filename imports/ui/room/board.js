@@ -206,7 +206,6 @@ Template.board.helpers({
         } else {
             str += 'btn-light';
         }
-        str += ' float-right ml-2';
         return str;
     },
 

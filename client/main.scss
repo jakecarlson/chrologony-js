@@ -8,7 +8,17 @@ $muted: $gray-600;
 
 body#__blaze-root {
     background: $primary url("/background.png") no-repeat center center fixed;
-    background-size: 75% auto;
+    background-size: auto 100%;
+}
+@media (orientation: landscape) {
+    body#__blaze-root {
+        background-size: 100% auto;
+    }
+}
+@media (orientation: portrait) {
+    body#__blaze-root {
+        background-size: auto 100%;
+    }
 }
 
 @import "../imports/ui/_header.scss";

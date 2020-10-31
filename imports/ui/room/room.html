@@ -6,20 +6,30 @@
 
             <header class="clearfix mb-4">
 
-                <h1 class="float-left text-white" id="roomTitle">{{name}}</h1>
+                <h1 class="float-sm-left text-white text-center mb-2 mb-sm-0" id="roomTitle">{{name}}</h1>
 
-                <div class="float-right mb-2" id="roomMenu">
+                <div class="float-sm-right text-center mb-2" id="roomMenu">
 
-                    <button
-                            class="btn btn-light float-right leave"
-                            disabled="{{loading}}"
-                    >
-                        <i class="fa fa-sign-out"></i>
-                        <span class="d-none d-md-inline">Leave Room</span>
-                    </button>
+                    {{#if fullBoard}}
+                        <button
+                                class="btn btn-light d-none d-lg-inline mr-2 board-columns"
+                                disabled="{{loading}}"
+                        >
+                            <i class="fa fa-columns"></i>
+                            Columns
+                        </button>
+                    {{else}}
+                        <button
+                                class="btn btn-light d-none d-lg-inline mr-2 board-full"
+                                disabled="{{loading}}"
+                        >
+                            <i class="fa fa-arrows-h"></i>
+                            Full Width
+                        </button>
+                    {{/if}}
 
                     {{#if isOwner}}
-                        <div class="dropdown float-right mr-2">
+                        <div class="dropdown d-inline-block mr-2">
                             <button class="btn btn-light" type="button" id="invitePlayersButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-paper-plane"></i>
                                 <span class="d-none d-md-inline">Invite Players</span>
@@ -39,12 +49,12 @@
                                     </a>
                                 {{/if}}
                                 <a
-                                    class="dropdown-item link"
-                                    data-clipboard-text="{{link}}"
-                                    data-placement="top"
-                                    data-trigger="manual"
-                                    title="Room URL copied to your clipboard!"
-                                    href="{{link}}"
+                                        class="dropdown-item link"
+                                        data-clipboard-text="{{link}}"
+                                        data-placement="top"
+                                        data-trigger="manual"
+                                        title="Room URL copied to your clipboard!"
+                                        href="{{link}}"
                                 >
                                     <i class="fa fa-link"></i>
                                     Copy Room Link
@@ -62,23 +72,13 @@
                         </div>
                     {{/if}}
 
-                    {{#if fullBoard}}
-                        <button
-                            class="btn btn-light float-right d-none d-lg-inline mr-2 board-columns"
+                    <button
+                            class="btn btn-light d-inline-block leave"
                             disabled="{{loading}}"
-                        >
-                            <i class="fa fa-columns"></i>
-                            Columns
-                        </button>
-                    {{else}}
-                        <button
-                            class="btn btn-light float-right d-none d-lg-inline mr-2 board-full"
-                            disabled="{{loading}}"
-                        >
-                            <i class="fa fa-arrows-h"></i>
-                            Full Width
-                        </button>
-                    {{/if}}
+                    >
+                        <i class="fa fa-sign-out"></i>
+                        <span class="d-none d-md-inline">Leave Room</span>
+                    </button>
 
                 </div>
 
@@ -92,7 +92,7 @@
 
                     {{#if showPlayerCards}}
                         <div id="playerCards" class="mb-4 {{#if columnsBoard}}mb-lg-0{{/if}}">
-                            <h2 id="playerCardsTitle" class="text-white mb-2">
+                            <h2 id="playerCardsTitle" class="text-white text-center text-sm-left mb-2">
                                 {{#if gameInProgress}}
                                     Other
                                 {{/if}}

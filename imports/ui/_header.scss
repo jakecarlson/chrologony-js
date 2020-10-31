@@ -25,6 +25,13 @@
   font-size: large;
   width: 2.5rem;
   text-align: left;
+  position: relative;
+  top: .2rem;
+}
+#menuToggle:hover,
+#menuToggle:focus
+{
+  text-decoration: none !important;
 }
 #profile .btn-link {
   /*font-weight: bold;*/
@@ -32,7 +39,7 @@
 #profile .btn-link i {
   font-size: x-large;
   position: relative;
-  top: .15rem;
+  top: .2rem;
 }
 #profile .dropdown-menu {
   min-width: 11.5rem;

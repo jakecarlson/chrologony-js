@@ -38,16 +38,12 @@
         {{#if showSizer}}
 
             <form class="pager-size form-inline justify-content-center">
-                <div class="form-group">
-                    <label>
-                        <span class="text-muted">{{items}} per Page:</span>
-                        <select name="size" class="form-control form-control-sm ml-2">
-                            {{#each size in sizes}}
-                                <option value="{{size}}" selected="{{sizeSelected size}}">{{size}}</option>
-                            {{/each}}
-                        </select>
-                    </label>
-                </div>
+                <label class="text-muted mr-2" for="pageSize{{rand}}">{{items}} per Page:</label>
+                <select name="size" class="form-control" id="pageSize{{rand}}">
+                    {{#each size in sizes}}
+                        <option value="{{size}}" selected="{{sizeSelected size}}">{{size}}</option>
+                    {{/each}}
+                </select>
             </form>
 
         {{/if}}

@@ -8,6 +8,7 @@ Template.pager.onCreated(function pagerOnCreated() {
     if (!this.displayed) {
         this.displayed = 7;
     }
+    this.rand = Math.ceil(Math.random() * 100);
 
 });
 
@@ -99,6 +100,10 @@ Template.pager.helpers({
 
     sizeSelected(size) {
         return (size == this.size);
+    },
+
+    rand() {
+        return Template.instance().rand;
     },
 
 });

@@ -1,4 +1,17 @@
 /* Room */
+@media (max-width: 575px) {
+  #room .row {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  #room .col-lg-9,
+  #room .col-lg-3
+  {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 .full-width .card:not(.game-card) {
   border-left-width: 0 !important;
   border-right-width: 0 !important;
@@ -11,6 +24,13 @@
 .full-width #playerCardsTitle
 {
   padding-left: 1.25rem;
+}
+@media (max-width: 575px) {
+  #roomTitle,
+  #playerCardsTitle
+  {
+    padding-left: 1.25rem;
+  }
 }
 #roomSide .card-title {
   font-size: medium;

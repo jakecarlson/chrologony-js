@@ -191,6 +191,13 @@
 }
 
 /* pager */
+.pager-size label {
+  line-height: 2rem;
+  margin-bottom: 0;
+}
+.pager-size .form-control {
+  width: 5rem;
+}
 .pager-results {
   font-size: medium !important;
 }

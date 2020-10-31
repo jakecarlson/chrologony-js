@@ -1,4 +1,14 @@
 /* content */
+@media (max-width: 575px) {
+  main.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .card {
+    border-left: none;
+    border-right: none;
+  }
+}
 .content {
   text-align: left;
 }
@@ -10,14 +20,18 @@
 }
 
 /* card overrides */
-.card {
-  box-shadow: 0 0 .25rem .05rem $white;
+@media (min-width: 576px) {
+  .card {
+    box-shadow: 0 0 .25rem .05rem $white;
+  }
 }
-.card-small {
-  max-width: 20rem;
-}
-.card-medium {
-  max-width: 30rem;
+@media (min-width: 576px) {
+  .card-small {
+    max-width: 20rem;
+  }
+  .card-medium {
+    max-width: 30rem;
+  }
 }
 .card-title {
   margin-bottom: 0 !important;
