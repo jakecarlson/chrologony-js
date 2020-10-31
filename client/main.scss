@@ -7,7 +7,7 @@ html {
 $muted: $gray-600;
 
 body#__blaze-root {
-    background: $primary url("/background.png") no-repeat center center;
+    background: $primary url("/background.png") no-repeat center center fixed;
     background-size: 75% auto;
 }
 

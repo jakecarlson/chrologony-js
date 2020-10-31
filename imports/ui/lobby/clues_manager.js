@@ -35,19 +35,22 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('cluesSelected', false);
 
     this.dataReady = new ReactiveVar(false);
+    this.search = new ReactiveVar(this.filters.all());
+
+    this.filters.set('categoryId', FlowRouter.getParam('categoryId'));
+    this.filters.set('clueId', FlowRouter.getParam('clueId'));
+    filterClues(this);
 
     this.autorun(() => {
 
-        FlowRouter.watchPathChange();
-        this.filters.set('categoryId', FlowRouter.getParam('categoryId'));
-        this.filters.set('clueId', FlowRouter.getParam('clueId'));
+        // FlowRouter.watchPathChange();
+
 
         if (Categories.findOne(this.filters.get('categoryId'))) {
 
             LoadingState.start();
-            const advanced = FlowRouter.getQueryParam('advanced');
-            let t0 = performance.now();
-            this.subscribe('clues', this.filters.all(), advanced);
+            const legacy = FlowRouter.getQueryParam('legacy');
+            this.subscribe('clues', this.filters.all(), legacy);
 
             if (this.subscriptionsReady()) {
 
@@ -71,18 +74,21 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                         self.state.set('currentClue', null);
                     });
 
-                    let t1 = performance.now();
-                    const searchType = (advanced) ? 'Advanced' : 'Basic';
-                    const ms = (t1 - t0);
-                    Logger.log("Filter Time (" + searchType + "): " + ms + "ms");
-                    let eventData = this.filters.all();
-                    eventData.ms = ms;
-                    // Logger.track('filterClues', eventData);
-
                 });
 
-                this.dataReady.set(true);
-                LoadingState.stop();
+                if (cluesLoaded(this)) {
+                    const ms = LoadingState.stop();
+                    this.dataReady.set(true);
+                    if (this.previousFilters != JSON.stringify(this.filters.all())) {
+                        const searchType = (legacy) ? ' (Legacy)' : '';
+                        Logger.log("Filter Time" + searchType + ": " + ms + "ms");
+                        let eventData = this.search.get();
+                        eventData.ms = ms;
+                        Logger.audit('filterClues', {attrs: eventData});
+                        Logger.track('filterClues', eventData);
+                    }
+                    this.previousFilters = JSON.stringify(this.filters.all());
+                }
 
             }
 
@@ -192,6 +198,7 @@ Template.clues_manager.events({
         i.filters.set('page', 1);
         i.filters.set('keyword', i.find('[name="keyword"]').value);
         i.filters.set('owned', i.find('[name="owned"]').checked);
+        filterClues(i);
     },
 
     'change #cluesFilter [name="categoryId"]'(e, i) {
@@ -199,9 +206,14 @@ Template.clues_manager.events({
         const categoryId = e.target.options[e.target.selectedIndex].value;
         FlowRouter.go('clues.categoryId', {categoryId: categoryId});
         i.filters.set('categoryId', categoryId);
-        i.find('[name="keyword"]').value = '';
+        const keyword = i.find('[name="keyword"]');
+        const reload = (keyword.value.trim().length > 0);
+        keyword.value = '';
         i.find('[name="owned"]').checked = false;
         i.filters.set('page', 1);
+        if (reload) {
+            window.location.reload();
+        }
         TourGuide.resume();
     },
 
@@ -238,6 +250,7 @@ Template.clues_manager.events({
         e.preventDefault();
         const page = parseInt($(e.target).closest('a').attr('data-page'));
         i.filters.set('page', page);
+        filterClues(i);
     },
 
     'change .select-all'(e, i) {
@@ -299,6 +312,20 @@ Template.clues_manager.events({
         Session.set('pageSize', pageSize);
         i.filters.set('pageSize', pageSize);
         i.filters.set('page', 1);
+        filterClues(i);
     },
 
 });
+
+function filterClues(i) {
+    i.search.set(i.filters.all());
+}
+
+function cluesLoaded(i) {
+    let limit = i.filters.get('page') * i.filters.get('pageSize');
+    const total = Counts.get('cluesCount');
+    if (total < limit) {
+        limit = total;
+    }
+    return (Clues.find({}).count() >= limit);
+}

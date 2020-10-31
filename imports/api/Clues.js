@@ -158,10 +158,10 @@ Clues.helpers({
 
 if (Meteor.isServer) {
 
-    Meteor.publish('clues', function cluesPublication(filters, advancedSearch = false) {
+    Meteor.publish('clues', function cluesPublication(filters, legacy = false) {
         if (this.userId && filters) {
 
-            const selector = getCluePublicationSelector(filters, advancedSearch);
+            const selector = getCluePublicationSelector(filters, legacy);
             const limit = filters.page * filters.pageSize;
 
             Counts.publish(this, 'cluesCount', Clues.find(selector));
@@ -511,7 +511,7 @@ function getClueUpdateSelector(attrs) {
     return selector;
 }
 
-function getCluePublicationSelector(filters, advancedSearch = false) {
+function getCluePublicationSelector(filters, legacy = false) {
 
     let selector = {};
 
@@ -532,18 +532,18 @@ function getCluePublicationSelector(filters, advancedSearch = false) {
         // keyword
         if (filters.keyword && (filters.keyword.length > 2)) {
 
-            // If using text search, we need to pre-filter before doing the full text search
-            if (advancedSearch) {
-                selector.$text = {$search: filters.keyword};
-
-            // Otherwise use straight-up regex
-            } else {
+            // Use straight-up regex if basic search is enabled
+            if (legacy) {
                 selector.$or = [
                     {description: {$regex: filters.keyword, $options: 'i'}},
                     {date: {$regex: filters.keyword, $options: 'i'}},
                     {moreInfo: {$regex: filters.keyword, $options: 'i'}},
                     {hint: {$regex: filters.keyword, $options: 'i'}},
                 ];
+
+            // Otherwise we'll use text search
+            } else {
+                selector.$text = {$search: filters.keyword};
             }
 
         }
