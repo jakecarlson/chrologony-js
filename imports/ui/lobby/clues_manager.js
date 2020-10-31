@@ -35,11 +35,9 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('cluesSelected', false);
 
     this.dataReady = new ReactiveVar(false);
-    this.search = new ReactiveVar(this.filters.all());
 
     this.filters.set('categoryId', FlowRouter.getParam('categoryId'));
     this.filters.set('clueId', FlowRouter.getParam('clueId'));
-    filterClues(this);
 
     this.autorun(() => {
 
@@ -74,6 +72,9 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                         self.state.set('currentClue', null);
                     });
 
+                    self.keywordInput = self.find('[name="keyword"]');
+                    self.ownedInput = self.find('[name="owned"]');
+
                 });
 
                 if (cluesLoaded(this)) {
@@ -82,7 +83,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                     if (this.previousFilters != JSON.stringify(this.filters.all())) {
                         const searchType = (legacy) ? ' (Legacy)' : '';
                         Logger.log("Filter Time" + searchType + ": " + ms + "ms");
-                        let eventData = this.search.get();
+                        let eventData = this.filters.all();
                         eventData.ms = ms;
                         Logger.audit('filterClues', {attrs: eventData});
                         Logger.track('filterClues', eventData);
@@ -195,10 +196,7 @@ Template.clues_manager.events({
 
     'submit #cluesFilter'(e, i) {
         LoadingState.start(e);
-        i.filters.set('page', 1);
-        i.filters.set('keyword', i.find('[name="keyword"]').value);
-        i.filters.set('owned', i.find('[name="owned"]').checked);
-        filterClues(i);
+        resetFilters(i);
     },
 
     'change #cluesFilter [name="categoryId"]'(e, i) {
@@ -206,14 +204,11 @@ Template.clues_manager.events({
         const categoryId = e.target.options[e.target.selectedIndex].value;
         FlowRouter.go('clues.categoryId', {categoryId: categoryId});
         i.filters.set('categoryId', categoryId);
-        const keyword = i.find('[name="keyword"]');
-        const reload = (keyword.value.trim().length > 0);
-        keyword.value = '';
-        i.find('[name="owned"]').checked = false;
-        i.filters.set('page', 1);
-        if (reload) {
-            window.location.reload();
+        if (i.keywordInput) {
+            i.keywordInput.value = '';
+            i.ownedInput.checked = false;
         }
+        resetFilters(i);
         TourGuide.resume();
     },
 
@@ -250,7 +245,6 @@ Template.clues_manager.events({
         e.preventDefault();
         const page = parseInt($(e.target).closest('a').attr('data-page'));
         i.filters.set('page', page);
-        filterClues(i);
     },
 
     'change .select-all'(e, i) {
@@ -312,13 +306,16 @@ Template.clues_manager.events({
         Session.set('pageSize', pageSize);
         i.filters.set('pageSize', pageSize);
         i.filters.set('page', 1);
-        filterClues(i);
     },
 
 });
 
-function filterClues(i) {
-    i.search.set(i.filters.all());
+function resetFilters(i) {
+    i.filters.set('page', 1);
+    if (i.keywordInput) {
+        i.filters.set('keyword', i.keywordInput.value);
+        i.filters.set('owned', i.ownedInput.checked);
+    }
 }
 
 function cluesLoaded(i) {
