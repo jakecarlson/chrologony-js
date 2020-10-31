@@ -16,12 +16,18 @@
   margin-bottom: 6rem;
 }
 #tagline {
-  position: absolute;
-  top: 10.5rem;
-  left: 50%;
-  margin-left: -12.25rem;
   font-size: medium;
   cursor: pointer;
+  margin-top: -3rem;
+}
+@media (min-width: 576px) {
+  #tagline {
+    position: absolute;
+    top: 10.5rem;
+    left: 50%;
+    margin-left: -12.25rem;
+    margin-top: 0;
+  }
 }
 
 /* authentication */
