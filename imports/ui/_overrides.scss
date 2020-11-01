@@ -1,6 +1,8 @@
 /* content */
 @media (max-width: 575px) {
-  main.container-fluid {
+  main.container-fluid,
+  #auth.container
+  {
     padding-left: 0;
     padding-right: 0;
   }
