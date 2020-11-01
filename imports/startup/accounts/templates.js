@@ -12,12 +12,6 @@ AccountsTemplates.configure({
     showReCaptcha: true,
     homeRoutePath: 'lobby',
 
-    // Hooks
-    onLogoutHook: function() {
-        Flasher.set('success', 'You have successfully logged out.');
-        FlowRouter.go('home');
-    },
-
     // Texts
     texts: {
         navSignIn: "Login",

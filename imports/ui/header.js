@@ -3,8 +3,6 @@ import { Template } from 'meteor/templating';
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 
 import './header.html';
-import {LoadingState} from "../modules/LoadingState";
-import {Flasher} from "./flasher";
 
 Template.header.onCreated(function headerOnCreated() {
 
@@ -13,7 +11,11 @@ Template.header.onCreated(function headerOnCreated() {
 Template.header.helpers({
 
     profileName() {
-        return Meteor.user({fields: {"profile.name": 1}}).profile.name;
+        const user = Meteor.user({fields: {"profile.name": 1}});
+        if (user) {
+            return user.profile.name;
+        }
+        return null;
     },
 
     passwordLink() {

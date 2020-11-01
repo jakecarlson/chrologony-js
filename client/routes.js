@@ -21,8 +21,11 @@ AccountsTemplates.configureRoute('signIn', {
     title: getTitle(Meteor.settings.public.app.tagline),
     redirect: function() {
         if (Meteor.user()) {
-            Logger.audit('login');
-            Logger.track('login');
+            const previousRoute = FlowRouter.current().oldRoute;
+            if (previousRoute && (previousRoute.name != 'logout')) {
+                Logger.audit('login');
+                Logger.track('login');
+            }
             redirectToPrevious('lobby');
         }
     },
@@ -146,6 +149,7 @@ FlowRouter.route('/logout', {
         Logger.audit('logout');
         Logger.track('logout');
         AccountsTemplates.logout();
+        Flasher.set('success', 'You have successfully logged out.');
         FlowRouter.go('home');
     }
 });
