@@ -1,13 +1,13 @@
 /* content */
 @media (max-width: 575px) {
-  main.container-fluid {
+  /*main.container-fluid {
     padding-left: 0;
     padding-right: 0;
   }
   .card {
     border-left: none;
     border-right: none;
-  }
+  }*/
 }
 
 /* list-group-item */
@@ -17,17 +17,18 @@
 }
 
 /* card overrides */
-@media (min-width: 576px) {
-  .card {
-    box-shadow: 0 0 .25rem .05rem $white;
-  }
+.card {
+  box-shadow: 0 0 .25rem .05rem $white;
 }
-@media (min-width: 576px) {
+/*@media (min-width: 576px) {
+
+}*/
+@media (min-width: 400px) {
   .card-small {
     max-width: 20rem;
   }
   .card-medium {
-    max-width: 30rem;
+    max-width: 28rem;
   }
 }
 .card-title {
