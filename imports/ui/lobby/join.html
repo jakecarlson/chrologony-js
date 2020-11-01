@@ -4,11 +4,11 @@
         <header class="card-header bg-primary">
             <h1 class="card-title text-white text-center">Join or Create a Room</h1>
         </header>
-        <form class="card-body text-center" autocomplete="new-password" novalidate>
+        <form class="card-body text-center" autocomplete="off" novalidate>
             <label class="sr-only" for="roomName">Room Name</label>
-            <input type="text" class="form-control mb-3" name="name" id="roomName" aria-describedby="roomNameHelp" placeholder="Room Name" maxlength="40" autocapitalize="none" autocomplete="off" autocorrect="off">
+            <input type="text" class="form-control mb-3" name="name" id="roomName" aria-describedby="roomNameHelp" placeholder="Room Name" maxlength="40" autocapitalize="none" autocomplete="one-time-code" autocorrect="off">
             <label class="sr-only" for="roomPassword">Room Password</label>
-            <input type="password" class="form-control mb-3" name="password" id="roomPassword" aria-describedby="roomPasswordHelp" placeholder="Room Password" maxlength="40" autocapitalize="none" autocomplete="off" autocorrect="off">
+            <input type="password" class="form-control mb-3" name="password" id="roomPassword" aria-describedby="roomPasswordHelp" placeholder="Room Password" maxlength="40" autocapitalize="none" autocomplete="one-time-code" autocorrect="off">
             <button type="submit" name="join" class="btn btn-primary float-right join" disabled="{{loading}}">Join Room</button>
             <button type="submit" name="create" class="btn btn-secondary float-left create" disabled="{{loading}}">Create Room</button>
         </form>
