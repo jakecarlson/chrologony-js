@@ -21,6 +21,9 @@
   padding-left: 15px;
   padding-right: 15px;
 }
+#headerLinks a:hover {
+  color: $white !important;
+}
 #mute {
   font-size: large;
   width: 2.5rem;
