@@ -64,9 +64,6 @@ fa-facebook-f:before, .fa-facebook:before {
   position: relative;
   left: .15rem;
 }
-button.at-social-btn i.fa-facebook {
-  //width: 20px;
-}
 
 /* Meteor accounts overrides */
 .at-pwd-form fieldset {
@@ -76,19 +73,17 @@ button.at-social-btn i.fa-facebook {
   width: 6rem;
   margin-bottom: 1rem;
 }
-//@media (min-width: 576px) {
-  .at-form-signUp .at-pwd-form .at-input.form-group:nth-child(odd):before {
-    content: "\A\A";
-    white-space: pre;
-  }
-  .at-form-signUp .at-pwd-form .at-input.form-group:first-child:before {
-    content: none;
-    white-space: normal;
-  }
-  .at-form-signUp .at-pwd-form .at-input.form-group:first-child {
-    margin-left: .75rem;
-  }
-//}
+.at-form-signUp .at-pwd-form .at-input.form-group:nth-child(odd):before {
+  content: "\A\A";
+  white-space: pre;
+}
+.at-form-signUp .at-pwd-form .at-input.form-group:first-child:before {
+  content: none;
+  white-space: normal;
+}
+.at-form-signUp .at-pwd-form .at-input.form-group:first-child {
+  margin-left: .75rem;
+}
 .at-pwd-form .at-input.form-group,
 .at-pwd-form #at-btn
 {
