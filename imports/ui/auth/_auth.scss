@@ -1,14 +1,11 @@
 /* auth screens */
 #auth {
-  margin-top: 4rem;
   text-align: center;
-  transition: margin-top .5s ease-out;
-  max-width: 960px;
 }
 #auth #title {
   margin: 0 auto;
-  width: 100%;
-  max-width: 30rem;
+  width: auto;
+  max-width: 18rem;
   height: 8rem;
   background-position: center center;
   background-size: 100% auto;
@@ -16,18 +13,13 @@
   margin-bottom: 6rem;
 }
 #tagline {
-  font-size: medium;
+  font-size: small;
   cursor: pointer;
-  margin-top: -3rem;
-}
-@media (min-width: 576px) {
-  #tagline {
-    position: absolute;
-    top: 10.5rem;
-    left: 50%;
-    margin-left: -12.25rem;
-    margin-top: 0;
-  }
+  position: absolute;
+  top: 5.5rem;
+  left: 50%;
+  margin-left: -8.625rem;
+  margin-top: 0;
 }
 
 /* authentication */
@@ -38,10 +30,14 @@
   width: 100%;
 }
 .at-sep:before {
-  left: -77.5%;
+  width: 50%;
+  left: 0;
+  margin-left: -7.5rem;
 }
 .at-sep:after {
-  right: -77.5%;
+  width: 50%;
+  right: 0;
+  margin-right: -7.5rem;
 }
 button.at-social-btn {
   border-radius: 0;
@@ -62,7 +58,7 @@ button.at-social-btn i {
   width: 1.25rem;
   text-align: center;
   padding-right: 1.5rem;
-  margin-right: .5rem;
+  margin-right: .625rem;
 }
 fa-facebook-f:before, .fa-facebook:before {
   position: relative;

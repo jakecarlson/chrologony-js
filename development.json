@@ -13,7 +13,8 @@
         "subject": "You've Been Invited to Play Chrologony",
         "preview": "Chrologony is a game where players sequence historical events into a timeline."
       },
-      "feedbackEmail": "chrologony@carlsonville.com"
+      "feedbackEmail": "chrologony@carlsonville.com",
+      "documentationUrl": "https://chrologony.com/documentation"
     },
     "themes": [
       "Arts",

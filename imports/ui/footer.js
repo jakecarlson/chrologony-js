@@ -57,6 +57,10 @@ Template.footer.helpers({
         return FlowRouter.path('terms');
     },
 
+    documentationLink() {
+        return Meteor.settings.public.app.documentationUrl;
+    },
+
 });
 
 Template.footer.events({

@@ -24,6 +24,7 @@ body#__blaze-root {
 @import "../imports/ui/_header.scss";
 @import "../imports/ui/_overrides.scss";
 @import "../imports/ui/auth/_auth.scss";
+@import "../imports/ui/content/_content.scss";
 @import "../imports/ui/lobby/_lobby.scss";
 @import "../imports/ui/room/_room.scss";
 @import "../imports/ui/_footer.scss";
@@ -31,7 +32,6 @@ body#__blaze-root {
 /* loader */
 #loader {
     position: fixed;
-    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
@@ -41,6 +41,8 @@ body#__blaze-root {
     z-index: 9999;
 }
 #loader .spinner {
+    position: absolute;
+    top: 45%;
     height: 5rem;
     width: 5rem;
 }
