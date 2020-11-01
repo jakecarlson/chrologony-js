@@ -42,7 +42,10 @@ body#__blaze-root {
 }
 #loader .spinner {
     position: absolute;
-    top: 45%;
+    top: 50%;
+    left: 50%;
     height: 5rem;
     width: 5rem;
+    margin-top: -2.5rem;
+    margin-left: -2.5rem;
 }
