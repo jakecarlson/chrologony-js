@@ -81,7 +81,7 @@ AccountsTemplates.configure({
             cannotRemoveService: "Cannot remove the only active service!",
             captchaVerification: "Captcha verification failed!",
             loginForbidden: "Login failed. Please try again.",
-            mustBeLoggedIn: "error.accounts.Must be logged in",
+            mustBeLoggedIn: "error.accounts. Must be logged in",
             pwdMismatch: "error.pwdsDontMatch",
             validationErrors: "Validation Errors",
             verifyEmailFirst: "Please verify your email prior to logging in by clicking on the link that was sent to you via email.",
