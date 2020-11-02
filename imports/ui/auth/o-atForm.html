@@ -45,6 +45,10 @@
 
         </div>
 
+        {{#if isLogin}}
+            {{> guest}}
+        {{/if}}
+
     {{/unless}}
 
 </template>

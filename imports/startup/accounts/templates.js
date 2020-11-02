@@ -1,6 +1,7 @@
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { Flasher } from "../../ui/flasher";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+import {Meteor} from "meteor/meteor";
 
 AccountsTemplates.configure({
 
@@ -11,6 +12,12 @@ AccountsTemplates.configure({
     showPlaceholders: true,
     showReCaptcha: true,
     homeRoutePath: 'lobby',
+
+    // Hooks
+    // onLogoutHook: myLogoutFunc,
+    // onSubmitHook: mySubmitFunc,
+    // preSignUpHook: myPreSubmitFunc,
+    // postSignUpHook: myPostSignUpFunc
 
     // Texts
     texts: {

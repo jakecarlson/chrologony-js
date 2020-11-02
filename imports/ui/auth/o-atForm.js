@@ -4,6 +4,7 @@ import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { Flasher } from "../flasher";
 
 import './o-atForm.html';
+import './guest.js';
 
 Template.atForm.onCreated(function atFormOnCreated() {
     this.autorun(() => {
@@ -42,12 +43,16 @@ Template.atForm.helpers({
         return (!AccountsTemplates.options.forbidClientAccountCreation && !Meteor.userId() && (state !== "signIn"));
     },
 
-    showSignUpLink: function(next_state){
+    showSignUpLink(next_state){
         if  (AccountsTemplates.options.hideSignUpLink) {
             return false;
         }
         let state = next_state || this.state || AccountsTemplates.getState();
         return (!AccountsTemplates.options.forbidClientAccountCreation && !Meteor.user() && (state !== "signUp"));
+    },
+
+    isLogin() {
+        return (AccountsTemplates.getState() == 'signIn');
     },
 
 });

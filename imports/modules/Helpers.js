@@ -1,5 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import { SSR, Template } from 'meteor/meteorhacks:ssr';
+import { Session } from "meteor/session";
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 
 Helpers = {
 
@@ -106,6 +108,19 @@ Helpers = {
 
         return _.difference(diff, excludeKeys);
 
+    },
+
+    randomStr(numChars) {
+        return Math.random().toString(36).substr(2, numChars).toUpperCase();
+    },
+
+    redirectToPrevious(defaultRoute = 'lobby') {
+        const redirect = Session.get('redirect');
+        if (redirect) {
+            delete Session.keys['redirect'];
+            FlowRouter.go(redirect);
+        }
+        FlowRouter.go(defaultRoute);
     },
 
 };

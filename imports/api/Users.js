@@ -18,6 +18,7 @@ if (Meteor.isServer) {
                     fields: {
                         currentRoomId: 1,
                         joinedRoomAt: 1,
+                        guest: 1,
                     }
                 }
             );
@@ -39,6 +40,7 @@ if (Meteor.isServer) {
                         'profile.name': 1,
                         currentRoomId: 1,
                         joinedRoomAt: 1,
+                        guest: 1,
                     }
                 }
             );
@@ -129,9 +131,12 @@ if (Meteor.isServer) {
         },
 
         // Send welcome email
-        'user.sendWelcome'() {
+        'user.sendWelcome'(userId) {
 
-            const userEmail = Meteor.user().email();
+            check(userId, RecordId);
+
+            const user = Meteor.users.findOne(userId);
+            const userEmail = user.email();
             if (userEmail) {
 
                 const email = Helpers.renderHtmlEmail({
@@ -139,7 +144,7 @@ if (Meteor.isServer) {
                     preview: Meteor.settings.public.app.welcome.preview,
                     template: 'account_welcome',
                     data: {
-                        user: Meteor.user(),
+                        user: user,
                         appUrl: Meteor.absoluteUrl(),
                         tourUrl: Meteor.absoluteUrl('lobby#tour'),
                         feedbackEmail: Meteor.settings.public.app.feedbackEmail,
@@ -154,6 +159,37 @@ if (Meteor.isServer) {
                     html: email.html,
                 });
 
+            }
+
+        },
+
+        'user.guest'(username, captchaResponse) {
+
+            check(username, String);
+            Permissions.check(!Permissions.authenticated());
+
+            const apiResponse = HTTP.post("https://www.google.com/recaptcha/api/siteverify", {
+                params: {
+                    secret: Meteor.settings.reCaptcha.secretKey,
+                    response: captchaResponse,
+                    remoteip: this.connection.clientAddress,
+                }
+            }).data
+
+            if (!apiResponse.success) {
+                throw new Meteor.Error(422, 'reCAPTCHA Failed: ' + apiResponse.error);
+            }
+
+            // Append random 4 characters
+            username += ' [' + Helpers.randomStr(4) + ']';
+
+            try {
+                const userId = Accounts.createUser({username: username});
+                Meteor.users.update(userId, {$set: {guest: true}});
+                this.setUserId(userId);
+                return userId;
+            } catch (err) {
+                throw new Meteor.Error(err.error, err.message);
             }
 
         },

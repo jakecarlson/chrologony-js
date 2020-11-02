@@ -23,10 +23,11 @@ AccountsTemplates.configureRoute('signIn', {
         if (Meteor.user()) {
             const previousRoute = FlowRouter.current().oldRoute;
             if (previousRoute && (previousRoute.name != 'logout')) {
+
                 Logger.audit('login');
                 Logger.track('login');
             }
-            redirectToPrevious('lobby');
+            Helpers.redirectToPrevious('lobby');
         }
     },
 });
@@ -37,15 +38,13 @@ AccountsTemplates.configureRoute('signUp', {
     title: getTitle('Sign Up'),
     redirect: function() {
         if (Meteor.user()) {
-            const username = Meteor.user().username;
-            if (username) {
-                Meteor.users.update(Meteor.userId(), {$set: {'profile.name': username}});
+            if (Meteor.user().email()) {
+
             }
-            Meteor.call('user.sendWelcome');
             Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>');
             Logger.audit('signUp');
             Logger.track('signUp');
-            redirectToPrevious('lobby');
+            Helpers.redirectToPrevious('lobby');
         }
     },
 });
@@ -288,15 +287,6 @@ function redirectToHome(ctx, redirect) {
         Session.set('redirect', FlowRouter.current().path);
         redirect(FlowRouter.path('home'));
     }
-}
-
-function redirectToPrevious(defaultRoute = 'lobby') {
-    const redirect = Session.get('redirect');
-    if (redirect) {
-        delete Session.keys['redirect'];
-        FlowRouter.go(redirect);
-    }
-    FlowRouter.go(defaultRoute);
 }
 
 function getTitle(page) {

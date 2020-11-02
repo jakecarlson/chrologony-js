@@ -19,7 +19,8 @@ Accounts.urls.verifyEmail = function(token) {
 };
 
 AccountsTemplates.configure({
-    postSignUpHook(userId, info) {
+    postSignUpHook(userId, user) {
+        Meteor.call('user.sendWelcome', userId);
         Accounts.sendVerificationEmail(userId);
     },
 });
@@ -28,7 +29,7 @@ Accounts.validateLoginAttempt(function(params) {
 
     // Only validate verified email for password logins
     if (params.type == 'password') {
-        const newSignup = (params.user && params.user.profile && !params.user.profile.name);
+        const newSignup = !params.user.lastLoggedInAt;
         if (!newSignup && params.user && params.user.emails && (params.user.emails.length > 0)) {
             let found = _.find(
                 params.user.emails,
