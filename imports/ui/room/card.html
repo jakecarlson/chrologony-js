@@ -23,40 +23,46 @@
                                 {{/each}}
                             </span>
 
-                            <a href="#" id="cardMenu-{{id}}" class="game-card-action ml-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-h" title="Card Options"></i>
-                            </a>
+                            {{#if showMenu}}
 
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cardMenu-{{id}}">
+                                <a href="#" id="cardMenu-{{id}}" class="game-card-action ml-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-ellipsis-h" title="Card Options"></i>
+                                </a>
 
-                                {{#if isNotGuest}}
-                                    <div class="text-center vote">
-                                        <a href="#" class="upvote pl-2 pr-2 {{#if isVoteValue 1}}text-primary{{else}}text-muted{{/if}}" title="Upvote"><i class="fa fa-thumbs-up"></i></a>
-                                        <span class="vote-divider text-muted ml-2 mr-2">/</span>
-                                        <a href="#" class="downvote pl-2 pr-2 {{#if isVoteValue -1}}text-primary{{else}}text-muted{{/if}}" title="Downvote"><i class="fa fa-thumbs-down"></i></a>
-                                    </div>
-                                    <div class="dropdown-divider"></div>
-                                {{/if}}
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cardMenu-{{id}}">
 
-                                {{#if hasMoreInfo}}
-                                    <a class="dropdown-item more" href="#">More Info</a>
-                                {{/if}}
-
-                                {{#if isNotGuest}}
-
-                                    <div class="dropdown-divider"></div>
-
-                                    {{#if canEdit}}
-                                        <a class="dropdown-item" href="{{editClueLink}}" target="_blank">Edit Clue</a>
+                                    {{#if isNotGuest}}
+                                        <div class="text-center vote">
+                                            <a href="#" class="upvote pl-2 pr-2 {{#if isVoteValue 1}}text-primary{{else}}text-muted{{/if}}" title="Upvote"><i class="fa fa-thumbs-up"></i></a>
+                                            <span class="vote-divider text-muted ml-2 mr-2">/</span>
+                                            <a href="#" class="downvote pl-2 pr-2 {{#if isVoteValue -1}}text-primary{{else}}text-muted{{/if}}" title="Downvote"><i class="fa fa-thumbs-down"></i></a>
+                                        </div>
+                                        <div class="dropdown-divider"></div>
                                     {{/if}}
 
-                                    {{#if canSetCategories}}
-                                        <a class="dropdown-item categories" href="#" data-id="{{clueId}}">Categories</a>
+                                    {{#if hasMoreInfo}}
+                                        <a class="dropdown-item more" href="#">More Info</a>
                                     {{/if}}
 
-                                {{/if}}
+                                    {{#if isNotGuest}}
 
-                            </div>
+                                        {{#if hasMoreInfo}}
+                                            <div class="dropdown-divider"></div>
+                                        {{/if}}
+
+                                        {{#if canEdit}}
+                                            <a class="dropdown-item" href="{{editClueLink}}" target="_blank">Edit Clue</a>
+                                        {{/if}}
+
+                                        {{#if canSetCategories}}
+                                            <a class="dropdown-item categories" href="#" data-id="{{clueId}}">Categories</a>
+                                        {{/if}}
+
+                                    {{/if}}
+
+                                </div>
+
+                            {{/if}}
 
                         </div>
 

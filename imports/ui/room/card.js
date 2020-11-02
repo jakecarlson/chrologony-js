@@ -101,18 +101,7 @@ Template.card.helpers({
     },
 
     hasMoreInfo() {
-        const clue = Template.instance().clue.get();
-        return (
-            !isCurrent(this.turn, this.card) &&
-            (
-                clue.moreInfo ||
-                clue.externalUrl ||
-                clue.externalId ||
-                clue.imageUrl ||
-                clue.thumbnailUrl ||
-                (clue.latitude && clue.longitude)
-            )
-        );
+        return hasMoreInfo(Template.instance(), this.turn, this.card);
     },
 
     canSetCategories() {
@@ -164,7 +153,11 @@ Template.card.helpers({
     },
 
     isNotGuest() {
-        return !Meteor.user().guest;
+        return !isGuest();
+    },
+
+    showMenu() {
+        return !isGuest() || hasMoreInfo(Template.instance(), this.turn, this.card);
     },
 
 });
@@ -206,4 +199,23 @@ function getDifficultyLevel(template) {
         return Math.round(clue.difficulty / .5) + 1;
     }
     return 1;
+}
+
+function hasMoreInfo(i, turn, card) {
+    const clue = Template.instance().clue.get();
+    return (
+        !isCurrent(turn, card) &&
+        (
+            clue.moreInfo ||
+            clue.externalUrl ||
+            clue.externalId ||
+            clue.imageUrl ||
+            clue.thumbnailUrl ||
+            (clue.latitude && clue.longitude)
+        )
+    );
+}
+
+function isGuest() {
+    return Meteor.user().guest;
 }
