@@ -5,8 +5,8 @@
             <h1 class="card-title text-white text-center">Continue as Guest</h1>
         </header>
         <form class="card-body text-center justify-content-center" autocomplete="off" novalidate>
-            <label class="sr-only" for="username">Your Name</label>
-            <input type="text" class="form-control mr-3" name="username" id="username" placeholder="Your Name" maxlength="40" autocapitalize="none" autocomplete="off" autocorrect="off">
+            <label class="sr-only" for="username">Name</label>
+            <input type="text" class="form-control mr-3" name="username" id="username" placeholder="Name" maxlength="40" autocapitalize="none" autocomplete="off" autocorrect="off">
             {{> atReCaptcha}}
             <button type="submit" class="btn btn-primary guest" disabled="{{loading}}">Continue</button>
         </form>
