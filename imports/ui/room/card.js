@@ -163,6 +163,10 @@ Template.card.helpers({
         return dots;
     },
 
+    isNotGuest() {
+        return !Meteor.user().guest;
+    },
+
 });
 
 Template.card.events({

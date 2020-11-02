@@ -23,11 +23,15 @@
                         <span class="dropdown-header d-sm-none">{{profileName}}</span>
                         <div class="dropdown-divider d-sm-none"></div>
                         <a class="dropdown-item" href="{{lobbyLink}}">Lobby</a>
-                        <a class="dropdown-item clues-link" href="{{cluesLink}}">Clues</a>
-                        <a class="dropdown-item categories-link" href="{{categoriesLink}}">Categories</a>
+                        {{#if isNotGuest}}
+                            <a class="dropdown-item clues-link" href="{{cluesLink}}">Clues</a>
+                            <a class="dropdown-item categories-link" href="{{categoriesLink}}">Categories</a>
+                        {{/if}}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item tour-link" href="#tour">Take a Tour</a>
-                        <a class="dropdown-item" href="{{passwordLink}}">Change Password</a>
+                        {{#if isNotGuest}}
+                            <a class="dropdown-item tour-link" href="#tour">Take a Tour</a>
+                            <a class="dropdown-item" href="{{passwordLink}}">Change Password</a>
+                        {{/if}}
                         <a class="dropdown-item" href="{{logoutLink}}">Logout</a>
                     </div>
                 </div>

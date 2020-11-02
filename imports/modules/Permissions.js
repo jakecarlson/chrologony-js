@@ -13,6 +13,10 @@ export const Permissions = {
         return Meteor.userId();
     },
 
+    notGuest() {
+        return !Meteor.user().guest;
+    },
+
     owned(item) {
         return (item.ownerId == Meteor.userId());
     },

@@ -50,6 +50,10 @@ Template.header.helpers({
         return Session.get('muted');
     },
 
+    isNotGuest() {
+        return !Meteor.user().guest;
+    },
+
 });
 
 Template.header.events({

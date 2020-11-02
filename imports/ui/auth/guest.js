@@ -13,6 +13,10 @@ Template.guest.onCreated(function guestOnCreated() {
 
 Template.guest.helpers({
 
+    signupLink() {
+        return FlowRouter.path('signUp');
+    },
+
 });
 
 Template.guest.events({

@@ -90,6 +90,7 @@ if (Meteor.isServer) {
             check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
             Permissions.check(Permissions.authenticated());
+            Permissions.check(Permissions.notGuest());
 
             const regex = new RegExp(query, 'i');
             return Meteor.users.find(
@@ -116,6 +117,7 @@ if (Meteor.isServer) {
 
             check(ids, [RecordId]);
             Permissions.check(Permissions.authenticated());
+            Permissions.check(Permissions.notGuest());
 
             return Meteor.users.find(
                 {

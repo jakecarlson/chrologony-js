@@ -74,6 +74,7 @@ Meteor.methods({
         check(clueId, RecordId);
         check(value, Match.Integer);
         Permissions.check(Permissions.authenticated());
+        Permissions.check(Permissions.notGuest());
 
         Logger.log("Set Vote for " + clueId + ": " + value);
 
