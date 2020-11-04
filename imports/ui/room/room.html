@@ -92,6 +92,23 @@
 
                 <div class="{{#if columnsBoard}}col-lg-9{{/if}}" id="roomMain">
 
+                    {{#if showEmbedHeader}}
+                        <div id="embedHeader" class="px-3 py-3 bg-primary">
+                            <h1 id="embedTitle" class="mx-sm-auto mb-0">{{appName}}</h1>
+                            <h2
+                                id="embedTagline"
+                                class="text-secondary"
+                                data-toggle="popover"
+                                data-placement="top"
+                                data-content="{{appDescription}}"
+                            >
+                                {{appTagline}}
+                                <i class="fa fa-question-circle"></i>
+                            </h2>
+                            <a id="embedBtn" href="{{appUrl}}" target="_blank" class="btn btn-outline-secondary">Sign Up Now</a>
+                        </div>
+                    {{/if}}
+
                     {{> board room=currentRoom game=currentGame turn=currentTurn}}
 
                     {{#if showPlayerCards}}

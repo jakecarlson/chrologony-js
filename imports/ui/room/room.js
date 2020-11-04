@@ -321,6 +321,14 @@ Template.room.helpers({
         return !Helpers.isAnonymous();
     },
 
+    showEmbedHeader() {
+        return Helpers.isAnonymous() && !FlowRouter.getQueryParam('hide_header');
+    },
+
+    embedTitle() {
+        return Meteor.settings.public.app.name + ': ' + Meteor.settings.public.app.tagline;
+    },
+
 });
 
 Template.room.events({

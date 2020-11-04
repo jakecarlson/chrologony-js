@@ -165,7 +165,10 @@ Template.board.helpers({
     },
 
     boardClasses() {
-        let str = 'card mb-4 ';
+        let str = 'card ';
+        if (!Helpers.isAnonymous()) {
+            str += 'mb-4 ';
+        }
         if (gameHasEnded(this.game)) {
             if (isGameWinner(this.game)) {
                 str += 'border-success';

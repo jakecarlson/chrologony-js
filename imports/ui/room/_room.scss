@@ -12,7 +12,7 @@
     padding-right: 0;
   }
 }
-.full-width .card:not(.game-card) {
+#layout .full-width .card:not(.game-card) {
   border-left-width: 0 !important;
   border-right-width: 0 !important;
 }
@@ -44,7 +44,6 @@
 #inviteEmail {
   width: 11.5rem;
 }
-
 .player.current {
   font-weight: bold;
 }
@@ -53,6 +52,40 @@
 }
 .player {
   padding: 0.75rem 1.25rem
+}
+
+/* embed */
+#embed .card {
+  box-shadow: none;
+}
+#embedHeader {
+  position: relative;
+}
+#embedTitle {
+  width: 17.5rem;
+  height: 4rem;
+  background-position: left top;
+  background-size: 100% auto;
+}
+#embedTagline {
+  position: absolute;
+  left: 1rem;
+  top: 4.15rem;
+  font-size: small;
+}
+@media (min-width: 576px) {
+  #embedTagline {
+    left: 50%;
+    margin-left: -8.75rem;
+  }
+}
+#embedTagline .fa {
+  cursor: pointer;
+}
+#embedBtn {
+  position: absolute;
+  top: 2rem;
+  right: 1rem;
 }
 
 /* board */
@@ -69,7 +102,7 @@
 .bg-warning .board-title {
   color: $dark;
 }
-.board-menu {
+#layout .board-menu {
   padding-top: .1rem;
 }
 #board .card-subtitle {
