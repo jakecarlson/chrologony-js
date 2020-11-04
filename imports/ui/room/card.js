@@ -152,12 +152,12 @@ Template.card.helpers({
         return dots;
     },
 
-    isNotGuest() {
-        return !isGuest();
+    isNotGuestOrAnonymous() {
+        return (!Helpers.isGuest() && !Helpers.isAnonymous());
     },
 
     showMenu() {
-        return !isGuest() || hasMoreInfo(Template.instance(), this.turn, this.card);
+        return (!Helpers.isGuest() && !Helpers.isAnonymous()) || hasMoreInfo(Template.instance(), this.turn, this.card);
     },
 
 });
@@ -214,8 +214,4 @@ function hasMoreInfo(i, turn, card) {
             (clue.latitude && clue.longitude)
         )
     );
-}
-
-function isGuest() {
-    return Meteor.user().guest;
 }

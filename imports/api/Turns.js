@@ -14,7 +14,7 @@ export const Turns = new Mongo.Collection('turns');
 
 Turns.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    ownerId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
+    ownerId: {type: String, max: 17, optional: true},
     owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},
@@ -105,7 +105,7 @@ Meteor.methods({
         check(id, RecordId);
         check(cardId, Match.OneOf(null, RecordId));
         check(lastCardCorrect, Match.OneOf(null, Boolean));
-        Permissions.check(Permissions.authenticated());
+        Permissions.authenticated()
         if (cardId) {
             Permissions.check((Turns.findOne(id).ownerId == Cards.findOne(cardId).ownerId));
         }
@@ -134,15 +134,14 @@ if (Meteor.isServer) {
         'turn.next'(gameId) {
 
             check(gameId, RecordId);
-            Permissions.check(Permissions.authenticated());
+            Permissions.authenticated()
 
             // Check that the user is allowed
             const game = Games.findOne(gameId);
             const turn = game.currentTurn();
-            Permissions.check((
-                Permissions.owned(game.room()) ||
-                (turn && Permissions.owned(turn))
-            ));
+            if (!game.currentTurnId || (turn.ownerId != Meteor.userId())) {
+                Permissions.owned(game.room());
+            }
 
             // End the current turn
             if (game.currentTurnId) {

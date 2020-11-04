@@ -7,7 +7,6 @@ import { LoadingState } from '../../modules/LoadingState';
 
 import './board.html';
 import './card.js';
-import {Clues} from "../../api/Clues";
 
 Template.board.onCreated(function boardOnCreated() {
 
@@ -246,7 +245,23 @@ Template.board.helpers({
             }
         }
         return '';
-    }
+    },
+
+    isAnonymous() {
+        return Helpers.isAnonymous();
+    },
+
+    currentRoom() {
+        return this.room;
+    },
+
+    currentGame() {
+        return this.game;
+    },
+
+    currentTurn() {
+        return this.turn;
+    },
 
 });
 

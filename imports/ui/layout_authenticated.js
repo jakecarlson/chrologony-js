@@ -3,6 +3,7 @@ import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from "meteor/templating";
 import { LoadingState } from "../modules/LoadingState";
+import { Session } from "meteor/session";
 
 import '../modules/TourGuide';
 import './layout_authenticated.html';
@@ -17,7 +18,6 @@ import './flasher.js';
 
 import { Clues } from "../api/Clues";
 import { Categories } from "../api/Categories";
-import {Session} from "meteor/session";
 
 Template.layout_authenticated.onCreated(function layout_authenticatedOnCreated() {
 

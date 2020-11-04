@@ -65,6 +65,10 @@ Template.categories_selector.helpers({
         return str;
     },
 
+    isAnonymous() {
+        return Helpers.isAnonymous();
+    },
+
 });
 
 Template.categories_selector.events({

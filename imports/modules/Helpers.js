@@ -123,4 +123,12 @@ Helpers = {
         FlowRouter.go(defaultRoute);
     },
 
+    isGuest() {
+        return (Meteor.userId() && Meteor.user().guest);
+    },
+
+    isAnonymous() {
+        return (Meteor.userId() && (Meteor.user().currentRoomId == 'anonymous'));
+    },
+
 };

@@ -6,9 +6,13 @@
 
             <header class="{{headerClasses}}">
 
-                <h2 class="card-title text-center float-sm-left mb-2 mb-sm-0 board-title">{{boardTitle}}</h2>
+                {{#if isAnonymous}}
+                    {{> game room=currentRoom game=currentGame turn=currentTurn compact=true}}
+                {{else}}
+                    <h2 class="card-title text-center float-sm-left mb-2 mb-sm-0 board-title">{{boardTitle}}</h2>
+                {{/if}}
 
-                <div class="board-menu text-center float-sm-right">
+                <div class="board-menu text-center {{#if isAnonymous}}float-right{{else}}float-sm-right{{/if}}">
 
                     <button
                             class="{{buttonClasses cannotSubmitGuess}} mr-2 submit-guess"

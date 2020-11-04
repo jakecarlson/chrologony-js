@@ -285,6 +285,12 @@
 }
 
 /* game */
+#embed #game {
+  float: left;
+}
+#embed #gameCategoryId {
+  max-width: 12rem;
+}
 #gameOptionsToggle {
   font-size: medium;
   display: block;

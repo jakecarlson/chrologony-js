@@ -30,7 +30,7 @@ Template.player.helpers({
     numLockedCards() {
         return Cards.find(
             {
-                gameId: this.room.currentGameId,
+                gameId: this.room.gameId(),
                 ownerId: this.player._id,
                 lockedAt: {$ne: null},
             }
@@ -40,7 +40,7 @@ Template.player.helpers({
     numPendingCards() {
         return Cards.find(
             {
-                gameId: this.room.currentGameId,
+                gameId: this.room.gameId(),
                 ownerId: this.player._id,
                 $or: [
                     {lockedAt: {$ne: null}},
@@ -51,7 +51,7 @@ Template.player.helpers({
     },
 
     gameInProgress() {
-        return this.room.currentGameId;
+        return this.room.gameId();
     },
 
     canEject() {

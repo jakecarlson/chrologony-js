@@ -1,19 +1,21 @@
 <template name="game">
 
-    <form id="game" class="card border-primary mb-4">
+    <form id="game" class="{{#if notCompact}}card border-primary mb-4{{else}}form-inline{{/if}}">
 
-        <header class="card-header bg-primary">
-            <h2 class="card-title text-white text-center text-sm-left">Start a New Game</h2>
-        </header>
+        {{#if notCompact}}
+            <header class="card-header bg-primary">
+                <h2 class="card-title text-white text-center text-sm-left">Start a New Game</h2>
+            </header>
+        {{/if}}
 
-        <div class="card-body">
+        <div class="{{#if notCompact}}card-body{{/if}}">
 
-            <div class="form-group">
-                <label for="gameCategoryId">Category:</label>
+            <div class="{{#if notCompact}}form-group{{else}}float-left d-inline-block{{/if}}">
+                <label for="gameCategoryId" class="{{#if compact}}sr-only{{/if}}">Category:</label>
                 {{> categories_selector id="gameCategoryId" val=categoryId}}
             </div>
 
-            <fieldset id="gameAdvanced" class="mb-2">
+            <fieldset id="gameAdvanced" class="{{#if notCompact}}mb-2{{else}}d-none{{/if}}">
 
                 <a class="collapsed" id="gameOptionsToggle" data-toggle="collapse" href="#gameOptions" role="button" aria-expanded="false" aria-controls="gameOptions">
                     <i class="fa fa-caret-right"></i>
@@ -165,7 +167,7 @@
                 </div>
             </fieldset>
 
-            <div class="text-center">
+            <div class="{{#if notCompact}}text-center{{else}}float-left d-inline-block ml-2{{/if}}">
                 <button
                     type="submit"
                     class="
@@ -179,7 +181,7 @@
                     disabled="{{loading}}"
                 >
                     <i class="fa fa-play-circle"></i>
-                    <span>Start Game</span>
+                    <span>Start {{#if notCompact}}Game{{/if}}</span>
                 </button>
             </div>
         </div>

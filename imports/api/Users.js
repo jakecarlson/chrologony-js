@@ -89,8 +89,8 @@ if (Meteor.isServer) {
 
             check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
-            Permissions.check(Permissions.authenticated());
-            Permissions.check(Permissions.notGuest());
+            Permissions.authenticated()
+            Permissions.notGuest();
 
             const regex = new RegExp(query, 'i');
             return Meteor.users.find(
@@ -116,8 +116,8 @@ if (Meteor.isServer) {
             }
 
             check(ids, [RecordId]);
-            Permissions.check(Permissions.authenticated());
-            Permissions.check(Permissions.notGuest());
+            Permissions.authenticated()
+            Permissions.notGuest();
 
             return Meteor.users.find(
                 {
@@ -168,7 +168,6 @@ if (Meteor.isServer) {
         'user.guest'(username, captchaResponse) {
 
             check(username, String);
-            Permissions.check(!Permissions.authenticated());
 
             const apiResponse = HTTP.post("https://www.google.com/recaptcha/api/siteverify", {
                 params: {
@@ -194,6 +193,10 @@ if (Meteor.isServer) {
                 throw new Meteor.Error(err.error, err.message);
             }
 
+        },
+
+        'user.anonymous'() {
+            return this.setUserId('anonymous');
         },
 
     });

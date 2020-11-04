@@ -18,8 +18,7 @@ Cards.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
     turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
     clueId: {type: String, min: 17, max: 24},
-    ownerId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
-    owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
+    ownerId: {type: String, max: 17, optional: true},
     correct: {type: Boolean, defaultValue: null, optional: true},
     guessedAt: {type: Date, defaultValue: null, optional: true},
     lockedAt: {type: Date, defaultValue: null, optional: true},
@@ -148,7 +147,7 @@ Meteor.methods({
     'card.setPositions'(cards) {
 
         check(cards, Object);
-        Permissions.check(Permissions.authenticated());
+        Permissions.authenticated()
 
         Logger.log("Card Positions: " + JSON.stringify(cards));
 
@@ -156,7 +155,7 @@ Meteor.methods({
         for (const [id, pos] of Object.entries(cards)) {
             check(id, RecordId);
             check(pos, Match.Integer);
-            Permissions.check(Permissions.owned(Cards.findOne(id)));
+            Permissions.owned(Cards.findOne(id));
             numUpdated += Cards.update(
                 {
                     _id: id,
@@ -178,7 +177,7 @@ Meteor.methods({
     'card.lock'(id) {
 
         check(id, RecordId);
-        Permissions.check(Permissions.authenticated());
+        Permissions.authenticated()
 
         // Double check that the card was correct before locking
         const card = Cards.findOne(id);
@@ -211,7 +210,7 @@ if (Meteor.isServer) {
         'card.draw'(turnId) {
 
             check(turnId, RecordId);
-            Permissions.check(Permissions.authenticated());
+            Permissions.authenticated()
             const turn = Turns.findOne(turnId);
             Permissions.check((turn.game().roomId == Meteor.user().currentRoomId));
 
@@ -238,11 +237,11 @@ if (Meteor.isServer) {
 
             check(id, RecordId);
             check(pos, Match.Integer);
-            Permissions.check(Permissions.authenticated());
+            Permissions.authenticated()
 
             // Get the card and determine if the guess is correct
             const card = Cards.findOne(id);
-            Permissions.check(Permissions.owned(card));
+            Permissions.owned(card);
             const correct = guessIsCorrect(card, pos);
 
             Logger.log("Card Guess Correct?: " + JSON.stringify(correct));

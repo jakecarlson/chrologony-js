@@ -6,7 +6,7 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { Categories } from '../imports/api/Categories';
 import { Rooms } from '../imports/api/Rooms';
-import { Flasher } from "../imports/ui/flasher";
+import { Flasher } from '../imports/ui/flasher';
 
 AccountsTemplates.configure({
     defaultTemplate: 'atForm',
@@ -276,6 +276,22 @@ FlowRouter.route('/join/:id/:token', {
                 FlowRouter.go('room', {id: id});
             }
         });
+    }
+});
+
+FlowRouter.route('/embed', {
+    name: 'embed',
+    title: getTitle(Meteor.settings.public.app.tagline),
+    action(params, queryParams) {
+        Logger.log("Route: embed");
+        // Logger.audit('join', {collection: 'Rooms', documentId: params.id});
+        // Logger.track('joinRoom', {roomId: params.id});
+        BlazeLayout.render(
+            'layout_embedded',
+            {
+                main: 'room',
+            }
+        );
     }
 });
 

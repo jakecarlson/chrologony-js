@@ -50,13 +50,6 @@ Template.room.onCreated(function roomOnCreated() {
 
     this.autorun((computation) => {
 
-        /*
-        console.log('AUTORUN');
-        computation.onInvalidate(function() {
-            console.trace();
-        });
-         */
-
         LoadingState.start();
         FlowRouter.watchPathChange();
 
@@ -66,7 +59,7 @@ Template.room.onCreated(function roomOnCreated() {
             const roomId = user.currentRoomId;
 
             // Redirect the user back to lobby if they aren't authenticated to this room
-            if (roomId != FlowRouter.getParam('id')) {
+            if (!Helpers.isAnonymous() && (roomId != FlowRouter.getParam('id'))) {
                 Flasher.set('danger', "You are not authorized to view that room.");
                 leaveRoom();
             }
@@ -77,14 +70,14 @@ Template.room.onCreated(function roomOnCreated() {
                 subscribe(this, 'players', this.room.get()._id);
                 subscribe(this, 'games', this.room.get()._id);
 
-                if (this.room.get().currentGameId) {
+                if (this.room.get().gameId()) {
 
-                    subscribe(this, 'turns', this.room.get().currentGameId);
-                    subscribe(this, 'cards', this.room.get().currentGameId);
-                    subscribe(this, 'cardClues', this.room.get().currentGameId);
-                    subscribe(this, 'votes', this.room.get().currentGameId);
+                    subscribe(this, 'turns', this.room.get().gameId());
+                    subscribe(this, 'cards', this.room.get().gameId());
+                    subscribe(this, 'cardClues', this.room.get().gameId());
+                    subscribe(this, 'votes', this.room.get().gameId());
 
-                    this.game.set(Games.findOne(this.room.get().currentGameId));
+                    this.game.set(Games.findOne(this.room.get().gameId()));
                     if (this.game.get() && this.game.get().currentTurnId) {
                         this.turn.set(Turns.findOne(this.game.get().currentTurnId));
                     }
@@ -179,8 +172,8 @@ Template.room.onCreated(function roomOnCreated() {
 
         added: function(cardId, fields) {
             if (self.initialized && self.room.get()) {
-                subscribe(Meteor, 'cards', self.room.get().currentGameId);
-                subscribe(Meteor, 'cardClues', self.room.get().currentGameId);
+                subscribe(Meteor, 'cards', self.room.get().gameId());
+                subscribe(Meteor, 'cardClues', self.room.get().gameId());
                 playSound(self.sounds.card.draw);
                 if (fields.ownerId == Meteor.userId()) {
                     $('.player-cards-wrapper').animate({
@@ -297,6 +290,7 @@ Template.room.helpers({
 
     showPlayerCards() {
         return (
+            !Helpers.isAnonymous() &&
             Template.instance().game.get() &&
             (Template.instance().room.get().players().count() > 1)
         );
@@ -316,11 +310,15 @@ Template.room.helpers({
     },
 
     fullBoard() {
-        return Session.get('fullBoard');
+        return (Helpers.isAnonymous() || Session.get('fullBoard'));
     },
 
     columnsBoard() {
-        return !Session.get('fullBoard');
+        return (!Helpers.isAnonymous() && !Session.get('fullBoard'));
+    },
+
+    isNotAnonymous() {
+        return !Helpers.isAnonymous();
     },
 
 });

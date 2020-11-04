@@ -37,7 +37,19 @@ Rooms.after.remove(function(id, room) {
 Rooms.helpers({
 
     currentGame() {
-        return Games.findOne(this.currentGameId);
+        let gameId = this.currentGameId;
+        if (Helpers.isAnonymous()) {
+            gameId = Session.get('gameId');
+        }
+        return Games.findOne(gameId);
+    },
+
+    gameId() {
+        if (Helpers.isAnonymous()) {
+            return Session.get('currentGameId');
+        } else {
+            return this.currentGameId;
+        }
     },
 
     players() {
@@ -113,15 +125,14 @@ Meteor.methods({
         }
 
         check(userId, RecordId);
-        Permissions.check(Permissions.authenticated());
+        Permissions.authenticated()
 
         Logger.audit('leave', {collection: 'Rooms', documentId: Meteor.user().currentRoomId});
 
         // Make sure the user is the owner of the room that the other user is in, or the user him/herself
-        Permissions.check((
-            (userId != Meteor.userId()) &&
-            Permissions.owned(Meteor.user().currentRoom())
-        ));
+        if (userId != Meteor.userId()) {
+            Permissions.owned(Meteor.user().currentRoom());
+        }
 
         // If the user isn't in a room, just pretend like it worked
         if (!Meteor.user().currentRoomId) {
@@ -130,12 +141,12 @@ Meteor.methods({
 
         // Check to see if it's this user's turn currently and end it if so -- but only if it's a multiplayer game
         const room = Meteor.user().currentRoom();
-        if (room && room.currentGameId && (room.players().count() > 1)) {
+        if (room && room.gameId() && (room.players().count() > 1)) {
             const game = room.currentGame();
             if (game.currentTurnId) {
                 const turn = game.currentTurn();
                 if (turn.ownerId == userId) {
-                    Meteor.call('turn.next', room.currentGameId, function(err, id) {
+                    Meteor.call('turn.next', room.gameId(), function(err, id) {
                         if (!err) {
                             Logger.log("Start Turn: " + id);
                         }
@@ -153,27 +164,31 @@ Meteor.methods({
     // Set Game
     'room.setGame'(id, gameId) {
 
-        check(id, RecordId);
+        check(id, String);
         if (gameId) {
             check(gameId, RecordId);
         }
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.owned(Rooms.findOne(id)));
+        Permissions.authenticated()
+        Permissions.owned(Rooms.findOne(id));
 
         Logger.log('Set Room ' + id + ' Game to ' + gameId);
 
         // If there is an ID, this is an update
-        return Rooms.update(
-            {
-                _id: id,
-                ownerId: Meteor.userId(),
-            },
-            {
-                $set: {
-                    currentGameId: gameId,
+        if (Helpers.isAnonymous()) {
+            return true;
+        } else {
+            return Rooms.update(
+                {
+                    _id: id,
+                    ownerId: Meteor.userId(),
+                },
+                {
+                    $set: {
+                        currentGameId: gameId,
+                    }
                 }
-            }
-        );
+            );
+        }
 
     },
 
@@ -181,8 +196,8 @@ Meteor.methods({
     'room.remove'(id) {
 
         check(id, RecordId);
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.owned(Rooms.findOne(id)));
+        Permissions.authenticated()
+        Permissions.owned(Rooms.findOne(id));
 
         Logger.log('Delete Room: ' + id);
 
@@ -229,7 +244,7 @@ if (Meteor.isServer) {
 
             check(roomId, RecordId);
             check(token, NonEmptyString);
-            Permissions.check(Permissions.authenticated());
+            Permissions.authenticated()
 
             if (Hasher.md5.hash(roomId) == token.trim()) {
                 setRoom(roomId);
@@ -265,7 +280,7 @@ if (Meteor.isServer) {
             const room = Rooms.findOne(id);
             if (room) {
 
-                Permissions.check(Permissions.authenticated());
+                Permissions.authenticated()
                 Permissions.check(Permissions.owned(room));
 
                 const invite = Helpers.renderHtmlEmail({
@@ -320,7 +335,7 @@ function validateAndGetByName(name, password) {
 
     check(name, NonEmptyString);
     check(password, NonEmptyString);
-    Permissions.check(Permissions.authenticated());
+    Permissions.authenticated()
 
     let roomId = false;
 

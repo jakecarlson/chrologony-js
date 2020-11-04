@@ -26,13 +26,13 @@ Games.PRECISION_OPTIONS = [
 ];
 
 Games.schema = new SimpleSchema({
-    roomId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    roomId: {type: String, max: 17},
     categoryId: {type: String, regEx: SimpleSchema.RegEx.Id},
     currentTurnId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     currentRound: {type: Number, defaultValue: 1},
-    currentLeaderId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
-    winnerId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
-    winPoints: {type: SimpleSchema.Integer, defaultValue: 0},
+    currentLeaderId: {type: String, max: 17, defaultValue: null, optional: true},
+    winnerId: {type: String, max: 17, defaultValue: null, optional: true},
+    winPoints: {type: SimpleSchema.Integer, defaultValue: 10},
     equalTurns: {type: Boolean, defaultValue: false},
     minDifficulty: {type: Number, defaultValue: 0},
     maxDifficulty: {type: Number, defaultValue: 0},
@@ -305,12 +305,12 @@ Meteor.methods({
             {
                 currentTurnId: RecordId,
                 currentRound: Match.Integer,
-                currentLeaderId: Match.OneOf(RecordId, null),
+                currentLeaderId: Match.OneOf(String, null),
             }
         );
-        Permissions.check(Permissions.authenticated());
-        checkPlayerIsInRoom(id);
 
+        Permissions.authenticated()
+        checkPlayerIsInRoom(id);
         Logger.log('Update Game: ' + id + ': ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
@@ -330,7 +330,7 @@ if (Meteor.isServer) {
             check(
                 attrs,
                 {
-                    roomId: RecordId,
+                    roomId: String,
                     categoryId: RecordId,
                     winPoints: Match.Integer,
                     equalTurns: Boolean,
@@ -347,11 +347,11 @@ if (Meteor.isServer) {
                     displayPrecision: NonEmptyString,
                 }
             );
-            Permissions.check(Permissions.authenticated());
+            Permissions.authenticated()
 
             // Set the room
             const room = Rooms.findOne(attrs.roomId);
-            Permissions.check(Permissions.owned(room));
+            Permissions.owned(room);
 
             // Check the precision values
             Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.comparisonPrecision));
@@ -380,11 +380,14 @@ if (Meteor.isServer) {
 
             Logger.audit('start', {collection: 'Games', documentId: gameId});
 
-            Meteor.call('room.setGame', attrs.roomId, gameId, function(err, updated) {
-                if (!err) {
-                    Logger.log("Updated Room: " + updated);
-                }
-            });
+            if (!Helpers.isAnonymous()) {
+                Meteor.call('room.setGame', attrs.roomId, gameId, function(err, updated) {
+                    if (!err) {
+                        Logger.log("Updated Room: " + updated);
+                    }
+                });
+            }
+
 
             Meteor.call('turn.next', gameId, function(err, id) {
                 if (!err) {
@@ -400,10 +403,12 @@ if (Meteor.isServer) {
         'game.end'(id, abandon = false) {
 
             check(id, RecordId);
-            Permissions.check(Permissions.authenticated());
+            Permissions.authenticated()
             checkPlayerIsInRoom(id);
             const game = Games.findOne(id);
-            Permissions.check((id == game.room().currentGameId));
+            if (!Helpers.isAnonymous()) {
+                Permissions.check((id == game.room().currentGameId));
+            }
 
             // Initialize game end attributes
             let attrs = {

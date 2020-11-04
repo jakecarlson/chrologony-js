@@ -114,8 +114,8 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
+        Permissions.authenticated()
+        Permissions.notGuest();
         Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.precision));
 
         Logger.log('Insert Category: ' + JSON.stringify(attrs));
@@ -145,9 +145,9 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
-        Permissions.check(Permissions.owned(Categories.findOne(attrs._id)));
+        Permissions.authenticated()
+        Permissions.notGuest();
+        Permissions.owned(Categories.findOne(attrs._id));
         Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.precision));
 
         Logger.log('Update Category: ' + attrs._id + ' ' + JSON.stringify(attrs));
@@ -176,9 +176,9 @@ Meteor.methods({
 
         check(id, RecordId);
         check(collaborators, [RecordId]);
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
-        Permissions.check(Permissions.owned(Categories.findOne(id)));
+        Permissions.authenticated()
+        Permissions.notGuest();
+        Permissions.owned(Categories.findOne(id));
 
         Logger.log('Update Category Collaborators: ' + id + ' ' + JSON.stringify(collaborators));
 
@@ -203,9 +203,9 @@ Meteor.methods({
     'category.remove'(id) {
 
         check(id, RecordId);
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
-        Permissions.check(Permissions.owned(Categories.findOne(id)));
+        Permissions.authenticated()
+        Permissions.notGuest();
+        Permissions.owned(Categories.findOne(id));
 
         Logger.log('Delete Category: ' + id);
 
@@ -221,8 +221,8 @@ Meteor.methods({
 
     'category.updateClueCounts'(ids) {
 
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
+        Permissions.authenticated()
+        Permissions.notGuest();
 
         ids.forEach(function(id) {
             const cluesCount = Clues.find({categories: id, active: true}).count();
@@ -248,8 +248,8 @@ if (Meteor.isServer) {
 
             check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
-            Permissions.check(Permissions.authenticated());
-            Permissions.check(Permissions.notGuest());
+            Permissions.authenticated()
+            Permissions.notGuest();
 
             const regex = new RegExp(query, 'i');
             const selector = {
@@ -278,8 +278,8 @@ if (Meteor.isServer) {
             }
 
             check(ids, [RecordId]);
-            Permissions.check(Permissions.authenticated());
-            Permissions.check(Permissions.notGuest());
+            Permissions.authenticated()
+            Permissions.notGuest();
 
             return Categories.find(
                 {

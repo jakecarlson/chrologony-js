@@ -1,34 +1,38 @@
 import { Meteor } from 'meteor/meteor';
-import {Categories} from "../api/Categories";
+import { Categories } from "../api/Categories";
 
 export const Permissions = {
 
-    check(allowed) {
+    check(allowed, ret = false) {
         if (!allowed) {
+            if (ret) {
+                return false;
+            }
             throw new Meteor.Error('not-authorized');
         }
+        return true;
     },
 
-    authenticated() {
-        return Meteor.userId();
+    authenticated(ret = false) {
+        return this.check(Meteor.userId(), ret);
     },
 
-    notGuest() {
-        return !Meteor.user().guest;
+    notGuest(ret = false) {
+        return this.check(!Meteor.user().guest, ret);
     },
 
-    owned(item) {
-        return (item.ownerId == Meteor.userId());
+    owned(item, ret = false) {
+        return this.check((item.ownerId == Meteor.userId()), ret);
     },
 
     clue: {
 
         canEdit(clue, categoryId) {
-            if (Permissions.owned(clue)) {
+            if (Permissions.owned(clue, true)) {
                 return true;
             }
             const category = Categories.findOne(categoryId);
-            if (category && Permissions.owned(category)) {
+            if (category && Permissions.owned(category, true)) {
                 return true;
             }
             return false;

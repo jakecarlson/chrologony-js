@@ -3,7 +3,6 @@ import { Template } from 'meteor/templating';
 import { LoadingState } from '../../modules/LoadingState';
 
 import { Categories } from '../../api/Categories';
-import { Games } from '../../api/Games';
 
 import './game.html';
 import '../precisions_selector.js';
@@ -29,7 +28,12 @@ Template.game.helpers({
     },
 
     winConditions() {
-        const selected = (this.game) ? this.game.winPoints : 0;
+        let selected = 0;
+        if (Helpers.isAnonymous()) {
+            selected = 10;
+        } else if (this.game.winPoints) {
+            selected = this.game.winPoints;
+        }
         return [
             {display: 'None (Owner Decides)', value: 0, selected: (0 == selected)},
             {display: '25 Cards', value: 25, selected: (25 == selected)},
@@ -118,6 +122,14 @@ Template.game.helpers({
         return (!this.game || (this.game && (this.game.minDifficulty <= 2) && (this.game.maxDifficulty >= 2)));
     },
 
+    compact() {
+        return this.compact;
+    },
+
+    notCompact() {
+        return !this.compact;
+    },
+
 });
 
 Template.game.events({
@@ -191,6 +203,7 @@ Template.game.events({
 
         Meteor.call('game.create', attrs, function(err, id) {
             if (!err) {
+                Session.set('currentGameId', id);
                 Logger.log("Created Game: " + id);
             }
             LoadingState.stop();

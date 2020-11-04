@@ -214,8 +214,8 @@ Meteor.methods({
                 categoryId: RecordId,
             }
         );
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
+        Permissions.authenticated()
+        Permissions.notGuest();
         const category = Categories.findOne(attrs.categoryId);
         Permissions.check((category && category.canAddClue()));
 
@@ -246,8 +246,8 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
+        Permissions.authenticated()
+        Permissions.notGuest();
         Permissions.check(Clues.findOne(attrs._id).canEdit(attrs.categoryId));
 
         // Convert date to ISODate
@@ -274,8 +274,8 @@ Meteor.methods({
 
         check(id, RecordId);
         check(categories, [RecordId]);
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
+        Permissions.authenticated()
+        Permissions.notGuest();
         Permissions.check(Clues.findOne(id).canSetCategories(categories))
 
         Logger.log('Update Clue Categories: ' + id + ' ' + JSON.stringify(categories));
@@ -301,8 +301,8 @@ Meteor.methods({
 
         check(ids, [RecordId]);
         check(categoryId, RecordId);
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
+        Permissions.authenticated()
+        Permissions.notGuest();
         ids.forEach(function(id) {
             Permissions.check(Clues.findOne(id).canSetCategories([categoryId]));
         });
@@ -327,8 +327,8 @@ Meteor.methods({
 
         check(ids, [RecordId]);
         check(categoryId, RecordId);
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
+        Permissions.authenticated()
+        Permissions.notGuest();
         ids.forEach(function(id) {
             Permissions.check(Clues.findOne(id).canSetCategories([categoryId]));
         });
@@ -367,8 +367,8 @@ Meteor.methods({
                 approximation: Match.OneOf(null, Boolean),
             }
         );
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
+        Permissions.authenticated()
+        Permissions.notGuest();
         Permissions.check(Clues.findOne(attrs._id).canEdit(attrs.categoryId));
 
         Logger.log('Update Clue: ' + attrs._id + ' ' + JSON.stringify(attrs));
@@ -397,9 +397,9 @@ Meteor.methods({
     'clue.remove'(id) {
 
         check(id, RecordId);
-        Permissions.check(Permissions.authenticated());
-        Permissions.check(Permissions.notGuest());
-        Permissions.check(Permissions.owned(Clues.findOne(id)));
+        Permissions.authenticated()
+        Permissions.notGuest();
+        Permissions.owned(Clues.findOne(id));
 
         Logger.log('Delete Clue: ' + id);
 

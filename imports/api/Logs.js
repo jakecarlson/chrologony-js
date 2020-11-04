@@ -7,7 +7,7 @@ export const Logs = new Mongo.Collection('logs');
 
 Logs.schema = new SimpleSchema({
     action: {type: String, max: 24, required: true},
-    userId: {type: String, regEx: SimpleSchema.RegEx.Id, required: true},
+    userId: {type: String, max: 17, required: true},
     collection: {type: String, max: 24, defaultValue: null, optional: true},
     documentId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     previousAttrs: {type: Object, defaultValue: null, optional: true, blackbox: true},
@@ -38,7 +38,7 @@ if (Meteor.isServer) {
 
         // Log an action
         'log'(attrs) {
-            Permissions.check(Permissions.authenticated());
+            Permissions.authenticated()
             attrs.userId = Meteor.userId();
             Logs.insert(attrs);
             return true;
