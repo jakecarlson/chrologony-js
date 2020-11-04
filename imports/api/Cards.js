@@ -17,7 +17,7 @@ export const Cards = new Mongo.Collection('cards');
 Cards.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
     turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    clueId: {type: String, min: 17, max: 24},
+    clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
     ownerId: {type: String, max: 17, optional: true},
     correct: {type: Boolean, defaultValue: null, optional: true},
     guessedAt: {type: Date, defaultValue: null, optional: true},

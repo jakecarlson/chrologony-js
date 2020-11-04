@@ -13,7 +13,7 @@ import { Promise } from "meteor/promise";
 export const Votes = new Mongo.Collection('votes');
 
 Votes.schema = new SimpleSchema({
-    clueId: {type: String, min: 17, max: 24},
+    clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
     ownerId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     value: {type: SimpleSchema.Integer, defaultValue: 0},
 });
