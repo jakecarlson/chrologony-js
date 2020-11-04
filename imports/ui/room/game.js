@@ -28,10 +28,8 @@ Template.game.helpers({
     },
 
     winConditions() {
-        let selected = 0;
-        if (Helpers.isAnonymous()) {
-            selected = 10;
-        } else if (this.game.winPoints) {
+        let selected = 10;
+        if (!Helpers.isAnonymous() && this.game.winPoints) {
             selected = this.game.winPoints;
         }
         return [
