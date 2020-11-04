@@ -284,8 +284,6 @@ FlowRouter.route('/embed', {
     title: getTitle(Meteor.settings.public.app.tagline),
     action(params, queryParams) {
         Logger.log("Route: embed");
-        // Logger.audit('join', {collection: 'Rooms', documentId: params.id});
-        // Logger.track('joinRoom', {roomId: params.id});
         BlazeLayout.render(
             'layout_embedded',
             {
