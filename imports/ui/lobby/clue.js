@@ -79,7 +79,7 @@ Template.clue.helpers({
     },
 
     canRemove() {
-        return Permissions.owned(this.clue);
+        return Permissions.owned(this.clue, true);
     },
 
 });

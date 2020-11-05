@@ -128,7 +128,7 @@ Helpers = {
     },
 
     isAnonymous() {
-        return (Meteor.userId() && (Meteor.user().currentRoomId == 'anonymous'));
+        return (Meteor.user() && (Meteor.user().currentRoomId == 'anonymous'));
     },
 
 };
