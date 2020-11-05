@@ -4,110 +4,89 @@
 
         {{#if dataReady}}
 
-            {{#if isNotAnonymous}}
+            <header class="clearfix mb-4">
 
-                <header class="clearfix mb-4">
+                <h1 class="float-sm-left text-white text-center mb-2 mb-sm-0" id="roomTitle">{{name}}</h1>
 
-                    <h1 class="float-sm-left text-white text-center mb-2 mb-sm-0" id="roomTitle">{{name}}</h1>
+                <div class="float-sm-right text-center mb-2" id="roomMenu">
 
-                    <div class="float-sm-right text-center mb-2" id="roomMenu">
-
-                        {{#if fullBoard}}
-                            <button
-                                    class="btn btn-light d-none d-lg-inline mr-2 board-columns"
-                                    disabled="{{loading}}"
-                            >
-                                <i class="fa fa-columns"></i>
-                                Columns
-                            </button>
-                        {{else}}
-                            <button
-                                    class="btn btn-light d-none d-lg-inline mr-2 board-full"
-                                    disabled="{{loading}}"
-                            >
-                                <i class="fa fa-arrows-h"></i>
-                                Full Width
-                            </button>
-                        {{/if}}
-
-                        {{#if isOwner}}
-                            <div class="dropdown d-inline-block mr-2">
-                                <button class="btn btn-light" type="button" id="invitePlayersButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-paper-plane"></i>
-                                    <span class="d-none d-md-inline">Invite Players</span>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right invite-menu" aria-labelledby="invitePlayersButton">
-                                    {{#if password}}
-                                        <a
-                                                class="dropdown-item password"
-                                                data-clipboard-text="{{password}}"
-                                                data-placement="top"
-                                                data-trigger="manual"
-                                                title="Room Password copied to your clipboard!"
-                                                href="{{password}}"
-                                        >
-                                            <i class="fa fa-key"></i>
-                                            Password: <strong>{{password}}</strong>
-                                        </a>
-                                    {{/if}}
-                                    <a
-                                            class="dropdown-item link"
-                                            data-clipboard-text="{{link}}"
-                                            data-placement="top"
-                                            data-trigger="manual"
-                                            title="Room URL copied to your clipboard!"
-                                            href="{{link}}"
-                                    >
-                                        <i class="fa fa-link"></i>
-                                        Copy Room Link
-                                    </a>
-                                    <a
-                                            class="dropdown-item invite"
-                                            data-toggle="modal"
-                                            data-target=".invite-modal"
-                                            href="#"
-                                    >
-                                        <i class="fa fa-envelope"></i>
-                                        Send Invitation
-                                    </a>
-                                </div>
-                            </div>
-                        {{/if}}
-
+                    {{#if fullBoard}}
                         <button
-                                class="btn btn-light d-inline-block leave"
+                                class="btn btn-light d-none d-lg-inline mr-2 board-columns"
                                 disabled="{{loading}}"
                         >
-                            <i class="fa fa-sign-out"></i>
-                            <span class="d-none d-md-inline">Leave Room</span>
+                            <i class="fa fa-columns"></i>
+                            Columns
                         </button>
+                    {{else}}
+                        <button
+                                class="btn btn-light d-none d-lg-inline mr-2 board-full"
+                                disabled="{{loading}}"
+                        >
+                            <i class="fa fa-arrows-h"></i>
+                            Full Width
+                        </button>
+                    {{/if}}
 
-                    </div>
+                    {{#if isOwner}}
+                        <div class="dropdown d-inline-block mr-2">
+                            <button class="btn btn-light" type="button" id="invitePlayersButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-paper-plane"></i>
+                                <span class="d-none d-md-inline">Invite Players</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right invite-menu" aria-labelledby="invitePlayersButton">
+                                {{#if password}}
+                                    <a
+                                            class="dropdown-item password"
+                                            data-clipboard-text="{{password}}"
+                                            data-placement="top"
+                                            data-trigger="manual"
+                                            title="Room Password copied to your clipboard!"
+                                            href="{{password}}"
+                                    >
+                                        <i class="fa fa-key"></i>
+                                        Password: <strong>{{password}}</strong>
+                                    </a>
+                                {{/if}}
+                                <a
+                                        class="dropdown-item link"
+                                        data-clipboard-text="{{link}}"
+                                        data-placement="top"
+                                        data-trigger="manual"
+                                        title="Room URL copied to your clipboard!"
+                                        href="{{link}}"
+                                >
+                                    <i class="fa fa-link"></i>
+                                    Copy Room Link
+                                </a>
+                                <a
+                                        class="dropdown-item invite"
+                                        data-toggle="modal"
+                                        data-target=".invite-modal"
+                                        href="#"
+                                >
+                                    <i class="fa fa-envelope"></i>
+                                    Send Invitation
+                                </a>
+                            </div>
+                        </div>
+                    {{/if}}
 
-                </header>
+                    <button
+                            class="btn btn-light d-inline-block leave"
+                            disabled="{{loading}}"
+                    >
+                        <i class="fa fa-sign-out"></i>
+                        <span class="d-none d-md-inline">Leave Room</span>
+                    </button>
 
-            {{/if}}
+                </div>
+
+            </header>
 
             <div class="{{#if columnsBoard}}row{{/if}}">
 
                 <div class="{{#if columnsBoard}}col-lg-9{{/if}}" id="roomMain">
-
-                    {{#if showEmbedHeader}}
-                        <div id="embedHeader" class="px-3 py-3 bg-primary">
-                            <h1 id="embedTitle" class="mx-sm-auto mb-0">{{appName}}</h1>
-                            <h2
-                                id="embedTagline"
-                                class="text-secondary"
-                                data-toggle="popover"
-                                data-placement="top"
-                                data-content="{{appDescription}}"
-                            >
-                                {{appTagline}}
-                                <i class="fa fa-question-circle"></i>
-                            </h2>
-                            <a id="embedBtn" href="{{appUrl}}" target="_blank" class="btn btn-outline-secondary">Sign Up Now</a>
-                        </div>
-                    {{/if}}
 
                     {{> board room=currentRoom game=currentGame turn=currentTurn}}
 
@@ -129,89 +108,41 @@
 
                 </div>
 
-                {{#if isNotAnonymous}}
+                <div class="{{#if columnsBoard}}col-lg-3{{/if}}" id="roomSide">
 
-                    <div class="{{#if columnsBoard}}col-lg-3{{/if}}" id="roomSide">
+                    {{> players_list room=currentRoom game=currentGame turn=currentTurn}}
 
-                        {{> players_list room=currentRoom game=currentGame turn=currentTurn}}
+                    {{#if showGameEnd}}
+                        <div class="text-center mb-4">
+                            <button class="btn btn-sm btn-secondary mr-2 end-game" disabled="{{loading}}">
+                                <i class="fa fa-stop-circle"></i>
+                                <span>End Game</span>
+                            </button>
+                            <button class="btn btn-sm btn-light abandon-game" disabled="{{loading}}">
+                                <i class="fa fa-remove"></i>
+                                <span>Abandon Game</span>
+                            </button>
+                        </div>
+                    {{/if}}
 
-                        {{#if showGameEnd}}
-                            <div class="text-center mb-4">
-                                <button class="btn btn-sm btn-secondary mr-2 end-game" disabled="{{loading}}">
-                                    <i class="fa fa-stop-circle"></i>
-                                    <span>End Game</span>
-                                </button>
-                                <button class="btn btn-sm btn-light abandon-game" disabled="{{loading}}">
-                                    <i class="fa fa-remove"></i>
-                                    <span>Abandon Game</span>
-                                </button>
-                            </div>
-                        {{/if}}
+                    {{#if isOwner}}
 
-                        {{#if isOwner}}
+                        {{> game room=currentRoom game=currentGame turn=currentTurn}}
 
-                            {{> game room=currentRoom game=currentGame turn=currentTurn}}
-
-                            <div class="text-center pt-4">
-                                <button class="btn btn-danger destroy" disabled="{{loading}}">
-                                    <i class="fa fa-trash"></i>
-                                    <span>Delete Room</span>
-                                </button>
-                            </div>
-
-                        {{/if}}
-
-                    </div>
-
-                {{/if}}
-
-            </div>
-
-            <div class="modal fade" id="clueMore" tabindex="-1" role="dialog" aria-labelledby="clueMoreTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="clueMoreTitle">{{moreName}}: More Info</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                        <div class="text-center pt-4">
+                            <button class="btn btn-danger destroy" disabled="{{loading}}">
+                                <i class="fa fa-trash"></i>
+                                <span>Delete Room</span>
                             </button>
                         </div>
 
-                        <div class="modal-body">
+                    {{/if}}
 
-                            {{#if hasMoreImage}}
-                                <a href="{{moreImageUrl}}" target="blank" class="float-left mr-4 mb-2"><img src="{{moreThumbnailUrl}}" class="more-img"></a>
-                            {{/if}}
-
-                            {{#if hasMoreAttr 'moreInfo'}}
-                                <p class="more-info">{{moreAttr 'moreInfo'}}</p>
-                            {{/if}}
-
-                            {{#if hasMoreLocation}}
-                                <div class="more-map mb-3">
-                                    <iframe
-                                        width="100%"
-                                        height="100%"
-                                        frameborder="0" style="border:0"
-                                        src="{{moreMapUrl}}" allowfullscreen>
-                                    </iframe>
-                                </div>
-                            {{/if}}
-
-                            {{#if hasMoreAttr 'externalId'}}
-                                <span class="more-id float-left text-muted" title="External ID">{{moreAttr 'externalId'}}</span>
-                            {{/if}}
-
-                            {{#if hasMoreAttr 'externalUrl'}}
-                                <a href="{{moreAttr 'externalUrl'}}" class="more-url float-right" target="_blank">Read More <i class="fa fa-external-link"></i></a>
-                            {{/if}}
-
-                        </div>
-
-                    </div>
                 </div>
+
             </div>
+
+            {{> clue_more clue=clueMore}}
 
         {{/if}}
 

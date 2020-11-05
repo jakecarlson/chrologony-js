@@ -4,6 +4,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { Session } from 'meteor/session';
 import { Flasher } from '../flasher';
 import { LoadingState } from '../../modules/LoadingState';
+import Clipboard from "clipboard";
 
 import '../../api/Users';
 import { Clues } from '../../api/Clues';
@@ -16,7 +17,7 @@ import './player_cards.js';
 import './board.js';
 import './players_list.js';
 import './game.js';
-import Clipboard from "clipboard";
+import './clue_more.js';
 
 // GAME SOUNDS
 const AUDIO = {
@@ -59,7 +60,7 @@ Template.room.onCreated(function roomOnCreated() {
             const roomId = user.currentRoomId;
 
             // Redirect the user back to lobby if they aren't authenticated to this room
-            if (!Helpers.isAnonymous() && (roomId != FlowRouter.getParam('id'))) {
+            if (roomId != FlowRouter.getParam('id')) {
                 Flasher.set('danger', "You are not authorized to view that room.");
                 leaveRoom();
             }
@@ -70,14 +71,14 @@ Template.room.onCreated(function roomOnCreated() {
                 subscribe(this, 'players', this.room.get()._id);
                 subscribe(this, 'games', this.room.get()._id);
 
-                if (this.room.get().gameId()) {
+                if (this.room.get().currentGameId) {
 
-                    subscribe(this, 'turns', this.room.get().gameId());
-                    subscribe(this, 'cards', this.room.get().gameId());
-                    subscribe(this, 'cardClues', this.room.get().gameId());
-                    subscribe(this, 'votes', this.room.get().gameId());
+                    subscribe(this, 'turns', this.room.get().currentGameId);
+                    subscribe(this, 'cards', this.room.get().currentGameId);
+                    subscribe(this, 'cardClues', this.room.get().currentGameId);
+                    subscribe(this, 'votes', this.room.get().currentGameId);
 
-                    this.game.set(Games.findOne(this.room.get().gameId()));
+                    this.game.set(Games.findOne(this.room.get().currentGameId));
                     if (this.game.get() && this.game.get().currentTurnId) {
                         this.turn.set(Turns.findOne(this.game.get().currentTurnId));
                     }
@@ -172,8 +173,8 @@ Template.room.onCreated(function roomOnCreated() {
 
         added: function(cardId, fields) {
             if (self.initialized && self.room.get()) {
-                subscribe(Meteor, 'cards', self.room.get().gameId());
-                subscribe(Meteor, 'cardClues', self.room.get().gameId());
+                subscribe(Meteor, 'cards', self.room.get().currentGameId);
+                subscribe(Meteor, 'cardClues', self.room.get().currentGameId);
                 playSound(self.sounds.card.draw);
                 if (fields.ownerId == Meteor.userId()) {
                     $('.player-cards-wrapper').animate({
@@ -246,51 +247,12 @@ Template.room.helpers({
         return Template.instance().room.get().link();
     },
 
-    moreName() {
-        const clue = Template.instance().clueMore.get();
-        return (clue) ? Formatter.date(clue.date) : null;
-    },
-
-    moreAttr(attr) {
-        return moreAttr(Template.instance(), attr);
-    },
-
-    hasMoreAttr(attr) {
-        return hasMoreAttr(Template.instance(), attr);
-    },
-
-    hasMoreImage() {
-        return hasMoreImage(Template.instance());
-    },
-
-    moreImageUrl() {
-        const clue = Template.instance().clueMore.get();
-        return (clue.imageUrl) ? clue.imageUrl : clue.thumbnailUrl;
-    },
-
-    moreThumbnailUrl() {
-        const clue = Template.instance().clueMore.get();
-        return (clue.thumbnailUrl) ? clue.thumbnailUrl : clue.imageUrl;
-    },
-
-    hasMoreLocation() {
-        return hasMoreLocation(Template.instance());
-    },
-
-    moreMapUrl() {
-        const i = Template.instance();
-        const coords = moreAttr(i, 'latitude') + ',' + moreAttr(i, 'longitude');
-        let url = 'https://www.google.com/maps/embed/v1/place?key=' + Meteor.settings.public.maps.apiKey + '&';
-        url += 'zoom=' + Meteor.settings.public.maps.zoom + '&';
-        url += 'maptype=' + Meteor.settings.public.maps.type + '&';
-        url += 'center=' + coords + '&';
-        url += 'q=' + coords;
-        return url;
+    clueMore() {
+        return Template.instance().clueMore.get();
     },
 
     showPlayerCards() {
         return (
-            !Helpers.isAnonymous() &&
             Template.instance().game.get() &&
             (Template.instance().room.get().players().count() > 1)
         );
@@ -310,23 +272,11 @@ Template.room.helpers({
     },
 
     fullBoard() {
-        return (Helpers.isAnonymous() || Session.get('fullBoard'));
+        return Session.get('fullBoard');
     },
 
     columnsBoard() {
-        return (!Helpers.isAnonymous() && !Session.get('fullBoard'));
-    },
-
-    isNotAnonymous() {
-        return !Helpers.isAnonymous();
-    },
-
-    showEmbedHeader() {
-        return Helpers.isAnonymous() && !FlowRouter.getQueryParam('hide_header');
-    },
-
-    embedTitle() {
-        return Meteor.settings.public.app.name + ': ' + Meteor.settings.public.app.tagline;
+        return !Session.get('fullBoard');
     },
 
 });
@@ -431,36 +381,6 @@ function leaveRoom() {
 function subscribe(ctx, name, arg) {
     Logger.log('Subscribe: ' + name);
     ctx.subscribe(name, arg);
-}
-
-function hasMoreImage(i) {
-    const clue = i.clueMore.get();
-    if (clue) {
-        return (clue.thumbnailUrl || clue.imageUrl);
-    }
-    return false;
-}
-
-function hasMoreLocation(i) {
-    const clue = i.clueMore.get();
-    if (clue) {
-        return (clue.latitude && clue.longitude);
-    }
-    return false;
-}
-
-function hasMoreAttr(i, attr) {
-    const clue = i.clueMore.get();
-    return (clue && clue[attr]);
-}
-
-function moreAttr(i, attr) {
-    const clue = i.clueMore.get();
-    if (clue) {
-        return clue[attr];
-    } else {
-        return null;
-    }
 }
 
 function getCurrentTurn(t) {

@@ -44,14 +44,6 @@ Rooms.helpers({
         return Games.findOne(gameId);
     },
 
-    gameId() {
-        if (Helpers.isAnonymous()) {
-            return Session.get('currentGameId');
-        } else {
-            return this.currentGameId;
-        }
-    },
-
     players() {
         return Meteor.users.find(
             {
@@ -141,12 +133,12 @@ Meteor.methods({
 
         // Check to see if it's this user's turn currently and end it if so -- but only if it's a multiplayer game
         const room = Meteor.user().currentRoom();
-        if (room && room.gameId() && (room.players().count() > 1)) {
+        if (room && room.currentGameId && (room.players().count() > 1)) {
             const game = room.currentGame();
             if (game.currentTurnId) {
                 const turn = game.currentTurn();
                 if (turn.ownerId == userId) {
-                    Meteor.call('turn.next', room.gameId(), function(err, id) {
+                    Meteor.call('turn.next', room.currentGameId, function(err, id) {
                         if (!err) {
                             Logger.log("Start Turn: " + id);
                         }

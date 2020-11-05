@@ -201,7 +201,9 @@ Template.game.events({
 
         Meteor.call('game.create', attrs, function(err, id) {
             if (!err) {
-                Session.set('currentGameId', id);
+                if (Helpers.isAnonymous()) {
+                    Session.set('currentGameId', id);
+                }
                 Logger.log("Created Game: " + id);
             }
             LoadingState.stop();

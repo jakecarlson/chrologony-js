@@ -284,12 +284,7 @@ FlowRouter.route('/embed', {
     title: getTitle(Meteor.settings.public.app.tagline),
     action(params, queryParams) {
         Logger.log("Route: embed");
-        BlazeLayout.render(
-            'layout_embedded',
-            {
-                main: 'room',
-            }
-        );
+        BlazeLayout.render('embed');
     }
 });
 

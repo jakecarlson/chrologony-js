@@ -1,7 +1,7 @@
 import { LoadingState } from "../modules/LoadingState";
 import './layout_authenticated.js';
 import './layout_unauthenticated.js';
-import './layout_embedded.js';
+import './embed.js';
 
 import './body.html';
 
