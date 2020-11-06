@@ -2,6 +2,7 @@ import { Meteor } from "meteor/meteor";
 import { SSR, Template } from 'meteor/meteorhacks:ssr';
 import { Session } from "meteor/session";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+import { Cards } from "../api/Cards";
 
 Helpers = {
 
@@ -129,6 +130,20 @@ Helpers = {
 
     isAnonymous() {
         return (Meteor.user() && (Meteor.user().currentRoomId == 'anonymous'));
+    },
+
+    subscribe(ctx, name, arg) {
+        Logger.log('Subscribe: ' + name);
+        ctx.subscribe(name, arg);
+    },
+    
+    showClueMore(e, i) {
+        const card = $(e.target).closest('.game-card');
+        const id = card.attr('data-id');
+        i.clueMore.set(Cards.findOne(id).clue());
+        if (i.clueMore.get()) {
+            $('#clueMore').modal('show');
+        }
     },
 
 };

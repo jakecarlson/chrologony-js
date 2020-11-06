@@ -11,8 +11,6 @@ import './room/clue_more.js';
 
 import { Games } from "../api/Games";
 import { Turns } from "../api/Turns";
-import { Cards } from "../api/Cards";
-import { Clues } from "../api/Clues";
 
 Template.embed.onCreated(function embedOnCreated() {
 
@@ -34,23 +32,21 @@ Template.embed.onCreated(function embedOnCreated() {
 
         LoadingState.start();
 
-        this.subscribe('rooms', 'anonymous');
+        Helpers.subscribe(this, 'rooms', 'anonymous');
 
         const user = Meteor.user({fields: {currentRoomId: 1}});
         if (user) {
 
-            const roomId = user.currentRoomId;
-
             this.room.set(user.currentRoom());
             if (this.room.get()) {
 
-                subscribe(this, 'games', this.room.get()._id);
+                Helpers.subscribe(this, 'games', this.room.get()._id);
 
                 if (Session.get('currentGameId')) {
 
-                    subscribe(this, 'turns', Session.get('currentGameId'));
-                    subscribe(this, 'cards', Session.get('currentGameId'));
-                    subscribe(this, 'cardClues', Session.get('currentGameId'));
+                    Helpers.subscribe(this, 'turns', Session.get('currentGameId'));
+                    Helpers.subscribe(this, 'cards', Session.get('currentGameId'));
+                    Helpers.subscribe(this, 'cardClues', Session.get('currentGameId'));
 
                     this.game.set(Games.findOne(Session.get('currentGameId')));
                     if (this.game.get() && this.game.get().currentTurnId) {
@@ -84,55 +80,7 @@ Template.embed.onCreated(function embedOnCreated() {
 
     });
 
-    let self = this;
-    Games.find().observeChanges({
-
-        added: function(gameId, fields) {
-            if (self.initialized) {
-                self.game.set(Games.findOne(gameId));
-            }
-        },
-
-    });
-
-    Turns.find().observeChanges({
-
-        added: function(turnId, fields) {
-            if (self.initialized) {
-                const turn = Turns.findOne(turnId);
-                self.turn.set(turn);
-            }
-        },
-
-    });
-
-    Cards.find().observeChanges({
-
-        added: function(cardId, fields) {
-            if (self.initialized && self.room.get()) {
-                subscribe(Meteor, 'cards', Session.get('currentGameId'));
-                subscribe(Meteor, 'cardClues', Session.get('currentGameId'));
-                if (fields.ownerId == Meteor.userId()) {
-                    $('.player-cards-wrapper').animate({
-                        scrollLeft: 0
-                    }, 250);
-                }
-            }
-        },
-
-        changed(cardId, fields) {
-            if (self.initialized && (fields.correct != null)) {
-                const card = Cards.findOne(cardId);
-                Meteor.call('clue.get', card.clueId, function(err, clue) {
-                    if (!err) {
-                        Logger.log("Update Clue Data: " + card.clueId);
-                        Clues._collection.update(card.clueId, {$set: clue});
-                    }
-                });
-            }
-        },
-
-    });
+    GameObserver.observe(this, true);
 
 });
 
@@ -170,18 +118,6 @@ Template.embed.helpers({
 
 Template.embed.events({
 
-    'click .more'(e, i) {
-        const card = $(e.target).closest('.game-card');
-        const id = card.attr('data-id');
-        i.clueMore.set(Cards.findOne(id).clue());
-        if (i.clueMore.get()) {
-            $('#clueMore').modal('show');
-        }
-    },
+    'click .more': Helpers.showClueMore,
 
 });
-
-function subscribe(ctx, name, arg) {
-    Logger.log('Subscribe: ' + name);
-    ctx.subscribe(name, arg);
-}

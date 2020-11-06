@@ -5,7 +5,7 @@
 }
 
 /* card overrides */
-.card {
+.card:not(.game-card) {
   box-shadow: 0 0 .25rem .05rem $white;
 }
 @media (min-width: 400px) {

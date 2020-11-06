@@ -7,10 +7,8 @@ import { LoadingState } from '../../modules/LoadingState';
 import Clipboard from "clipboard";
 
 import '../../api/Users';
-import { Clues } from '../../api/Clues';
 import { Games } from '../../api/Games';
 import { Turns } from '../../api/Turns';
-import { Cards } from "../../api/Cards";
 
 import './room.html';
 import './player_cards.js';
@@ -18,28 +16,6 @@ import './board.js';
 import './players_list.js';
 import './game.js';
 import './clue_more.js';
-
-// GAME SOUNDS
-const AUDIO = {
-
-    game: {
-        start: '/game-start.mp4',
-        win: '/game-win.mp4',
-        lose: '/game-lose.mp4',
-    },
-
-    turn: {
-        start: '/turn-start.mp4',
-        end: '/turn-end.mp4',
-    },
-
-    card: {
-        draw: '/card-draw.mp4',
-        right: '/card-right.mp4',
-        wrong: '/card-wrong.mp4',
-    },
-
-};
 
 Template.room.onCreated(function roomOnCreated() {
 
@@ -68,15 +44,15 @@ Template.room.onCreated(function roomOnCreated() {
             this.room.set(user.currentRoom());
             if (this.room.get()) {
 
-                subscribe(this, 'players', this.room.get()._id);
-                subscribe(this, 'games', this.room.get()._id);
+                Helpers.subscribe(this, 'players', this.room.get()._id);
+                Helpers.subscribe(this, 'games', this.room.get()._id);
 
                 if (this.room.get().currentGameId) {
 
-                    subscribe(this, 'turns', this.room.get().currentGameId);
-                    subscribe(this, 'cards', this.room.get().currentGameId);
-                    subscribe(this, 'cardClues', this.room.get().currentGameId);
-                    subscribe(this, 'votes', this.room.get().currentGameId);
+                    Helpers.subscribe(this, 'turns', this.room.get().currentGameId);
+                    Helpers.subscribe(this, 'cards', this.room.get().currentGameId);
+                    Helpers.subscribe(this, 'cardClues', this.room.get().currentGameId);
+                    Helpers.subscribe(this, 'votes', this.room.get().currentGameId);
 
                     this.game.set(Games.findOne(this.room.get().currentGameId));
                     if (this.game.get() && this.game.get().currentTurnId) {
@@ -119,89 +95,8 @@ Template.room.onCreated(function roomOnCreated() {
 
     });
 
-    this.sounds = {};
-    for (const type in AUDIO) {
-        this.sounds[type] = {};
-        for (const sound in AUDIO[type]) {
-            this.sounds[type][sound] = new buzz.sound(AUDIO[type][sound]);
-        }
-    }
-
-    let self = this;
-    Games.find().observeChanges({
-
-        added: function(gameId, fields) {
-            if (self.initialized) {
-                self.game.set(Games.findOne(gameId));
-                playSound(self.sounds.game.start);
-            }
-        },
-
-        changed(gameId, fields) {
-            if (self.initialized && (fields.endedAt != null)) {
-                if (fields.winnerId == Meteor.userId()) {
-                    playSound(self.sounds.game.win);
-                } else {
-                    playSound(self.sounds.game.lose);
-                }
-            }
-        },
-
-    });
-
-    Turns.find().observeChanges({
-
-        added: function(turnId, fields) {
-            if (self.initialized) {
-                const turn = Turns.findOne(turnId);
-                self.turn.set(turn);
-                if (turn.ownerId == Meteor.userId()) {
-                    playSound(self.sounds.turn.start);
-                }
-            }
-        },
-
-        changed(turnId, fields) {
-            if (self.initialized && (fields.endedAt != null)) {
-                playSound(self.sounds.turn.end);
-            }
-        },
-
-    });
-
-    Cards.find().observeChanges({
-
-        added: function(cardId, fields) {
-            if (self.initialized && self.room.get()) {
-                subscribe(Meteor, 'cards', self.room.get().currentGameId);
-                subscribe(Meteor, 'cardClues', self.room.get().currentGameId);
-                playSound(self.sounds.card.draw);
-                if (fields.ownerId == Meteor.userId()) {
-                    $('.player-cards-wrapper').animate({
-                        scrollLeft: 0
-                    }, 250);
-                }
-            }
-        },
-
-        changed(cardId, fields) {
-            if (self.initialized && (fields.correct != null)) {
-                const card = Cards.findOne(cardId);
-                Meteor.call('clue.get', card.clueId, function(err, clue) {
-                    if (!err) {
-                        Logger.log("Update Clue Data: " + card.clueId);
-                        Clues._collection.update(card.clueId, {$set: clue});
-                        if (card.correct) {
-                            playSound(self.sounds.card.right);
-                        } else {
-                            playSound(self.sounds.card.wrong);
-                        }
-                    }
-                });
-            }
-        },
-
-    });
+    SoundManager.init();
+    GameObserver.observe(this);
 
 });
 
@@ -319,14 +214,7 @@ Template.room.events({
         });
     },
 
-    'click .more'(e, i) {
-        const card = $(e.target).closest('.game-card');
-        const id = card.attr('data-id');
-        i.clueMore.set(Cards.findOne(id).clue());
-        if (i.clueMore.get()) {
-            $('#clueMore').modal('show');
-        }
-    },
+    'click .more': Helpers.showClueMore,
 
     'submit #invitePlayer'(e, i) {
 
@@ -378,21 +266,10 @@ function leaveRoom() {
     });
 }
 
-function subscribe(ctx, name, arg) {
-    Logger.log('Subscribe: ' + name);
-    ctx.subscribe(name, arg);
-}
-
 function getCurrentTurn(t) {
     return t.instance().turn.get();
 }
 
 function isOwner(t) {
     return (t.instance().room.get() && (t.instance().room.get().ownerId == Meteor.userId()));
-}
-
-function playSound(sound) {
-    if (!Session.get('muted')) {
-        sound.play();
-    }
 }

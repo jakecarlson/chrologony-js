@@ -4,6 +4,8 @@ import '../imports/startup/template-helpers';
 import '../imports/modules/Logger';
 import '../imports/modules/Formatter';
 import '../imports/modules/Helpers';
+import '../imports/modules/SoundManager';
+import '../imports/modules/GameObserver';
 
 import './routes';
 import '../imports/ui/body';

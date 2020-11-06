@@ -54,45 +54,6 @@
   padding: 0.75rem 1.25rem
 }
 
-/* embed */
-#embed .card:not(.game-card) {
-  box-shadow: none;
-}
-#embedHeader {
-  position: relative;
-}
-#embedTitle {
-  width: 17.5rem;
-  height: 4rem;
-  background-position: left top;
-  background-size: 100% auto;
-}
-#embedTitle > a {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-#embedTagline {
-  position: absolute;
-  left: 1rem;
-  top: 4.15rem;
-  font-size: small;
-}
-@media (min-width: 576px) {
-  #embedTagline {
-    left: 50%;
-    margin-left: -8.75rem;
-  }
-}
-#embedTagline .fa {
-  cursor: pointer;
-}
-#embedBtn {
-  position: absolute;
-  top: 2rem;
-  right: 1rem;
-}
-
 /* board */
 .board-title {
   font-size: xx-large;
@@ -323,12 +284,6 @@
 }
 
 /* game */
-#embed #game {
-  float: left;
-}
-#embed #gameCategoryId {
-  max-width: 12rem;
-}
 #gameOptionsToggle {
   font-size: medium;
   display: block;
