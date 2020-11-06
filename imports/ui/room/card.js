@@ -152,8 +152,8 @@ Template.card.helpers({
         return dots;
     },
 
-    isNotGuestOrAnonymous() {
-        return (!Helpers.isGuest() && !Helpers.isAnonymous());
+    isAnonymous() {
+        return Helpers.isAnonymous();
     },
 
     showMenu() {

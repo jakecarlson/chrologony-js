@@ -138,6 +138,7 @@ Helpers = {
     },
     
     showClueMore(e, i) {
+        e.preventDefault();
         const card = $(e.target).closest('.game-card');
         const id = card.attr('data-id');
         i.clueMore.set(Cards.findOne(id).clue());
