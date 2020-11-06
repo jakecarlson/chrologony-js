@@ -19,11 +19,22 @@ Accounts.config({
 if (Meteor.isServer) {
 
     Accounts.onCreateUser(function(options, user) {
+        let name = 'Unknown';
         if (user.username) {
-            if (!user.profile) {
-                user.profile = {};
+            name = user.username;
+        } else {
+            for (const service in user.services) {
+                if (service.name) {
+                    name = service.name;
+                    break;
+                }
             }
-            user.profile.name = user.username;
+        }
+        if (!user.profile) {
+            user.profile = {};
+        }
+        if (!user.profile.name) {
+            user.profile.name = name;
         }
         return user;
     });
