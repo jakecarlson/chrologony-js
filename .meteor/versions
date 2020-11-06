@@ -73,6 +73,7 @@ meteortesting:mocha-core@7.1.2
 minifier-css@1.5.3
 minifier-js@2.6.0
 minimongo@1.6.0
+mixmax:smart-disconnect@0.0.4
 mobile-experience@1.1.0
 mobile-status-bar@1.1.0
 modern-browsers@0.1.5
