@@ -1,17 +1,15 @@
 <template name="layout_unauthenticated">
 
     <main id="auth" class="container-fluid mb-4">
-        <h1 id="title" class="mb-4"><a href="{{homeLink}}">{{appName}}</a></h1>
-        <h2
-            id="tagline"
-            class="text-secondary mb-4"
+        <h1
+            id="title"
+            class="mb-4"
             data-toggle="popover"
             data-placement="top"
             data-content="{{appDescription}}"
         >
-            {{appTagline}}
-            <i class="fa fa-question-circle"></i>
-        </h2>
+            <a href="{{homeLink}}">{{appName}}: {{appTagline}}</a>
+        </h1>
         {{> flasher}}
         {{> Template.dynamic template=main}}
         {{> footer}}

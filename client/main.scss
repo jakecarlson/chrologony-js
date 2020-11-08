@@ -13,11 +13,16 @@ body#__blaze-root {
 @media (orientation: landscape) {
     body#__blaze-root {
         background-size: 100% auto;
+        //padding: 0;
+        //padding-left: env(safe-area-inset-left);
+        //padding-right: env(safe-area-inset-right);
     }
 }
 @media (orientation: portrait) {
     body#__blaze-root {
         background-size: auto 100%;
+        //padding: 0;
+        //padding-top: env(safe-area-inset-top);
     }
 }
 

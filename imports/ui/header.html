@@ -1,12 +1,12 @@
 <template name="header">
 
-    <div class="container-fluid clearfix mb-2 mb-sm-4" id="header">
+    <div class="container-fluid clearfix mt-2 mb-4" id="header">
 
         <div class="float-left">
             <h1 id="title"><a href="{{lobbyLink}}">{{appName}}</a></h1>
         </div>
 
-        <div id="menu" class="float-right mt-2">
+        <div id="menu" class="float-right">
 
             {{#if currentUser}}
 
@@ -17,7 +17,7 @@
                 <div class="dropdown d-inline-block" id="profile">
                     <button class="btn btn-link text-white" type="button" id="menuToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="d-none d-sm-inline-block">{{profileName}}</span>
-                        <i class="fa fa-bars ml-2"></i>
+                        <i class="fa fa-bars ml-sm-2"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="menuToggle">
                         <span class="dropdown-header d-sm-none">{{profileName}}</span>

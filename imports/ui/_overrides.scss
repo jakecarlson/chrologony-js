@@ -6,7 +6,7 @@
 
 /* card overrides */
 .card:not(.game-card) {
-  box-shadow: 0 0 .25rem .05rem $white;
+  box-shadow: 0 0 .1rem .02rem $white;
 }
 @media (min-width: 400px) {
   .card-small {

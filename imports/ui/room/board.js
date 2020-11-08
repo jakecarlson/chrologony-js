@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Sortable } from 'sortablejs';
+import Sortable from 'sortablejs';
 import { LoadingState } from '../../modules/LoadingState';
 
 // import { Insult } from "insult";
