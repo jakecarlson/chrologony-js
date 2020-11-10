@@ -34,6 +34,7 @@ App.appendToConfig(`
     <host name="localhost:3000" />
   </universal-links>
   <allow-navigation href="https://www.google.com/recaptcha/*" />
+  <allow-navigation href="http://www.google.com/recaptcha/*" />
   <allow-navigation href="https://www.google.com/maps/*" />
 `);
 
