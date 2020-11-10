@@ -64,3 +64,7 @@ Template.registerHelper('fbAppId', function() {
 Template.registerHelper('doctype', function() {
     return "<!DOCTYPE html>";
 });
+
+Template.registerHelper('mobileApp', function() {
+    return Meteor.isCordova;
+});
