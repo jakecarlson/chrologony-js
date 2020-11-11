@@ -5,7 +5,7 @@
       {
         "appID": "UBJNW65P8U.com.chrologony",
         "paths": [
-          "/"
+          "/*"
         ]
       }
     ]
