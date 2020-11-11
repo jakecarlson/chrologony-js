@@ -30,13 +30,25 @@ App.configurePlugin('cordova-plugin-googleplus', {
 // Add custom tags for a particular PhoneGap/Cordova plugin to the end of the
 // generated config.xml. 'Universal Links' is shown as an example here.
 App.appendToConfig(`
+
   <universal-links>
-    <host name="localhost:3000" />
+    <host name="localhost:3000" scheme="http" event="ulink" />
+    <host name="app.chrologony.com" scheme="https" event="ulink" />
+    <ios-team-id value="UBJNW65P8U" />
   </universal-links>
+  
+  <preference name="AndroidLaunchMode" value="singleInstance" />
+  
   <allow-navigation href="https://www.google.com/recaptcha/*" />
   <allow-navigation href="http://www.google.com/recaptcha/*" />
   <allow-navigation href="https://www.google.com/maps/*" />
+  
 `);
+
+// Setup deeplink
+// App.configurePlugin('cordova-plugin-customurlscheme', {
+//     URL_SCHEME: 'chrologony'
+// });
 
 App.icons({
 

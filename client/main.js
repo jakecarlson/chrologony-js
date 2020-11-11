@@ -16,5 +16,13 @@ import 'bootstrap4-toggle';
 import 'bootstrap4-toggle/css/bootstrap4-toggle.min.css';
 
 Meteor.startup(function() {
+
     Logger.init();
+
+    document.addEventListener('deviceready', function() {
+        universalLinks.subscribe('ulink', function(e) {
+            Logger.log(e);
+        });
+    }, false);
+
 });
