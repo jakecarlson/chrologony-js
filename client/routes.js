@@ -8,6 +8,13 @@ import { Categories } from '../imports/api/Categories';
 import { Rooms } from '../imports/api/Rooms';
 import { Flasher } from '../imports/ui/flasher';
 
+document.addEventListener('deviceready', function() {
+    universalLinks.subscribe('ulink', function(e) {
+        console.log(e);
+        // FlowRouter.go();
+    });
+}, false);
+
 AccountsTemplates.configure({
     defaultTemplate: 'atForm',
     defaultLayout: 'layout_unauthenticated',

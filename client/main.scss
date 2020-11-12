@@ -7,8 +7,9 @@ html {
 $muted: $gray-600;
 
 #body {
-    background: $primary url("/background.png") no-repeat center center fixed;
+    background: $primary url("/background.png") no-repeat center center;
     background-size: 100% auto;
+    background-attachment: fixed;
 }
 @media (orientation: landscape) {
     #body {

@@ -32,6 +32,7 @@ App.configurePlugin('cordova-plugin-googleplus', {
 App.appendToConfig(`
 
   <universal-links>
+    <host name="localhost:3000" scheme="http" event="ulink" />
     <host name="app.chrologony.com" scheme="https" event="ulink" />
     <ios-team-id value="UBJNW65P8U" />
   </universal-links>

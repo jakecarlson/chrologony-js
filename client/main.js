@@ -19,10 +19,4 @@ Meteor.startup(function() {
 
     Logger.init();
 
-    document.addEventListener('deviceready', function() {
-        universalLinks.subscribe('ulink', function(e) {
-            Logger.log(e);
-        });
-    }, false);
-
 });
