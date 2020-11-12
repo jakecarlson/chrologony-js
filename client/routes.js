@@ -10,8 +10,8 @@ import { Flasher } from '../imports/ui/flasher';
 
 document.addEventListener('deviceready', function() {
     universalLinks.subscribe('ulink', function(e) {
-        console.log(e);
-        // FlowRouter.go();
+        Logger.log('Universal Link: ' + JSON.stringify(e));
+        FlowRouter.go(e.path);
     });
 }, false);
 
