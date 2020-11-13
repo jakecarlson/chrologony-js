@@ -11,7 +11,7 @@ import { Flasher } from '../imports/ui/flasher';
 document.addEventListener('deviceready', function() {
     universalLinks.subscribe('ulink', function(e) {
         Logger.log('Universal Link: ' + JSON.stringify(e));
-        FlowRouter.go(e.path);
+        FlowRouter.go(e.path, {}, e.params);
     });
 }, false);
 
