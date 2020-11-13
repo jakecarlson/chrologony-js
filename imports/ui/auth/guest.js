@@ -41,6 +41,8 @@ Template.guest.events({
                 Flasher.set('danger', 'There was an error logging you in as a guest. Please try again.');
             } else {
                 Meteor.connection.setUserId(id);
+                Logger.audit('login', {guest: true});
+                Logger.track('login', {guest: true});
                 Helpers.redirectToPrevious('lobby');
             }
             LoadingState.stop();

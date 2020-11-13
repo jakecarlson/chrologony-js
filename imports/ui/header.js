@@ -1,6 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
+import { AccountsTemplates } from 'meteor/useraccounts:core';
+import { LoadingState } from '../modules/LoadingState';
+import { Flasher } from "./flasher";
 
 import './header.html';
 
@@ -42,10 +45,6 @@ Template.header.helpers({
         return FlowRouter.path('categories');
     },
 
-    logoutLink() {
-        return FlowRouter.path('logout');
-    },
-
     isMuted() {
         return Session.get('muted');
     },
@@ -71,6 +70,19 @@ Template.header.helpers({
 Template.header.events({
 
     'click .external-link': Helpers.handleExternalLink,
+
+    'click .logout-link'(e, i) {
+        LoadingState.start(e);
+        e.preventDefault();
+        console.log('logout');
+        Logger.audit('logout', {guest: Helpers.isGuest()});
+        Logger.track('logout', {guest: Helpers.isGuest()});
+        AccountsTemplates.logout(function() {
+            Flasher.set('success', 'You have successfully logged out.');
+            FlowRouter.go('home');
+            LoadingState.stop();
+        });
+    },
 
     'click a'(e, i) {
         if (TourGuide.isActive()) {

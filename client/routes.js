@@ -28,11 +28,8 @@ AccountsTemplates.configureRoute('signIn', {
     title: getTitle(Meteor.settings.public.app.tagline),
     redirect: function() {
         if (Meteor.user()) {
-            const previousRoute = FlowRouter.current().oldRoute;
-            if (previousRoute && (previousRoute.name != 'logout')) {
-                Logger.audit('login');
-                Logger.track('login');
-            }
+            Logger.audit('login', {guest: false});
+            Logger.track('login', {guest: false});
             Helpers.redirectToPrevious('lobby');
         }
     },
@@ -44,9 +41,6 @@ AccountsTemplates.configureRoute('signUp', {
     title: getTitle('Sign Up'),
     redirect: function() {
         if (Meteor.user()) {
-            if (Meteor.user().email()) {
-
-            }
             Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>');
             Logger.audit('signUp');
             Logger.track('signUp');
@@ -143,19 +137,6 @@ FlowRouter.route('/terms', {
                 main: 'terms',
             }
         );
-    }
-});
-
-FlowRouter.route('/logout', {
-    name: 'logout',
-    title: getTitle('Logout'),
-    action(params, queryParams) {
-        Logger.log("Route: logout");
-        Logger.audit('logout');
-        Logger.track('logout');
-        AccountsTemplates.logout();
-        Flasher.set('success', 'You have successfully logged out.');
-        FlowRouter.go('home');
     }
 });
 
