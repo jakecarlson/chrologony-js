@@ -13,15 +13,6 @@
 }
 #header {
   padding-right: 3px;
-  //background: $white;
-}
-#headerLinks {
-  line-height: 3.45rem;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-#headerLinks a:hover {
-  color: $white !important;
 }
 #mute {
   font-size: large;
@@ -35,9 +26,6 @@
 {
   text-decoration: none !important;
 }
-#profile .btn-link {
-  /*font-weight: bold;*/
-}
 #profile .btn-link i {
   font-size: x-large;
   position: relative;
@@ -45,5 +33,5 @@
 }
 #profile .dropdown-menu {
   min-width: 11.5rem;
-  //transform: translate3d(-65px, 40px, 0px) !important;
+  transform: translate3d(-65px, 40px, 0px) !important;
 }

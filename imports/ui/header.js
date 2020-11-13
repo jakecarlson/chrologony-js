@@ -54,6 +54,18 @@ Template.header.helpers({
         return !Meteor.user().guest;
     },
 
+    privacyLink() {
+        return FlowRouter.path('privacy');
+    },
+
+    termsLink() {
+        return FlowRouter.path('terms');
+    },
+
+    documentationLink() {
+        return Meteor.settings.public.app.documentationUrl;
+    },
+
 });
 
 Template.header.events({

@@ -4,14 +4,7 @@
 
         <div class="mt-4 pt-2">
             <p class="text-center text-secondary mb-2">Share {{appName}}</p>
-            <div
-                    class="sharethis-inline-share-buttons"
-                    data-url="{{appUrl}}"
-                    data-title="{{appTitle}}"
-                    data-image="{{appImage}}"
-                    data-description="{{appDescription}}"
-                    data-message="{{appDescription}} Play now at {{appUrl}}!"
-            ></div>
+            {{> share}}
         </div>
 
         <p class="text-secondary text-center mt-4 mb-0">
@@ -25,7 +18,5 @@
         </div>
 
     </div>
-
-
 
 </template>
