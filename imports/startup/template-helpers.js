@@ -78,6 +78,6 @@ Template.registerHelper('termsLink', function() {
     return FlowRouter.path('terms');
 });
 
-Template.registerHelper('documentationLink', function() {
-    return Meteor.settings.public.app.documentationUrl;
+Template.registerHelper('supportLink', function() {
+    return Meteor.settings.public.app.supportUrl;
 });

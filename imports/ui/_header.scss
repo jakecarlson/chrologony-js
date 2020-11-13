@@ -33,5 +33,13 @@
 }
 #profile .dropdown-menu {
   min-width: 11.5rem;
-  transform: translate3d(-65px, 40px, 0px) !important;
+  //transform: translate3d(-65px, 40px, 0px) !important;
+}
+#profile .about-item {
+  color: $muted;
+}
+#profile .about-item:hover,
+#profile .about-item:active
+{
+  color: $white;
 }

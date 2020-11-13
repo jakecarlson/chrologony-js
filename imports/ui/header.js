@@ -62,8 +62,8 @@ Template.header.helpers({
         return FlowRouter.path('terms');
     },
 
-    documentationLink() {
-        return Meteor.settings.public.app.documentationUrl;
+    supportLink() {
+        return Meteor.settings.public.app.supportUrl;
     },
 
 });
