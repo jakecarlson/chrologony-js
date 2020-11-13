@@ -60,7 +60,7 @@ Rooms.helpers({
     },
 
     link() {
-        return Meteor.absoluteUrl(FlowRouter.path('joinByToken', {id: this._id, token: this.token}));
+        return Meteor.absoluteUrl(FlowRouter.path('room', {id: this._id, token: this.token}));
     },
 
 });
