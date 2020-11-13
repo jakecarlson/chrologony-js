@@ -22,4 +22,6 @@ Template.footer.helpers({
 
 Template.footer.events({
 
+    'click .external-link': Helpers.handleExternalLink,
+
 });

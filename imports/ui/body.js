@@ -1,4 +1,6 @@
+import { Template } from "meteor/templating";
 import { LoadingState } from "../modules/LoadingState";
+
 import './layout_authenticated.js';
 import './layout_unauthenticated.js';
 import './embed.js';
@@ -31,5 +33,9 @@ Template.body.onCreated(function bodyOnCreated() {
         }
 
     });
+
+});
+
+Template.body.events({
 
 });

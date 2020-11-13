@@ -155,4 +155,11 @@ Helpers = {
         }
     },
 
+    handleExternalLink(e, i) {
+        e.preventDefault();
+        const url = $(e.target).closest('a').attr('href');
+        Logger.log('Open External URL: ' + url);
+        window.open(url, '_system');
+    },
+
 };

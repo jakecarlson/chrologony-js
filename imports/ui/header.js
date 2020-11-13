@@ -70,6 +70,8 @@ Template.header.helpers({
 
 Template.header.events({
 
+    'click .external-link': Helpers.handleExternalLink,
+
     'click a'(e, i) {
         if (TourGuide.isActive()) {
             if ($(e.target).hasClass('categories-link')) {

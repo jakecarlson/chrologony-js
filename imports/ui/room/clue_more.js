@@ -51,6 +51,8 @@ Template.clue_more.helpers({
 
 Template.clue_more.events({
 
+    'click .external-link': Helpers.handleExternalLink,
+
 });
 
 function hasImage(i) {
