@@ -30,7 +30,6 @@ AccountsTemplates.configureRoute('signIn', {
         if (Meteor.user()) {
             const previousRoute = FlowRouter.current().oldRoute;
             if (previousRoute && (previousRoute.name != 'logout')) {
-
                 Logger.audit('login');
                 Logger.track('login');
             }
@@ -295,7 +294,7 @@ new FlowRouterTitle(FlowRouter);
 function redirectToHome(ctx, redirect) {
     if (!Meteor.userId()) {
         Session.set('redirect', FlowRouter.current().path);
-        redirect(FlowRouter.path('home'));
+        redirect(FlowRouter.path('home'), {}, {redirect: FlowRouter.current().path});
     }
 }
 
