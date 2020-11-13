@@ -54,9 +54,23 @@ Template.header.helpers({
         return !Meteor.user().guest;
     },
 
+    privacyLink() {
+        return FlowRouter.path('privacy');
+    },
+
+    termsLink() {
+        return FlowRouter.path('terms');
+    },
+
+    supportLink() {
+        return Meteor.settings.public.app.supportUrl;
+    },
+
 });
 
 Template.header.events({
+
+    'click .external-link': Helpers.handleExternalLink,
 
     'click a'(e, i) {
         if (TourGuide.isActive()) {

@@ -14,7 +14,7 @@
                 <div class="modal-body">
 
                     {{#if hasImage}}
-                        <a href="{{imageUrl}}" target="blank" class="float-left mr-4 mb-2"><img src="{{thumbnailUrl}}" class="more-img"></a>
+                        <a href="{{imageUrl}}" class="external-link float-left mr-4 mb-2"><img src="{{thumbnailUrl}}" class="more-img"></a>
                     {{/if}}
 
                     {{#if hasAttr 'moreInfo'}}
@@ -37,7 +37,7 @@
                     {{/if}}
 
                     {{#if hasAttr 'externalUrl'}}
-                        <a href="{{attr 'externalUrl'}}" class="more-url float-right" target="_blank">Read More <i class="fa fa-external-link"></i></a>
+                        <a href="{{attr 'externalUrl'}}" class="more-url external-link float-right" target="_blank">Read More <i class="fa fa-external-link"></i></a>
                     {{/if}}
 
                 </div>

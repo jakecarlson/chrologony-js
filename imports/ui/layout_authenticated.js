@@ -13,7 +13,7 @@ import './lobby/lobby.js';
 import './room/room.js';
 import './child_manager.js';
 import './header.js';
-import './footer.js';
+import './share.js';
 import './flasher.js';
 
 import { Clues } from "../api/Clues";

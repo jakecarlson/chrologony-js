@@ -1,3 +1,4 @@
+import { Meteor } from "meteor/meteor";
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { LoadingState } from "../modules/LoadingState";
 
@@ -22,7 +23,6 @@ import './auth/o-atSocial.html';
 import './auth/o-atTermsLink.html';
 import './auth/o-atTitle.html';
 import './auth/o-inputs.html';
-import {Meteor} from "meteor/meteor";
 
 Template['o-atError'].replaces('atError');
 Template['o-atForm'].replaces('atForm');
@@ -50,6 +50,9 @@ Template['o-atHiddenInput'].replaces('atHiddenInput');
 Template.layout_unauthenticated.onRendered(function layout_unauthenticatedOnCreated() {
     if (Meteor.userId()) {
         FlowRouter.go('lobby');
+    }
+    if (FlowRouter.getQueryParam('redirect')) {
+        Session.set('redirect', FlowRouter.getQueryParam('redirect'));
     }
     LoadingState.stop();
 });

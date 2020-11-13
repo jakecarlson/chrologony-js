@@ -1,5 +1,6 @@
 import { LoadingState } from '../modules/LoadingState';
 import {Meteor} from "meteor/meteor";
+import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 Template.registerHelper('collectionNotEmpty', function(collection) {
     return (collection.count() > 0);
@@ -63,4 +64,20 @@ Template.registerHelper('fbAppId', function() {
 
 Template.registerHelper('doctype', function() {
     return "<!DOCTYPE html>";
+});
+
+Template.registerHelper('mobileApp', function() {
+    return Meteor.isCordova;
+});
+
+Template.registerHelper('privacyLink', function() {
+    return FlowRouter.path('privacy');
+});
+
+Template.registerHelper('termsLink', function() {
+    return FlowRouter.path('terms');
+});
+
+Template.registerHelper('supportLink', function() {
+    return Meteor.settings.public.app.supportUrl;
 });

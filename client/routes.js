@@ -8,6 +8,13 @@ import { Categories } from '../imports/api/Categories';
 import { Rooms } from '../imports/api/Rooms';
 import { Flasher } from '../imports/ui/flasher';
 
+document.addEventListener('deviceready', function() {
+    universalLinks.subscribe('ulink', function(e) {
+        Logger.log('Universal Link: ' + JSON.stringify(e));
+        FlowRouter.go(e.path, {}, e.params);
+    });
+}, false);
+
 AccountsTemplates.configure({
     defaultTemplate: 'atForm',
     defaultLayout: 'layout_unauthenticated',
@@ -23,7 +30,6 @@ AccountsTemplates.configureRoute('signIn', {
         if (Meteor.user()) {
             const previousRoute = FlowRouter.current().oldRoute;
             if (previousRoute && (previousRoute.name != 'logout')) {
-
                 Logger.audit('login');
                 Logger.track('login');
             }
@@ -236,47 +242,40 @@ FlowRouter.route('/categories', {
     }
 });
 
-FlowRouter.route('/rooms/:id', {
+FlowRouter.route('/rooms/:id/:token?', {
+
     name: 'room',
+
     title(params, query, data) {
         const room = Rooms.findOne(params.id);
         return getTitle(room ? room.name : 'unknown');
     },
-    triggersEnter: [redirectToHome],
-    action(params, queryParams) {
-        Logger.log("Route: room");
-        Logger.audit('join', {collection: 'Rooms', documentId: params.id});
-        Logger.track('joinRoom', {roomId: params.id});
-        BlazeLayout.render(
-            'layout_authenticated',
-            {
-                main: 'room',
-            }
-        );
-    }
-});
 
-FlowRouter.route('/join/:id/:token', {
-    name: 'joinByToken',
-    title: getTitle('Join Room by Token'),
     triggersEnter: [redirectToHome],
+
     action(params, queryParams) {
-        Logger.log("Route: joinByToken");
-        Meteor.call('room.joinByToken', params.id, params.token, function(err, id) {
-            if (err) {
-                Logger.log(err);
-                Flasher.set('danger', "Room token is not valid.");
-                FlowRouter.go('lobby');
-            } else {
-                Logger.log("Room Set: " + id);
-                Meteor.subscribe('rooms');
-                Flasher.set('success', "Success! Invite others to join.");
-                Logger.audit('joinByToken', {collection: 'Rooms', documentId: params.id});
-                Logger.track('joinRoomByToken', {roomId: params.id});
-                FlowRouter.go('room', {id: id});
-            }
-        });
+
+        Logger.log("Route: room");
+
+        if (params.token) {
+            Meteor.call('room.joinByToken', params.id, params.token, function(err, id) {
+                if (err) {
+                    Logger.log(err);
+                    Flasher.set('danger', "Room token is not valid.");
+                    FlowRouter.go('lobby');
+                } else {
+                    Logger.log("Room Set: " + id);
+                    Meteor.subscribe('rooms');
+                    Flasher.set('success', "Success! Invite others to join using any of the options under the 'Invite Players' button.");
+                    renderRoom(params);
+                }
+            });
+        } else {
+            renderRoom(params);
+        }
+
     }
+
 });
 
 FlowRouter.route('/embed', {
@@ -294,10 +293,21 @@ new FlowRouterTitle(FlowRouter);
 function redirectToHome(ctx, redirect) {
     if (!Meteor.userId()) {
         Session.set('redirect', FlowRouter.current().path);
-        redirect(FlowRouter.path('home'));
+        redirect(FlowRouter.path('home'), {}, {redirect: FlowRouter.current().path});
     }
 }
 
 function getTitle(page) {
     return Meteor.settings.public.app.name + ': ' + page;
+}
+
+function renderRoom(params) {
+    Logger.audit('join', {collection: 'Rooms', documentId: params.id});
+    Logger.track('joinRoom', {roomId: params.id, token: params.token});
+    BlazeLayout.render(
+        'layout_authenticated',
+        {
+            main: 'room',
+        }
+    );
 }

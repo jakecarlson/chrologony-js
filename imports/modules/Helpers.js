@@ -116,12 +116,20 @@ Helpers = {
     },
 
     redirectToPrevious(defaultRoute = 'lobby') {
-        const redirect = Session.get('redirect');
+        let redirect = false;
+        if (FlowRouter.getQueryParam('redirect')) {
+            redirect = FlowRouter.getQueryParam('redirect');
+        } else if (Session.get('redirect')) {
+            redirect = Session.get('redirect');
+        }
         if (redirect) {
+            Logger.log('Redirect To: ' + redirect);
             delete Session.keys['redirect'];
             FlowRouter.go(redirect);
+        } else {
+            Logger.log('Redirect To: ' + defaultRoute);
+            FlowRouter.go(defaultRoute);
         }
-        FlowRouter.go(defaultRoute);
     },
 
     isGuest() {
@@ -145,6 +153,13 @@ Helpers = {
         if (i.clueMore.get()) {
             $('#clueMore').modal('show');
         }
+    },
+
+    handleExternalLink(e, i) {
+        e.preventDefault();
+        const url = $(e.target).closest('a').attr('href');
+        Logger.log('Open External URL: ' + url);
+        window.open(url, '_system');
     },
 
 };

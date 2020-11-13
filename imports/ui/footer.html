@@ -4,28 +4,19 @@
 
         <div class="mt-4 pt-2">
             <p class="text-center text-secondary mb-2">Share {{appName}}</p>
-            <div
-                    class="sharethis-inline-share-buttons"
-                    data-url="{{appUrl}}"
-                    data-title="{{appTitle}}"
-                    data-image="{{appImage}}"
-                    data-description="{{appDescription}}"
-                    data-message="{{appDescription}} Play now at {{appUrl}}!"
-            ></div>
+            {{> share}}
         </div>
 
         <p class="text-secondary text-center mt-4 mb-0">
-            Made with &#9889; by <a href="https://jakecarlson.com" class="text-secondary" target="_blank">Jake Carlson</a>. &copy; {{copyright}}.
+            Made with &#9889; by <a href="https://jakecarlson.com" class="text-secondary external-link">Jake Carlson</a>. &copy; {{copyright}}.
         </p>
 
         <div id="footerLinks" class=" pb-4 text-secondary text-center">
             <a href="{{privacyLink}}" class="text-secondary">Privacy Policy</a> |
             <a href="{{termsLink}}" class="text-secondary">Terms of Use</a> |
-            <a href="{{documentationLink}}" class="text-secondary" target="_blank">Documentation</a>
+            <a href="{{supportLink}}" class="text-secondary external-link">Get Help</a>
         </div>
 
     </div>
-
-
 
 </template>

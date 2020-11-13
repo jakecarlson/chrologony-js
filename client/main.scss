@@ -6,17 +6,18 @@ html {
 
 $muted: $gray-600;
 
-body#__blaze-root {
-    background: $primary url("/background.png") no-repeat center center fixed;
-    background-size: auto 100%;
+#body {
+    background: $primary url("/background.png") no-repeat center center;
+    background-size: 100% auto;
+    background-attachment: fixed;
 }
 @media (orientation: landscape) {
-    body#__blaze-root {
+    #body {
         background-size: 100% auto;
     }
 }
 @media (orientation: portrait) {
-    body#__blaze-root {
+    #body {
         background-size: auto 100%;
     }
 }
