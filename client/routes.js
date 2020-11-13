@@ -258,7 +258,6 @@ FlowRouter.route('/rooms/:id/:token?', {
         Logger.log("Route: room");
 
         if (params.token) {
-            console.log(params.token);
             Meteor.call('room.joinByToken', params.id, params.token, function(err, id) {
                 if (err) {
                     Logger.log(err);
