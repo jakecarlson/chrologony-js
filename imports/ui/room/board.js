@@ -131,7 +131,7 @@ Template.board.helpers({
                 if (this.game.cardTime) {
                     return '';
                 }
-                return "Move the purple card to the correct spot on the timeline.";
+                return "Move the blue card to the correct spot on the timeline.";
                 break;
             case 'correct':
                 let str = "Correct! ";
@@ -402,7 +402,7 @@ function getStatus(turn) {
 function getColor(turn) {
     switch(getStatus(turn)) {
         case 'guessing':
-            return "primary";
+            return "active";
             break;
         case 'correct':
             return "success";

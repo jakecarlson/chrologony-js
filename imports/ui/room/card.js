@@ -87,7 +87,7 @@ Template.card.helpers({
             if (this.card.turnId == this.turn._id) {
                 str += ' turn';
                 if (isCurrent(this.turn, this.card)) {
-                    str += ' current bg-primary text-white'
+                    str += ' current bg-active text-white'
                 } else {
                     if (this.card.correct) {
                         str += ' correct bg-warning';

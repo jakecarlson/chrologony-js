@@ -93,14 +93,14 @@ TourGuide = {
                     preventInteraction: true,
                     placement: "left",
                     title: "The Board",
-                    content: "The Board shows what's going on for the current player's turn. Everyone can see it, but only the player whose turn it is can take any actions. The only exception is that the room owner can end another player's turn on his/her behalf to keep the game moving. The title bar and border of the Board will become purple when it's your turn.",
+                    content: "The Board shows what's going on for the current player's turn. Everyone can see it, but only the player whose turn it is can take any actions. The only exception is that the room owner can end another player's turn on his/her behalf to keep the game moving. The title bar and border of the Board will become blue when it's your turn.",
                 },
                 {
                     element: "#board",
                     onShown: this.wait,
                     placement: "left",
                     title: "Submit a Guess",
-                    content: "The currently active card is purple. Move it by clicking / tapping on the arrows, or by dragging it to where you think it belongs in the timeline. Note that you can view any non-active card by moving your mouse over or tapping it. When the active card is in the right place, click / tap on the 'Submit Guess' button.",
+                    content: "The currently active card is blue. Move it by clicking / tapping on the arrows, or by dragging it to where you think it belongs in the timeline. Note that you can view any non-active card by moving your mouse over or tapping it. When the active card is in the right place, click / tap on the 'Submit Guess' button.",
                 },
                 {
                     element: "#board",

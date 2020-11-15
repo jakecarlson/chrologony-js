@@ -59,9 +59,24 @@
   font-size: xx-large;
   color: $muted;
 }
+#board.border-active {
+  border-color: $blue !important;
+}
+.bg-active {
+  background-color: $blue !important;
+}
+.btn.btn-active,
+.btn.btn-active.disabled,
+.btn.btn-active:disabled
+{
+  color: #fff;
+  background-color: $blue;
+  border-color: $blue;
+}
+
 .bg-success .board-title,
 .bg-danger .board-title,
-.bg-primary .board-title
+.bg-active .board-title
 {
   color: $white;
 }
