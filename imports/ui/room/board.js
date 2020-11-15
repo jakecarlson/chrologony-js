@@ -59,11 +59,12 @@ Template.board.helpers({
             if (this.turn.ownerId == Meteor.userId()) {
                 title += 'Your';
             } else {
-                if (this.turn.ownerId) {
-                    title += this.turn.owner().profile.name + "'s";
-                } else {
-                    title += "Unknown's";
+                let name = 'Unknown';
+                const owner = this.turn.owner();
+                if (owner && owner.profile && owner.profile.name) {
+                    name = owner.profile.name;
                 }
+                title += name + "'s";
             }
             title += ' Turn';
             return title;
@@ -272,7 +273,7 @@ Template.board.events({
 
     'click .submit-guess'(e, i) {
 
-        Session.set('cardSubmitting', true);
+        Session.set('waiting', true);
         LoadingState.start();
         let pos = {};
         let currentCardPos = null;
@@ -370,14 +371,14 @@ function drawCard(turnId, t) {
 }
 
 function endTurn(game) {
-    Session.set('turnEnding', true);
+    Session.set('waiting', true);
     Logger.log('End Turn: ' + game.currentTurnId);
     const gameId = game._id;
     Meteor.call('turn.next', gameId, function(err, id) {
         if (!err) {
             Logger.log("Start Turn: " + id);
         }
-        Session.set('turnEnding', false);
+        Session.set('waiting', false);
         LoadingState.stop();
         TourGuide.resume();
     });
@@ -385,7 +386,7 @@ function endTurn(game) {
 
 function getStatus(turn) {
     if (turn) {
-        if (Session.get('cardSubmitting') || Session.get('turnEnding') || turn.currentCardId) {
+        if (Session.get('waiting') || turn.currentCardId) {
             return 'guessing';
         } else {
             if (turn.lastCardCorrect === true) {

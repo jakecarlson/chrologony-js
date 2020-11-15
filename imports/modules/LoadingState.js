@@ -13,7 +13,7 @@ export const LoadingState = {
     },
 
     stop() {
-        if (!Session.get('cardSubmitting') && !Session.get('turnEnding')) {
+        if (!Session.get('waiting')) {
             Session.set('loading', false);
             const started = this.started;
             this.started = null;
@@ -22,7 +22,7 @@ export const LoadingState = {
     },
 
     active() {
-        return (Session.get('loading') || Session.get('cardSubmitting') || Session.get('turnEnding'));
+        return (Session.get('loading') || Session.get('waiting'));
     },
 
 };
