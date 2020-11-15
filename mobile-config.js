@@ -11,8 +11,9 @@ App.info({
 // Set PhoneGap/Cordova preferences.
 App.setPreference('BackgroundColor', '0xFF593196');
 App.setPreference('StatusBarOverlaysWebView', false);
-App.setPreference('StatusBarBackgroundColor', '#593196');
-App.setPreference('StatusBarStyle', 'blacktranslucent');
+// App.setPreference('StatusBarBackgroundColor', '#593196');
+App.setPreference('StatusBarBackgroundColor', '#000000');
+App.setPreference('StatusBarStyle', 'lightcontent');
 App.setPreference('HideKeyboardFormAccessoryBar', true);
 App.setPreference('Orientation', 'default');
 App.setPreference('Orientation', 'all', 'ios');
