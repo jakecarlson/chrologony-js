@@ -12,7 +12,7 @@ App.info({
 App.setPreference('BackgroundColor', '0xFF593196');
 App.setPreference('StatusBarOverlaysWebView', false);
 App.setPreference('StatusBarBackgroundColor', '#593196');
-App.setPreference('StatusBarStyle', 'lightcontent');
+App.setPreference('StatusBarStyle', 'blacktranslucent');
 App.setPreference('HideKeyboardFormAccessoryBar', true);
 App.setPreference('Orientation', 'default');
 App.setPreference('Orientation', 'all', 'ios');
