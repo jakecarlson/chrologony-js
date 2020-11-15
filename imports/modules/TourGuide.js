@@ -1,4 +1,5 @@
 import '/node_modules/bootstrap-tourist/bootstrap-tourist.css';
+import {LoadingState} from "./LoadingState";
 const Tour = require('bootstrap-tourist');
 
 TourGuide = {
@@ -180,6 +181,7 @@ TourGuide = {
 
         // Start the tour
         this.tour.restart();
+        LoadingState.stop();
 
     },
 
@@ -192,6 +194,7 @@ TourGuide = {
         if (this.isActive()) {
             this.paused = false;
             this.tour.next();
+            LoadingState.stop();
         }
     },
 

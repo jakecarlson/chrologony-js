@@ -41,9 +41,6 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
     this.autorun(() => {
 
-        // FlowRouter.watchPathChange();
-
-
         if (Categories.findOne(this.filters.get('categoryId'))) {
 
             LoadingState.start();
@@ -93,6 +90,8 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
             }
 
+        } else {
+            LoadingState.stop();
         }
 
     });

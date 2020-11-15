@@ -1,12 +1,16 @@
 <template name="o-atError">
 
-    <div class="at-error alert alert-danger alert-dismissible">
-        {{#each error}}
-            <p>{{errorText}}</p>
-        {{/each}}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+    {{#if hasErrors}}
+        <div class="at-error alert alert-danger alert-dismissible">
+            {{#each error}}
+                <p>{{errorText}}</p>
+            {{/each}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {{else}}
+        {{> flasher}}
+    {{/if}}
 
 </template>

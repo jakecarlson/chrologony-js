@@ -74,26 +74,25 @@ Template.header.events({
     'click .logout-link'(e, i) {
         LoadingState.start(e);
         e.preventDefault();
-        console.log('logout');
         Logger.audit('logout', {guest: Helpers.isGuest()});
         Logger.track('logout', {guest: Helpers.isGuest()});
-        AccountsTemplates.logout(function() {
-            Flasher.set('success', 'You have successfully logged out.');
-            FlowRouter.go('home');
-            LoadingState.stop();
-        });
+        AccountsTemplates.logout();
     },
 
     'click a'(e, i) {
-        if (TourGuide.isActive()) {
-            if ($(e.target).hasClass('categories-link')) {
-                FlowRouter.go('categories');
-                TourGuide.resume();
-            } else if ($(e.target).hasClass('clues-link')) {
-                FlowRouter.go('clues');
-                TourGuide.resume();
-            } else {
-                e.preventDefault();
+        const url = Meteor.absoluteUrl($(e.target).closest('a').attr('href'));
+        if (url != window.location.href) {
+            LoadingState.start();
+            if (TourGuide.isActive()) {
+                if ($(e.target).hasClass('categories-link')) {
+                    FlowRouter.go('categories');
+                    TourGuide.resume();
+                } else if ($(e.target).hasClass('clues-link')) {
+                    FlowRouter.go('clues');
+                    TourGuide.resume();
+                } else {
+                    e.preventDefault();
+                }
             }
         }
     },

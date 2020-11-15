@@ -4,6 +4,7 @@ import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { Flasher } from "../flasher";
 
 import './o-atForm.html';
+import './o-atError.js';
 import './guest.js';
 
 Template.atForm.onCreated(function atFormOnCreated() {
@@ -51,8 +52,8 @@ Template.atForm.helpers({
         return (!AccountsTemplates.options.forbidClientAccountCreation && !Meteor.user() && (state !== "signUp"));
     },
 
-    isLogin() {
-        return (AccountsTemplates.getState() == 'signIn');
+    showGuestLogin() {
+        return ['signIn','signUp'].includes(AccountsTemplates.getState());
     },
 
 });

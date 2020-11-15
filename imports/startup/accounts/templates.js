@@ -1,7 +1,8 @@
+import { Meteor } from "meteor/meteor";
 import { AccountsTemplates } from 'meteor/useraccounts:core';
-import { Flasher } from "../../ui/flasher";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
-import {Meteor} from "meteor/meteor";
+import { LoadingState } from "../../modules/LoadingState";
+import { Flasher } from "../../ui/flasher";
 
 AccountsTemplates.configure({
 
@@ -14,7 +15,11 @@ AccountsTemplates.configure({
     homeRoutePath: 'lobby',
 
     // Hooks
-    // onLogoutHook: myLogoutFunc,
+    onLogoutHook: function() {
+        Flasher.set('success', 'You have successfully logged out.');
+        FlowRouter.go('home');
+        LoadingState.stop();
+    },
     // onSubmitHook: mySubmitFunc,
     // preSignUpHook: myPreSubmitFunc,
     // postSignUpHook: myPostSignUpFunc

@@ -15,6 +15,7 @@ export const Flasher = {
     },
 
     set(type, msg) {
+        Logger.log('Flasher [' + type + ']: ' + msg);
         Session.set('flasher', {type: type, msg: msg});
         if (type == 'danger') {
             LoadingState.stop();

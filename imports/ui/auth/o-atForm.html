@@ -2,9 +2,7 @@
 
     {{#unless hide}}
 
-        {{#if showError}}
-            {{> atError}}
-        {{/if}}
+        {{> atError}}
 
         <div class="card card-{{size}} border-primary mx-auto mb-4">
 
@@ -45,7 +43,7 @@
 
         </div>
 
-        {{#if isLogin}}
+        {{#if showGuestLogin}}
             {{> guest}}
         {{/if}}
 
