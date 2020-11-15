@@ -5,6 +5,7 @@ import { Games } from "../api/Games";
 import { Turns } from "../api/Turns";
 import { Cards } from "../api/Cards";
 import { Clues } from "../api/Clues";
+import {LoadingState} from "./LoadingState";
 
 GameObserver = {
 
@@ -79,6 +80,8 @@ GameObserver = {
                                 SoundManager.play('cardWrong');
                             }
                         }
+                        Session.set('cardSubmitting', false);
+                        LoadingState.stop();
                     });
                 }
             },

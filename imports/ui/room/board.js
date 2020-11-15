@@ -272,6 +272,7 @@ Template.board.events({
 
     'click .submit-guess'(e, i) {
 
+        Session.set('cardSubmitting', true);
         LoadingState.start();
         let pos = {};
         let currentCardPos = null;
@@ -297,7 +298,6 @@ Template.board.events({
                     }
                 }
             }
-            LoadingState.stop();
             TourGuide.resume();
         });
 
@@ -358,24 +358,26 @@ function saveCardPos() {
 
 }
 
-function drawCard(turnId) {
+function drawCard(turnId, t) {
     LoadingState.start();
     Meteor.call('card.draw', turnId, function(err, id) {
         if (!err) {
             Logger.log("Created Card: " + id);
         }
         saveCardPos();
-        LoadingState.stop();
+        // LoadingState.stop();
     });
 }
 
 function endTurn(game) {
+    Session.set('turnEnding', true);
     Logger.log('End Turn: ' + game.currentTurnId);
     const gameId = game._id;
     Meteor.call('turn.next', gameId, function(err, id) {
         if (!err) {
             Logger.log("Start Turn: " + id);
         }
+        Session.set('turnEnding', false);
         LoadingState.stop();
         TourGuide.resume();
     });
@@ -383,7 +385,7 @@ function endTurn(game) {
 
 function getStatus(turn) {
     if (turn) {
-        if (turn.currentCardId) {
+        if (Session.get('cardSubmitting') || Session.get('turnEnding') || turn.currentCardId) {
             return 'guessing';
         } else {
             if (turn.lastCardCorrect === true) {

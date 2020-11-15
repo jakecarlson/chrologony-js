@@ -181,7 +181,7 @@ function isOwned(turn) {
 }
 
 function isCurrent(turn, card) {
-    return (turn && (turn.currentCardId == card._id));
+    return (Session.get('cardSubmitting') || (turn && (turn.currentCardId == card._id)));
 }
 
 function submitVote(clueId, value) {

@@ -13,14 +13,16 @@ export const LoadingState = {
     },
 
     stop() {
-        Session.set('loading', false);
-        const started = this.started;
-        this.started = null;
-        return (performance.now() - started);
+        if (!Session.get('cardSubmitting') && !Session.get('turnEnding')) {
+            Session.set('loading', false);
+            const started = this.started;
+            this.started = null;
+            return (performance.now() - started);
+        }
     },
 
     active() {
-        return Session.get('loading');
+        return (Session.get('loading') || Session.get('cardSubmitting') || Session.get('turnEnding'));
     },
 
 };
