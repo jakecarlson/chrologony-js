@@ -32,7 +32,7 @@ AccountsTemplates.configure({
         pwdLink_link: "Forgot Password?",
         pwdLink_suff: "",
         resendVerificationEmailLink_pre: "",
-        resendVerificationEmailLink_link: "Re-send Verification Email",
+        resendVerificationEmailLink_link: "Re-send Verification",
         resendVerificationEmailLink_suff: "",
         sep: "OR USE YOUR SOCIAL ACCOUNT",
         signInLink_pre: "Already have an account? ",
