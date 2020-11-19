@@ -56,6 +56,4 @@ ostrio:flow-router-meta
 matb33:collection-hooks
 http
 mixmax:smart-disconnect
-fastclick
-mobile-status-bar
-meteorhacks:fast-render
+staringatlights:fast-render
