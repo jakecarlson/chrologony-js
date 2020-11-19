@@ -35,10 +35,9 @@ Template.room.onCreated(function roomOnCreated() {
 
             const roomId = user.currentRoomId;
 
-            // Redirect the user back to lobby if they aren't authenticated to this room
-            if (roomId != FlowRouter.getParam('id')) {
-                Flasher.set('danger', "You are not authorized to view that room.");
-                leaveRoom();
+            // Redirect the user back to the room they were in last if their current room doesn't match this one
+            if (roomId && (roomId != FlowRouter.getParam('id'))) {
+                FlowRouter.go('room', {id: roomId});
             }
 
             this.room.set(user.currentRoom());
