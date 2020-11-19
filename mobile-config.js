@@ -43,6 +43,8 @@ App.appendToConfig(`
   <allow-navigation href="https://www.google.com/recaptcha/*" />
   <allow-navigation href="http://www.google.com/recaptcha/*" />
   <allow-navigation href="https://www.google.com/maps/*" />
+  <allow-navigation href="https://c.sharethis.mgr.consensu.org/*" />
+  <allow-navigation href="about:blank" />
   
 `);
 
