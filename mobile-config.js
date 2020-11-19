@@ -25,7 +25,7 @@ App.configurePlugin('com.phonegap.plugins.facebookconnect', {
 });
 
 App.configurePlugin('cordova-plugin-googleplus', {
-    REVERSED_CLIENT_ID: '1005996420969-kpo4ft36u03h0th475c3jcm8899ctu1c.apps.googleusercontent.com'
+    REVERSED_CLIENT_ID: 'com.googleusercontent.apps.1005996420969-kpo4ft36u03h0th475c3jcm8899ctu1c'
 });
 
 // Add custom tags for a particular PhoneGap/Cordova plugin to the end of the
