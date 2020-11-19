@@ -53,7 +53,7 @@ Template.atForm.helpers({
     },
 
     showGuestLogin() {
-        return ['signIn','signUp'].includes(AccountsTemplates.getState());
+        return ['signIn'].includes(AccountsTemplates.getState());
     },
 
 });
