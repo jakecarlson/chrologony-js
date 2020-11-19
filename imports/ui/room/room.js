@@ -36,8 +36,12 @@ Template.room.onCreated(function roomOnCreated() {
             const roomId = user.currentRoomId;
 
             // Redirect the user back to the room they were in last if their current room doesn't match this one
-            if (roomId && (roomId != FlowRouter.getParam('id'))) {
-                FlowRouter.go('room', {id: roomId});
+            if (roomId != FlowRouter.getParam('id')) {
+                if (roomId) {
+                    FlowRouter.go('room', {id: roomId});
+                } else {
+                    FlowRouter.go('lobby');
+                }
             }
 
             this.room.set(user.currentRoom());
