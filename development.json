@@ -66,5 +66,14 @@
   "crypt": {
     "saltRounds": 10,
     "salt": "JXo8G2ZDMwvQxcoYJ"
+  },
+  "apple": {
+    "nativeClientId": "UBJNW65P8U.com.chrologony",
+    "clientId": "com.chrologony.client",
+    "teamId": "UBJNW65P8U",
+    "keyId": "66Z9K3Q8Y3",
+    "secret": "-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgh66IFWZl9CWrj6Kt\ny0BkRIkpqmmdPQ1tDu8O2v9hh4ugCgYIKoZIzj0DAQehRANCAARrQ2w+56sDbMq6\n0dzUyrS9K0n6W5JZhlQHtWrSr6EgwyD2UhhzX1sPK0+XM9NtwVo5/kegndTrg5vA\nevBcqiBU\n-----END PRIVATE KEY-----",
+    "redirectUri": "http://localhost:3000/_oauth/apple",
+    "loginStyle": "redirect"
   }
 }
