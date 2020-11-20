@@ -20,6 +20,8 @@ if (Meteor.isServer) {
 
     Accounts.onCreateUser(function(options, user) {
 
+        Logger.log('New User Data:');
+        Logger.log(options);
         if (options.profile) {
             user.profile = options.profile;
         }
