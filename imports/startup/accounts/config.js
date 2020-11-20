@@ -35,11 +35,21 @@ if (Meteor.isServer) {
         if (
             user.profile &&
             user.profile.name &&
-            (user.profile.name == 'object') &&
-            user.profile.name.firstName &&
-            user.profile.name.lastName
+            (
+                user.profile.name.firstName ||
+                user.profile.name.lastName
+            )
         ) {
-            user.profile.name = user.profile.name.firstName + ' ' + user.profile.name.lastName;
+            let name = '';
+            if (user.profile.name.firstName) {
+                name += user.profile.name.firstName + ' ';
+            }
+            if (user.profile.name.lastName) {
+                name += user.profile.name.lastName;
+            }
+            if (name.length > 0) {
+                user.profile.name = name;
+            }
         }
 
         if (!user.profile.name) {

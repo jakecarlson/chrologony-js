@@ -36,6 +36,14 @@ Template.body.onCreated(function bodyOnCreated() {
 
 });
 
-Template.body.events({
-
+Template.body.onRendered(function bodyOnRendered() {
+    if (
+        Meteor.isCordova &&
+        (typeof navigator !== 'undefined') &&
+        navigator.splashscreen
+    ) {
+        setTimeout(function() {
+            navigator.splashscreen.hide();
+        }, 100);
+    }
 });
