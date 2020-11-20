@@ -32,6 +32,16 @@ if (Meteor.isServer) {
             user.profile.name = user.username;
         }
 
+        if (
+            user.profile &&
+            user.profile.name &&
+            (user.profile.name == 'object') &&
+            user.profile.name.firstName &&
+            user.profile.name.lastName
+        ) {
+            user.profile.name = user.profile.name.firstName + ' ' + user.profile.name.lastName;
+        }
+
         if (!user.profile.name) {
             user.profile.name = 'Unknown';
         }
