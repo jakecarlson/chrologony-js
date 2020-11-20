@@ -32,23 +32,16 @@ if (Meteor.isServer) {
             user.profile.name = user.username;
         }
 
-        if (
-            user.profile &&
-            user.profile.name &&
-            (
-                user.profile.name.firstName ||
-                user.profile.name.lastName
-            )
-        ) {
-            let name = '';
+        if (typeof(user.profile.name) === 'object') {
+            let names = [];
             if (user.profile.name.firstName) {
-                name += user.profile.name.firstName + ' ';
+                names.push(user.profile.name.firstName);
             }
             if (user.profile.name.lastName) {
-                name += user.profile.name.lastName;
+                names.push(user.profile.name.lastName);
             }
-            if (name.length > 0) {
-                user.profile.name = name;
+            if (names.length > 0) {
+                user.profile.name = names.join(' ');
             }
         }
 

@@ -39,7 +39,7 @@ Template.body.onCreated(function bodyOnCreated() {
 Template.body.onRendered(function bodyOnRendered() {
     if (
         Meteor.isCordova &&
-        (typeof navigator !== 'undefined') &&
+        (typeof(navigator) !== 'undefined') &&
         navigator.splashscreen
     ) {
         setTimeout(function() {
