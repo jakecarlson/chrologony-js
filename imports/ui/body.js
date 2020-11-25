@@ -37,13 +37,16 @@ Template.body.onCreated(function bodyOnCreated() {
 });
 
 Template.body.onRendered(function bodyOnRendered() {
+    Logger.log('Rendered body');
     if (
         Meteor.isCordova &&
         (typeof(navigator) !== 'undefined') &&
         navigator.splashscreen
     ) {
+        Logger.log('Mobile: Wait .1 seconds to hide splash screen');
         setTimeout(function() {
+            Logger.log('Mobile: Hide splash screen');
             navigator.splashscreen.hide();
-        }, 100);
+        }, 250);
     }
 });
