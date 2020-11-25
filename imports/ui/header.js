@@ -80,8 +80,8 @@ Template.header.events({
     },
 
     'click a'(e, i) {
-        const url = Meteor.absoluteUrl($(e.target).closest('a').attr('href'));
-        if (url != window.location.href) {
+        const path = $(e.target).closest('a').attr('href');
+        if (path != window.location.pathname) {
             LoadingState.start();
             if (TourGuide.isActive()) {
                 if ($(e.target).hasClass('categories-link')) {
