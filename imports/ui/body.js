@@ -43,7 +43,7 @@ Template.body.onRendered(function bodyOnRendered() {
         (typeof(navigator) !== 'undefined') &&
         navigator.splashscreen
     ) {
-        Logger.log('Mobile: Wait .1 seconds to hide splash screen');
+        Logger.log('Mobile: Wait .25 seconds to hide splash screen');
         setTimeout(function() {
             Logger.log('Mobile: Hide splash screen');
             navigator.splashscreen.hide();
