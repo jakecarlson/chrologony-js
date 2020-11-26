@@ -5,7 +5,8 @@ App.info({
     description: 'Best Game of All Time',
     author: 'Jake Carlson',
     email: 'chrologony@carlsonville.com',
-    website: 'https://chrologony.com'
+    website: 'https://chrologony.com',
+    version: '2020.11.26'
 });
 
 // Set PhoneGap/Cordova preferences.
