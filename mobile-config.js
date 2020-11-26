@@ -10,6 +10,7 @@ App.info({
 });
 
 // Set PhoneGap/Cordova preferences.
+App.setPreference('android-targetSdkVersion', '29');
 App.setPreference('BackgroundColor', '0xFF593196');
 App.setPreference('StatusBarOverlaysWebView', false);
 // App.setPreference('StatusBarBackgroundColor', '#593196');
