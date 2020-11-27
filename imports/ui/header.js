@@ -81,7 +81,7 @@ Template.header.events({
 
     'click a'(e, i) {
         const path = $(e.target).closest('a').attr('href');
-        if (path != window.location.pathname) {
+        if ((path.substr(0, 1) == '/') && (path != window.location.pathname)) {
             LoadingState.start();
             if (TourGuide.isActive()) {
                 if ($(e.target).hasClass('categories-link')) {
