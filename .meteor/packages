@@ -59,3 +59,4 @@ http
 mixmax:smart-disconnect
 quave:accounts-apple
 staringatlights:fast-render
+mdg:reload-on-resume

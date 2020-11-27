@@ -1,5 +1,6 @@
 {
   "public": {
+    "env": "development",
     "app": {
       "name": "Chrologony",
       "sendEmail": "Chrologony <no-reply@chrologony.com>",

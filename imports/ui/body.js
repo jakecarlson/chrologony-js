@@ -18,6 +18,14 @@ Template.body.onCreated(function bodyOnCreated() {
 
         if (this.subscriptionsReady()) {
 
+            if (Reload.isWaitingForResume()) {
+                Logger.log('Waiting for Auto-Update');
+                if (!Meteor.isProduction) {
+                    Logger.log('Initiate Auto-Update');
+                    window.location.replace(window.location.href);
+                }
+            }
+
             Tracker.afterFlush(() => {
                 $(function() {
                     $('[data-toggle="popover"]').popover();
