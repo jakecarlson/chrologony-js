@@ -41,7 +41,11 @@ AccountsTemplates.configureRoute('signUp', {
     title: getTitle('Sign Up'),
     redirect: function() {
         if (Meteor.user()) {
-            Flasher.set('success', 'You have successfully registered. Create or join a room and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>');
+            Flasher.set(
+                'success',
+                'You have successfully registered. Create or join a room and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>',
+                false
+            );
             Logger.audit('signUp');
             Logger.track('signUp');
             Helpers.redirectToPrevious('lobby');
@@ -247,7 +251,11 @@ FlowRouter.route('/rooms/:id/:token?', {
                 } else {
                     Logger.log("Room Set: " + id);
                     Meteor.subscribe('rooms');
-                    Flasher.set('success', "Success! Invite others to join using any of the options under the 'Invite Players' button.");
+                    Flasher.set(
+                        'success',
+                        "Success! Invite others to join using any of the options under the 'Invite Players' button.",
+                        10000
+                    );
                     renderRoom(params);
                 }
             });

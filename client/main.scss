@@ -49,6 +49,15 @@ main {
     min-height: calc(100% - 4.5rem);
 }
 
+#layout .alert {
+    position: absolute;
+    top: .5rem;
+    left: 50%;
+    width: calc(100% - 30px);
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
 @import "../imports/ui/_header.scss";
 @import "../imports/ui/_overrides.scss";
 @import "../imports/ui/_embed.scss";

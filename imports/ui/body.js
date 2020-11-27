@@ -33,9 +33,6 @@ Template.body.onCreated(function bodyOnCreated() {
                 $(function() {
                     $('[data-toggle="popover"]').popover();
                     $('[data-toggle="tooltip"]').tooltip();
-                    $('.alert-dismissible').fadeTo(2000, 500).slideUp(500, function(){
-                        $('.alert-dismissible').alert('close');
-                    });
                 });
             });
 

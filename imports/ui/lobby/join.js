@@ -78,6 +78,10 @@ function processSuccessfulSubmit(form, roomId) {
     Session.set('roomPassword', form.password.value);
     form.name.value = '';
     form.password.value = '';
-    Flasher.set('success', "Success! Invite others to join using any of the options under the 'Invite Players' button.");
+    Flasher.set(
+        'success',
+        "Success! Invite others to join using any of the options under the 'Invite Players' button.",
+        10000
+    );
     FlowRouter.go('room', {id: roomId});
 }

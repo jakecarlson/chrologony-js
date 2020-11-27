@@ -190,7 +190,11 @@ Template.room.events({
         Meteor.call('room.remove', i.room.get()._id, function(err, id) {
             if (!err) {
                 Logger.log("Room Deleted: " + id);
-                Flasher.set('success', "You have successfully deleted the room. You can join or create a new one below.");
+                Flasher.set(
+                    'success',
+                    'You have successfully deleted the room. You can join or create a new one below.',
+                    10000
+                );
                 FlowRouter.go('lobby');
             }
             LoadingState.stop();
@@ -230,7 +234,7 @@ Template.room.events({
         Meteor.call('room.invite', email, room._id, room.link(), function(err, id) {
             if (!err) {
                 Logger.log(email + ' invited to room: ' + id);
-                Flasher.set('success', "You have successfully invited " + email + " to join this room.");
+                Flasher.set('success', 'You have successfully invited ' + email + ' to join this room.');
                 target.email.value = '';
                 $('.invite-modal').modal('hide');
                 LoadingState.stop();
