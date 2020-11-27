@@ -1,3 +1,17 @@
+#lobby {
+  height: 100%;
+}
+
+@media (min-height: 400px) {
+  #join {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+}
+
 /* child manager */
 .child-manager .list-group-item:last-child {
   border-bottom: none;
