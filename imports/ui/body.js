@@ -18,12 +18,15 @@ Template.body.onCreated(function bodyOnCreated() {
 
         if (this.subscriptionsReady()) {
 
+            Logger.log('Checking for updates ...');
             if (Reload.isWaitingForResume()) {
-                Logger.log('Waiting for Auto-Update');
+                Logger.log('Update available. Waiting for resume ...');
                 if (!Meteor.isProduction) {
-                    Logger.log('Initiate Auto-Update');
-                    window.location.replace(window.location.href);
+                    Logger.log('Initiate auto-update');
+                    window.location.reload();
                 }
+            } else {
+                Logger.log('No update available.');
             }
 
             Tracker.afterFlush(() => {
