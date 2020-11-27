@@ -7,23 +7,33 @@ html {
 html,
 body,
 #__blaze-root,
-#layout
+#layout,
+#background
 {
     height: 100%;
 }
 
 #body {
-    background: $primary url("/background.png") no-repeat center center;
+    background: $primary;
+}
+
+#background {
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent url("/background.png") no-repeat center center;
     background-size: 100% auto;
-    background-attachment: fixed;
 }
 @media (orientation: landscape) {
-    #body {
+    #background {
         background-size: 100% auto;
     }
 }
 @media (orientation: portrait) {
-    #body {
+    #background {
         background-size: auto 100%;
     }
 }
