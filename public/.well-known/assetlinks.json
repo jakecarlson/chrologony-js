@@ -1,5 +1,5 @@
 [{
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target" : { "namespace": "android_app", "package_name": "com.chrologony",
-    "sha256_cert_fingerprints": ["hash_of_app_certificate"] }
+    "sha256_cert_fingerprints": ["9B:C4:34:86:0B:93:DE:BF:D7:76:1F:82:B3:B3:F0:E5:12:DF:60:8B:6C:0F:F4:6B:23:28:27:05:70:F3:84:6D"] }
 }]
