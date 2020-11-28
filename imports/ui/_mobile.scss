@@ -1,0 +1,27 @@
+@media (orientation: portrait) {
+  @supports(padding-top: env(safe-area-inset-top)) {
+    .mobile-app {
+      padding-top: unquote('max(env(safe-area-inset-top), 15px)');
+    }
+    #status {
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: unquote('max(env(safe-area-inset-top), 15px)');
+      background: rgba(0, 0, 0, .675);
+      -webkit-backdrop-filter: blur(2rem);
+      backdrop-filter: blur(2rem);
+    }
+  }
+}
+
+@media (orientation: landscape) {
+  @supports(padding-left: env(safe-area-inset-left)) {
+    .mobile-app .container-fluid {
+      padding-left: unquote('max(env(safe-area-inset-left), 15px) !important');
+      padding-right: unquote('max(env(safe-area-inset-right), 15px) !important');
+    }
+  }
+}
