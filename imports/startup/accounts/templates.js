@@ -12,6 +12,7 @@ AccountsTemplates.configure({
     showResendVerificationEmailLink: true,
     showPlaceholders: true,
     showReCaptcha: true,
+    overrideLoginErrors: false,
     homeRoutePath: 'lobby',
 
     // Hooks
