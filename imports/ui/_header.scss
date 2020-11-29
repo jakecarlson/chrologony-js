@@ -11,15 +11,15 @@
   width: 100%;
   height: 100%;
 }
-#header {
-  padding-right: 3px;
-}
 #mute {
   font-size: large;
   width: 2.5rem;
   text-align: left;
   position: relative;
   top: .2rem;
+}
+#menuToggle {
+  padding-right: 0;
 }
 #menuToggle:hover,
 #menuToggle:focus
