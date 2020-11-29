@@ -28,7 +28,7 @@ AccountsTemplates.configure({
 Accounts.validateLoginAttempt(function(params) {
 
     // Only validate verified email for password logins
-    if (params.type == 'password') {
+    if (params.user && (params.type == 'password')) {
         const newSignup = !params.user.lastLoggedInAt;
         if (!newSignup && params.user && params.user.emails && (params.user.emails.length > 0)) {
             let found = _.find(
