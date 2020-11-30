@@ -11,45 +11,6 @@
   #{$propToModify}: calc(#{$add} + env(safe-area-inset-top, 0px) + var(--safe-area-inset-top)) #{$importantStr};
 }
 
-// ----------------------------------------
-/* Defines a property which is affected by the safe area */
-@mixin SafeAreaRight($propToModify, $add: 0px, $important: false) {
-  $importantStr: "";
-  @if ($important) {
-    $importantStr: " !important";
-  }
-  #{$propToModify}: #{$add} #{$importantStr};
-  #{$propToModify}: calc(#{$add} + var(--safe-area-inset-right)) #{$importantStr};
-  #{$propToModify}: calc(#{$add} + constant(safe-area-inset-right) + var(--safe-area-inset-right)) #{$importantStr};
-  #{$propToModify}: calc(#{$add} + env(safe-area-inset-right, 0px) + var(--safe-area-inset-right)) #{$importantStr};
-}
-
-// ----------------------------------------
-/* Defines a property which is affected by the safe area */
-@mixin SafeAreaBottom($propToModify, $add: 0px, $important: false) {
-  $importantStr: "";
-  @if ($important) {
-    $importantStr: " !important";
-  }
-  #{$propToModify}: #{$add} #{$importantStr};
-  #{$propToModify}: calc(#{$add} + var(--safe-area-inset-bottom)) #{$importantStr};
-  #{$propToModify}: calc(#{$add} + constant(safe-area-inset-bottom) + var(--safe-area-inset-bottom)) #{$importantStr};
-  #{$propToModify}: calc(#{$add} + env(safe-area-inset-bottom, 0px) + var(--safe-area-inset-bottom)) #{$importantStr};
-}
-
-// ----------------------------------------
-/* Defines a property which is affected by the safe area */
-@mixin SafeAreaLeft($propToModify, $add: 0px, $important: false) {
-  $importantStr: "";
-  @if ($important) {
-    $importantStr: " !important";
-  }
-  #{$propToModify}: #{$add} #{$importantStr};
-  #{$propToModify}: calc(#{$add} + var(--safe-area-inset-left)) #{$importantStr};
-  #{$propToModify}: calc(#{$add} + constant(safe-area-inset-left) + var(--safe-area-inset-left)) #{$importantStr};
-  #{$propToModify}: calc(#{$add} + env(safe-area-inset-left, 0px) + var(--safe-area-inset-left)) #{$importantStr};
-}
-
 :root {
   --safe-area-inset-top: 0px;
   --safe-area-inset-right: 0px;
