@@ -12,8 +12,8 @@ App.info({
 // Set general Cordova preferences
 App.setPreference('BackgroundColor', '0xFF593196');
 App.setPreference('StatusBarOverlaysWebView', true);
-App.setPreference('StatusBarBackgroundColor', '#593196');
-App.setPreference('StatusBarStyle', 'lightcontent', 'ios');
+App.setPreference('StatusBarBackgroundColor', '#000000');
+App.setPreference('StatusBarStyle', 'lightcontent');
 App.setPreference('HideKeyboardFormAccessoryBar', true);
 App.setPreference('Orientation', 'default');
 

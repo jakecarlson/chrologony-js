@@ -20,10 +20,11 @@ Meteor.startup(function() {
     Logger.init();
 
     if (Meteor.isCordova && (window.cordova.platformId == 'android')) {
-        document.addEventListener("deviceready", function() {
+        StatusBar.overlaysWebView(false);
+        setTimeout(function() {
             StatusBar.overlaysWebView(true);
-            setSafeAreaInsets();
-        }, false);
+        }, 100);
+        setSafeAreaInsets();
         document.addEventListener('orientationchange', setSafeAreaInsets, false);
         screen.orientation.addEventListener('change', setSafeAreaInsets, false);
         document.addEventListener('resize', setSafeAreaInsets, false);
@@ -33,7 +34,6 @@ Meteor.startup(function() {
 
 function setSafeAreaInsets(e) {
     if (window.AndroidNotch) {
-        // alert(screen.orientation.type);
         const style = document.documentElement.style;
         window.AndroidNotch.getInsetTop(px => {
             if (['portrait', 'portrait-primary', 'portrait-secondary'].includes(screen.orientation.type)) {
