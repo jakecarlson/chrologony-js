@@ -9,23 +9,28 @@ App.info({
     version: '2020.11.26'
 });
 
-// Set PhoneGap/Cordova preferences.
-App.setPreference('android-targetSdkVersion', '29');
+// Set general Cordova preferences
 App.setPreference('BackgroundColor', '0xFF593196');
 App.setPreference('StatusBarOverlaysWebView', true);
 App.setPreference('StatusBarBackgroundColor', '#593196');
-// App.setPreference('StatusBarBackgroundColor', '#000000');
-App.setPreference('StatusBarStyle', 'lightcontent');
+App.setPreference('StatusBarStyle', 'lightcontent', 'ios');
 App.setPreference('HideKeyboardFormAccessoryBar', true);
 App.setPreference('Orientation', 'default');
+
+// Set iOS Cordova preferences
 App.setPreference('Orientation', 'all', 'ios');
 
-// Pass preferences for a particular PhoneGap/Cordova plugin.
+// Set Android Cordova preferences
+App.setPreference('android-targetSdkVersion', '29', 'android');
+App.setPreference('AndroidLaunchMode', 'singleInstance', 'android');
+
+// Configure Facebook login
 App.configurePlugin('com.phonegap.plugins.facebookconnect', {
     APP_ID: '237901244101201',
     API_KEY: '5c552215b03607be636f602c31a4c94b'
 });
 
+// Configure Google+ login
 App.configurePlugin('cordova-plugin-googleplus', {
     REVERSED_CLIENT_ID: 'com.googleusercontent.apps.1005996420969-kpo4ft36u03h0th475c3jcm8899ctu1c'
 });
@@ -34,19 +39,17 @@ App.configurePlugin('cordova-plugin-googleplus', {
 // generated config.xml. 'Universal Links' is shown as an example here.
 App.appendToConfig(`
 
-  <universal-links>
-    <host name="localhost:3000" scheme="http" event="ulink" />
-    <host name="app.chrologony.com" scheme="https" event="ulink" />
-    <ios-team-id value="UBJNW65P8U" />
-  </universal-links>
-  
-  <preference name="AndroidLaunchMode" value="singleInstance" />
-  
-  <allow-navigation href="https://www.google.com/recaptcha/*" />
-  <allow-navigation href="http://www.google.com/recaptcha/*" />
-  <allow-navigation href="https://www.google.com/maps/*" />
-  <allow-navigation href="https://c.sharethis.mgr.consensu.org/*" />
-  <allow-navigation href="about:*" />
+    <universal-links>
+        <host name="localhost:3000" scheme="http" event="ulink" />
+        <host name="app.chrologony.com" scheme="https" event="ulink" />
+        <ios-team-id value="UBJNW65P8U" />
+    </universal-links>
+    
+    <allow-navigation href="https://www.google.com/recaptcha/*" />
+    <allow-navigation href="http://www.google.com/recaptcha/*" />
+    <allow-navigation href="https://www.google.com/maps/*" />
+    <allow-navigation href="https://c.sharethis.mgr.consensu.org/*" />
+    <allow-navigation href="about:*" />
   
 `);
 

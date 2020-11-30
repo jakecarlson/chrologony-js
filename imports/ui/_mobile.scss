@@ -1,36 +1,101 @@
-@supports(padding-top: env(safe-area-inset-top)) {
-
-  #status {
-    position: fixed;
-    z-index: 999;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 20px; // iOS <10
-    height: calc(constant(safe-area-inset-top) - 4px); // iOS 11
-    height: calc(env(safe-area-inset-top) - 4px); // iOS >=11.2+
-    background: rgba(0, 0, 0, .675);
-    -webkit-backdrop-filter: blur(2rem);
-    backdrop-filter: blur(2rem);
+// ----------------------------------------
+/* Defines a property which is affected by the safe area */
+@mixin SafeAreaTop($propToModify, $add: 0px, $important: false) {
+  $importantStr: "";
+  @if ($important) {
+    $importantStr: "!important";
   }
+  #{$propToModify}: #{$add} #{$importantStr};
+  #{$propToModify}: calc(#{$add} + var(--safe-area-inset-top)) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + constant(safe-area-inset-top) + var(--safe-area-inset-top)) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + env(safe-area-inset-top, 0px) + var(--safe-area-inset-top)) #{$importantStr};
+}
 
-  .mobile-app {
-    padding-top: 20px; // iOS <10
-    padding-top: calc(constant(safe-area-inset-top) - 4px); // iOS 11
-    padding-top: calc(env(safe-area-inset-top) - 4px); // iOS >=11.2+
+// ----------------------------------------
+/* Defines a property which is affected by the safe area */
+@mixin SafeAreaRight($propToModify, $add: 0px, $important: false) {
+  $importantStr: "";
+  @if ($important) {
+    $importantStr: " !important";
   }
+  #{$propToModify}: #{$add} #{$importantStr};
+  #{$propToModify}: calc(#{$add} + var(--safe-area-inset-right)) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + constant(safe-area-inset-right) + var(--safe-area-inset-right)) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + env(safe-area-inset-right, 0px) + var(--safe-area-inset-right)) #{$importantStr};
+}
 
-  #layout.mobile-app .alert {
-    top: 20px; // iOS <10
-    top: calc(constant(safe-area-inset-top) - 4px + .5rem); // iOS 11
-    top: calc(env(safe-area-inset-top) - 4px + .5rem); // iOS >=11.2
+// ----------------------------------------
+/* Defines a property which is affected by the safe area */
+@mixin SafeAreaBottom($propToModify, $add: 0px, $important: false) {
+  $importantStr: "";
+  @if ($important) {
+    $importantStr: " !important";
   }
+  #{$propToModify}: #{$add} #{$importantStr};
+  #{$propToModify}: calc(#{$add} + var(--safe-area-inset-bottom)) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + constant(safe-area-inset-bottom) + var(--safe-area-inset-bottom)) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + env(safe-area-inset-bottom, 0px) + var(--safe-area-inset-bottom)) #{$importantStr};
+}
 
-  @media (orientation: landscape) {
-    .mobile-app .container-fluid {
-      padding-left: unquote('max(env(safe-area-inset-left), 15px) !important');
-      padding-right: unquote('max(env(safe-area-inset-right), 15px) !important');
-    }
+// ----------------------------------------
+/* Defines a property which is affected by the safe area */
+@mixin SafeAreaLeft($propToModify, $add: 0px, $important: false) {
+  $importantStr: "";
+  @if ($important) {
+    $importantStr: " !important";
   }
+  #{$propToModify}: #{$add} #{$importantStr};
+  #{$propToModify}: calc(#{$add} + var(--safe-area-inset-left)) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + constant(safe-area-inset-left) + var(--safe-area-inset-left)) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + env(safe-area-inset-left, 0px) + var(--safe-area-inset-left)) #{$importantStr};
+}
 
+:root {
+  --safe-area-inset-top: 0px;
+  --safe-area-inset-right: 0px;
+  --safe-area-inset-bottom: 0px;
+  --safe-area-inset-left: 0px;
+}
+
+#status {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  right: 0;
+  //height: 20px; // default
+  //height: var(--safe-area-inset-top); // Android
+  //height: calc(constant(safe-area-inset-top) - 4px); // iOS 11
+  //height: calc(env(safe-area-inset-top) - 4px); // iOS >=11.2+
+  @include SafeAreaTop(height);
+  background: rgba(0, 0, 0, .675);
+  -webkit-backdrop-filter: blur(2rem);
+  backdrop-filter: blur(2rem);
+}
+
+.mobile-app {
+  //padding-top: 20px; // default
+  //padding-top: var(--safe-area-inset-top); // Android
+  //padding-top: calc(constant(safe-area-inset-top) - 4px); // iOS 11
+  //padding-top: calc(env(safe-area-inset-top) - 4px); // iOS >=11.2+
+  @include SafeAreaTop(padding-top);
+}
+
+#layout.mobile-app .alert {
+  //top: calc(20px + .5rem); // default
+  //top: calc(var(--safe-area-inset-top) + .5rem); // Android
+  //top: calc(constant(safe-area-inset-top) - 4px + .5rem); // iOS 11
+  //top: calc(env(safe-area-inset-top) - 4px + .5rem); // iOS >=11.2
+  @include SafeAreaTop(top, 8px);
+}
+
+@media (orientation: landscape) {
+  .mobile-app .container-fluid {
+    //padding-left: unquote('max(var(--safe-area-inset-left), 15px) !important'); // Android
+    //padding-right: unquote('max(var(--safe-area-inset-right), 15px) !important'); // Android
+    padding-left: unquote('max(env(safe-area-inset-left), 15px) !important'); // iOS
+    padding-right: unquote('max(env(safe-area-inset-right), 15px) !important'); // iOS
+    //@include SafeAreaLeft(padding-left, 0px);
+    //@include SafeAreaRight(padding-right, 0px);
+  }
 }
