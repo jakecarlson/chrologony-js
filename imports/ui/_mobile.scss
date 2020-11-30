@@ -7,8 +7,8 @@
   }
   #{$propToModify}: #{$add} #{$importantStr};
   #{$propToModify}: calc(#{$add} + var(--safe-area-inset-top)) #{$importantStr};
-  #{$propToModify}: calc(#{$add} + constant(safe-area-inset-top) + var(--safe-area-inset-top)) #{$importantStr};
-  #{$propToModify}: calc(#{$add} + env(safe-area-inset-top, 0px) + var(--safe-area-inset-top)) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + constant(safe-area-inset-top) - 4px) #{$importantStr};
+  #{$propToModify}: calc(#{$add} + env(safe-area-inset-top, 0px) - 4px) #{$importantStr};
 }
 
 :root {
