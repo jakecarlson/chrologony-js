@@ -98,6 +98,18 @@ AccountsTemplates.configure({
 
 });
 
+// This seems to be the only way to override 'Login forbidden'
+T9n.map(
+    'en',
+    {
+        error: {
+            accounts: {
+                'Login forbidden': 'Username and/or password was incorrect. Please try again.',
+            }
+        }
+    }
+);
+
 let pwd = AccountsTemplates.removeField('password');
 AccountsTemplates.addField({
     _id: 'username',
