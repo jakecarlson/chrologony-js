@@ -162,4 +162,12 @@ Helpers = {
         window.open(url, '_system');
     },
 
+    isAndroid() {
+        return (window.cordova.platformId == 'android');
+    },
+
+    isPortrait() {
+        return ['portrait', 'portrait-primary', 'portrait-secondary'].includes(screen.orientation.type);
+    },
+
 };

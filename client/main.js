@@ -19,30 +19,56 @@ Meteor.startup(function() {
 
     Logger.init();
 
-    if (Meteor.isCordova && (window.cordova.platformId == 'android')) {
-        StatusBar.overlaysWebView(false);
-        setTimeout(function() {
-            StatusBar.overlaysWebView(true);
-        }, 100);
-        setSafeAreaInsets();
-        document.addEventListener('orientationchange', setSafeAreaInsets, false);
-        screen.orientation.addEventListener('change', setSafeAreaInsets, false);
-        document.addEventListener('resize', setSafeAreaInsets, false);
+    if (Meteor.isCordova) {
+        if (Helpers.isAndroid()) {
+            StatusBar.overlaysWebView(false);
+            setTimeout(function() {
+                StatusBar.overlaysWebView(true);
+            }, 100);
+            handleMobileViewportChange();
+        }
+        document.addEventListener('orientationchange', handleMobileViewportChange, false);
+        screen.orientation.addEventListener('change', handleMobileViewportChange, false);
+        document.addEventListener('resize', handleMobileViewportChange, false);
     }
 
 });
 
-function setSafeAreaInsets(e) {
-    if (window.AndroidNotch) {
-        const style = document.documentElement.style;
-        window.AndroidNotch.getInsetTop(px => {
-            if (['portrait', 'portrait-primary', 'portrait-secondary'].includes(screen.orientation.type)) {
-                StatusBar.show();
-            } else {
-                px = 0;
-                StatusBar.hide();
-            }
-            style.setProperty("--safe-area-inset-top", px + "px");
-        }, (err) => Logger.log("Failed to get insets top: " + err));
+function handleMobileViewportChange(e) {
+
+    // If the devices is in portrait mode, show the status bar
+    if (Helpers.isPortrait()) {
+
+        StatusBar.show();
+
+        // Calculate the Android top safe area
+        if (window.AndroidNotch && Helpers.isAndroid()) {
+            window.AndroidNotch.getInsetTop(px => {
+                setAndroidSafeAreaInsetTop(px);
+            }, (err) => Logger.log("Failed to get insets top: " + err));
+        }
+
+        // Re-apply the backdrop-filter blur effect for the status bar
+        const statusBarStyle = document.getElementById('status').style;
+        statusBarStyle.display = "none";
+        setTimeout(function() {
+            statusBarStyle.webkitBackdropFilter = "blur(32px)";
+            statusBarStyle.backdropFilter = "blur(32px)";
+            statusBarStyle.display = "block";
+        }, 0);
+
+    // If the device is in landscape mode, hide the status bar
+    } else {
+
+        StatusBar.hide();
+
+        // Reset the Android top safe area
+        setAndroidSafeAreaInsetTop(0);
+
     }
+
+}
+
+function setAndroidSafeAreaInsetTop(px) {
+    document.documentElement.style.setProperty("--safe-area-inset-top", px + "px");
 }
