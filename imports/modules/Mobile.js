@@ -29,6 +29,8 @@ Mobile = {
 
     handleViewportChange(e) {
 
+        const statusBarStyle = document.getElementById('status').style;
+
         // If the devices is in portrait mode, show the status bar
         if (Mobile.isPortrait()) {
 
@@ -42,18 +44,13 @@ Mobile = {
             }
 
             // Re-apply the backdrop-filter blur effect for the status bar
-            const statusBarStyle = document.getElementById('status').style;
-            statusBarStyle.display = "none";
-            setTimeout(function() {
-                statusBarStyle.webkitBackdropFilter = "blur(32px)";
-                statusBarStyle.backdropFilter = "blur(32px)";
-                statusBarStyle.display = "block";
-            }, 0);
+            statusBarStyle.display = "block";
 
         // If the device is in landscape mode, hide the status bar
         } else {
 
             StatusBar.hide();
+            statusBarStyle.display = "none";
 
             // Reset the Android top safe area
             Mobile.setSafeAreaInsetTop(0);
