@@ -1,7 +1,9 @@
 Mobile = {
 
     init() {
+
         if (this.is()) {
+
             if (this.isAndroid()) {
                 StatusBar.overlaysWebView(false);
                 setTimeout(function() {
@@ -9,10 +11,13 @@ Mobile = {
                 }, 100);
                 this.handleViewportChange();
             }
+
             document.addEventListener('orientationchange', this.handleViewportChange, false);
             screen.orientation.addEventListener('change', this.handleViewportChange, false);
             document.addEventListener('resize', this.handleViewportChange, false);
+
         }
+
     },
 
     is() {
@@ -32,6 +37,7 @@ Mobile = {
         const statusBarStyle = document.getElementById('status').style;
 
         // If the devices is in portrait mode, show the status bar
+        Logger.log('Orientation: ' + screen.orientation.type);
         if (Mobile.isPortrait()) {
 
             StatusBar.show();
@@ -39,6 +45,7 @@ Mobile = {
             // Calculate the Android top safe area
             if (window.AndroidNotch && Mobile.isAndroid()) {
                 window.AndroidNotch.getInsetTop(px => {
+                    Logger.log('Status Bar Height: ' + px);
                     Mobile.setSafeAreaInsetTop(px);
                 }, (err) => Logger.log("Failed to get insets top: " + err));
             }
@@ -60,7 +67,8 @@ Mobile = {
     },
 
     setSafeAreaInsetTop(px) {
-        document.documentElement.style.setProperty("--safe-area-inset-top", px + "px");
+        const str = px + "px";
+        document.documentElement.style.setProperty("--safe-area-inset-top", str);
     },
 
 };

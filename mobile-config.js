@@ -32,7 +32,8 @@ App.configurePlugin('com.phonegap.plugins.facebookconnect', {
 
 // Configure Google+ login
 App.configurePlugin('cordova-plugin-googleplus', {
-    REVERSED_CLIENT_ID: 'com.googleusercontent.apps.1005996420969-kpo4ft36u03h0th475c3jcm8899ctu1c'
+    REVERSED_CLIENT_ID: 'com.googleusercontent.apps.1005996420969-8tdhfk8s5t7jj8qti4j70509cnphscaq',
+    WEB_APPLICATION_CLIENT_ID: '1005996420969-8tdhfk8s5t7jj8qti4j70509cnphscaq.apps.googleusercontent.com'
 });
 
 // Add custom tags for a particular PhoneGap/Cordova plugin to the end of the
@@ -45,8 +46,8 @@ App.appendToConfig(`
         <ios-team-id value="UBJNW65P8U" />
     </universal-links>
     
-    <allow-navigation href="https://www.google.com/recaptcha/*" />
-    <allow-navigation href="http://www.google.com/recaptcha/*" />
+    <access origin="*" />
+    <allow-navigation href="*://www.google.com/recaptcha/*" />
     <allow-navigation href="https://www.google.com/maps/*" />
     <allow-navigation href="https://c.sharethis.mgr.consensu.org/*" />
     <allow-navigation href="about:*" />
