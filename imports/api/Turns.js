@@ -184,7 +184,7 @@ if (Meteor.isServer) {
                     const leader = game.calculateCurrentLeader();
                     if (leader.cards >= game.winPoints) {
                         let equalTurns = true;
-                        players.forEach(function(player) {
+                        game.getPlayerTurnCounts().forEach(function(player) {
                             if (player.turns < leader.turns) {
                                 equalTurns = false;
                                 return;
