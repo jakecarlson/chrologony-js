@@ -4,6 +4,7 @@ import { LoadingState } from "../modules/LoadingState";
 import './layout_authenticated.js';
 import './layout_unauthenticated.js';
 import './embed.js';
+import './flasher.js';
 
 import './body.html';
 
@@ -46,15 +47,4 @@ Template.body.onCreated(function bodyOnCreated() {
 
 Template.body.onRendered(function bodyOnRendered() {
     Logger.log('Rendered body');
-    if (
-        Meteor.isCordova &&
-        (typeof(navigator) !== 'undefined') &&
-        navigator.splashscreen
-    ) {
-        Logger.log('Mobile: Wait .25 seconds to hide splash screen');
-        setTimeout(function() {
-            Logger.log('Mobile: Hide splash screen');
-            navigator.splashscreen.hide();
-        }, 250);
-    }
 });

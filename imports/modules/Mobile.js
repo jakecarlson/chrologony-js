@@ -4,6 +4,21 @@ Mobile = {
 
         if (this.is()) {
 
+            if (
+                (typeof(navigator) !== 'undefined') &&
+                navigator.splashscreen
+            ) {
+                Logger.log('Mobile: Wait .25 seconds to hide splash screen');
+                setTimeout(function() {
+                    Logger.log('Mobile: Hide splash screen');
+                    navigator.splashscreen.hide();
+                }, 250);
+            }
+
+            this.bodyEl = document.body;
+            this.statusBarEl = document.getElementById('status');
+            this.alertEl = document.getElementById('alert');
+
             if (this.isAndroid()) {
                 StatusBar.overlaysWebView(false);
                 setTimeout(function() {
@@ -32,9 +47,7 @@ Mobile = {
         return ['portrait', 'portrait-primary', 'portrait-secondary'].includes(screen.orientation.type);
     },
 
-    handleViewportChange(e) {
-
-        const statusBarStyle = document.getElementById('status').style;
+    handleViewportChange() {
 
         // If the devices is in portrait mode, show the status bar
         Logger.log('Orientation: ' + screen.orientation.type);
@@ -45,30 +58,31 @@ Mobile = {
             // Calculate the Android top safe area
             if (window.AndroidNotch && Mobile.isAndroid()) {
                 window.AndroidNotch.getInsetTop(px => {
-                    Logger.log('Status Bar Height: ' + px);
-                    Mobile.setSafeAreaInsetTop(px);
+                    Mobile.setSafeAreaInsetTop(px, true);
                 }, (err) => Logger.log("Failed to get insets top: " + err));
             }
 
-            // Re-apply the backdrop-filter blur effect for the status bar
-            statusBarStyle.display = "block";
+            Mobile.statusBarEl.style.display = "block";
 
         // If the device is in landscape mode, hide the status bar
         } else {
 
             StatusBar.hide();
-            statusBarStyle.display = "none";
+            Mobile.statusBarEl.style.display = "none";
 
             // Reset the Android top safe area
-            Mobile.setSafeAreaInsetTop(0);
+            Mobile.setSafeAreaInsetTop(0, true);
 
         }
 
     },
 
     setSafeAreaInsetTop(px) {
+        Logger.log('Safe Top Inset: ' + px);
         const str = px + "px";
-        document.documentElement.style.setProperty("--safe-area-inset-top", str);
+        this.bodyEl.style.setProperty('padding-top', str);
+        this.statusBarEl.style.setProperty('height', str);
+        this.alertEl.style.setProperty('top', (px + 8) + 'px');
     },
 
 };

@@ -38,11 +38,11 @@ Template.flasher.onCreated(function flasherOnCreated() {
 Template.flasher.helpers({
 
     id() {
-        return (this.id) ? this.id : null;
+        return (this.id) ? this.id : 'alert';
     },
 
-    has() {
-        return Flasher.msg();
+    hidden() {
+        return !Flasher.msg();
     },
 
     msg() {
