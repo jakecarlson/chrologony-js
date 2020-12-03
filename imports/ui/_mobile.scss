@@ -6,17 +6,17 @@
     $importantStr: "!important";
   }
   #{$propToModify}: #{$add} #{$importantStr};
-  #{$propToModify}: calc(#{$add} + var(--safe-area-inset-top)) #{$importantStr};
+  //#{$propToModify}: calc(#{$add} + var(--safe-area-inset-top)) #{$importantStr};
   #{$propToModify}: calc(#{$add} + constant(safe-area-inset-top) - 4px) #{$importantStr};
   #{$propToModify}: calc(#{$add} + env(safe-area-inset-top, 0px) - 4px) #{$importantStr};
 }
 
-:root {
-  --safe-area-inset-top: 0px;
-  --safe-area-inset-right: 0px;
-  --safe-area-inset-bottom: 0px;
-  --safe-area-inset-left: 0px;
-}
+//:root {
+//  --safe-area-inset-top: 0px;
+//  --safe-area-inset-right: 0px;
+//  --safe-area-inset-bottom: 0px;
+//  --safe-area-inset-left: 0px;
+//}
 
 #status {
   position: fixed;
@@ -41,7 +41,7 @@
   @include SafeAreaTop(padding-top);
 }
 
-#layout.mobile-app .alert {
+#alert {
   @include SafeAreaTop(top, 8px);
 }
 

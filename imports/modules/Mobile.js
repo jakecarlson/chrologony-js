@@ -24,8 +24,8 @@ Mobile = {
                 setTimeout(function() {
                     StatusBar.overlaysWebView(true);
                 }, 100);
-                this.handleViewportChange();
             }
+            this.handleViewportChange();
 
             document.addEventListener('orientationchange', this.handleViewportChange, false);
             screen.orientation.addEventListener('change', this.handleViewportChange, false);
@@ -58,7 +58,7 @@ Mobile = {
             // Calculate the Android top safe area
             if (window.AndroidNotch && Mobile.isAndroid()) {
                 window.AndroidNotch.getInsetTop(px => {
-                    Mobile.setSafeAreaInsetTop(px, true);
+                    Mobile.setSafeAreaInsetTop(px);
                 }, (err) => Logger.log("Failed to get insets top: " + err));
             }
 
@@ -71,7 +71,9 @@ Mobile = {
             Mobile.statusBarEl.style.display = "none";
 
             // Reset the Android top safe area
-            Mobile.setSafeAreaInsetTop(0, true);
+            if (window.AndroidNotch && Mobile.isAndroid()) {
+                Mobile.setSafeAreaInsetTop(0);
+            }
 
         }
 
