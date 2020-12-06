@@ -4,18 +4,18 @@ import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { assert } from 'meteor/practicalmeteor:chai';
 
-import { Rooms } from '../Rooms.js';
+import { Games } from '../Games.js';
 
 if (Meteor.isServer) {
-    describe('Rooms', () => {
+    describe('Games', () => {
         describe('methods', () => {
             const userId = Random.id();
-            let roomId;
+            let gameId;
 
             beforeEach(() => {
-                Rooms.remove({});
-                roomId = Rooms.insert({
-                    name: 'test room',
+                Games.remove({});
+                gameId = Games.insert({
+                    name: 'test game',
                     password: 'test password',
                     createdAt: new Date(),
                     ownerId: userId,

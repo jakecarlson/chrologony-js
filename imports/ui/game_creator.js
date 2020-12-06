@@ -1,13 +1,18 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { LoadingState } from '../../modules/LoadingState';
+import { ReactiveVar } from "meteor/reactive-var";
+import { Session } from "meteor/session";
+import { LoadingState } from '../modules/LoadingState';
 
-import { Categories } from '../../api/Categories';
+import { Categories } from '../api/Categories';
 
-import './game.html';
-import '../precisions_selector.js';
+import './game_creator.html';
+import './precisions_selector.js';
 
-Template.game.onCreated(function gameOnCreated() {
+Template.game_creator.onCreated(function gameOnCreated() {
+
+    this.advanced = new ReactiveVar(false);
+
     this.autorun(() => {
         Tracker.afterFlush(() => {
             this.easy = $('.difficulty .easy input');
@@ -15,22 +20,27 @@ Template.game.onCreated(function gameOnCreated() {
             this.hard = $('.difficulty .hard input');
         });
     });
+
 });
 
-Template.game.helpers({
-
-    gameInProgress() {
-        return this.turn;
-    },
+Template.game_creator.helpers({
 
     categoryId() {
-        return (this.game) ? this.game.categoryId : null;
+        return (this.lastGame) ? this.lastGame.categoryId : null;
+    },
+
+    basic() {
+        return !Template.instance().advanced.get();
+    },
+
+    advanced() {
+        return Template.instance().advanced.get();
     },
 
     winConditions() {
         let selected = 10;
-        if (!Helpers.isAnonymous() && this.game && this.game.winPoints) {
-            selected = this.game.winPoints;
+        if (!Helpers.isAnonymous() && this.lastGame && this.lastGame.winPoints) {
+            selected = this.lastGame.winPoints;
         }
         return [
             {display: 'None (Owner Decides)', value: 0, selected: (0 == selected)},
@@ -41,7 +51,7 @@ Template.game.helpers({
     },
 
     guessLimits() {
-        const selected = (this.game) ? this.game.cardLimit : 0;
+        const selected = (this.lastGame) ? this.lastGame.cardLimit : 0;
         return [
             {display: 'Unlimited (Streak)', value: 0, selected: (0 == selected)},
             {display: '10', value: 10, selected: (10 == selected)},
@@ -52,7 +62,7 @@ Template.game.helpers({
     },
 
     turnOrders() {
-        const selected = (this.game) ? this.game.turnOrder : 'sequential';
+        const selected = (this.lastGame) ? this.lastGame.turnOrder : 'sequential';
         return [
             {display: 'Sequential', value: 'sequential', selected: ('sequential' == selected)},
             {display: 'Snake', value: 'snake', selected: ('snake' == selected)},
@@ -61,7 +71,7 @@ Template.game.helpers({
     },
 
     timeLimits() {
-        const selected = (this.game) ? this.game.cardTime : 0;
+        const selected = (this.lastGame) ? this.lastGame.cardTime : 0;
         return [
             {display: 'No Limit', value: 0, selected: (0 == selected)},
             {display: '3 Minutes', value: 180, selected: (180 == selected)},
@@ -73,7 +83,7 @@ Template.game.helpers({
     },
 
     scoreThresholds() {
-        const selected = (this.game) ? this.game.minScore : 0;
+        const selected = (this.lastGame) ? this.lastGame.minScore : 0;
         return [
             {display: 'No Restriction', value: 0, selected: (0 == selected)},
             {display: '1+ (Any Positive)', value: 1, selected: (1 == selected)},
@@ -85,39 +95,39 @@ Template.game.helpers({
     },
 
     equalTurns() {
-        return (this.game && this.game.equalTurns);
+        return (this.lastGame && this.lastGame.equalTurns);
     },
 
     showHints() {
-        return (this.game && this.game.showHints);
+        return (this.lastGame && this.lastGame.showHints);
     },
 
     recycleCards() {
-        return (this.game && this.game.recycleCards);
+        return (this.lastGame && this.lastGame.recycleCards);
     },
 
     autoProceed() {
-        return (this.game && this.game.autoProceed);
+        return (this.lastGame && this.lastGame.autoProceed);
     },
 
     comparisonPrecision() {
-        return (this.game) ? this.game.comparisonPrecision : 'date';
+        return (this.lastGame) ? this.lastGame.comparisonPrecision : 'date';
     },
 
     displayPrecision() {
-        return (this.game) ? this.game.displayPrecision : 'date';
+        return (this.lastGame) ? this.lastGame.displayPrecision : 'date';
     },
 
     easy() {
-        return (!this.game || (this.game && (this.game.minDifficulty == 1)));
+        return (!this.lastGame || (this.lastGame && (this.lastGame.minDifficulty == 1)));
     },
 
     hard() {
-        return (!this.game || (this.game && (this.game.maxDifficulty == 3)));
+        return (!this.lastGame || (this.lastGame && (this.lastGame.maxDifficulty == 3)));
     },
 
     moderate() {
-        return (!this.game || (this.game && (this.game.minDifficulty <= 2) && (this.game.maxDifficulty >= 2)));
+        return (!this.lastGame || (this.lastGame && (this.lastGame.minDifficulty <= 2) && (this.lastGame.maxDifficulty >= 2)));
     },
 
     compact() {
@@ -130,7 +140,12 @@ Template.game.helpers({
 
 });
 
-Template.game.events({
+Template.game_creator.events({
+
+    'click #gameOptionsToggle'(e, i) {
+        i.advanced.set(!i.advanced.get());
+        $(e.target).closest('.modal').toggleClass('advanced');
+    },
 
     'change .difficulty input'(e, i) {
 
@@ -168,7 +183,7 @@ Template.game.events({
         Helpers.setSelectValue(form.displayPrecision, category.precision);
     },
 
-    'submit #game'(e, i) {
+    'submit #gameCreator'(e, i) {
 
         LoadingState.start(e);
         const form = e.target;
@@ -182,8 +197,10 @@ Template.game.events({
 
         // Get values from form element
         const attrs = {
-            roomId: this.room._id,
             categoryId: Helpers.getSelectValue(form.categoryId),
+            name: form.name.value,
+            password: form.password.value,
+            private: form.private.checked,
             winPoints: parseInt(Helpers.getSelectValue(form.winPoints)),
             equalTurns: form.equalTurns.checked,
             minDifficulty: difficulties[0],
@@ -200,14 +217,30 @@ Template.game.events({
         };
 
         Meteor.call('game.create', attrs, function(err, id) {
-            if (!err) {
+
+            if (err) {
+                Logger.log(err);
+                Flasher.set('danger', "An active game with that name already exists.");
+            } else {
+
+                Logger.log("Created Game: " + id);
+                Session.set('lastOwnedGameId', id);
+
                 if (Helpers.isAnonymous()) {
                     Session.set('currentGameId', id);
                 }
-                Logger.log("Created Game: " + id);
+
+                Helpers.subscribe(i, 'games', Helpers.currentAndPreviousGameIds());
+
+                Session.set('gamePassword', form.password.value);
+                form.password.value = '';
+                Helpers.joinGame(id);
+
             }
+
             LoadingState.stop();
             TourGuide.resume();
+
         });
 
     },

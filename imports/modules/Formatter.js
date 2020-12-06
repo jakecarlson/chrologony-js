@@ -16,6 +16,14 @@ Formatter = {
         return moment.utc(date).format("Y-MM-DD");
     },
 
+    datetime(datetime) {
+        return moment.utc(datetime).format("Y-MM-DD h:mm A");
+    },
+
+    relativeTime(datetime) {
+        return moment.utc(datetime).fromNow();
+    },
+
     month(date) {
         return moment.utc(date).format("MMM Y");
     },

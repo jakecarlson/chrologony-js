@@ -38,7 +38,7 @@ if (Meteor.isServer) {
 
         // Log an action
         'log'(attrs) {
-            Permissions.authenticated()
+            Permissions.authenticated();
             attrs.userId = Meteor.userId();
             Logs.insert(attrs);
             return true;

@@ -3,7 +3,7 @@ import { check } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 
-import { Rooms } from "./Rooms";
+import { Games } from "./Games";
 
 if (Meteor.isServer) {
 
@@ -16,8 +16,8 @@ if (Meteor.isServer) {
                 },
                 {
                     fields: {
-                        currentRoomId: 1,
-                        joinedRoomAt: 1,
+                        currentGameId: 1,
+                        joinedGameAt: 1,
                         guest: 1,
                     }
                 }
@@ -27,19 +27,19 @@ if (Meteor.isServer) {
         }
     });
 
-    // Get the players in the room
-    Meteor.publish('players', function playersPublication(roomId) {
-        if (this.userId && roomId) {
+    // Get the players in the game
+    Meteor.publish('players', function playersPublication(gameId) {
+        if (this.userId && gameId) {
             return Meteor.users.find(
                 {
-                    currentRoomId: roomId,
+                    currentGameId: gameId,
                 },
                 {
                     fields: {
                         _id: 1,
                         'profile.name': 1,
-                        currentRoomId: 1,
-                        joinedRoomAt: 1,
+                        currentGameId: 1,
+                        joinedGameAt: 1,
                         guest: 1,
                     }
                 }
@@ -53,8 +53,8 @@ if (Meteor.isServer) {
 
 Meteor.users.helpers({
 
-    currentRoom() {
-        return Rooms.findOne({_id: this.currentRoomId, deletedAt: null});
+    currentGame() {
+        return Games.findOne({_id: this.currentGameId, deletedAt: null});
     },
 
     email() {
@@ -76,6 +76,26 @@ if (Meteor.isServer) {
 
     Meteor.methods({
 
+        'user.setGame'(id, userId = null) {
+
+            if (!userId) {
+                userId = this.userId;
+            }
+
+            Meteor.users.update(
+                userId,
+                {
+                    $set: {
+                        currentGameId: id,
+                        joinedGameAt: (id) ? new Date() : null,
+                    }
+                }
+            );
+
+            return id;
+
+        },
+
         'user.exists'(username) {
             return !!Meteor.users.findOne({username: username});
         },
@@ -89,7 +109,7 @@ if (Meteor.isServer) {
 
             check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
-            Permissions.authenticated()
+            Permissions.authenticated();
             Permissions.notGuest();
 
             const regex = new RegExp(query, 'i');
@@ -116,7 +136,7 @@ if (Meteor.isServer) {
             }
 
             check(ids, [RecordId]);
-            Permissions.authenticated()
+            Permissions.authenticated();
             Permissions.notGuest();
 
             return Meteor.users.find(

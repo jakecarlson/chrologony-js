@@ -1,87 +1,83 @@
-import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
-import { Session } from 'meteor/session';
-import { Flasher } from '../flasher';
 import { LoadingState } from '../../modules/LoadingState';
+
+import { Games } from '../../api/Games';
+import { Cards } from '../../api/Cards';
 
 import './join.html';
 
 Template.join.onCreated(function joinOnCreated() {
-    this.action = null;
+    this.currentGame = new ReactiveVar(null);
 });
 
 Template.join.helpers({
+
+    games() {
+        return Games.find(
+            {},
+            {
+                sort: {
+                    createdAt: -1,
+                },
+            }
+        );
+    },
+
+    started(game) {
+        return game.startedAt;
+    },
+
+    hasPassword(game) {
+        return game.password;
+    },
+
+    title(game) {
+        return game.title();
+    },
+
+    category(game) {
+        return game.category().name;
+    },
+
+    numCards(game) {
+        return game.winPoints;
+    },
+
+    difficulty(game) {
+        const avg = Math.round((game.minDifficulty + game.maxDifficulty) / 2);
+        return Cards.DIFFICULTIES[avg];
+    },
+
+    numPlayers(game) {
+        return game.numPlayers();
+    },
 
 });
 
 Template.join.events({
 
-    'click button'(e, i) {
-        i.action = e.target.name;
+    'click .game-open'(e, i) {
+        const game = getGame(e);
+        if (game && !game.password) {
+            Helpers.joinGame(game._id);
+        }
     },
 
-    'submit #join'(e, i) {
+    'click .game-password'(e, i) {
+        const game = getGame(e);
+        i.currentGame.set(game);
+    },
 
+    'submit #joinPassword'(e, i) {
         LoadingState.start(e);
-
-        const target = e.target;
-        const name = target.name.value;
-        const password = target.password.value;
-
-        // Short circuit if no room name was supplied
-        if (name.trim().length == 0) {
-            Flasher.set('danger', "You must enter a room name.");
-            return;
-        }
-
-        // Short circuit if no password was supplied
-        if (password.trim().length == 0) {
-            Flasher.set('danger', "You must enter a room password.");
-            return;
-        }
-
-        // If this was a create action, validate the room name is unique
-        if (i.action == 'create') {
-            Meteor.call('room.create', name, password, function(err, id) {
-                if (err) {
-                    Logger.log(err);
-                    Flasher.set('danger', "A room with that name already exists.");
-                    LoadingState.stop();
-                } else {
-                    processSuccessfulSubmit(target, id);
-                    LoadingState.stop();
-                    TourGuide.resume();
-                }
-            });
-
-        // Otherwise if this is a join action, validate that the name and password match an existing room
-        } else {
-            Meteor.call('room.join', name, password, function(err, id) {
-                if (err) {
-                    Logger.log(err);
-                    Flasher.set('danger', "That name and password don't match an existing room.");
-                    LoadingState.stop();
-                } else {
-                    processSuccessfulSubmit(target, id);
-                }
-            });
-        }
-
+        const form = e.target;
+        Helpers.joinGame(i.currentGame.get()._id, form.password.value);
     },
 
 });
 
-function processSuccessfulSubmit(form, roomId) {
-    Logger.log("Room Set: " + roomId);
-    Meteor.subscribe('rooms');
-    Session.set('roomPassword', form.password.value);
-    form.name.value = '';
-    form.password.value = '';
-    Flasher.set(
-        'success',
-        "Success! Invite others to join using any of the options under the 'Invite Players' button.",
-        10000
-    );
-    FlowRouter.go('room', {id: roomId});
+function getGame(e) {
+    const el = $(e.target).closest('.game');
+    const gameId = el.attr('data-id');
+    return Games.findOne(gameId);
 }

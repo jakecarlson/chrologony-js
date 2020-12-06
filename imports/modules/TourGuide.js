@@ -1,5 +1,5 @@
 import '/node_modules/bootstrap-tourist/bootstrap-tourist.css';
-import {LoadingState} from "./LoadingState";
+import { LoadingState } from "./LoadingState";
 const Tour = require('bootstrap-tourist');
 
 TourGuide = {
@@ -59,41 +59,41 @@ TourGuide = {
                     preventInteraction: true,
                     placement: "right",
                     title: "The Lobby",
-                    content: "Welcome to " + Meteor.settings.public.app.name + ", the game where players sequence events into a timeline. This is the Lobby, the first screen you will see after logging in. From here you can create a new room or join an existing room.",
+                    content: "Welcome to " + Meteor.settings.public.app.name + ", the game where players sequence events into a timeline. This is the Lobby, the first screen you will see after logging in. From here you can create a new game or join an existing game.",
                 },
                 {
                     element: "#join",
                     onShown: this.wait,
                     placement: "top",
-                    title: "Create or Join a Room",
-                    content: "Let's jump right in and create a room! Enter a room name and password, then click / tap 'Create Room'.",
+                    title: "Create or Join a Game",
+                    content: "Let's jump right in and create a game! Enter a game name and password, then click / tap 'Create Game'.",
                 },
                 {
                     element: "#layout",
                     preventInteraction: true,
                     placement: "right",
-                    title: "The Room",
-                    content: "This is a room, where the games actually happen. The room name is on the upper left; the room menu is on the upper right. The first box is the Board, and there are one or more panels that provide more information about what's happening in the room.",
+                    title: "The Game",
+                    content: "This is a game, where the games actually happen. The game name is on the upper left; the game menu is on the upper right. The first box is the Board, and there are one or more panels that provide more information about what's happening in the game.",
                 },
                 {
                     element: "#players",
                     placement: "right",
-                    title: "Players in this Room",
-                    content: "This is the list of players currently in this room. Each player's score is shown to the right of their name. If you are the room owner, you will also see an 'x' next to all players (besides yourself), which will allow you to eject that player from the room.",
+                    title: "Players in this Game",
+                    content: "This is the list of players currently in this game. Each player's score is shown to the right of their name. If you are the game owner, you will also see an 'x' next to all players (besides yourself), which will allow you to eject that player from the game.",
                 },
                 {
                     element: "#game",
                     onShown: this.wait,
                     placement: "right",
                     title: "Start a New Game",
-                    content: "Only the owner of a room can start a new game. You can start a new game whenever you wish, but note that the current game will be discarded when you do so. Select a category to use, then click / tap on the 'Start' button.",
+                    content: "Only the owner of a game can start a new game. You can start a new game whenever you wish, but note that the current game will be discarded when you do so. Select a category to use, then click / tap on the 'Start' button.",
                 },
                 {
                     element: "#board",
                     preventInteraction: true,
                     placement: "left",
                     title: "The Board",
-                    content: "The Board shows what's going on for the current player's turn. Everyone can see it, but only the player whose turn it is can take any actions. The only exception is that the room owner can end another player's turn on his/her behalf to keep the game moving. The title bar and border of the Board will become blue when it's your turn.",
+                    content: "The Board shows what's going on for the current player's turn. Everyone can see it, but only the player whose turn it is can take any actions. The only exception is that the game owner can end another player's turn on his/her behalf to keep the game moving. The title bar and border of the Board will become blue when it's your turn.",
                 },
                 {
                     element: "#board",
@@ -114,14 +114,14 @@ TourGuide = {
                     onShown: this.wait,
                     placement: "left",
                     title: "End Your Turn",
-                    content: "Now let's end your turn by clicking / tapping on the 'End Turn' button. If you are the only player in the room, it will be your turn again; otherwise it will be the next player's turn. Any cards you guessed right will turn green to indicate that they are locked in. Note that if a new player enters the room when a game is in progress, that player will get as many turns as it takes for him/her to catch up to the rest of the players in the room.",
+                    content: "Now let's end your turn by clicking / tapping on the 'End Turn' button. If you are the only player in the game, it will be your turn again; otherwise it will be the next player's turn. Any cards you guessed right will turn green to indicate that they are locked in. Note that if a new player enters the game when a game is in progress, that player will get as many turns as it takes for him/her to catch up to the rest of the players in the game.",
                 },
                 {
                     element: "#invitePlayers",
                     preventInteraction: true,
                     placement: "right",
                     title: "Invite Players",
-                    content: "Feeling lonely in here all by yourself? To invite others to play with you, click / tap on the 'Invite Players' button. You can copy a shareable room URL or send friends an invitation directly. You can leave the room and go back to the Lobby by clicking / tapping on the 'Leave Room' button.",
+                    content: "Feeling lonely in here all by yourself? To invite others to play with you, click / tap on the 'Invite' button. You can copy a shareable game URL or send friends an invitation directly. You can leave the game and go back to the Lobby by clicking / tapping on the 'Leave Game' button.",
                 },
                 {
                     element: "#menu",
@@ -174,7 +174,7 @@ TourGuide = {
                     preventInteraction: true,
                     placement: "bottom",
                     title: "The End",
-                    content: "That's it! You now know how to create a room and play the game. You also learned how to create your own categories and clues. There's plenty more to explore, but you have the basics down. Go have fun! Click / tap on the 'End Tour' button.",
+                    content: "That's it! You now know how to create a game and play the game. You also learned how to create your own categories and clues. There's plenty more to explore, but you have the basics down. Go have fun! Click / tap on the 'End Tour' button.",
                 }
             ],
         });

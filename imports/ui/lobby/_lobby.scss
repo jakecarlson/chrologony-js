@@ -2,15 +2,77 @@
   height: 100%;
 }
 
-@media (min-height: 400px) {
-  #join {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    min-width: 18rem;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+/* join */
+#join .game {
+  cursor: pointer;
+}
+#join .fa-unlock-alt {
+  opacity: .25;
+}
+#joinGames {
+  min-width: 60rem;
+}
+#gamePassword {
+  width: 13rem;
+}
+
+/* gameCreator */
+#gameCreatorModal .modal-dialog {
+  transition: max-width 1s !important;
+}
+@media (min-width: 576px) {
+  #gameCreatorModal.advanced .modal-dialog {
+    max-width: calc(100% - 30px);
   }
+}
+#gameCreatorModal.advanced #gameAdvanced {
+  padding-top: 1rem;
+  border-top: 1px solid $secondary;
+}
+
+#gameOptionsToggle {
+  font-size: medium;
+  display: block;
+  color: $dark;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+#gameOptionsToggle .fa {
+  width: .5rem;
+}
+#gameOptionsToggle.collapsed {
+  color: $dark;
+}
+#gameOptionsToggle .fa-caret-up,
+#gameOptionsToggle.collapsed .fa-caret-down
+{
+  display: inline-block;
+}
+#gameOptionsToggle.collapsed .fa-caret-up,
+#gameOptionsToggle .fa-caret-down
+{
+  display: none;
+}
+.difficulty .btn-group {
+  width: 100%;
+}
+.difficulty .btn {
+  line-height: calc(1em + .75rem + 1px);
+}
+.difficulty .easy.btn-light:not(:disabled):not(.disabled).active {
+  background: $success;
+  border-color: $success;
+  color: $white;
+}
+.difficulty .moderate.btn-light:not(:disabled):not(.disabled).active {
+  background: $warning;
+  border-color: $warning;
+  color: $dark;
+}
+.difficulty .hard.btn-light:not(:disabled):not(.disabled).active {
+  background: $danger;
+  border-color: $danger;
+  color: $white;
 }
 
 /* child manager */

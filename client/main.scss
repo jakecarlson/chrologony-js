@@ -56,7 +56,7 @@ main {
     width: calc(100% - 30px);
     -ms-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
-    z-index: 99;
+    z-index: 9999;
 }
 
 @import "../imports/ui/_header.scss";
@@ -65,7 +65,7 @@ main {
 @import "../imports/ui/auth/_auth.scss";
 @import "../imports/ui/content/_content.scss";
 @import "../imports/ui/lobby/_lobby.scss";
-@import "../imports/ui/room/_room.scss";
+@import "../imports/ui/game/_game.scss";
 @import "../imports/ui/_footer.scss";
 @import "../imports/ui/_mobile.scss";
 

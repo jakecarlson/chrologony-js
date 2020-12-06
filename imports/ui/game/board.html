@@ -7,7 +7,7 @@
             <header class="{{headerClasses}}">
 
                 {{#if isAnonymous}}
-                    {{> game room=currentRoom game=currentGame turn=currentTurn compact=true}}
+                    {{> game_creator game=currentGame turn=currentTurn compact=true}}
                 {{else}}
                     <h2 class="card-title text-center float-sm-left mb-2 mb-sm-0 board-title">{{boardTitle}}</h2>
                 {{/if}}

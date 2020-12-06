@@ -2,7 +2,6 @@ import { Meteor } from "meteor/meteor";
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { LoadingState } from "../../modules/LoadingState";
-import { Flasher } from "../../ui/flasher";
 
 AccountsTemplates.configure({
 

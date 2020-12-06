@@ -3,7 +3,6 @@ import { Template } from 'meteor/templating';
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { LoadingState } from '../modules/LoadingState';
-import { Flasher } from "./flasher";
 
 import './header.html';
 

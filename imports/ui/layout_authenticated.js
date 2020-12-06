@@ -10,7 +10,7 @@ import './layout_authenticated.html';
 import './content/privacy.js';
 import './content/terms.js';
 import './lobby/lobby.js';
-import './room/room.js';
+import './game/game.js';
 import './child_manager.js';
 import './header.js';
 import './share.js';
@@ -29,8 +29,8 @@ Template.layout_authenticated.onCreated(function layout_authenticatedOnCreated()
     this.autorun(() => {
 
         FlowRouter.watchPathChange();
-        this.subscribe('rooms', (Meteor.user()) ? Meteor.user().currentRoomId : null);
-        this.subscribe('categories');
+        Helpers.subscribe(this, 'games', Helpers.currentAndPreviousGameIds());
+        Helpers.subscribe(this, 'categories');
 
         if (this.subscriptionsReady()) {
 
@@ -80,7 +80,7 @@ Template.layout_authenticated.helpers({
     },
 
     columnsBoard() {
-        return ((FlowRouter.getRouteName() != 'room') || !Session.get('fullBoard'));
+        return ((FlowRouter.getRouteName() != 'game') || !Session.get('fullBoard'));
     },
 
 })

@@ -114,7 +114,7 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.precision));
 
@@ -145,7 +145,7 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         Permissions.owned(Categories.findOne(attrs._id));
         Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.precision));
@@ -176,7 +176,7 @@ Meteor.methods({
 
         check(id, RecordId);
         check(collaborators, [RecordId]);
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         Permissions.owned(Categories.findOne(id));
 
@@ -203,7 +203,7 @@ Meteor.methods({
     'category.remove'(id) {
 
         check(id, RecordId);
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         Permissions.owned(Categories.findOne(id));
 
@@ -221,7 +221,7 @@ Meteor.methods({
 
     'category.updateClueCounts'(ids) {
 
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
 
         ids.forEach(function(id) {
@@ -248,7 +248,7 @@ if (Meteor.isServer) {
 
             check(query, NonEmptyString);
             check(excludeIds, [RecordId]);
-            Permissions.authenticated()
+            Permissions.authenticated();
             Permissions.notGuest();
 
             const regex = new RegExp(query, 'i');
@@ -278,7 +278,7 @@ if (Meteor.isServer) {
             }
 
             check(ids, [RecordId]);
-            Permissions.authenticated()
+            Permissions.authenticated();
             Permissions.notGuest();
 
             return Categories.find(

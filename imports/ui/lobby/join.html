@@ -1,17 +1,97 @@
 <template name="join">
 
-    <div id="join" class="card card-small border-primary text-white mx-auto mb-4">
+    <div id="join" class="card border-primary text-white mx-auto mb-4">
+
         <header class="card-header bg-primary">
-            <h1 class="card-title text-white text-center">Join or Create a Room</h1>
+            <h1 class="card-title text-white float-left">Join a Game</h1>
+            <button class="btn btn-secondary float-right" title="Create a New Game" data-toggle="modal" data-target="#gameCreatorModal">
+                Create a New Game
+            </button>
         </header>
-        <form class="card-body text-center" autocomplete="off" novalidate>
-            <label class="sr-only" for="roomName">Room Name</label>
-            <input type="text" class="form-control mb-3" name="name" id="roomName" aria-describedby="roomNameHelp" placeholder="Room Name" maxlength="40" autocapitalize="none" autocomplete="one-time-code" autocorrect="off">
-            <label class="sr-only" for="roomPassword">Room Password</label>
-            <input type="password" class="form-control mb-3" name="password" id="roomPassword" aria-describedby="roomPasswordHelp" placeholder="Room Password" maxlength="40" autocapitalize="none" autocomplete="one-time-code" autocorrect="off">
-            <button type="submit" name="join" class="btn btn-primary float-right join" disabled="{{loading}}">Join Room</button>
-            <button type="submit" name="create" class="btn btn-secondary float-left create" disabled="{{loading}}">Create Room</button>
-        </form>
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+                <table id="joinGames" class="table table-hover mb-0">
+                    <colgroup>
+                        <col class="name">
+                        <col class="category">
+                        <col class="cards">
+                        <col class="difficulty">
+                        <col class="created">
+                        <col class="started">
+                        <col class="players">
+                        <col class="join">
+                    </colgroup>
+                    <thead class="table-borderless">
+                        <tr>
+                            <th scope="col"><i class="fa fa-lock"></i> Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col" class="d-none d-lg-table-cell"># Cards</th>
+                            <th scope="col" class="d-none d-lg-table-cell">Difficulty</th>
+                            <th scope="col">Created</th>
+                            <th scope="col">Started</th>
+                            <th scope="col"># Players</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each game in games}}
+                            <tr
+                                class="
+                                    game
+                                    {{#if hasPassword game}}
+                                        game-password
+                                    {{else}}
+                                        game-open
+                                    {{/if}}
+                                    {{#if started game}}
+                                        table-primary
+                                    {{/if}}
+                                "
+                                data-id="{{game._id}}"
+                                data-toggle="{{#if hasPassword game}}modal{{/if}}"
+                                data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
+                            >
+                                <th>
+                                    <i class="fa fa-{{#if hasPassword game}}lock{{else}}unlock-alt{{/if}}"></i>
+                                    {{title game}}
+                                </th>
+                                <td>{{category game}}</td>
+                                <td class="d-none d-lg-table-cell">{{numCards game}}</td>
+                                <td class="d-none d-lg-table-cell">{{difficulty game}}</td>
+                                <td>{{relativeTime game.createdAt}}</td>
+                                <td>{{relativeTime game.startedAt}}</td>
+                                <td>{{numPlayers game}}</td>
+                                <td><button class="btn btn-primary btn-sm">Join</button></td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content border-primary">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="passwordModalTitle">Enter the Game Password</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-0">
+                    <form class="form-inline justify-content-center p-2" id="joinPassword">
+                        <label class="sr-only" for="gamePassword">Email</label>
+                        <input type="password" name="password" class="form-control mr-2 attr" id="gamePassword" placeholder="Password">
+                        <button type="submit" class="btn btn-primary">Join</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 </template>

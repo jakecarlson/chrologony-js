@@ -6,8 +6,8 @@ import { Template } from "meteor/templating";
 import { LoadingState } from "../modules/LoadingState";
 
 import './embed.html';
-import './room/board.js';
-import './room/clue_more.js';
+import './game/board.js';
+import './game/clue_more.js';
 
 import { Games } from "../api/Games";
 import { Turns } from "../api/Turns";
@@ -23,7 +23,6 @@ Template.embed.onCreated(function embedOnCreated() {
     Session.set('muted', true);
 
     this.initialized = false;
-    this.room = new ReactiveVar(null);
     this.game = new ReactiveVar(null);
     this.turn = new ReactiveVar(null);
     this.clueMore = new ReactiveVar(null);
@@ -32,15 +31,15 @@ Template.embed.onCreated(function embedOnCreated() {
 
         LoadingState.start();
 
-        Helpers.subscribe(this, 'rooms', 'anonymous');
+        Helpers.subscribe(this, 'games');
 
-        const user = Meteor.user({fields: {currentRoomId: 1}});
+        const user = Meteor.user({fields: {currentGameId: 1}});
         if (user) {
 
-            this.room.set(user.currentRoom());
-            if (this.room.get()) {
+            this.game.set(user.currentGame());
+            if (this.game.get()) {
 
-                Helpers.subscribe(this, 'games', this.room.get()._id);
+                Helpers.subscribe(this, 'games', [this.game.get()._id]);
 
                 if (Session.get('currentGameId')) {
 
@@ -87,11 +86,7 @@ Template.embed.onCreated(function embedOnCreated() {
 Template.embed.helpers({
 
     dataReady() {
-        return (Meteor.user() && Template.instance().room.get());
-    },
-
-    currentRoom() {
-        return Template.instance().room.get();
+        return (Meteor.user() && Template.instance().game.get());
     },
 
     currentGame() {

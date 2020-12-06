@@ -214,7 +214,7 @@ Meteor.methods({
                 categoryId: RecordId,
             }
         );
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         const category = Categories.findOne(attrs.categoryId);
         Permissions.check((category && category.canAddClue()));
@@ -246,7 +246,7 @@ Meteor.methods({
                 active: Boolean,
             }
         );
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         Permissions.check(Clues.findOne(attrs._id).canEdit(attrs.categoryId));
 
@@ -274,7 +274,7 @@ Meteor.methods({
 
         check(id, RecordId);
         check(categories, [RecordId]);
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         Permissions.check(Clues.findOne(id).canSetCategories(categories))
 
@@ -301,7 +301,7 @@ Meteor.methods({
 
         check(ids, [RecordId]);
         check(categoryId, RecordId);
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         ids.forEach(function(id) {
             Permissions.check(Clues.findOne(id).canSetCategories([categoryId]));
@@ -327,7 +327,7 @@ Meteor.methods({
 
         check(ids, [RecordId]);
         check(categoryId, RecordId);
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         ids.forEach(function(id) {
             Permissions.check(Clues.findOne(id).canSetCategories([categoryId]));
@@ -367,7 +367,7 @@ Meteor.methods({
                 approximation: Match.OneOf(null, Boolean),
             }
         );
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         Permissions.check(Clues.findOne(attrs._id).canEdit(attrs.categoryId));
 
@@ -397,7 +397,7 @@ Meteor.methods({
     'clue.remove'(id) {
 
         check(id, RecordId);
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.notGuest();
         Permissions.owned(Clues.findOne(id));
 

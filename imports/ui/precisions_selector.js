@@ -14,10 +14,6 @@ Template.precisions_selector.helpers({
         return Games.PRECISION_OPTIONS;
     },
 
-    capitalize(str) {
-        return Formatter.capitalize(str);
-    },
-
 });
 
 Template.precisions_selector.events({

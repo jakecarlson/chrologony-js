@@ -3,13 +3,9 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { LoadingState } from "../../modules/LoadingState";
 
-import './card.html';
+import { Cards } from '../../api/Cards';
 
-const DIFFICULTY_NAMES = [
-    'Easy',
-    'Moderate',
-    'Hard',
-];
+import './card.html';
 
 Template.card.onCreated(function boardOnCreated() {
     this.clue = new ReactiveVar(null);
@@ -140,7 +136,7 @@ Template.card.helpers({
 
     difficultyName() {
         const level = getDifficultyLevel(Template);
-        return DIFFICULTY_NAMES[level - 1];
+        return Cards.DIFFICULTIES[level];
     },
 
     difficultyDots() {

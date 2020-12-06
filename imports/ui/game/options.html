@@ -1,0 +1,85 @@
+<template name="options">
+
+    {{#if dataReady}}
+        <div id="options" class="mb-4">
+
+            {{#if dataReady}}
+
+                <a class="text-white" data-toggle="modal" data-target="#gameOptionsModal" href="#gameOptionsModal" role="button">
+                    <i class="fa fa-info-circle"></i>
+                    Game Options
+                </a>
+
+                <div class="modal fade" id="gameOptionsModal" tabindex="-1" role="dialog" aria-labelledby="gameOptionsTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                        <div class="modal-content border-primary">
+
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="gameOptionsTitle">Game Options</h5>
+                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" class="text-white">&times;</span>
+                                </button>
+                            </div>
+
+                            <dl class="modal-body row mb-0">
+
+                                <dt class="col-7">Category</dt>
+                                    <dd class="col-5">{{category}}</dd>
+
+                                <dt class="col-7">Password</dt>
+                                    <dd class="col-5">{{boolean game.password}}</dd>
+
+                                <dt class="col-7">Private</dt>
+                                    <dd class="col-5">{{boolean game.private}}</dd>
+
+                                <dt class="col-7">Win Condition</dt>
+                                    <dd class="col-5">{{limit game.winCondition 'Cards'}}</dd>
+
+                                <dt class="col-7">Card Limit per Turn</dt>
+                                    <dd class="col-5">{{limit game.cardLimit 'Seconds'}}</dd>
+
+                                <dt class="col-7">Player Turn Order</dt>
+                                    <dd class="col-5">{{capitalize game.turnOrder}}</dd>
+
+                                <dt class="col-7">Minimum Clue Difficulty</dt>
+                                    <dd class="col-5">{{difficulty game.minDifficulty}}</dd>
+
+                                <dt class="col-7">Maximum Clue Difficulty</dt>
+                                    <dd class="col-5">{{difficulty game.maxDifficulty}}</dd>
+
+                                <dt class="col-7">Clue Score Threshold</dt>
+                                    <dd class="col-5">{{limit game.minScore}}</dd>
+
+                                <dt class="col-7">Card Guess Time Limit</dt>
+                                    <dd class="col-5">{{limit game.cardTime}}</dd>
+
+                                <dt class="col-7">Guess Datetime Precision</dt>
+                                    <dd class="col-5">{{capitalize game.comparisonPrecision}}</dd>
+
+                                <dt class="col-7">Display Datetime Precision</dt>
+                                    <dd class="col-5">{{capitalize game.displayPrecision}}</dd>
+
+                                <dt class="col-7">Equal # Turns per Player</dt>
+                                    <dd class="col-5">{{boolean game.equalTurns}}</dd>
+
+                                <dt class="col-7">Show Hints</dt>
+                                    <dd class="col-5">{{boolean game.showHints}}</dd>
+
+                                <dt class="col-7">Auto-Proceed on Correct Guess</dt>
+                                    <dd class="col-5">{{boolean game.autoProceed}}</dd>
+
+                                <dt class="col-7">Recycle Incorrect Cards</dt>
+                                    <dd class="col-5">{{boolean game.recycleCards}}</dd>
+
+                            </dl>
+
+                        </div>
+                    </div>
+                </div>
+
+            {{/if}}
+
+        </div>
+    {{/if}}
+
+</template>

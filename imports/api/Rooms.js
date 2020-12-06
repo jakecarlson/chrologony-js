@@ -117,7 +117,7 @@ Meteor.methods({
         }
 
         check(userId, RecordId);
-        Permissions.authenticated()
+        Permissions.authenticated();
 
         Logger.audit('leave', {collection: 'Rooms', documentId: Meteor.user().currentRoomId});
 
@@ -160,7 +160,7 @@ Meteor.methods({
         if (gameId) {
             check(gameId, RecordId);
         }
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.owned(Rooms.findOne(id));
 
         Logger.log('Set Room ' + id + ' Game to ' + gameId);
@@ -188,7 +188,7 @@ Meteor.methods({
     'room.remove'(id) {
 
         check(id, RecordId);
-        Permissions.authenticated()
+        Permissions.authenticated();
         Permissions.owned(Rooms.findOne(id));
 
         Logger.log('Delete Room: ' + id);
@@ -236,7 +236,7 @@ if (Meteor.isServer) {
 
             check(roomId, RecordId);
             check(token, NonEmptyString);
-            Permissions.authenticated()
+            Permissions.authenticated();
 
             if (Hasher.md5.hash(roomId) == token.trim()) {
                 setRoom(roomId);
@@ -272,7 +272,7 @@ if (Meteor.isServer) {
             const room = Rooms.findOne(id);
             if (room) {
 
-                Permissions.authenticated()
+                Permissions.authenticated();
                 Permissions.check(Permissions.owned(room));
 
                 const invite = Helpers.renderHtmlEmail({
@@ -327,7 +327,7 @@ function validateAndGetByName(name, password) {
 
     check(name, NonEmptyString);
     check(password, NonEmptyString);
-    Permissions.authenticated()
+    Permissions.authenticated();
 
     let roomId = false;
 

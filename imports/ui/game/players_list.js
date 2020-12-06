@@ -2,7 +2,6 @@ import { Template } from 'meteor/templating';
 
 import './players_list.html';
 import './player.js';
-import {Cards} from "../../api/Cards";
 
 Template.players_list.onCreated(function players_listOnCreated() {
 
@@ -11,11 +10,11 @@ Template.players_list.onCreated(function players_listOnCreated() {
 Template.players_list.helpers({
 
     dataReady() {
-        return this.room;
+        return this.game;
     },
 
     players() {
-        return this.room.players();
+        return this.game.players();
     },
 
     isTurnOwner(userId) {
@@ -23,7 +22,7 @@ Template.players_list.helpers({
     },
 
     numPlayers() {
-        return this.room.players().count();
+        return this.game.numPlayers();
     },
 
     currentRound() {

@@ -10,8 +10,8 @@ Accounts.config({
         createdAt: 1,
         profile: 1,
         services: 1,
-        currentRoomId: 1,
-        joinedRoomAt: 1,
+        currentGameId: 1,
+        joinedGameAt: 1,
         guest: 1,
     },
 });

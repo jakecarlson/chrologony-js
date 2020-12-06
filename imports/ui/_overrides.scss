@@ -4,11 +4,24 @@
   color: $dark !important;
 }
 
-/* card overrides */
-.card:not(.game-card) {
+/* forms */
+@media (min-width: 576px) {
+  .form-check-padded {
+    padding-top: 2.25rem;
+    padding-bottom: .75rem;
+  }
+}
+
+/* cards */
+.card:not(.game-card),
+.modal-content
+{
   box-shadow: 0 0 .1rem .02rem $white;
 }
 @media (min-width: 400px) {
+  .card:not(.game-card) {
+    max-width: 100%;
+  }
   .card-small {
     max-width: 20rem;
   }

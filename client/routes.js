@@ -5,8 +5,7 @@ import { Session } from 'meteor/session';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { Categories } from '../imports/api/Categories';
-import { Rooms } from '../imports/api/Rooms';
-import { Flasher } from '../imports/ui/flasher';
+import { Games } from '../imports/api/Games';
 
 document.addEventListener('deviceready', function() {
     universalLinks.subscribe('ulink', function(e) {
@@ -43,7 +42,7 @@ AccountsTemplates.configureRoute('signUp', {
         if (Meteor.user()) {
             Flasher.set(
                 'success',
-                'You have successfully registered. Create or join a room and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>',
+                'You have successfully registered. Create or join a game and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>',
                 false
             );
             Logger.audit('signUp');
@@ -227,40 +226,40 @@ FlowRouter.route('/categories', {
     }
 });
 
-FlowRouter.route('/rooms/:id/:token?', {
+FlowRouter.route('/games/:id/:token?', {
 
-    name: 'room',
+    name: 'game',
 
     title(params, query, data) {
-        const room = Rooms.findOne(params.id);
-        return getTitle(room ? room.name : 'unknown');
+        const game = Games.findOne(params.id);
+        return getTitle(game ? game.title() : 'unknown');
     },
 
     triggersEnter: [redirectToHome],
 
     action(params, queryParams) {
 
-        Logger.log("Route: room");
+        Logger.log("Route: game");
 
         if (params.token) {
-            Meteor.call('room.joinByToken', params.id, params.token, function(err, id) {
+            Meteor.call('game.joinByToken', params.id, params.token, function(err, id) {
                 if (err) {
                     Logger.log(err);
-                    Flasher.set('danger', "Room token is not valid.");
+                    Flasher.set('danger', "Game token is not valid.");
                     FlowRouter.go('lobby');
                 } else {
-                    Logger.log("Room Set: " + id);
-                    Meteor.subscribe('rooms');
+                    Logger.log("Game Set: " + id);
+                    Meteor.subscribe('games', Helpers.currentAndPreviousGameIds());
                     Flasher.set(
                         'success',
-                        "Success! Invite others to join using any of the options under the 'Invite Players' button.",
+                        "Success! Invite others to join using any of the options under the 'Invite' button.",
                         10000
                     );
-                    renderRoom(params);
+                    renderGame(params);
                 }
             });
         } else {
-            renderRoom(params);
+            renderGame(params);
         }
 
     }
@@ -290,13 +289,13 @@ function getTitle(page) {
     return Meteor.settings.public.app.name + ': ' + page;
 }
 
-function renderRoom(params) {
-    Logger.audit('join', {collection: 'Rooms', documentId: params.id});
-    Logger.track('joinRoom', {roomId: params.id, token: params.token});
+function renderGame(params) {
+    Logger.audit('join', {collection: 'Games', documentId: params.id});
+    Logger.track('joinGame', {gameId: params.id, token: params.token});
     BlazeLayout.render(
         'layout_authenticated',
         {
-            main: 'room',
+            main: 'game',
         }
     );
 }

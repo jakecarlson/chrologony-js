@@ -12,7 +12,7 @@ Template.player.onCreated(function playerOnCreated() {
 Template.player.helpers({
 
     dataReady() {
-        return (this.room && this.player);
+        return (this.game && this.player);
     },
 
     isTurnOwner() {
@@ -30,7 +30,7 @@ Template.player.helpers({
     numLockedCards() {
         return Cards.find(
             {
-                gameId: this.room.currentGameId,
+                gameId: this.game._id,
                 ownerId: this.player._id,
                 lockedAt: {$ne: null},
             }
@@ -40,7 +40,7 @@ Template.player.helpers({
     numPendingCards() {
         return Cards.find(
             {
-                gameId: this.room.currentGameId,
+                gameId: this.game._id,
                 ownerId: this.player._id,
                 $or: [
                     {lockedAt: {$ne: null}},
@@ -51,11 +51,11 @@ Template.player.helpers({
     },
 
     gameInProgress() {
-        return this.room.currentGameId;
+        return this.game.startedAt;
     },
 
     canEject() {
-        return ((this.room.ownerId == Meteor.userId()) && (this.player._id != Meteor.userId()));
+        return ((this.game.ownerId == Meteor.userId()) && (this.player._id != Meteor.userId()));
     },
 
     lockedBadgeClasses() {
@@ -75,9 +75,9 @@ Template.player.events({
 
     'click .eject'(e, i) {
         LoadingState.start(e);
-        Meteor.call('room.leave', this.player._id, function(err, id) {
+        Meteor.call('game.leave', this.player._id, function(err, id) {
             if (!err) {
-                Logger.log("Player Left Room: " + id);
+                Logger.log("Player Left Game: " + id);
             }
             LoadingState.stop();
         });

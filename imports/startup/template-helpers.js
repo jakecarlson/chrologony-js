@@ -81,3 +81,15 @@ Template.registerHelper('termsLink', function() {
 Template.registerHelper('supportLink', function() {
     return Meteor.settings.public.app.supportUrl;
 });
+
+Template.registerHelper('capitalize', function(str) {
+    return Formatter.capitalize(str);
+});
+
+Template.registerHelper('datetime', function(val) {
+    return (val ? Formatter.datetime(val) : null);
+});
+
+Template.registerHelper('relativeTime', function(val) {
+    return (val ? Formatter.relativeTime(val) : null);
+});

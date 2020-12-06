@@ -12,11 +12,11 @@ Template.board.onCreated(function boardOnCreated() {
 
     this.autorun(() => {
 
-        // Make sure the current turn isn't for a user who isn't in the room anymore
+        // Make sure the current turn isn't for a user who isn't in the game anymore
         if (
             this.data.turn &&
             (this.data.turn.ownerId != Meteor.userId()) &&
-            (!this.data.turn.ownerId || (this.data.turn.owner().currentRoomId != this.data.room._id))
+            (!this.data.turn.ownerId || (this.data.turn.owner().currentGameId != this.data.game._id))
         ) {
             endTurn(this.data.game);
         }
@@ -50,7 +50,7 @@ Template.board.onCreated(function boardOnCreated() {
 Template.board.helpers({
 
     dataReady() {
-        return this.room;
+        return this.game;
     },
 
     boardTitle() {
@@ -71,7 +71,7 @@ Template.board.helpers({
         } else if (gameHasEnded(this.game)) {
             return 'Game has Ended';
         } else {
-            return 'No Game in Progress';
+            return 'Waiting ...';
         }
     },
 
@@ -111,7 +111,7 @@ Template.board.helpers({
             gameHasEnded(this.game) ||
             (
                 (
-                    !isRoomOwner(this.room) ||
+                    !isGameOwner(this.game) ||
                     TourGuide.isActive()
                 ) &&
                 (
@@ -126,7 +126,11 @@ Template.board.helpers({
     prompt() {
         switch(getStatus(this.turn)) {
             case 'waiting':
-                return "Waiting for a game to start ...";
+                if (this.game.ownerId == Meteor.userId()) {
+                    return "Click on the 'Start' button to start the game.";
+                } else {
+                    return "Waiting for owner to start the game ...";
+                }
                 break;
             case 'guessing':
                 if (this.game.cardTime) {
@@ -255,10 +259,6 @@ Template.board.helpers({
         return Helpers.isAnonymous();
     },
 
-    currentRoom() {
-        return this.room;
-    },
-
     currentGame() {
         return this.game;
     },
@@ -339,8 +339,8 @@ function isCurrentPlayer(turn) {
     return (turn && (turn.ownerId == Meteor.userId()));
 }
 
-function isRoomOwner(room) {
-    return (room.ownerId == Meteor.userId());
+function isGameOwner(game) {
+    return (game.ownerId == Meteor.userId());
 }
 
 function saveCardPos() {
@@ -359,7 +359,7 @@ function saveCardPos() {
 
 }
 
-function drawCard(turnId, t) {
+function drawCard(turnId) {
     LoadingState.start();
     Meteor.call('card.draw', turnId, function(err, id) {
         if (!err) {

@@ -3,11 +3,11 @@
     {{#if dataReady}}
         <div id="players" class="card border-primary mb-4">
             <div class="card-header bg-primary">
-                <h2 class="card-title text-white text-center text-sm-left">Players in this Room ({{numPlayers}})</h2>
+                <h2 class="card-title text-white text-center text-sm-left">Players in this Game ({{numPlayers}})</h2>
             </div>
             <ul id="playersAccordion" class="list-group list-group-flush">
                 {{#each currentPlayer in players}}
-                    {{> player room=room game=game turn=turn player=currentPlayer}}
+                    {{> player game=game turn=turn player=currentPlayer}}
                 {{/each}}
             </ul>
             <div class="card-footer text-muted">

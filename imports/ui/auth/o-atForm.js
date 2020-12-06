@@ -1,7 +1,6 @@
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { Template } from "meteor/templating";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
-import { Flasher } from "../flasher";
 
 import './o-atForm.html';
 import './o-atError.js';

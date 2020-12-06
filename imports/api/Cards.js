@@ -14,6 +14,12 @@ import { Turns } from "./Turns";
 
 export const Cards = new Mongo.Collection('cards');
 
+Cards.DIFFICULTIES = {
+    1:  'Easy',
+    2:  'Moderate',
+    3:  'Hard',
+};
+
 Cards.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
     turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
@@ -147,7 +153,7 @@ Meteor.methods({
     'card.setPositions'(cards) {
 
         check(cards, Object);
-        Permissions.authenticated()
+        Permissions.authenticated();
 
         Logger.log("Card Positions: " + JSON.stringify(cards));
 
@@ -177,7 +183,7 @@ Meteor.methods({
     'card.lock'(id) {
 
         check(id, RecordId);
-        Permissions.authenticated()
+        Permissions.authenticated();
 
         // Double check that the card was correct before locking
         const card = Cards.findOne(id);
@@ -210,9 +216,9 @@ if (Meteor.isServer) {
         'card.draw'(turnId) {
 
             check(turnId, RecordId);
-            Permissions.authenticated()
+            Permissions.authenticated();
             const turn = Turns.findOne(turnId);
-            Permissions.check((turn.game().roomId == Meteor.user().currentRoomId));
+            Permissions.check((turn.gameId == Meteor.user().currentGameId));
 
             // If the game has a turn card limit, check whether the user is allowed to draw
             Permissions.check(!turn.hasReachedCardLimit());
@@ -237,7 +243,7 @@ if (Meteor.isServer) {
 
             check(id, RecordId);
             check(pos, Match.Integer);
-            Permissions.authenticated()
+            Permissions.authenticated();
 
             // Get the card and determine if the guess is correct
             const card = Cards.findOne(id);

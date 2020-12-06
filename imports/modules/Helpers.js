@@ -2,6 +2,8 @@ import { Meteor } from "meteor/meteor";
 import { SSR, Template } from 'meteor/meteorhacks:ssr';
 import { Session } from "meteor/session";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+import { LoadingState } from "./LoadingState";
+
 import { Cards } from "../api/Cards";
 
 Helpers = {
@@ -137,7 +139,7 @@ Helpers = {
     },
 
     isAnonymous() {
-        return (Meteor.user() && (Meteor.user().currentRoomId == 'anonymous'));
+        return (Meteor.user() && (Meteor.user().currentGameId == 'anonymous'));
     },
 
     subscribe(ctx, name, arg) {
@@ -162,12 +164,59 @@ Helpers = {
         window.open(url, '_system');
     },
 
-    isAndroid() {
-        return (window.cordova.platformId == 'android');
+    isNonEmptyString(str) {
+        return (str && (str.length > 0));
     },
 
-    isPortrait() {
-        return ['portrait', 'portrait-primary', 'portrait-secondary'].includes(screen.orientation.type);
+    currentGameId() {
+        return (Meteor.userId() ? Meteor.user({fields: {currentGameId: 1}}).currentGameId : null);
+    },
+
+    currentAndPreviousGameIds() {
+        let gameIds = [this.currentGameId()];
+        if (Session.get('lastOwnedGameId')) {
+            gameIds.push(Session.get('lastOwnedGameId'));
+        }
+        return gameIds;
+    },
+
+    joinGame(id, password = null, userId = null) {
+
+        LoadingState.start();
+
+        Meteor.call('game.join', id, password, userId, function(err, id) {
+
+            if (!err) {
+
+                Logger.log('Joined Game: ' + id);
+                Flasher.set(
+                    'success',
+                    "Success! Invite others to join using any of the options under the 'Invite' button.",
+                    10000
+                );
+                Helpers.closeModal();
+
+                if (id) {
+                    FlowRouter.go('game', {id: id});
+                } else {
+                    FlowRouter.go('lobby');
+                }
+
+            } else {
+                Flasher.set(
+                    'danger',
+                    "Could not join game. Please try again."
+                );
+                FlowRouter.go('lobby');
+            }
+
+        });
+    },
+
+    // Hack to hide modal backdrop
+    closeModal() {
+        $(document.body).removeClass('modal-open');
+        $('.modal-backdrop').hide();
     },
 
 };

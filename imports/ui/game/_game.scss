@@ -1,12 +1,12 @@
-/* Room */
+/* Game */
 @media (max-width: 575px) {
-  #room .row {
+  #game .row {
     display: block;
     margin-left: 0;
     margin-right: 0;
   }
-  #room .col-lg-9,
-  #room .col-lg-3
+  #game .col-lg-9,
+  #game .col-lg-3
   {
     padding-left: 0;
     padding-right: 0;
@@ -16,26 +16,26 @@
   border-left-width: 0 !important;
   border-right-width: 0 !important;
 }
-#roomTitle {
+#gameTitle {
   font-size: xx-large;
   margin-bottom: 0;
 }
-.full-width #roomTitle,
+.full-width #gameTitle,
 .full-width #playerCardsTitle
 {
   padding-left: 1.25rem;
 }
 @media (max-width: 575px) {
-  #roomTitle,
+  #gameTitle,
   #playerCardsTitle
   {
-    padding-left: 1.25rem;
+    padding-left: 0;
   }
 }
-#roomSide .card-title {
+#gameSide .card-title {
   font-size: medium;
 }
-.full-width #roomMenu {
+.full-width #gameMenu {
   padding-right: 1.25rem;
 }
 .invite-menu {
@@ -296,49 +296,4 @@
   font-size: 25rem;
   text-align: center;
   margin-top: -1.25rem;
-}
-
-/* game */
-#gameOptionsToggle {
-  font-size: medium;
-  display: block;
-  color: $dark;
-  text-decoration: none;
-  margin-bottom: 1rem;
-}
-#gameOptionsToggle .fa {
-  width: .5rem;
-}
-#gameOptionsToggle.collapsed {
-  color: $dark;
-}
-#gameOptionsToggle .fa-caret-down,
-#gameOptionsToggle.collapsed .fa-caret-right
-{
-  display: inline-block;
-}
-#gameOptionsToggle.collapsed .fa-caret-down,
-#gameOptionsToggle .fa-caret-right
-{
-  display: none;
-}
-
-.difficulty-label {
-  display: inline-block;
-  width: 4rem;
-}
-.difficulty .easy.btn-light:not(:disabled):not(.disabled).active {
-  background: $success;
-  border-color: $success;
-  color: $white;
-}
-.difficulty .moderate.btn-light:not(:disabled):not(.disabled).active {
-  background: $warning;
-  border-color: $warning;
-  color: $dark;
-}
-.difficulty .hard.btn-light:not(:disabled):not(.disabled).active {
-  background: $danger;
-  border-color: $danger;
-  color: $white;
 }

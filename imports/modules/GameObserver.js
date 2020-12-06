@@ -13,19 +13,16 @@ GameObserver = {
 
         Games.find().observeChanges({
 
-            added: function(gameId, fields) {
+            changed(id, fields) {
                 if (ctx.initialized) {
-                    ctx.game.set(Games.findOne(gameId));
-                    SoundManager.play('gameStart');
-                }
-            },
-
-            changed(gameId, fields) {
-                if (ctx.initialized && (fields.endedAt != null)) {
-                    if (fields.winnerId == Meteor.userId()) {
-                        SoundManager.play('gameWin');
-                    } else {
-                        SoundManager.play('gameLose');
+                    if (fields.startedAt != null) {
+                        SoundManager.play('gameStart');
+                    } else if (fields.endedAt != null) {
+                        if (fields.winnerId == Meteor.userId()) {
+                            SoundManager.play('gameWin');
+                        } else {
+                            SoundManager.play('gameLose');
+                        }
                     }
                 }
             },
@@ -91,7 +88,7 @@ GameObserver = {
     },
 
     getId(ctx, anonymous = false) {
-        return (anonymous) ? Session.get('currentGameId') : ctx.room.get().currentGameId;
+        return (anonymous) ? Session.get('currentGameId') : ctx.game.get()._id;
     },
 
 }

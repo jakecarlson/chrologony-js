@@ -41,13 +41,8 @@ export const Schemas = {
     endable: new SimpleSchema({
         startedAt: {
             type: Date,
-            autoValue() {
-                if (this.isInsert) {
-                    return new Date();
-                }
-                return undefined;
-            },
-            required: true,
+            defaultValue: null,
+            optional: true,
         },
         endedAt: {
             type: Date,

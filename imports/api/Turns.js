@@ -105,7 +105,7 @@ Meteor.methods({
         check(id, RecordId);
         check(cardId, Match.OneOf(null, RecordId));
         check(lastCardCorrect, Match.OneOf(null, Boolean));
-        Permissions.authenticated()
+        Permissions.authenticated();
         if (cardId) {
             Permissions.check((Turns.findOne(id).ownerId == Cards.findOne(cardId).ownerId));
         }
@@ -134,17 +134,20 @@ if (Meteor.isServer) {
         'turn.next'(gameId) {
 
             check(gameId, RecordId);
-            Permissions.authenticated()
+            Permissions.authenticated();
 
             // Check that the user is allowed
             const game = Games.findOne(gameId);
             const turn = game.currentTurn();
             if (!game.currentTurnId || (turn.ownerId != Meteor.userId())) {
-                Permissions.owned(game.room());
+                Permissions.owned(game);
             }
 
             // End the current turn
+            let endGame = false;
             if (game.currentTurnId) {
+
+                // Set the end time
                 const updated = Turns.update(
                     game.currentTurnId,
                     {
@@ -158,10 +161,8 @@ if (Meteor.isServer) {
                 } else {
                     Logger.log('Error Ending Turn: ' + game.currentTurnId, 3);
                 }
-            }
 
-            // Lock all current turn cards
-            if (game.currentTurnId) {
+                // Lock all current turn cards
                 const cards = turn.cards();
                 const correctCards = turn.cards(true);
                 if (cards.count() === correctCards.count()) {
@@ -173,44 +174,44 @@ if (Meteor.isServer) {
                         });
                     });
                 }
-            }
 
-            // If a win condition is defined, see if we've met it
-            let endGame = false;
-            if (turn && game.winPoints) {
+                // If a win condition is defined, see if we've met it
+                if (turn && game.winPoints) {
 
-                // If we need to have equal turns, find out if anyone has won and if everyone has had equal turns
-                if (game.equalTurns) {
-                    const leader = game.calculateCurrentLeader();
-                    if (leader.cards >= game.winPoints) {
-                        let equalTurns = true;
-                        game.getPlayerTurnCounts().forEach(function(player) {
-                            if (player.turns < leader.turns) {
-                                equalTurns = false;
-                                return;
-                            }
-                        });
-                        endGame = equalTurns;
+                    // If we need to have equal turns, find out if anyone has won and if everyone has had equal turns
+                    if (game.equalTurns) {
+                        const leader = game.calculateCurrentLeader();
+                        if (leader.cards >= game.winPoints) {
+                            let equalTurns = true;
+                            game.getPlayerTurnCounts().forEach(function(player) {
+                                if (player.turns < leader.turns) {
+                                    equalTurns = false;
+                                    return;
+                                }
+                            });
+                            endGame = equalTurns;
+                        }
+
+                    // Otherwise end the game if the current player has enough cards
+                    } else {
+                        const numLockedCards = game.playerCards(turn.ownerId, true).count();
+                        endGame = (numLockedCards >= game.winPoints);
                     }
 
-                // Otherwise end the game if the current player has enough cards
-                } else {
-                    const numLockedCards = game.playerCards(turn.ownerId, true).count();
-                    endGame = (numLockedCards >= game.winPoints);
+                    // End the game if the conditions are met
+                    if (endGame) {
+                        Meteor.call('game.end', game._id, false, function(err, updated) {
+                            if (!err) {
+                                Logger.log("Ended Game: " + game._id);
+                            }
+                        });
+                    }
+
+                // If the game already ended, don't try to end it again
+                } else if (game.endedAt) {
+                    endGame = true;
                 }
 
-                // End the game if the conditions are met
-                if (endGame) {
-                    Meteor.call('game.end', game._id, false, function(err, updated) {
-                        if (!err) {
-                            Logger.log("Ended Game: " + game._id);
-                        }
-                    });
-                }
-
-            // If the game already ended, don't try to end it again
-            } else if (game.endedAt) {
-                endGame = true;
             }
 
             // If not short-circuited by game end, continue on to start the next turn ...

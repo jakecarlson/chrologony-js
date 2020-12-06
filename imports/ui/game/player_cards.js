@@ -1,8 +1,6 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from "meteor/reactive-var";
 
-import { Cards } from '../../api/Cards';
-
 import './player_cards.html';
 import './card.js';
 
