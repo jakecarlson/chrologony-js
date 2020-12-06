@@ -30,7 +30,7 @@ Games.PRECISION_OPTIONS = [
 Games.schema = new SimpleSchema({
     name: {type: String, max: 40, defaultValue: null, optional: true},
     password: {type: String, max: 72, defaultValue: null, optional: true},
-    private: {type: Boolean, defaultValue: false},
+    private: {type: Boolean, defaultValue: false, optional: true},
     categoryId: {type: String, regEx: SimpleSchema.RegEx.Id},
     currentTurnId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     currentRound: {type: Number, defaultValue: 1},
