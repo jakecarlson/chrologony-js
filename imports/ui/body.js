@@ -19,17 +19,6 @@ Template.body.onCreated(function bodyOnCreated() {
 
         if (this.subscriptionsReady()) {
 
-            Logger.log('Checking for updates ...');
-            if (Reload.isWaitingForResume()) {
-                Logger.log('Update available. Waiting for resume ...');
-                if (!Meteor.isProduction) {
-                    Logger.log('Initiate auto-update');
-                    window.location.reload();
-                }
-            } else {
-                Logger.log('No update available.');
-            }
-
             Tracker.afterFlush(() => {
                 $(function() {
                     $('[data-toggle="popover"]').popover();

@@ -17,6 +17,11 @@ import 'bootstrap4-toggle';
 import 'bootstrap4-toggle/css/bootstrap4-toggle.min.css';
 
 Meteor.startup(function() {
+
     Logger.init();
-    Mobile.init();
+
+    if (Mobile.is()) {
+        document.addEventListener("deviceready", Mobile.init, false);
+    }
+
 });
