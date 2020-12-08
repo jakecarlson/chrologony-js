@@ -79,8 +79,11 @@ Template.layout_authenticated.helpers({
         return categories.fetch().map(function(category) { return category._id; });
     },
 
-    columnsBoard() {
-        return ((FlowRouter.getRouteName() != 'game') || !Session.get('fullBoard'));
+    columnLayout() {
+        return (
+            ['privacy', 'terms'].includes(FlowRouter.getRouteName()) ||
+            ((FlowRouter.getRouteName() == 'game') && !Session.get('fullBoard'))
+        );
     },
 
 })

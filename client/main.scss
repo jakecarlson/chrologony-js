@@ -59,6 +59,13 @@ main {
     z-index: 9999;
 }
 
+#layout .full-width,
+#layout .full-width .card:not(.game-card)
+{
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+}
+
 @import "../imports/ui/_header.scss";
 @import "../imports/ui/_overrides.scss";
 @import "../imports/ui/_embed.scss";

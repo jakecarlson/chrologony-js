@@ -91,16 +91,16 @@
 
                     {{#if fullBoard}}
                         <button
-                                class="btn btn-light d-none d-lg-inline mr-2 board-columns"
-                                disabled="{{loading}}"
+                            class="btn btn-light d-none d-lg-inline mr-2 board-columns"
+                            disabled="{{loading}}"
                         >
                             <i class="fa fa-columns"></i>
                             Columns
                         </button>
                     {{else}}
                         <button
-                                class="btn btn-light d-none d-lg-inline mr-2 board-full"
-                                disabled="{{loading}}"
+                            class="btn btn-light d-none d-lg-inline mr-2 board-full"
+                            disabled="{{loading}}"
                         >
                             <i class="fa fa-arrows-h"></i>
                             Full Width
@@ -108,8 +108,8 @@
                     {{/if}}
 
                     <button
-                            class="btn btn-light d-inline-block leave"
-                            disabled="{{loading}}"
+                        class="btn btn-light d-inline-block leave"
+                        disabled="{{loading}}"
                     >
                         <i class="fa fa-sign-out"></i>
                         <span class="d-none d-md-inline">Leave</span>
@@ -119,14 +119,14 @@
 
             </header>
 
-            <div class="{{#if columnsBoard}}row{{/if}}">
+            <div class="{{#if columnLayout}}row{{/if}}">
 
-                <div class="{{#if columnsBoard}}col-lg-9{{/if}}" id="gameMain">
+                <div class="{{#if columnLayout}}col-lg-9{{/if}}" id="gameMain">
 
                     {{> board game=currentGame turn=currentTurn}}
 
                     {{#if showPlayerCards}}
-                        <div id="playerCards" class="mb-4 {{#if columnsBoard}}mb-lg-0{{/if}}">
+                        <div id="playerCards" class="mb-4 {{#if columnLayout}}mb-lg-0{{/if}}">
                             <h2 id="playerCardsTitle" class="text-white text-center text-sm-left mb-4">
                                 {{#if gameInProgress}}
                                     Other
@@ -143,7 +143,7 @@
 
                 </div>
 
-                <div class="{{#if columnsBoard}}col-lg-3{{/if}}" id="gameSide">
+                <div class="{{#if columnLayout}}col-lg-3{{/if}}" id="gameSide">
 
                     {{> players_list game=currentGame turn=currentTurn}}
 

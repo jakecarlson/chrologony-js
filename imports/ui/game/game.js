@@ -147,7 +147,7 @@ Template.game.helpers({
         return Session.get('fullBoard');
     },
 
-    columnsBoard() {
+    columnLayout() {
         return !Session.get('fullBoard');
     },
 
