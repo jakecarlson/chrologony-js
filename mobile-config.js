@@ -6,18 +6,20 @@ App.info({
     author: 'Jake Carlson',
     email: 'chrologony@carlsonville.com',
     website: 'https://chrologony.com',
-    version: '2020.11.26'
+    version: '2020.12.06'
 });
 
 // Set general Cordova preferences
 App.setPreference('BackgroundColor', '0xFF593196');
-App.setPreference('StatusBarOverlaysWebView', true);
+App.setPreference('StatusBarOverlaysWebView', false);
 App.setPreference('StatusBarBackgroundColor', '#000000');
 App.setPreference('StatusBarStyle', 'lightcontent');
 App.setPreference('HideKeyboardFormAccessoryBar', true);
 App.setPreference('Orientation', 'default');
+// App.setPreference('Fullscreen', true);
 
 // Set iOS Cordova preferences
+App.setPreference('StatusBarOverlaysWebView', true, 'ios');
 App.setPreference('Orientation', 'all', 'ios');
 
 // Set Android Cordova preferences
