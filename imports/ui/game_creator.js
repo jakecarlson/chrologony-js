@@ -39,7 +39,7 @@ Template.game_creator.helpers({
 
     winConditions() {
         let selected = 10;
-        if (!Helpers.isAnonymous() && this.lastGame && this.lastGame.winPoints) {
+        if (this.lastGame && this.lastGame.winPoints) {
             selected = this.lastGame.winPoints;
         }
         return [
@@ -130,14 +130,6 @@ Template.game_creator.helpers({
         return (!this.lastGame || (this.lastGame && (this.lastGame.minDifficulty <= 2) && (this.lastGame.maxDifficulty >= 2)));
     },
 
-    compact() {
-        return this.compact;
-    },
-
-    notCompact() {
-        return !this.compact;
-    },
-
 });
 
 Template.game_creator.events({
@@ -225,10 +217,6 @@ Template.game_creator.events({
 
                 Logger.log("Created Game: " + id);
                 Session.set('lastOwnedGameId', id);
-
-                if (Helpers.isAnonymous()) {
-                    Session.set('currentGameId', id);
-                }
 
                 Helpers.subscribe(i, 'games', Helpers.currentAndPreviousGameIds());
 

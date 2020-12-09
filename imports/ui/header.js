@@ -12,12 +12,8 @@ Template.header.onCreated(function headerOnCreated() {
 
 Template.header.helpers({
 
-    profileName() {
-        const user = Meteor.user({fields: {"profile.name": 1}});
-        if (user) {
-            return user.profile.name;
-        }
-        return null;
+    dataReady() {
+        return Meteor.user();
     },
 
     passwordLink() {

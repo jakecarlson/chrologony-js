@@ -5,12 +5,12 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from "meteor/templating";
 import { LoadingState } from "../modules/LoadingState";
 
+import { Games } from "../api/Games";
+import { Turns } from "../api/Turns";
+
 import './embed.html';
 import './game/board.js';
 import './game/clue_more.js';
-
-import { Games } from "../api/Games";
-import { Turns } from "../api/Turns";
 
 Template.embed.onCreated(function embedOnCreated() {
 
@@ -20,7 +20,7 @@ Template.embed.onCreated(function embedOnCreated() {
         Meteor.connection.setUserId('anonymous');
     });
 
-    Session.set('muted', true);
+    // Session.set('muted', true);
 
     this.initialized = false;
     this.game = new ReactiveVar(null);
@@ -29,50 +29,32 @@ Template.embed.onCreated(function embedOnCreated() {
 
     this.autorun((computation) => {
 
-        LoadingState.start();
+        if (Session.get('currentGameId')) {
 
-        Helpers.subscribe(this, 'games');
+            LoadingState.start();
 
-        const user = Meteor.user({fields: {currentGameId: 1}});
-        if (user) {
+            Helpers.subscribe(this, 'anonymousGame', Session.get('currentGameId'));
+            Helpers.subscribe(this, 'turns', Session.get('currentGameId'));
+            Helpers.subscribe(this, 'cards', Session.get('currentGameId'));
+            Helpers.subscribe(this, 'cardClues', Session.get('currentGameId'));
 
-            this.game.set(user.currentGame());
-            if (this.game.get()) {
+            if (this.subscriptionsReady()) {
 
-                Helpers.subscribe(this, 'games', [this.game.get()._id]);
-
-                if (Session.get('currentGameId')) {
-
-                    Helpers.subscribe(this, 'turns', Session.get('currentGameId'));
-                    Helpers.subscribe(this, 'cards', Session.get('currentGameId'));
-                    Helpers.subscribe(this, 'cardClues', Session.get('currentGameId'));
-
-                    this.game.set(Games.findOne(Session.get('currentGameId')));
-                    if (this.game.get() && this.game.get().currentTurnId) {
-                        this.turn.set(Turns.findOne(this.game.get().currentTurnId));
-                    }
-
-                } else {
-                    this.game.set(null);
-                    this.turn.set(null);
+                this.game.set(Games.findOne(Session.get('currentGameId')));
+                if (this.game.get() && this.game.get().currentTurnId) {
+                    this.turn.set(Turns.findOne(this.game.get().currentTurnId));
                 }
 
-                if (this.subscriptionsReady()) {
-
-                    const self = this;
-                    Tracker.afterFlush(() => {
-                        $('#clueMore').on('hidden.bs.modal', function(e) {
-                            self.clueMore.set(null);
-                        });
+                const self = this;
+                Tracker.afterFlush(() => {
+                    $('#clueMore').on('hidden.bs.modal', function (e) {
+                        self.clueMore.set(null);
                     });
+                });
 
-                    this.initialized = true;
-                    LoadingState.stop();
-
-                }
-
-            } else {
+                this.initialized = true;
                 LoadingState.stop();
+
             }
 
         }
@@ -84,10 +66,6 @@ Template.embed.onCreated(function embedOnCreated() {
 });
 
 Template.embed.helpers({
-
-    dataReady() {
-        return (Meteor.user() && Template.instance().game.get());
-    },
 
     currentGame() {
         return Template.instance().game.get();
@@ -112,6 +90,50 @@ Template.embed.helpers({
 });
 
 Template.embed.events({
+
+    'submit #playNow'(e, i) {
+
+        LoadingState.start(e);
+
+        // Get values from form element
+        const attrs = {
+            categoryId: $('#gameCategoryId').val(),
+            name: null,
+            password: null,
+            private: true,
+            winPoints: 1,
+            equalTurns: false,
+            minDifficulty: 1,
+            maxDifficulty: 3,
+            minScore: 0,
+            cardLimit: 0,
+            autoProceed: false,
+            cardTime: 0,
+            turnOrder: 'sequential',
+            recycleCards: false,
+            showHints: false,
+            comparisonPrecision: 'year',
+            displayPrecision: 'year',
+        };
+
+        Meteor.call('game.create', attrs, function(err, id) {
+            if (!err) {
+                Logger.log("Created Game: " + id);
+                Session.set('currentGameId', id);
+                Meteor.call('game.start', id, false, function(err, gameId) {
+                    if (!err) {
+                        Logger.log("Started Game: " + gameId);
+                    } else {
+                        Logger.log(err);
+                    }
+                    LoadingState.stop();
+                });
+            } else {
+                Logger.log(err);
+            }
+        });
+
+    },
 
     'click .more': Helpers.showClueMore,
 

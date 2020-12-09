@@ -2,43 +2,33 @@
 #embed .card {
   box-shadow: none;
 }
+#embedPoster {
+  background: $white url('/embed-poster.jpg') no-repeat center bottom;
+  background-size: auto 100%;
+  height: 27.75rem;
+  padding-top: 8rem;
+}
+#embedPoster .card {
+  margin: 0 auto;
+  max-width: 20rem;
+  text-align: center;
+}
 #embedHeader {
   position: relative;
 }
-#embedTitle {
+#embed #title {
   width: 17.5rem;
   height: 4rem;
   background-position: left top;
   background-size: 100% auto;
 }
-#embedTitle > a {
+#embed #title > a {
   display: block;
   width: 100%;
   height: 100%;
-}
-#embedTagline {
-  position: absolute;
-  left: 1rem;
-  top: 4.15rem;
-  font-size: small;
-}
-@media (max-width: 576px) {
-  #embedTagline {
-    left: 50%;
-    margin-left: -8.75rem;
-  }
-}
-#embedTagline .fa {
-  cursor: pointer;
 }
 #embedBtn {
   position: absolute;
   top: 2rem;
   right: 1rem;
-}
-#embed #game {
-  float: left;
-}
-#embed #gameCategoryId {
-  max-width: 12rem;
 }

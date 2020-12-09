@@ -6,12 +6,23 @@ import { Games } from "../api/Games";
 import { Turns } from "../api/Turns";
 import { Cards } from "../api/Cards";
 import { Clues } from "../api/Clues";
+import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 GameObserver = {
 
     observe(ctx, anonymous = false) {
 
         Games.find().observeChanges({
+
+            added(gameId, fields) {
+                if (ctx.initialized && (fields.ownerId != Meteor.userId())) {
+                    setTimeout(function() {
+                        if (Helpers.currentGameId() == gameId) {
+                            FlowRouter.go('game', {id: gameId});
+                        }
+                    }, 100);
+                }
+            },
 
             changed(id, fields) {
                 if (ctx.initialized) {

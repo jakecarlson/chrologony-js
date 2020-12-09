@@ -14,10 +14,10 @@ export const Votes = new Mongo.Collection('votes');
 
 Votes.schema = new SimpleSchema({
     clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    ownerId: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     value: {type: SimpleSchema.Integer, defaultValue: 0},
 });
 Votes.schema.extend(Schemas.timestampable);
+Votes.schema.extend(Schemas.ownable());
 Votes.attachSchema(Votes.schema);
 
 Votes.helpers({

@@ -24,13 +24,13 @@ Cards.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
     turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
     clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    ownerId: {type: String, max: 17, optional: true},
     correct: {type: Boolean, defaultValue: null, optional: true},
     guessedAt: {type: Date, defaultValue: null, optional: true},
     lockedAt: {type: Date, defaultValue: null, optional: true},
     pos: {type: SimpleSchema.Integer, defaultValue: 0},
 });
 Cards.schema.extend(Schemas.timestampable);
+Cards.schema.extend(Schemas.ownable(true));
 Cards.attachSchema(Cards.schema);
 
 Cards.helpers({

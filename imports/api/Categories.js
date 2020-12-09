@@ -23,7 +23,7 @@ Categories.schema = new SimpleSchema({
     cluesCount: {type: SimpleSchema.Integer, defaultValue: 0, optional: true},
 });
 Categories.schema.extend(Schemas.timestampable);
-Categories.schema.extend(Schemas.ownable);
+Categories.schema.extend(Schemas.ownable());
 Categories.attachSchema(Categories.schema);
 
 // Collection hooks

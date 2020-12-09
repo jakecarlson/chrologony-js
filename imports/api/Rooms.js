@@ -19,7 +19,7 @@ Rooms.schema = new SimpleSchema({
     currentGameId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
 });
 Rooms.schema.extend(Schemas.timestampable);
-Rooms.schema.extend(Schemas.ownable);
+Rooms.schema.extend(Schemas.ownable());
 Rooms.schema.extend(Schemas.softDeletable);
 Rooms.attachSchema(Rooms.schema);
 

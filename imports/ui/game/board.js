@@ -7,6 +7,8 @@ import { LoadingState } from '../../modules/LoadingState';
 
 import './board.html';
 import './card.js';
+import {Session} from "meteor/session";
+import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 Template.board.onCreated(function boardOnCreated() {
 
@@ -112,6 +114,7 @@ Template.board.helpers({
             (
                 (
                     !isGameOwner(this.game) ||
+                    Helpers.isAnonymous() ||
                     TourGuide.isActive()
                 ) &&
                 (
@@ -267,6 +270,14 @@ Template.board.helpers({
         return this.turn;
     },
 
+    categoryName() {
+        return this.game.category().name;
+    },
+
+    isOwner() {
+        return (this.game.ownerId == Meteor.userId());
+    },
+
 });
 
 Template.board.events({
@@ -331,6 +342,34 @@ Template.board.events({
             currentCol.insertAfter(destinationCol);
             saveCardPos();
         }
+    },
+
+    'click #playAgain'(e, i) {
+
+        LoadingState.start(e);
+
+        Meteor.call('game.clone', this.game._id, function(err, id) {
+
+            if (!err) {
+
+                Logger.log("Cloned Game: " + id);
+                if (Helpers.isAnonymous()) {
+                    Session.set('currentGameId', id);
+                    Helpers.subscribe(i, 'anonymousGame', id);
+                } else {
+                    Session.set('lastOwnedGameId', id);
+                    Helpers.subscribe(i, 'games', Helpers.currentAndPreviousGameIds());
+                    setTimeout(function() {
+                        FlowRouter.go('game', {id: id});
+                    }, 100);
+                }
+
+            }
+
+            LoadingState.stop();
+
+        });
+
     },
 
 });

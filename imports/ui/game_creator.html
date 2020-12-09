@@ -1,22 +1,17 @@
 <template name="game_creator">
 
-    <form id="gameCreator" class="{{#if compact}}form-inline{{/if}}">
+    <form id="gameCreator">
 
         <div class="row">
 
             <div
                 class="
-                    {{#if notCompact}}
-                        form-group
-                        {{#if basic}}
-                            col-md-12
-                        {{else}}
-                            col-sm-6
-                            col-lg-3
-                        {{/if}}
+                    form-group
+                    {{#if basic}}
+                        col-md-12
                     {{else}}
-                        float-left
-                        d-inline-block
+                        col-sm-6
+                        col-lg-3
                     {{/if}}
                 "
             >
@@ -24,33 +19,29 @@
                 {{> categories_selector id="gameCategoryId" val=categoryId}}
             </div>
 
-            {{#if notCompact}}
+            <div class="form-group {{#if basic}}col-md-12{{else}}col-sm-6 col-lg-3{{/if}}">
+                <label for="name" class="{{#if basic}}sr-only{{/if}}">Game Name (optional):</label>
+                <input type="text" class="form-control" name="name" id="name" placeholder="{{#if basic}}Game Name (optional){{/if}}" maxlength="40" autocapitalize="none" autocomplete="one-time-code" autocorrect="off">
+            </div>
 
-                <div class="form-group {{#if basic}}col-md-12{{else}}col-sm-6 col-lg-3{{/if}}">
-                    <label for="name" class="{{#if basic}}sr-only{{/if}}">Game Name (optional):</label>
-                    <input type="text" class="form-control" name="name" id="name" placeholder="{{#if basic}}Game Name (optional){{/if}}" maxlength="40" autocapitalize="none" autocomplete="one-time-code" autocorrect="off">
+            <div class="form-group {{#if basic}}col-md-12{{else}}col-sm-6 col-lg-3{{/if}}">
+                <label for="password" class="{{#if basic}}sr-only{{/if}}">Game Password (optional):</label>
+                <input type="text" class="form-control" name="password" id="password" placeholder="{{#if basic}}Game Password (optional){{/if}}" maxlength="40" autocapitalize="none" autocomplete="one-time-code" autocorrect="off">
+            </div>
+
+            <div class="form-group {{#if basic}}col-md-12{{else}}col-sm-6 col-lg-3{{/if}}">
+                <div class="form-check {{#if advanced}}form-check-padded{{/if}}">
+                    <input type="checkbox" name="private" value="1" checked="{{private}}" class="form-check-input" id="private">
+                    <label for="private" class="form-check-label">
+                        Private (Do Not Show in Lobby)
+                        <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if don't want the game to be displayed in the Lobby. Players will need to be invited from the game screen to play."></i>
+                    </label>
                 </div>
-
-                <div class="form-group {{#if basic}}col-md-12{{else}}col-sm-6 col-lg-3{{/if}}">
-                    <label for="password" class="{{#if basic}}sr-only{{/if}}">Game Password (optional):</label>
-                    <input type="text" class="form-control" name="password" id="password" placeholder="{{#if basic}}Game Password (optional){{/if}}" maxlength="40" autocapitalize="none" autocomplete="one-time-code" autocorrect="off">
-                </div>
-
-                <div class="form-group {{#if basic}}col-md-12{{else}}col-sm-6 col-lg-3{{/if}}">
-                    <div class="form-check {{#if advanced}}form-check-padded{{/if}}">
-                        <input type="checkbox" name="private" value="1" checked="{{private}}" class="form-check-input" id="private">
-                        <label for="private" class="form-check-label">
-                            Private (Do Not Show in Lobby)
-                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if don't want the game to be displayed in the Lobby. Players will need to be invited from the game screen to play."></i>
-                        </label>
-                    </div>
-                </div>
-
-            {{/if}}
+            </div>
 
         </div>
 
-        <fieldset id="gameAdvanced" class="{{#if notCompact}}mb-2{{else}}d-none{{/if}}">
+        <fieldset id="gameAdvanced" class="mb-2">
 
             <a class="text-muted collapsed" id="gameOptionsToggle" data-toggle="collapse" href="#gameOptions" role="button" aria-expanded="false" aria-controls="gameOptions">
                 <i class="fa fa-caret-down"></i>
@@ -218,7 +209,7 @@
             </div>
         </fieldset>
 
-        <div class="{{#if notCompact}}text-center{{else}}float-left d-inline-block ml-2{{/if}}">
+        <div class="text-center">
             <button
                 type="submit"
                 class="
@@ -231,7 +222,7 @@
                 "
                 disabled="{{loading}}"
             >
-                <span>Create {{#if notCompact}}Game{{/if}}</span>
+                <span>Create Game</span>
             </button>
         </div>
 

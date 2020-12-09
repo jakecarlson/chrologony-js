@@ -14,12 +14,11 @@ export const Turns = new Mongo.Collection('turns');
 
 Turns.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    ownerId: {type: String, max: 17, optional: true},
-    owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
     currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},
 });
 Turns.schema.extend(Schemas.timestampable);
+Turns.schema.extend(Schemas.ownable(true));
 Turns.schema.extend(Schemas.endable);
 Turns.attachSchema(Turns.schema);
 

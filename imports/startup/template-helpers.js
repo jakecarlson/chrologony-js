@@ -93,3 +93,10 @@ Template.registerHelper('datetime', function(val) {
 Template.registerHelper('relativeTime', function(val) {
     return (val ? Formatter.relativeTime(val) : null);
 });
+
+Template.registerHelper('profileName', function(user) {
+    if (user && user.profile && user.profile.name) {
+        return user.profile.name;
+    }
+    return null;
+});

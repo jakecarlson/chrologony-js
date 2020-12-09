@@ -4,28 +4,33 @@
         <main>
             <section id="game" class="full-width">
 
-                {{#if dataReady}}
+                {{#if showHeader}}
+                    <div id="embedHeader" class="px-3 py-3 bg-primary">
+                        <h1 id="title" class="mx-auto mx-sm-0 mb-0"><a href="{{appUrl}}">"{{appName}}</a></h1>
+                        <a id="embedBtn" href="{{appUrl}}" target="_blank" class="btn btn-outline-secondary d-none d-sm-inline-block">Sign Up Now</a>
+                    </div>
+                {{/if}}
 
-                    {{#if showHeader}}
-                        <div id="embedHeader" class="px-3 py-3 bg-primary">
-                            <h1 id="embedTitle" class="mx-auto mx-sm-0 mb-0"><a href="{{appUrl}}">"{{appName}}</a></h1>
-                            <h2
-                                    id="embedTagline"
-                                    class="text-secondary"
-                                    data-toggle="popover"
-                                    data-placement="top"
-                                    data-content="{{appDescription}}"
-                            >
-                                {{appTagline}}
-                                <i class="fa fa-question-circle"></i>
-                            </h2>
-                            <a id="embedBtn" href="{{appUrl}}" target="_blank" class="btn btn-outline-secondary d-none d-sm-inline-block">Sign Up Now</a>
-                        </div>
-                    {{/if}}
+                {{#if currentGame}}
 
                     {{> board game=currentGame turn=currentTurn}}
 
                     {{> clue_more clue=clueMore}}
+
+                {{else}}
+
+                    <div id="embedPoster" class="text-center">
+                        <div class="card border-primary">
+                            <div class="card-header bg-primary">
+                                <h2 class="card-title text-white">Play Now</h2>
+                            </div>
+                            <form class="card-body" id="playNow">
+                                <label for="gameCategoryId" class="sr-only">Category:</label>
+                                {{> categories_selector id="gameCategoryId"}}
+                                <button type="submit" class="btn btn-success btn-lg mt-3"><i class="fa fa-play-circle"></i> Play Now</button>
+                            </form>
+                        </div>
+                    </div>
 
                 {{/if}}
 

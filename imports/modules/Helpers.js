@@ -139,12 +139,12 @@ Helpers = {
     },
 
     isAnonymous() {
-        return (Meteor.user() && (Meteor.user().currentGameId == 'anonymous'));
+        return (Meteor.user() && (Meteor.userId() == 'anonymous'));
     },
 
     subscribe(ctx, name, arg) {
         Logger.log('Subscribe: ' + name);
-        ctx.subscribe(name, arg);
+        return ctx.subscribe(name, arg);
     },
     
     showClueMore(e, i) {
@@ -217,6 +217,10 @@ Helpers = {
     closeModal() {
         $(document.body).removeClass('modal-open');
         $('.modal-backdrop').hide();
+    },
+
+    bsonToObject(bson) {
+        return JSON.parse(JSON.stringify(bson));
     },
 
 };

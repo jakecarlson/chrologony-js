@@ -43,7 +43,7 @@ Clues.schema = new SimpleSchema(
     }
 );
 Clues.schema.extend(Schemas.timestampable);
-Clues.schema.extend(Schemas.ownable);
+Clues.schema.extend(Schemas.ownable());
 Clues.attachSchema(Clues.schema);
 
 // Collection hooks

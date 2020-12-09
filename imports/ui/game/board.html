@@ -6,11 +6,13 @@
 
             <header class="{{headerClasses}}">
 
-                {{#if isAnonymous}}
-                    {{> game_creator game=currentGame turn=currentTurn compact=true}}
-                {{else}}
-                    <h2 class="card-title text-center float-sm-left mb-2 mb-sm-0 board-title">{{boardTitle}}</h2>
-                {{/if}}
+                <h2 class="card-title text-center float-sm-left mb-2 mb-sm-0 board-title">
+                    {{#if isAnonymous}}
+                        {{categoryName}}
+                    {{else}}
+                        {{boardTitle}}
+                    {{/if}}
+                </h2>
 
                 <div class="board-menu text-center {{#if isAnonymous}}float-right{{else}}float-sm-right{{/if}}">
 
@@ -50,7 +52,12 @@
                 {{#if gameHasEnded}}
 
                     <h3 class="winner">
-                        <span class="winner-player">{{winner}}</span> won the game!
+                        <div class="mb-4">
+                            <span class="winner-player">{{winner}}</span> won the game!
+                        </div>
+                        {{#if isOwner}}
+                            <button id="playAgain" type="button" class="btn btn-light btn-lg"><i class="fa fa-repeat"></i> Play Again</button>
+                        {{/if}}
                     </h3>
                     <i class="{{winnerClasses}}"></i>
 

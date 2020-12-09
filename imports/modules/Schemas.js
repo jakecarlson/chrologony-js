@@ -22,21 +22,30 @@ export const Schemas = {
         },
     }),
 
-    ownable: new SimpleSchema({
-        ownerId: {
+    ownable(loose = false) {
+
+        let definition = {
             type: String,
-            regEx: SimpleSchema.RegEx.Id,
             autoValue() {
                 if (this.isInsert) {
                     return this.userId;
                 }
                 return undefined;
             },
-            // required: true,
-            optional: true,
-        },
-        owner: {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
-    }),
+            required: true,
+        };
+
+        if (loose) {
+            definition.max = 17;
+        } else {
+            definition.regEx = SimpleSchema.RegEx.Id;
+        }
+
+        return new SimpleSchema({
+            ownerId: definition,
+        });
+
+    },
 
     endable: new SimpleSchema({
         startedAt: {

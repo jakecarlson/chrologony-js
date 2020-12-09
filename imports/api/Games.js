@@ -27,6 +27,35 @@ Games.PRECISION_OPTIONS = [
     'millennium',
 ];
 
+Games.PUBLISH_FIELDS = {
+    _id: 1,
+    name: 1,
+    private: 1,
+    password: 1,
+    ownerId: 1,
+    categoryId: 1,
+    currentTurnId: 1,
+    currentRound: 1,
+    currentLeaderId: 1,
+    winnerId: 1,
+    createdAt: 1,
+    startedAt: 1,
+    endedAt: 1,
+    winPoints: 1,
+    turnOrder: 1,
+    minScore: 1,
+    minDifficulty: 1,
+    maxDifficulty: 1,
+    equalTurns: 1,
+    recycleCards: 1,
+    cardLimit: 1,
+    autoProceed: 1,
+    cardTime: 1,
+    showHints: 1,
+    comparisonPrecision: 1,
+    displayPrecision: 1,
+};
+
 Games.schema = new SimpleSchema({
     name: {type: String, max: 40, defaultValue: null, optional: true},
     password: {type: String, max: 72, defaultValue: null, optional: true},
@@ -50,7 +79,7 @@ Games.schema = new SimpleSchema({
     displayPrecision: {type: String, defaultValue: 'date'},
     comparisonPrecision: {type: String, defaultValue: 'date'},
 });
-Games.schema.extend(Schemas.ownable);
+Games.schema.extend(Schemas.ownable(true));
 Games.schema.extend(Schemas.timestampable);
 Games.schema.extend(Schemas.endable);
 Games.schema.extend(Schemas.softDeletable);
@@ -302,34 +331,7 @@ if (Meteor.isServer) {
                     return Games.find(
                         selector,
                         {
-                            fields: {
-                                _id: 1,
-                                name: 1,
-                                private: 1,
-                                password: 1,
-                                ownerId: 1,
-                                categoryId: 1,
-                                currentTurnId: 1,
-                                currentRound: 1,
-                                currentLeaderId: 1,
-                                winnerId: 1,
-                                createdAt: 1,
-                                startedAt: 1,
-                                endedAt: 1,
-                                winPoints: 1,
-                                turnOrder: 1,
-                                minScore: 1,
-                                minDifficulty: 1,
-                                maxDifficulty: 1,
-                                equalTurns: 1,
-                                recycleCards: 1,
-                                cardLimit: 1,
-                                autoProceed: 1,
-                                cardTime: 1,
-                                showHints: 1,
-                                comparisonPrecision: 1,
-                                displayPrecision: 1,
-                            },
+                            fields: Games.PUBLISH_FIELDS,
                             sort: {
                                 // name: 1,
                                 createdAt: -1,
@@ -358,6 +360,21 @@ if (Meteor.isServer) {
             
         }
 
+    });
+
+    Meteor.publish('anonymousGame', function anonymousGamePublication(id) {
+        if (this.userId && id) {
+            return Games.find(
+                {
+                    _id: id
+                },
+                {
+                    fields: Games.PUBLISH_FIELDS,
+                }
+            );
+        } else {
+            return this.ready();
+        }
     });
 
     Games.deny({
@@ -709,6 +726,47 @@ if (Meteor.isServer) {
         'game.lastOwned'() {
             const game = Games.findOne({ownerId: this.userId}, {sort: {createdAt: -1}});
             return (game ? game._id : null);
+        },
+
+        'game.clone'(id) {
+
+            check(id, RecordId);
+            Permissions.authenticated();
+
+            // Get the game to clone and validate the user is the owner of it
+            const game = Games.findOne(id);
+            Permissions.check(Permissions.owned(game));
+
+            // Create the new game
+            const removeKeys = [
+                '_id',
+                'ownerId',
+                'createdAt',
+                'startedAt',
+                'endedAt',
+                'currentTurnId',
+                'currentLeaderId',
+                'currentRound',
+                'winnerId',
+                'updatedAt',
+                'deletedAt',
+            ];
+            const attrs = _.omit(Helpers.bsonToObject(game), removeKeys);
+            const gameId = Meteor.call('game.create', attrs);
+
+            // If this is an anonymous game, auto-start the next one
+            if (Helpers.isAnonymous()) {
+                Meteor.call('game.start', gameId);
+
+            // Otherwise copy over all players to the new game but don't auto-start
+            } else {
+                game.players().forEach(function(user) {
+                    Meteor.call('user.setGame', gameId, user._id);
+                });
+            }
+
+            return gameId;
+
         },
 
     });

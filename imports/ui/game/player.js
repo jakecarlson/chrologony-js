@@ -12,7 +12,7 @@ Template.player.onCreated(function playerOnCreated() {
 Template.player.helpers({
 
     dataReady() {
-        return (this.game && this.player);
+        return (this.game && this.player && this.player.profile);
     },
 
     isTurnOwner() {
@@ -21,10 +21,6 @@ Template.player.helpers({
 
     id() {
         return this.player._id;
-    },
-
-    profileName() {
-        return this.player.profile.name;
     },
 
     numLockedCards() {
