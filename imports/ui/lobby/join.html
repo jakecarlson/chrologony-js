@@ -11,64 +11,72 @@
 
         <div class="card-body p-0">
 
-            <div class="table-responsive">
-                <table id="joinGames" class="table table-hover mb-0">
-                    <colgroup>
-                        <col class="name">
-                        <col class="category">
-                        <col class="cards">
-                        <col class="difficulty">
-                        <col class="created">
-                        <col class="started">
-                        <col class="players">
-                        <col class="join">
-                    </colgroup>
-                    <thead class="table-borderless">
-                        <tr>
-                            <th scope="col"><i class="fa fa-lock"></i> Name</th>
-                            <th scope="col">Category</th>
-                            <th scope="col" class="d-none d-lg-table-cell"># Cards</th>
-                            <th scope="col" class="d-none d-lg-table-cell">Difficulty</th>
-                            <th scope="col">Created</th>
-                            <th scope="col">Started</th>
-                            <th scope="col"># Players</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each game in games}}
-                            <tr
-                                class="
-                                    game
-                                    {{#if hasPassword game}}
-                                        game-password
-                                    {{else}}
-                                        game-open
-                                    {{/if}}
-                                    {{#if started game}}
-                                        table-primary
-                                    {{/if}}
-                                "
-                                data-id="{{game._id}}"
-                                data-toggle="{{#if hasPassword game}}modal{{/if}}"
-                                data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
-                            >
-                                <th>
-                                    <i class="fa fa-{{#if hasPassword game}}lock{{else}}unlock-alt{{/if}}"></i>
-                                    {{title game}}
-                                </th>
-                                <td>{{category game}}</td>
-                                <td class="d-none d-lg-table-cell">{{numCards game}}</td>
-                                <td class="d-none d-lg-table-cell">{{difficulty game}}</td>
-                                <td>{{relativeTime game.createdAt}}</td>
-                                <td>{{relativeTime game.startedAt}}</td>
-                                <td>{{numPlayers game}}</td>
-                                <td><button class="btn btn-primary btn-sm">Join</button></td>
+            {{#if hasGames}}
+
+                <div class="table-responsive">
+                    <table id="joinGames" class="table table-hover mb-0">
+                        <colgroup>
+                            <col class="name">
+                            <col class="category">
+                            <col class="cards">
+                            <col class="difficulty">
+                            <col class="created">
+                            <col class="started">
+                            <col class="players">
+                            <col class="join">
+                        </colgroup>
+                        <thead class="table-borderless">
+                            <tr>
+                                <th scope="col"><i class="fa fa-lock"></i> Name</th>
+                                <th scope="col">Category</th>
+                                <th scope="col" class="d-none d-lg-table-cell"># Cards</th>
+                                <th scope="col" class="d-none d-lg-table-cell">Difficulty</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Started</th>
+                                <th scope="col"># Players</th>
+                                <th scope="col"></th>
                             </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {{#each game in games}}
+                                <tr
+                                    class="
+                                        game
+                                        {{#if hasPassword game}}
+                                            game-password
+                                        {{else}}
+                                            game-open
+                                        {{/if}}
+                                        {{#if started game}}
+                                            table-primary
+                                        {{/if}}
+                                    "
+                                    data-id="{{game._id}}"
+                                    data-toggle="{{#if hasPassword game}}modal{{/if}}"
+                                    data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
+                                >
+                                    <th>
+                                        <i class="fa fa-{{#if hasPassword game}}lock{{else}}unlock-alt{{/if}}"></i>
+                                        {{title game}}
+                                    </th>
+                                    <td>{{category game}}</td>
+                                    <td class="d-none d-lg-table-cell">{{numCards game}}</td>
+                                    <td class="d-none d-lg-table-cell">{{difficulty game}}</td>
+                                    <td>{{relativeTime game.createdAt}}</td>
+                                    <td>{{relativeTime game.startedAt}}</td>
+                                    <td>{{numPlayers game}}</td>
+                                    <td><button class="btn btn-primary btn-sm">Join</button></td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+
+            {{else}}
+
+                <p class="text-dark text-center mt-3">There are currently no games to join. <a href="#" data-toggle="modal" data-target="#gameCreatorModal">Create one now!</a></p>
+
+            {{/if}}
 
         </div>
 
