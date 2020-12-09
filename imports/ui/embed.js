@@ -101,7 +101,7 @@ Template.embed.events({
             name: null,
             password: null,
             private: true,
-            winPoints: 1,
+            winPoints: 5,
             equalTurns: false,
             minDifficulty: 1,
             maxDifficulty: 3,
