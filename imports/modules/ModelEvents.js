@@ -1,5 +1,6 @@
 import './Logger';
 import { LoadingState } from '../modules/LoadingState';
+import {Meteor} from "meteor/meteor";
 
 export const ModelEvents = {
 
@@ -61,6 +62,8 @@ export const ModelEvents = {
         Meteor.call(modelName + '.remove', id, function(err, deleted) {
             if (!err) {
                 Logger.log('Deleted ' + Formatter.capitalize(modelName) + ': ' + deleted);
+            } else {
+                throw new Meteor.Error(modelName + '-not-removed', 'Could not remove the ' + modelName + '.', JSON.stringify(err));
             }
             LoadingState.stop();
         });

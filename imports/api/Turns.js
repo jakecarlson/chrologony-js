@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
-import { Promise } from 'meteor/promise';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
@@ -14,11 +13,11 @@ export const Turns = new Mongo.Collection('turns');
 
 Turns.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    ownerId: {type: String, max: 17},
     currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
     lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},
 });
 Turns.schema.extend(Schemas.timestampable);
-Turns.schema.extend(Schemas.ownable(true));
 Turns.schema.extend(Schemas.endable);
 Turns.attachSchema(Turns.schema);
 
@@ -111,7 +110,7 @@ Meteor.methods({
 
         Logger.log('Update Turn ' + id + ' Card: ' + cardId);
 
-        return Turns.update(
+        const updated = Turns.update(
             id,
             {
                 $set: {
@@ -120,6 +119,11 @@ Meteor.methods({
                 }
             }
         );
+        if (!updated) {
+            throw new Meteor.Error('turn-not-updated', 'Could not update a turn.');
+        }
+
+        return updated;
 
     },
 
@@ -158,7 +162,7 @@ if (Meteor.isServer) {
                 if (updated) {
                     Logger.log('Ended Turn: ' + game.currentTurnId)
                 } else {
-                    Logger.log('Error Ending Turn: ' + game.currentTurnId, 3);
+                    throw new Meteor.Error('turn-not-updated', 'Could not end a turn.');
                 }
 
                 // Lock all current turn cards
@@ -169,6 +173,8 @@ if (Meteor.isServer) {
                         Meteor.call('card.lock', card._id, function(err, updated) {
                             if (!err) {
                                 Logger.log("Locked Card: " + updated);
+                            } else {
+                                throw new Meteor.Error('card-not-locked', 'Could not lock the card.', JSON.stringify(err));
                             }
                         });
                     });
@@ -202,6 +208,8 @@ if (Meteor.isServer) {
                         Meteor.call('game.end', game._id, false, function(err, updated) {
                             if (!err) {
                                 Logger.log("Ended Game: " + game._id);
+                            } else {
+                                throw new Meteor.Error('game-not-ended', 'Could not end the game.', JSON.stringify(err));
                             }
                         });
                     }
@@ -219,31 +227,41 @@ if (Meteor.isServer) {
                 const nextPlayer = game.getNextPlayer();
 
                 Logger.log("Next Turn Belongs To: " + nextPlayer._id);
-                const turnId = Turns.insert({
-                    gameId: gameId,
-                    ownerId: nextPlayer._id,
-                    startedAt: new Date(),
-                });
+                try {
 
-                const leader = game.calculateCurrentLeader();
-                const attrs = {
-                    currentTurnId: turnId,
-                    currentRound: game.calculateCurrentRound(),
-                    currentLeaderId: (leader ? leader._id : null),
-                };
-                Meteor.call('game.update', gameId, attrs, function(err, updated) {
-                    if (!err) {
-                        Logger.log("Updated Game: " + updated);
-                    }
-                });
+                    const turnId = Turns.insert({
+                        gameId: gameId,
+                        ownerId: nextPlayer._id,
+                        startedAt: new Date(),
+                    });
 
-                Meteor.call('card.draw', turnId, function(err, id) {
-                    if (!err) {
-                        Logger.log("Created Card: " + id);
-                    }
-                });
+                    const leader = game.calculateCurrentLeader();
+                    const attrs = {
+                        currentTurnId: turnId,
+                        currentRound: game.calculateCurrentRound(),
+                        currentLeaderId: (leader ? leader._id : null),
+                    };
+                    Meteor.call('game.update', gameId, attrs, function(err, updated) {
+                        if (!err) {
+                            Logger.log("Updated Game: " + updated);
+                        } else {
+                            throw new Meteor.Error('turn-not-set', 'Could not set the next turn.', JSON.stringify(err));
+                        }
+                    });
 
-                return turnId;
+                    Meteor.call('card.draw', turnId, function(err, id) {
+                        if (!err) {
+                            Logger.log("Created Card: " + id);
+                        } else {
+                            throw new Meteor.Error('card-not-drawn', 'Could not draw a card.');
+                        }
+                    });
+
+                    return turnId;
+
+                } catch(err) {
+                    throw new Meteor.Error('turn-not-inserted', 'Could not create a turn.', err);
+                }
 
             }
 

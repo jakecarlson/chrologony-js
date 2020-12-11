@@ -4,6 +4,7 @@ import { LoadingState } from "../../modules/LoadingState";
 import { Cards } from "../../api/Cards";
 
 import './player.html';
+import {Meteor} from "meteor/meteor";
 
 Template.player.onCreated(function playerOnCreated() {
 
@@ -71,9 +72,11 @@ Template.player.events({
 
     'click .eject'(e, i) {
         LoadingState.start(e);
-        Meteor.call('game.leave', this.player._id, function(err, id) {
+        Meteor.call('game.leave', this.game._id, this.player._id, function(err, id) {
             if (!err) {
                 Logger.log("Player Left Game: " + id);
+            } else {
+                throw new Meteor.Error('game-not-left', 'Could not leave the game.', JSON.stringify(err));
             }
             LoadingState.stop();
         });

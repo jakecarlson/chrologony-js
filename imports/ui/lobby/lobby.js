@@ -20,6 +20,8 @@ Template.lobby.onCreated(function lobbyOnCreated() {
                 if (!err) {
                     Logger.log("Last Owned Game: " + id);
                     Session.set('lastOwnedGameId', id);
+                } else {
+                    throw new Meteor.Error('last-game-not-received', 'Could not get the user\'s last game.', JSON.stringify(err));
                 }
             });
         }

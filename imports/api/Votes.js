@@ -88,20 +88,28 @@ Meteor.methods({
             }
         );
         if (!updated) {
-            Votes.insert({
-                ownerId: Meteor.userId(),
-                clueId: clueId,
-                value: value,
-            });
-        }
+            try {
 
-        Meteor.call('clue.calculateScore', clueId, function(err, score) {
-            if (!err) {
-                Logger.log("Updated Clue Score: " + clueId);
+                Votes.insert({
+                    ownerId: Meteor.userId(),
+                    clueId: clueId,
+                    value: value,
+                });
+
+                Meteor.call('clue.calculateScore', clueId, function(err, score) {
+                    if (!err) {
+                        Logger.log("Updated Clue Score: " + clueId);
+                    } else {
+                        throw new Meteor.Error('clue-score-not-calculated', 'Could not calculate a clue score.', JSON.stringify(err));
+                    }
+                });
+
+                return true;
+
+            } catch(err) {
+                throw new Meteor.Error('vote-not-inserted', 'Could not create a vote.', err);
             }
-        });
-
-        return true;
+        }
 
     },
 

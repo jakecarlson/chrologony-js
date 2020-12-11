@@ -58,4 +58,12 @@ Formatter = {
         return str[0].toUpperCase() + str.slice(1);
     },
 
+    pluralize(str, qty) {
+        if (qty == 1) {
+            return str;
+        } else {
+            return str + 's';
+        }
+    },
+
 };

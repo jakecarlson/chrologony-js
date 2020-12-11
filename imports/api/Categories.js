@@ -121,13 +121,17 @@ Meteor.methods({
         Logger.log('Insert Category: ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
-        return Categories.insert({
-            name: attrs.name,
-            theme: attrs.theme,
-            precision: attrs.precision,
-            private: attrs.private,
-            active: attrs.active,
-        });
+        try {
+            return Categories.insert({
+                name: attrs.name,
+                theme: attrs.theme,
+                precision: attrs.precision,
+                private: attrs.private,
+                active: attrs.active,
+            });
+        } catch(err) {
+            throw new Meteor.Error('category-not-inserted', 'Could not create a category.', err);
+        }
 
     },
 
@@ -153,7 +157,7 @@ Meteor.methods({
         Logger.log('Update Category: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
-        return Categories.update(
+        const updated = Categories.update(
             {
                 _id: attrs._id,
                 ownerId: Meteor.userId(),
@@ -168,6 +172,11 @@ Meteor.methods({
                 }
             }
         );
+        if (!updated) {
+            throw new Meteor.Error('category-not-updated', 'Could not update a category.');
+        }
+
+        return updated;
 
     },
 
@@ -183,7 +192,7 @@ Meteor.methods({
         Logger.log('Update Category Collaborators: ' + id + ' ' + JSON.stringify(collaborators));
 
         // Update the category collaborators
-        Categories.update(
+        const updated = Categories.update(
             {
                 _id: id,
                 ownerId: Meteor.userId(),
@@ -194,6 +203,9 @@ Meteor.methods({
                 }
             }
         );
+        if (!updated) {
+            throw new Meteor.Error('category-not-updated', 'Could not set collaborators on a category.');
+        }
 
         return collaborators.length;
 
@@ -210,12 +222,17 @@ Meteor.methods({
         Logger.log('Delete Category: ' + id);
 
         // Remove the item
-        return Categories.remove(
+        const removed = Categories.remove(
             {
                 _id: id,
                 ownerId: Meteor.userId(),
             }
         );
+        if (!removed) {
+            throw new Meteor.Error('category-not-removed', 'Could not remove a category.');
+        }
+
+        return removed;
 
     },
 
@@ -226,7 +243,10 @@ Meteor.methods({
 
         ids.forEach(function(id) {
             const cluesCount = Clues.find({categories: id, active: true}).count();
-            Categories.update(id, {$set: {cluesCount: cluesCount}});
+            const updated = Categories.update(id, {$set: {cluesCount: cluesCount}});
+            // if (!updated) {
+            //     throw new Meteor.Error('category-not-updated', 'Could not update clue count for a category.');
+            // }
         });
 
         return ids.length;

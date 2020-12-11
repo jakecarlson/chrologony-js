@@ -225,11 +225,15 @@ Meteor.methods({
         Logger.log('Create Clue: ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
-        return Clues.insert({
-            description: attrs.description,
-            date: attrs.date,
-            categories: [attrs.categoryId],
-        });
+        try {
+            return Clues.insert({
+                description: attrs.description,
+                date: attrs.date,
+                categories: [attrs.categoryId],
+            });
+        } catch(err) {
+            throw new Meteor.Error('clue-not-inserted', 'Could not create a clue.', err);
+        }
 
     },
 
@@ -256,7 +260,7 @@ Meteor.methods({
         Logger.log('Update Clue: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
-        return Clues.update(
+        const updated = Clues.update(
             getClueUpdateSelector(attrs),
             {
                 $set: {
@@ -266,6 +270,11 @@ Meteor.methods({
                 }
             }
         );
+        if (!updated) {
+            throw new Meteor.Error('clue-not-updated', 'Could not update a clue.');
+        }
+
+        return updated;
 
     },
 
@@ -281,7 +290,7 @@ Meteor.methods({
         Logger.log('Update Clue Categories: ' + id + ' ' + JSON.stringify(categories));
 
         // Update the clue categories
-        Clues.update(
+        const updated = Clues.update(
             {
                 _id: id,
             },
@@ -291,6 +300,9 @@ Meteor.methods({
                 }
             }
         );
+        if (!updated) {
+            throw new Meteor.Error('clue-not-updated', 'Could not update categories on a clue.');
+        }
 
         return categories.length;
 
@@ -310,7 +322,7 @@ Meteor.methods({
         Logger.log('Add category ' + categoryId + ' to: ' + JSON.stringify(ids));
 
         // Update the clue categories
-        return Clues.update(
+        const updated = Clues.update(
             {
                 _id: {$in: ids},
             },
@@ -319,6 +331,11 @@ Meteor.methods({
             },
             {multi: true}
         );
+        if (!updated) {
+            throw new Meteor.Error('clue-not-updated', 'Could not add a category to a clue.');
+        }
+
+        return updated;
 
     },
 
@@ -336,7 +353,7 @@ Meteor.methods({
         Logger.log('Remove category ' + categoryId + ' from: ' + JSON.stringify(ids));
 
         // Update the clue categories
-        return Clues.update(
+        const updated = Clues.update(
             {
                 _id: {$in: ids},
             },
@@ -345,6 +362,11 @@ Meteor.methods({
             },
             {multi: true}
         );
+        if (!updated) {
+            throw new Meteor.Error('clue-not-updated', 'Could not remove a category from a clue.');
+        }
+
+        return updated;
 
     },
 
@@ -374,7 +396,7 @@ Meteor.methods({
         Logger.log('Update Clue: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
-        return Clues.update(
+        const updated = Clues.update(
             getClueUpdateSelector(attrs),
             {
                 $set: {
@@ -390,6 +412,11 @@ Meteor.methods({
                 }
             }
         );
+        if (!updated) {
+            throw new Meteor.Error('clue-not-updated', 'Could not update a clue.');
+        }
+
+        return updated;
 
     },
 
@@ -404,12 +431,17 @@ Meteor.methods({
         Logger.log('Delete Clue: ' + id);
 
         // Remove the item
-        return Clues.remove(
+        const removed = Clues.remove(
             {
                 _id: id,
                 ownerId: Meteor.userId(),
             }
         );
+        if (!removed) {
+            throw new Meteor.Error('clue-not-removed', 'Could not remove a clue.');
+        }
+
+        return removed;
 
     },
 
@@ -447,6 +479,10 @@ if (Meteor.isServer) {
                 {_id: clueId},
                 {$set: {score: score}}
             );
+            if (!updated) {
+                throw new Meteor.Error('clue-not-updated', 'Could not update a clue.');
+            }
+
             return score;
 
         },
@@ -466,6 +502,10 @@ if (Meteor.isServer) {
                 {_id: clueId},
                 {$set: {difficulty: difficulty}}
             );
+            if (!updated) {
+                throw new Meteor.Error('clue-not-updated', 'Could not update a clue.');
+            }
+
             return difficulty;
 
         },
@@ -476,11 +516,16 @@ if (Meteor.isServer) {
             check(selector, Object);
             check(categoryId, RecordId);
 
-            return Clues.update(
+            const updated = Clues.update(
                 selector,
                 {$push: {categories: categoryId}},
                 {multi: true}
             );
+            if (!updated) {
+                throw new Meteor.Error('clue-not-updated', 'Could not add a category to a clue.');
+            }
+
+            return updated;
 
         },
 
@@ -490,11 +535,16 @@ if (Meteor.isServer) {
             check(selector, Object);
             check(categoryId, RecordId);
 
-            return Clues.update(
+            const updated = Clues.update(
                 selector,
                 {$pull: {categories: categoryId}},
                 {multi: true}
             );
+            if (!updated) {
+                throw new Meteor.Error('clue-not-updated', 'Could not remove a category from a clue.');
+            }
+
+            return updated;
 
         },
 
@@ -565,6 +615,8 @@ function updateClueCounts(categoryIds) {
     Meteor.call('category.updateClueCounts', categoryIds, function(err, updated) {
         if (!err) {
             Logger.log("Updated Category Clue Counts: " + updated);
+        } else {
+            throw new Meteor.Error('category-clues-not-set', 'Could not update the category clue counts.', JSON.stringify(err));
         }
     });
 }

@@ -4,81 +4,78 @@
 
         <header class="card-header bg-primary">
             <h1 class="card-title text-white float-left">Join a Game</h1>
-            <button class="btn btn-secondary float-right" title="Create a New Game" data-toggle="modal" data-target="#gameCreatorModal">
+            <button class="btn btn-success float-right" title="Create a New Game" data-toggle="modal" data-target="#gameCreatorModal">
                 Create a New Game
             </button>
         </header>
 
-        <div class="card-body p-0">
+        {{#if collectionNotEmpty games}}
 
-            {{#if hasGames}}
+            <ul id="joinGames" class="list-group list-group-flush">
+                {{#each game in games}}
 
-                <div class="table-responsive">
-                    <table id="joinGames" class="table table-hover mb-0">
-                        <colgroup>
-                            <col class="name">
-                            <col class="category">
-                            <col class="cards">
-                            <col class="difficulty">
-                            <col class="created">
-                            <col class="started">
-                            <col class="players">
-                            <col class="join">
-                        </colgroup>
-                        <thead class="table-borderless">
-                            <tr>
-                                <th scope="col"><i class="fa fa-lock"></i> Name</th>
-                                <th scope="col">Category</th>
-                                <th scope="col" class="d-none d-lg-table-cell"># Cards</th>
-                                <th scope="col" class="d-none d-lg-table-cell">Difficulty</th>
-                                <th scope="col">Created</th>
-                                <th scope="col">Started</th>
-                                <th scope="col"># Players</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each game in games}}
-                                <tr
-                                    class="
-                                        game
-                                        {{#if hasPassword game}}
-                                            game-password
-                                        {{else}}
-                                            game-open
-                                        {{/if}}
-                                        {{#if started game}}
-                                            table-primary
-                                        {{/if}}
-                                    "
-                                    data-id="{{game._id}}"
-                                    data-toggle="{{#if hasPassword game}}modal{{/if}}"
-                                    data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
-                                >
-                                    <th>
-                                        <i class="fa fa-{{#if hasPassword game}}lock{{else}}unlock-alt{{/if}}"></i>
-                                        {{title game}}
-                                    </th>
-                                    <td>{{category game}}</td>
-                                    <td class="d-none d-lg-table-cell">{{numCards game}}</td>
-                                    <td class="d-none d-lg-table-cell">{{difficulty game}}</td>
-                                    <td>{{relativeTime game.createdAt}}</td>
-                                    <td>{{relativeTime game.startedAt}}</td>
-                                    <td>{{numPlayers game}}</td>
-                                    <td><button class="btn btn-primary btn-sm">Join</button></td>
-                                </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+                    <li
+                        class="
+                            game
+                            {{#if hasPassword game}}
+                                game-password
+                            {{else}}
+                                game-open
+                            {{/if}}
+                            text-dark
+                            p-3
+                        "
+                        data-id="{{game._id}}"
+                        data-toggle="{{#if hasPassword game}}modal{{/if}}"
+                        data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
+                    >
+                        <div class="row">
+                            <div class="col-6">
+                                <h2 class="game-title">
+                                    <i class="fa {{#if hasPassword game}}fa-lock text-danger{{else}}fa-unlock-alt text-success{{/if}}"></i>
+                                    {{title game}}
+                                </h2>
+                                <p class="game-created text-muted">
+                                    {{#if game.startedAt}}
+                                        Started {{relativeTime game.startedAt}};
+                                    {{/if}}
+                                    Created {{relativeTime game.createdAt}}
+                                </p>
+                            </div>
+                            <dl class="col-6 text-muted game-meta">
+                                <dt>
+                                    <i class="fa fa-folder" title="Category"></i>
+                                </dt>
+                                    <dd>{{category game}}</dd>
+                                <dt>
+                                    <i class="fa fa-user" title="# Players"></i>
+                                </dt>
+                                    <dd>{{numPlayers game}} <span class="d-none d-md-inline">{{playersStr game}}</span></dd>
+                                <dt>
+                                    <i class="fa fa-asterisk" title="Difficulty"></i>
+                                </dt>
+                                    <dd>{{difficulty game}} <span class="d-none d-md-inline">Difficulty</span></dd>
+                                <dt>
+                                    <i class="fa fa-certificate" title="Win Condition"></i>
+                                </dt>
+                                    <dd>{{winCondition game}} <span class="d-none d-md-inline">Cards</span></dd>
+                                <dt>
+                                    <i class="fa fa-clock-o" title="Guess Time Limit"></i>
+                                </dt>
+                                    <dd>{{guessTime game}} <span class="d-none d-md-inline">Guess Time Limit</span></dd>
+                            </dl>
+                        </div>
 
-            {{else}}
+                    </li>
 
-                <p class="text-dark text-center mt-3">There are currently no games to join. <a href="#" data-toggle="modal" data-target="#gameCreatorModal">Create one now!</a></p>
+                {{/each}}
+            </ul>
 
-            {{/if}}
+        {{else}}
 
-        </div>
+            <p class="card-body text-dark text-center">There are currently no games to join. <a href="#" data-toggle="modal" data-target="#gameCreatorModal">Create one now!</a></p>
+
+        {{/if}}
 
     </div>
 

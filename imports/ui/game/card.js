@@ -184,6 +184,8 @@ function submitVote(clueId, value) {
     Meteor.call('vote.set', clueId, value, function(err, score) {
         if (!err) {
             Logger.log('Voted for Clue: ' + clueId);
+        } else {
+            throw new Meteor.Error('vote-not-set', 'Could not set a vote.', JSON.stringify(err));
         }
         LoadingState.stop();
     });

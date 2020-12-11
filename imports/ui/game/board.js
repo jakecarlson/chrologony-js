@@ -309,6 +309,8 @@ Template.board.events({
                         drawCard(self.game.currentTurnId);
                     }
                 }
+            } else {
+                throw new Meteor.Error('card-not-submitted', 'Could not submit a guess for the card.', JSON.stringify(err));
             }
             TourGuide.resume();
         });
@@ -364,6 +366,8 @@ Template.board.events({
                     }, 100);
                 }
 
+            } else {
+                throw new Meteor.Error('game-not-cloned', 'Could not clone the game.', JSON.stringify(err));
             }
 
             LoadingState.stop();
@@ -393,6 +397,8 @@ function saveCardPos() {
     Meteor.call('card.setPositions', pos, function(err, updated) {
         if (!err) {
             Logger.log("Card Positions Updated: " + updated);
+        } else {
+            throw new Meteor.Error('card-positions-not-set', 'Could not set card positions.', JSON.stringify(err));
         }
     });
 
@@ -403,6 +409,8 @@ function drawCard(turnId) {
     Meteor.call('card.draw', turnId, function(err, id) {
         if (!err) {
             Logger.log("Created Card: " + id);
+        } else {
+            throw new Meteor.Error('card-not-drawn', 'Could not draw a card.', JSON.stringify(err));
         }
         saveCardPos();
         // LoadingState.stop();
@@ -416,6 +424,8 @@ function endTurn(game) {
     Meteor.call('turn.next', gameId, function(err, id) {
         if (!err) {
             Logger.log("Start Turn: " + id);
+        } else {
+            throw new Meteor.Error('turn-not-set', 'Could not set a turn.', JSON.stringify(err));
         }
         Session.set('waiting', false);
         LoadingState.stop();

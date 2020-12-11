@@ -24,13 +24,13 @@ Cards.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
     turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
     clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    ownerId: {type: String, max: 17},
     correct: {type: Boolean, defaultValue: null, optional: true},
     guessedAt: {type: Date, defaultValue: null, optional: true},
     lockedAt: {type: Date, defaultValue: null, optional: true},
     pos: {type: SimpleSchema.Integer, defaultValue: 0},
 });
 Cards.schema.extend(Schemas.timestampable);
-Cards.schema.extend(Schemas.ownable(true));
 Cards.attachSchema(Cards.schema);
 
 Cards.helpers({
@@ -162,7 +162,7 @@ Meteor.methods({
             check(id, RecordId);
             check(pos, Match.Integer);
             Permissions.owned(Cards.findOne(id));
-            numUpdated += Cards.update(
+            let updated = Cards.update(
                 {
                     _id: id,
                     ownerId: Meteor.userId(),
@@ -173,6 +173,12 @@ Meteor.methods({
                     }
                 }
             );
+            if (updated) {
+                numUpdated += updated;
+            } else {
+                throw new Meteor.Error('card-not-updated', 'Could not update position of a card.');
+            }
+
         }
 
         return numUpdated;
@@ -192,7 +198,7 @@ Meteor.methods({
         Logger.log('Lock Card: ' + id);
 
         // If there is an ID, this is an update
-        return Cards.update(
+        const updated = Cards.update(
             {
                 _id: id,
                 ownerId: Meteor.userId(),
@@ -203,6 +209,11 @@ Meteor.methods({
                 }
             }
         );
+        if (!updated) {
+            throw new Meteor.Error('card-not-updated', 'Could not lock a card.');
+        }
+
+        return updated;
 
     },
 
@@ -218,19 +229,21 @@ if (Meteor.isServer) {
             check(turnId, RecordId);
             Permissions.authenticated();
             const turn = Turns.findOne(turnId);
-            Permissions.check((turn.gameId == Meteor.user().currentGameId));
+            const game = turn.game();
+            Permissions.check(game.hasPlayer(turn.ownerId));
 
             // If the game has a turn card limit, check whether the user is allowed to draw
             Permissions.check(!turn.hasReachedCardLimit());
 
             // Draw the card -- defer this to a helper defined below because it's recursive
-            const game = turn.game();
             const cardId = drawCard(turn, game);
             Logger.log("Card ID: " + cardId);
 
             Meteor.call('turn.setCard', turnId, cardId, null, function(err, updated) {
                 if (!err) {
                     Logger.log("Updated Turn: " + updated);
+                } else {
+                    throw new Meteor.Error('card-not-set', 'Could not set the turn card.', JSON.stringify(err));
                 }
             });
 
@@ -256,13 +269,15 @@ if (Meteor.isServer) {
             Meteor.call('turn.setCard', card.turn()._id, null, correct, function(err, updated) {
                 if (!err) {
                     Logger.log("Updated Turn: " + updated);
+                } else {
+                    throw new Meteor.Error('card-not-set', 'Could not set the turn card.', JSON.stringify(err));
                 }
             });
 
             Logger.log('Update Card: ' + id + ' ' + JSON.stringify({correct: correct}));
 
             // Update the card
-            Cards.update(
+            const updated = Cards.update(
                 id,
                 {
                     $set: {
@@ -271,10 +286,15 @@ if (Meteor.isServer) {
                     }
                 }
             );
+            if (!updated) {
+                throw new Meteor.Error('card-not-updated', 'Could not submit a card guess.', err);
+            }
 
             Meteor.call('clue.calculateDifficulty', card.clueId, function(err, difficulty) {
                 if (!err) {
                     Logger.log("Updated Clue Difficulty: " + difficulty);
+                } else {
+                    throw new Meteor.Error('difficulty-not-set', 'Could not update the clue difficulty.', JSON.stringify(err));
                 }
             });
 
@@ -372,13 +392,19 @@ if (Meteor.isServer) {
         Logger.log('Insert Card: ' + JSON.stringify(card));
 
         // Add the card
-        const cardId = Cards.insert(card);
+        try {
 
-        // If it's the first card, draw another
-        if (firstCard) {
-            return drawCard(turn, game);
-        } else {
-            return cardId;
+            const cardId = Cards.insert(card);
+
+            // If it's the first card, draw another
+            if (firstCard) {
+                return drawCard(turn, game);
+            } else {
+                return cardId;
+            }
+
+        } catch(err) {
+            throw new Meteor.Error('card-not-inserted', 'Could not create a card.', err);
         }
 
     }

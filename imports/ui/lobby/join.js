@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating';
 import { LoadingState } from '../../modules/LoadingState';
+import { Meteor } from "meteor/meteor";
 
 import { Games } from '../../api/Games';
 import { Cards } from '../../api/Cards';
@@ -8,6 +9,9 @@ import './join.html';
 
 Template.join.onCreated(function joinOnCreated() {
     this.currentGame = new ReactiveVar(null);
+    this.autorun(() => {
+        LoadingState.stop();
+    });
 });
 
 Template.join.helpers({
@@ -39,8 +43,12 @@ Template.join.helpers({
         return game.category().name;
     },
 
-    numCards(game) {
-        return game.winPoints;
+    winCondition(game) {
+        if (game.winPoints) {
+            return game.winPoints;
+        } else {
+            return 'No';
+        }
     },
 
     difficulty(game) {
@@ -49,7 +57,26 @@ Template.join.helpers({
     },
 
     numPlayers(game) {
-        return game.numPlayers();
+        return game.players.length;
+    },
+
+    guessTime(game) {
+        if (game.cardTime) {
+            return game.cardTime + 's';
+        } else {
+            return 'No';
+        }
+    },
+
+    playersStr(game) {
+        return Formatter.pluralize('Player', game.players.length);
+    },
+
+    showGame(game) {
+        return (
+            (game.ownerId == Meteor.userId()) ||
+            (game.players.length > 0)
+        );
     },
 
 });

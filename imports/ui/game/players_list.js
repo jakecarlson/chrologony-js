@@ -14,7 +14,7 @@ Template.players_list.helpers({
     },
 
     players() {
-        return this.game.players();
+        return this.game.playersWithNames();
     },
 
     isTurnOwner(userId) {
@@ -22,7 +22,7 @@ Template.players_list.helpers({
     },
 
     numPlayers() {
-        return this.game.numPlayers();
+        return this.game.players.length;
     },
 
     currentRound() {

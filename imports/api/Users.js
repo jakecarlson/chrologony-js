@@ -30,16 +30,17 @@ if (Meteor.isServer) {
     // Get the players in the game
     Meteor.publish('players', function playersPublication(gameId) {
         if (this.userId && gameId) {
+            const game = Games.findOne(gameId);
             return Meteor.users.find(
                 {
-                    currentGameId: gameId,
+                    _id: {$in: game.players},
                 },
                 {
                     fields: {
                         _id: 1,
                         'profile.name': 1,
-                        currentGameId: 1,
-                        joinedGameAt: 1,
+                        currentRoomId: 1,
+                        joinedRoomAt: 1,
                         guest: 1,
                     }
                 }
@@ -82,7 +83,7 @@ if (Meteor.isServer) {
                 userId = this.userId;
             }
 
-            Meteor.users.update(
+            const updated = Meteor.users.update(
                 userId,
                 {
                     $set: {
@@ -91,6 +92,9 @@ if (Meteor.isServer) {
                     }
                 }
             );
+            if (!updated) {
+                throw new Meteor.Error('user-not-updated', 'Could not set current game for user.');
+            }
 
             return id;
 
@@ -206,7 +210,10 @@ if (Meteor.isServer) {
 
             try {
                 const userId = Accounts.createUser({username: username});
-                Meteor.users.update(userId, {$set: {guest: true}});
+                const updated = Meteor.users.update(userId, {$set: {guest: true}});
+                if (!updated) {
+                    throw new Meteor.Error('user-not-updated', 'Could not update user to guest.');
+                }
                 this.setUserId(userId);
                 return userId;
             } catch (err) {

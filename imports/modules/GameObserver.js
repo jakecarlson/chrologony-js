@@ -81,12 +81,17 @@ GameObserver = {
                     Meteor.call('clue.get', card.clueId, function(err, clue) {
                         if (!err) {
                             Logger.log("Update Clue Data: " + card.clueId);
-                            Clues._collection.update(card.clueId, {$set: clue});
+                            const updated = Clues._collection.update(card.clueId, {$set: clue});
+                            if (!updated) {
+                                throw new Meteor.Error('clue-not-updated', '[client] Could not update a clue.');
+                            }
                             if (card.correct) {
                                 SoundManager.play('cardRight');
                             } else {
                                 SoundManager.play('cardWrong');
                             }
+                        } else {
+                            throw new Meteor.Error('clue-not-received', 'Could not get a card.', JSON.stringify(err));
                         }
                         Session.set('waiting', false);
                         LoadingState.stop();

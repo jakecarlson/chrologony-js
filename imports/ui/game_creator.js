@@ -180,56 +180,66 @@ Template.game_creator.events({
         LoadingState.start(e);
         const form = e.target;
 
-        let difficulties = [];
-        form.difficulty.forEach(function(input) {
-            if (input.checked) {
-                difficulties.push(parseInt(input.value));
-            }
-        });
+        // Only proceed if a category was selected
+        const categoryId = Helpers.getSelectValue(form.categoryId);
+        console.log(categoryId);
+        if (categoryId) {
 
-        // Get values from form element
-        const attrs = {
-            categoryId: Helpers.getSelectValue(form.categoryId),
-            name: form.name.value,
-            password: form.password.value,
-            private: form.private.checked,
-            winPoints: parseInt(Helpers.getSelectValue(form.winPoints)),
-            equalTurns: form.equalTurns.checked,
-            minDifficulty: difficulties[0],
-            maxDifficulty: difficulties[difficulties.length-1],
-            minScore: parseInt(Helpers.getSelectValue(form.minScore)),
-            cardLimit: parseInt(Helpers.getSelectValue(form.cardLimit)),
-            autoProceed: form.autoProceed.checked,
-            cardTime: parseInt(Helpers.getSelectValue(form.cardTime)),
-            turnOrder: Helpers.getSelectValue(form.turnOrder),
-            recycleCards: form.recycleCards.checked,
-            showHints: form.showHints.checked,
-            comparisonPrecision: Helpers.getSelectValue(form.comparisonPrecision),
-            displayPrecision: Helpers.getSelectValue(form.displayPrecision),
-        };
+            let difficulties = [];
+            form.difficulty.forEach(function(input) {
+                if (input.checked) {
+                    difficulties.push(parseInt(input.value));
+                }
+            });
 
-        Meteor.call('game.create', attrs, function(err, id) {
+            // Get values from form element
+            const attrs = {
+                categoryId: categoryId,
+                name: form.name.value,
+                password: form.password.value,
+                private: form.private.checked,
+                winPoints: parseInt(Helpers.getSelectValue(form.winPoints)),
+                equalTurns: form.equalTurns.checked,
+                minDifficulty: difficulties[0],
+                maxDifficulty: difficulties[difficulties.length-1],
+                minScore: parseInt(Helpers.getSelectValue(form.minScore)),
+                cardLimit: parseInt(Helpers.getSelectValue(form.cardLimit)),
+                autoProceed: form.autoProceed.checked,
+                cardTime: parseInt(Helpers.getSelectValue(form.cardTime)),
+                turnOrder: Helpers.getSelectValue(form.turnOrder),
+                recycleCards: form.recycleCards.checked,
+                showHints: form.showHints.checked,
+                comparisonPrecision: Helpers.getSelectValue(form.comparisonPrecision),
+                displayPrecision: Helpers.getSelectValue(form.displayPrecision),
+            };
 
-            if (err) {
-                Logger.log(err);
-                Flasher.set('danger', "An active game with that name already exists.");
-            } else {
+            Meteor.call('game.create', attrs, function(err, id) {
 
-                Logger.log("Created Game: " + id);
-                Session.set('lastOwnedGameId', id);
+                if (err) {
+                    Logger.log(err);
+                    Flasher.set('danger', "An active game with that name already exists.");
+                } else {
 
-                Helpers.subscribe(i, 'games', Helpers.currentAndPreviousGameIds());
+                    Logger.log("Created Game: " + id);
+                    Session.set('lastOwnedGameId', id);
 
-                Session.set('gamePassword', form.password.value);
-                form.password.value = '';
-                Helpers.joinGame(id);
+                    Helpers.subscribe(i, 'games', Helpers.currentAndPreviousGameIds());
 
-            }
+                    Session.set('gamePassword', form.password.value);
+                    form.password.value = '';
+                    Helpers.joinGame(id);
 
+                }
+
+                LoadingState.stop();
+                TourGuide.resume();
+
+            });
+
+        } else {
+            Flasher.set('danger', 'You must select a category to create a game.');
             LoadingState.stop();
-            TourGuide.resume();
-
-        });
+        }
 
     },
 

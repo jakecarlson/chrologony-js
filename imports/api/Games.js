@@ -54,6 +54,13 @@ Games.PUBLISH_FIELDS = {
     showHints: 1,
     comparisonPrecision: 1,
     displayPrecision: 1,
+    players: 1,
+};
+
+Games.PUBLIC_MATCH = {
+    private: false,
+    'players.0': {$exists: true},
+    endedAt: null
 };
 
 Games.schema = new SimpleSchema({
@@ -78,6 +85,8 @@ Games.schema = new SimpleSchema({
     showHints: {type: Boolean, defaultValue: false},
     displayPrecision: {type: String, defaultValue: 'date'},
     comparisonPrecision: {type: String, defaultValue: 'date'},
+    players: {type: Array, defaultValue: [], optional: true},
+    'players.$': {type: String, max: 17},
 });
 Games.schema.extend(Schemas.ownable(true));
 Games.schema.extend(Schemas.timestampable);
@@ -96,19 +105,27 @@ Games.helpers({
         }
     },
 
-    players() {
-        return Meteor.users.find(
+    playersWithNames() {
+        const userIds = this.players;
+        let players = Meteor.users.find(
             {
-                currentGameId: this._id
+                _id: {$in: userIds},
             },
             {
                 sort: {joinedGameAt: 1, 'profile.name': 1},
             }
-        );
+        ).fetch();
+        return _.sortBy(players, function(doc) {
+            return userIds.indexOf(doc._id);
+        });
     },
 
     numPlayers() {
-        return this.players().count();
+        return this.players.length;
+    },
+
+    hasPlayer(userId) {
+        return this.players.includes(userId);
     },
 
     owner() {
@@ -164,14 +181,13 @@ Games.helpers({
     },
 
     playersWithCounts() {
-        const userIds = Meteor.users.find({currentGameId: this.gameId}).map(function(i) { return i._id; });
         const players = Promise.await(
             Cards.rawCollection().aggregate(
                 [
                     {
                         $match: {
                             gameId: this._id,
-                            ownerId: {$in: userIds},
+                            ownerId: {$in: this.players},
                         }
                     },
                     {
@@ -222,14 +238,6 @@ Games.helpers({
 
     getPlayerTurnCounts() {
 
-        Logger.log('Getting turn counts ...');
-
-        // Create an array of user IDs of players currently in the game
-        let playerPool = [];
-        this.players().forEach(function(user) {
-            playerPool.push(user._id);
-        });
-
         // Get turn counts for players who have had turns in the current game and are still in the game
         let sort = {
             turns: -1,
@@ -241,7 +249,7 @@ Games.helpers({
         const players = Promise.await(
             Turns.rawCollection().aggregate(
                 [
-                    {$match: {gameId: this._id, ownerId: {$in: playerPool}}},
+                    {$match: {gameId: this._id, ownerId: {$in: this.players}}},
                     {$group: {_id: "$ownerId", turns: {$sum: 1}, lastTurn: {$max: "$createdAt"}}},
                     {$sort: sort},
                 ]
@@ -281,6 +289,7 @@ Games.helpers({
     getNextPlayer() {
 
         // Get players sorted by turn count descending
+        Logger.log('Getting turn counts ...');
         const players = this.getPlayerTurnCounts();
         Logger.log('Player Turn Counts: ' + JSON.stringify(players));
 
@@ -315,17 +324,17 @@ if (Meteor.isServer) {
             find() {
                 if (this.userId) {
 
-                    const selector = {
+                    let selector = {
                         deletedAt: null,
                     };
                     if (additionalGameIds) {
                         selector.$or = [
+                            {players: this.userId},
                             {_id: {$in: additionalGameIds}},
-                            {private: false, endedAt: null},
+                            Games.PUBLIC_MATCH,
                         ];
                     } else {
-                        selector.private = false;
-                        selector.endedAt = null;
+                        selector = Object.assign(selector, Games.PUBLIC_MATCH);
                     }
 
                     return Games.find(
@@ -354,7 +363,7 @@ if (Meteor.isServer) {
 
             children: [{
                 find(game) {
-                    return Meteor.users.find({currentGameId: game._id }, {fields: {_id: 1, currentGameId: 1}});
+                    return Meteor.users.find({_id: {$in: game.players}}, {fields: {_id: 1, currentGameId: 1}});
                 }
             }],
             
@@ -386,7 +395,7 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    'game.leave'(userId = false) {
+    'game.leave'(id, userId = false) {
 
         // If no userID was provided, use the current user
         if (!userId) {
@@ -396,36 +405,45 @@ Meteor.methods({
         check(userId, RecordId);
         Permissions.authenticated();
 
-        Logger.audit('leave', {collection: 'Games', documentId: Meteor.user().currentGameId});
+        Logger.audit('leave', {collection: 'Games', documentId: id});
 
         // Make sure the user is the owner of the game that the other user is in, or the user him/herself
+        const game = Games.findOne(id);
         if (userId != Meteor.userId()) {
-            Permissions.owned(Meteor.user().currentGame());
+            Permissions.owned(game);
         }
 
         // If the user isn't in a game, just pretend like it worked
-        if (!Meteor.user().currentGameId) {
+        if (!game.hasPlayer(userId)) {
             return userId;
         }
 
         // Check to see if it's this user's turn currently and end it if so -- but only if it's a multiplayer game
-        const game = Meteor.user().currentGame();
-        if (game && (game.players().count() > 1)) {
+        if (game && (game.players.length > 1)) {
             if (game.currentTurnId) {
                 const turn = game.currentTurn();
                 if (turn.ownerId == userId) {
                     Meteor.call('turn.next', game._id, function(err, id) {
                         if (!err) {
                             Logger.log("Start Turn: " + id);
+                        } else {
+                            throw new Meteor.Error('turn-not-started', 'Could not start the next turn.', JSON.stringify(err));
                         }
                     });
                 }
             }
         }
 
+        // Remove the player from the players array & null out the user's current game ID
+        const updated = Games.update(id, {$pull: {players: Meteor.userId()}});
+        if (!updated) {
+            throw new Meteor.Error('game-not-updated', 'Could not remove player from game.');
+        }
         Meteor.call('user.setGame', null, userId, function(err, id) {
             if (!err) {
                 Logger.log("Left Game: " + id);
+            } else {
+                throw new Meteor.Error('user-game-not-set', 'Could not set the game to the user.', JSON.stringify(err));
             }
         });
 
@@ -447,11 +465,17 @@ Meteor.methods({
         );
 
         Permissions.authenticated();
-        checkPlayerIsInGame(id);
+        const game = Games.findOne(id);
+        Permissions.check(game.hasPlayer(Meteor.userId()));
         Logger.log('Update Game: ' + id + ': ' + JSON.stringify(attrs));
 
         // Update the game
-        return Games.update(id, {$set: attrs});
+        const updated = Games.update(id, {$set: attrs});
+        if (!updated) {
+            throw new Meteor.Error('game-not-updated', 'Could not update a game.');
+        }
+
+        return updated;
 
     },
 
@@ -484,6 +508,7 @@ if (Meteor.isServer) {
                     showHints: Boolean,
                     comparisonPrecision: NonEmptyString,
                     displayPrecision: NonEmptyString,
+                    players: Match.Maybe(Array),
                 }
             );
             Permissions.authenticated();
@@ -523,41 +548,51 @@ if (Meteor.isServer) {
             }
 
             // Create the new game
-            const gameId = Games.insert({
-                categoryId: attrs.categoryId,
-                name: attrs.name,
-                password: attrs.password,
-                private: attrs.private,
-                winPoints: attrs.winPoints,
-                equalTurns: attrs.equalTurns,
-                minDifficulty: attrs.minDifficulty,
-                maxDifficulty: attrs.maxDifficulty,
-                minScore: attrs.minScore,
-                cardLimit: attrs.cardLimit,
-                autoProceed: attrs.autoProceed,
-                cardTime: attrs.cardTime,
-                turnOrder: attrs.turnOrder,
-                recycleCards: attrs.recycleCards,
-                showHints: attrs.showHints,
-                comparisonPrecision: attrs.comparisonPrecision,
-                displayPrecision: attrs.displayPrecision,
-            });
+            try {
 
-            Logger.audit('create', {collection: 'Games', documentId: gameId});
+                const gameId = Games.insert({
+                    categoryId: attrs.categoryId,
+                    name: attrs.name,
+                    password: attrs.password,
+                    private: attrs.private,
+                    winPoints: attrs.winPoints,
+                    equalTurns: attrs.equalTurns,
+                    minDifficulty: attrs.minDifficulty,
+                    maxDifficulty: attrs.maxDifficulty,
+                    minScore: attrs.minScore,
+                    cardLimit: attrs.cardLimit,
+                    autoProceed: attrs.autoProceed,
+                    cardTime: attrs.cardTime,
+                    turnOrder: attrs.turnOrder,
+                    recycleCards: attrs.recycleCards,
+                    showHints: attrs.showHints,
+                    comparisonPrecision: attrs.comparisonPrecision,
+                    displayPrecision: attrs.displayPrecision,
+                    players: ((attrs.players) ? attrs.players : [Meteor.userId()]),
+                });
 
-            if (gameId) {
-                Meteor.users.update(
-                    Meteor.userId(),
-                    {
-                        $set: {
-                            currentGameId: gameId,
-                            joinedGameAt: new Date(),
+                Logger.audit('create', {collection: 'Games', documentId: gameId});
+
+                if (gameId) {
+                    const updated = Meteor.users.update(
+                        Meteor.userId(),
+                        {
+                            $set: {
+                                currentGameId: gameId,
+                                joinedGameAt: new Date(),
+                            }
                         }
+                    );
+                    if (!updated) {
+                        throw new Meteor.Error('user-not-updated', 'Could not set current game for user.');
                     }
-                );
-            }
+                }
 
-            return gameId;
+                return gameId;
+
+            } catch(err) {
+                throw new Meteor.Error('game-not-inserted', 'Could not create a game.', err);
+            }
 
         },
 
@@ -587,9 +622,18 @@ if (Meteor.isServer) {
                 throw new Meteor.Error('not-found', 'Game does not exist.');
             }
 
+            // Add the user to the players array and set their current game
+            if (!game.players.includes(Meteor.userId())) {
+                const updated = Games.update(id, {$push: {players: Meteor.userId()}});
+                if (!updated) {
+                    throw new Meteor.Error('game-not-updated', 'Could not add player to game.');
+                }
+            }
             Meteor.call('user.setGame', id, this.userId, function(err, id) {
                 if (!err) {
                     Logger.log("Joined Game: " + id);
+                } else {
+                    throw new Meteor.Error('user-game-not-set', 'Could not set the game to the user.', JSON.stringify(err));
                 }
             });
 
@@ -607,13 +651,17 @@ if (Meteor.isServer) {
                 Meteor.call('user.setGame', id, this.userId, function(err, id) {
                     if (!err) {
                         Logger.log("Joined Game: " + id);
+                    } else {
+                        throw new Meteor.Error('game-join-invalid-token', 'Could not join the game by token. Invalid token.', JSON.stringify(err));
                     }
                 });
                 return id;
             } else {
-                Meteor.call('game.leave', this.userId, function(err, id) {
+                Meteor.call('game.leave', id, this.userId, function(err, id) {
                     if (!err) {
                         Logger.log("Left Game: " + id);
+                    } else {
+                        throw new Meteor.Error('game-not-left', 'Could not leave the game.', JSON.stringify(err));
                     }
                 });
                 throw new Meteor.Error('not-authorized');
@@ -632,11 +680,16 @@ if (Meteor.isServer) {
 
             Logger.audit('start', {collection: 'Games', documentId: id});
 
-            const update = Games.update(id, {$set: {startedAt: new Date()}});
+            const updated = Games.update(id, {$set: {startedAt: new Date()}});
+            if (!updated) {
+                throw new Meteor.Error('game-not-updated', 'Could not start a game.');
+            }
 
             Meteor.call('turn.next', id, function(err, id) {
                 if (!err) {
                     Logger.log("First Turn: " + id);
+                } else {
+                    throw new Meteor.Error('turn-not-set', 'Could not set the next turn.', JSON.stringify(err));
                 }
             });
 
@@ -657,7 +710,7 @@ if (Meteor.isServer) {
                     preview: Meteor.settings.public.app.invite.preview,
                     template: 'game_invite',
                     data: {
-                        name: game.name,
+                        title: game.title(),
                         url: url,
                         inviter: Meteor.user().profile.name,
                     },
@@ -686,8 +739,8 @@ if (Meteor.isServer) {
 
             check(id, RecordId);
             Permissions.authenticated();
-            checkPlayerIsInGame(id);
             const game = Games.findOne(id);
+            Permissions.check(game.hasPlayer(Meteor.userId()));
 
             // Initialize game end attributes
             let attrs = {
@@ -714,6 +767,9 @@ if (Meteor.isServer) {
                     $set: attrs,
                 }
             );
+            if (!updated) {
+                throw new Meteor.Error('game-not-updated', 'Could not end a game.');
+            }
 
             Logger.log('End Game: ' + id);
             Logger.audit((abandon ? 'abandon' : 'end'), {collection: 'Games', documentId: id});
@@ -760,7 +816,7 @@ if (Meteor.isServer) {
 
             // Otherwise copy over all players to the new game but don't auto-start
             } else {
-                game.players().forEach(function(user) {
+                game.playersWithNames().forEach(function(user) {
                     Meteor.call('user.setGame', gameId, user._id);
                 });
             }
@@ -771,9 +827,4 @@ if (Meteor.isServer) {
 
     });
 
-}
-
-function checkPlayerIsInGame(gameId) {
-    const gamePlayers = Helpers.getIds(Games.findOne(gameId).players());
-    Permissions.check(gamePlayers.includes(Meteor.userId()));
 }

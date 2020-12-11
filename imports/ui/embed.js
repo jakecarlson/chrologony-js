@@ -124,12 +124,12 @@ Template.embed.events({
                     if (!err) {
                         Logger.log("Started Game: " + gameId);
                     } else {
-                        Logger.log(err);
+                        throw new Meteor.Error('game-not-created', 'Could not create the game.');
                     }
                     LoadingState.stop();
                 });
             } else {
-                Logger.log(err);
+                throw new Meteor.Error('game-not-created', 'Could not create the game.', JSON.stringify(err));
             }
         });
 

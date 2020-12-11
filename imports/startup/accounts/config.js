@@ -57,7 +57,10 @@ if (Meteor.isServer) {
 
     Accounts.onLogin(function(login) {
         if (!login.methodArguments[0].resume) {
-            Meteor.users.update(Meteor.userId(), {$set: {lastLoggedInAt: new Date()}})
+            const updated = Meteor.users.update(Meteor.userId(), {$set: {lastLoggedInAt: new Date()}});
+            if (!updated) {
+                throw new Meteor.Error('user-not-updated', 'Could not update user.');
+            }
         }
     });
 

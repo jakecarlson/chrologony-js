@@ -6,6 +6,10 @@ Template.registerHelper('collectionNotEmpty', function(collection) {
     return (collection.count() > 0);
 });
 
+Template.registerHelper('arrayNotEmpty', function(array) {
+    return (array.length > 0);
+});
+
 Template.registerHelper('loading', function() {
     return LoadingState.active();
 });
@@ -84,6 +88,10 @@ Template.registerHelper('supportLink', function() {
 
 Template.registerHelper('capitalize', function(str) {
     return Formatter.capitalize(str);
+});
+
+Template.registerHelper('pluralize', function(str, qty) {
+    return Formatter.pluralize(str, qty);
 });
 
 Template.registerHelper('datetime', function(val) {
