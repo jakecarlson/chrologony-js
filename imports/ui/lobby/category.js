@@ -5,6 +5,7 @@ import { ModelEvents } from "../../modules/ModelEvents";
 import './category.html';
 import './themes_selector.js';
 import '../precisions_selector.js';
+import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 Template.category.onCreated(function categoryOnCreated() {
     this.state = new ReactiveDict();
@@ -56,6 +57,10 @@ Template.category.helpers({
 
     formattedPrecision() {
         return Formatter.capitalize((this.category) ? this.category.precision : 'date');
+    },
+
+    cluesLink() {
+        return FlowRouter.url('/clues/:categoryId', {categoryId: this.category._id});
     },
 
 });

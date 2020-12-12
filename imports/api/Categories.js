@@ -8,6 +8,7 @@ import { Schemas } from "../modules/Schemas";
 
 import { Games } from "./Games";
 import { Clues } from "./Clues";
+import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 export const Categories = new Mongo.Collection('categories');
 
@@ -56,12 +57,15 @@ Categories.helpers({
         return Meteor.users.findOne(this.ownerId);
     },
 
+    cluesLink() {
+        return FlowRouter.url('/clues/:categoryId', {categoryId: this._id});
+    },
+
     canAddClue() {
         return (
-            Permissions.owned(this) ||
+            Permissions.owned(this, true) ||
             (
                 this.collaborators &&
-                this.collaborators.includes &&
                 this.collaborators.includes(Meteor.userId())
             )
         );
@@ -191,6 +195,10 @@ Meteor.methods({
 
         Logger.log('Update Category Collaborators: ' + id + ' ' + JSON.stringify(collaborators));
 
+        // Get added and removed collaborators
+        const category = Categories.findOne(id);
+        const previousCollaborators = category.collaborators;
+
         // Update the category collaborators
         const updated = Categories.update(
             {
@@ -206,6 +214,16 @@ Meteor.methods({
         if (!updated) {
             throw new Meteor.Error('category-not-updated', 'Could not set collaborators on a category.');
         }
+
+        // Send out emails informing users of the invitations / disinvitation
+        const addedCollaborators = _.difference(collaborators, previousCollaborators);
+        const removedCollaborators = _.difference(previousCollaborators, collaborators);
+        addedCollaborators.forEach(function(userId) {
+            sendCollaboratorEmail(category, userId, 'add');
+        });
+        removedCollaborators.forEach(function(userId) {
+            sendCollaboratorEmail(category, userId, 'remove');
+        });
 
         return collaborators.length;
 
@@ -326,4 +344,42 @@ function getAllowedConditions() {
 
 function getSort() {
     return {theme: 1, name: 1};
+}
+
+function sendCollaboratorEmail(category, userId, action, text) {
+
+    Logger.audit(
+        action + 'Collaborator',
+        {
+            collection: 'Categories',
+            documentId: category._id,
+            attrs: {userId: userId}
+        }
+    );
+
+    const user = Meteor.users.findOne(userId);
+    if (user && user.email()) {
+
+        const collaborator = Helpers.renderHtmlEmail({
+            subject: Meteor.settings.public.app.collaborator[action].subject,
+            preview: Meteor.settings.public.app.collaborator[action].preview,
+            template: 'category_collaborator_' + action,
+            data: {
+                collaborator: user.name(),
+                inviter: Meteor.user().name(),
+                title: category.name,
+                url: category.cluesLink(),
+            },
+        });
+
+        Email.send({
+            from: Meteor.settings.public.app.sendEmail,
+            to: user.email(),
+            subject: Meteor.settings.public.app.collaborator[action].subject,
+            text: collaborator.text,
+            html: collaborator.html,
+        });
+
+    }
+
 }

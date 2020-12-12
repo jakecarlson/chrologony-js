@@ -14,6 +14,16 @@
         "subject": "You've Been Invited to Play Chrologony",
         "preview": "Chrologony is a game where players sequence historical events into a timeline."
       },
+      "collaborator": {
+        "add": {
+          "subject": "You've Been Added as a Collaborator on Chrologony",
+          "preview": "Chrologony is a game where players sequence historical events into a timeline."
+        },
+        "remove": {
+          "subject": "You've Been Removed as a Collaborator on Chrologony",
+          "preview": "Chrologony is a game where players sequence historical events into a timeline."
+        }
+      },
       "feedbackEmail": "chrologony@carlsonville.com",
       "supportUrl": "https://chrologony.com/support"
     },
