@@ -11,11 +11,6 @@ Template.card.onCreated(function boardOnCreated() {
     this.clue = new ReactiveVar(null);
     this.autorun(() => {
         this.clue.set(this.data.card.clue());
-        Tracker.afterFlush(() => {
-            $(function() {
-                $('[data-toggle="tooltip"]').tooltip();
-            });
-        });
     });
 });
 

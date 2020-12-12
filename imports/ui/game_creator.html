@@ -34,7 +34,7 @@
                     <input type="checkbox" name="private" value="1" checked="{{private}}" class="form-check-input" id="private">
                     <label for="private" class="form-check-label">
                         Private (Do Not Show in Lobby)
-                        <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if you don't want the game to be displayed in the Lobby. Players will need to be invited from the game screen to play."></i>
+                        <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="Check this if you don't want the game to be displayed in the Lobby. Players will need to be invited from the game screen to play."></i>
                     </label>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     <div class="form-group">
                         <label for="gameOptionsWinPoints">
                             Win Condition
-                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="How many cards do players need to have locked in to win?"></i>
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="How many cards do players need to have locked in to win?"></i>
                         </label>
                         <select name="winPoints" class="form-control" id="gameOptionsWinPoints">
                             {{#each condition in winConditions}}
@@ -68,7 +68,7 @@
                     <div class="form-group">
                         <label for="gameOptionsGuessLimit">
                             Card Limit per Turn
-                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="How many cards can a player guess on their turn?"></i>
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="How many cards can a player guess on their turn?"></i>
                         </label>
                         <select name="cardLimit" class="form-control" id="gameOptionsGuessLimit">
                             {{#each limit in guessLimits}}
@@ -80,7 +80,7 @@
                     <div class="form-group">
                         <label for="gameOptionsTurnOrder">
                             Player Turn Order
-                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="The method to determine which order players will take turns in a given round."></i>
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="The method to determine which order players will take turns in a given round."></i>
                         </label>
                         <select name="turnOrder" class="form-control" id="gameOptionsTurnOrder">
                             {{#each order in turnOrders}}
@@ -96,7 +96,7 @@
                     <div class="form-group">
                         <label for="gameOptionsDifficulty">
                             Clue Difficulty
-                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Difficulty ratings are based on the historical percentage of correct guesses."></i>
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="Difficulty ratings are based on the historical percentage of correct guesses."></i>
                         </label>
                         <div class="difficulty">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -119,7 +119,7 @@
                     <div class="form-group">
                         <label for="gameOptionsMinScore">
                             Clue Score Threshold
-                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="The score is the cumulative score from all upvotes and downvotes. Clues start at a score of 10."></i>
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="The score is the cumulative score from all upvotes and downvotes. Clues start at a score of 10."></i>
                         </label>
                         <select name="minScore" class="form-control" id="gameOptionsMinScore">
                             {{#each score in scoreThresholds}}
@@ -131,7 +131,7 @@
                     <div class="form-group">
                         <label for="gameOptionsCardTime">
                             Card Guess Time Limit
-                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="How much time does a player have to make a guess? The player's turn will end if their time expires."></i>
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="How much time does a player have to make a guess? The player's turn will end if their time expires."></i>
                         </label>
                         <select name="cardTime" class="form-control" id="gameOptionsCardTime">
                             {{#each time in timeLimits}}
@@ -147,7 +147,7 @@
                     <div class="form-group">
                         <label for="gameOptionsComparisonPrecision">
                             Guess Datetime Precision
-                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="The guess datetime comparison precision is how close the guess needs to be to be considered correct."></i>
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="The guess datetime comparison precision is how close the guess needs to be to be considered correct."></i>
                         </label>
                         {{> precisions_selector val=comparisonPrecision name="comparisonPrecision" id="gameOptionsComparisonPrecision"}}
                     </div>
@@ -155,7 +155,7 @@
                     <div class="form-group">
                         <label for="gameOptionsDisplayPrecision">
                             Display Datetime Precision
-                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="The clue datetime display precision is how detailed the clue datetime is displayed on guessed cards."></i>
+                            <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="The clue datetime display precision is how detailed the clue datetime is displayed on guessed cards."></i>
                         </label>
                         {{> precisions_selector val=displayPrecision name="displayPrecision" id="gameOptionsDisplayPrecision"}}
                     </div>
@@ -169,7 +169,7 @@
                             <input type="checkbox" name="equalTurns" value="1" checked="{{equalTurns}}" class="form-check-input" id="gameOptionsEqualTurns">
                             <label for="gameOptionsEqualTurns" class="form-check-label">
                                 Equal # Turns per Player
-                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if you want everyone to have a turn on the last round of the game. The player who locked in the most cards wins."></i>
+                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="Check this if you want everyone to have a turn on the last round of the game. The player who locked in the most cards wins."></i>
                             </label>
                         </div>
                     </div>
@@ -179,7 +179,7 @@
                             <input type="checkbox" name="showHints" value="1" checked="{{showHints}}" class="form-check-input" id="gameOptionsShowHints">
                             <label for="gameOptionsShowHints" class="form-check-label">
                                 Show Hints
-                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if you want cards to show hints to guessers, where available."></i>
+                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="Check this if you want cards to show hints to guessers, where available."></i>
                             </label>
                         </div>
                     </div>
@@ -189,7 +189,7 @@
                             <input type="checkbox" name="autoProceed" value="1" checked="{{autoProceed}}" class="form-check-input" id="gameOptionsAutoProceed">
                             <label for="gameOptionsAutoProceed" class="form-check-label">
                                 Auto-Proceed on Correct Guess
-                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this to automatically draw a new card each time a player guesses correctly. This option will also automatically end the player's turn if the player has reached the turn card limit."></i>
+                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="Check this to automatically draw a new card each time a player guesses correctly. This option will also automatically end the player's turn if the player has reached the turn card limit."></i>
                             </label>
                         </div>
                     </div>
@@ -199,7 +199,7 @@
                             <input type="checkbox" name="recycleCards" value="1" checked="{{recycleCards}}" class="form-check-input" id="gameOptionsRecycleCards">
                             <label for="gameOptionsRecycleCards" class="form-check-label">
                                 Recycle Incorrect Cards
-                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="Check this if you want cards that are guessed wrong to go back into the deck to be drawn again during the same game."></i>
+                                <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" data-original-title="Check this if you want cards that are guessed wrong to go back into the deck to be drawn again during the same game."></i>
                             </label>
                         </div>
                     </div>
