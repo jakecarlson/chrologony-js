@@ -134,7 +134,6 @@ Games.helpers({
     },
 
     link() {
-        console.log(this.token);
         return Meteor.absoluteUrl(FlowRouter.path('game', {id: this._id, token: this.token}));
     },
 

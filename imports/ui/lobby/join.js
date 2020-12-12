@@ -89,7 +89,12 @@ Template.join.events({
 
     'click .game-password'(e, i) {
         const game = getGame(e);
-        i.currentGame.set(game);
+        if (game.hasPlayer(Meteor.userId())) {
+            e.preventDefault();
+            Helpers.joinGame(game._id);
+        } else {
+            i.currentGame.set(game);
+        }
     },
 
     'submit #joinPassword'(e, i) {
