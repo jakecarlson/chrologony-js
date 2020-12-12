@@ -223,4 +223,14 @@ Helpers = {
         return JSON.parse(JSON.stringify(bson));
     },
 
+    updateLastActivity() {
+        if (Meteor.userId()) {
+            Meteor.call('user.activity', function(err, updated) {
+                if (err) {
+                    Logger.log('Failed to Update Activity: ' + JSON.stringify(err));
+                }
+            });
+        }
+    },
+
 };

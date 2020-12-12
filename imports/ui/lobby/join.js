@@ -72,11 +72,8 @@ Template.join.helpers({
         return Formatter.pluralize('Player', game.players.length);
     },
 
-    showGame(game) {
-        return (
-            (game.ownerId == Meteor.userId()) ||
-            (game.players.length > 0)
-        );
+    isPlayer(game) {
+        return game.hasPlayer(Meteor.userId());
     },
 
 });

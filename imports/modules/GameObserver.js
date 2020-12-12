@@ -14,27 +14,65 @@ GameObserver = {
 
         Games.find().observeChanges({
 
-            added(gameId, fields) {
+            added(id, fields) {
                 if (ctx.initialized && (fields.ownerId != Meteor.userId())) {
                     setTimeout(function() {
-                        if (Helpers.currentGameId() == gameId) {
-                            FlowRouter.go('game', {id: gameId});
+                        if (Helpers.currentGameId() == id) {
+                            Flasher.set('success', 'The game owner invited you to a new game!');
+                            FlowRouter.go('game', {id: id});
                         }
                     }, 100);
                 }
             },
 
+        });
+
+        Games.find({_id: GameObserver.getId(ctx, anonymous)}).observe({
+
+            changed(current, previous) {
+                if (ctx.initialized) {
+
+                    // If the players in the game changed, notify user
+                    if (current.players.length != previous.players.length) {
+                        if (current.players.length > previous.players.length) {
+                            const userId = _.difference(current.players, previous.players)[0];
+                            const joinedPlayer = Meteor.users.findOne(userId);
+                            if (joinedPlayer._id != Meteor.userId()) {
+                                Flasher.set('warning', joinedPlayer.name() + ' has joined the game.');
+                            }
+                        } else if (previous.players.length > current.players.length) {
+                            const userId = _.difference(previous.players, current.players)[0];
+                            const leftPlayer = Meteor.users.findOne(userId);
+                            if (userId != Meteor.userId()) {
+                                Flasher.set('warning', (leftPlayer ? leftPlayer.name() : 'Player') + ' has left the game.');
+                            }
+                        }
+
+                    }
+
+                }
+            },
+
+        });
+
+        Games.find({_id: GameObserver.getId(ctx, anonymous)}).observeChanges({
+
             changed(id, fields) {
                 if (ctx.initialized) {
-                    if (fields.startedAt != null) {
+
+                    // If the game is started, play game start sound
+                    if (fields.startedAt) {
                         SoundManager.play('gameStart');
-                    } else if (fields.endedAt != null) {
+
+                        // If the game is ended, play appropriate game end sound
+                    } else if (fields.endedAt) {
                         if (fields.winnerId == Meteor.userId()) {
                             SoundManager.play('gameWin');
                         } else {
                             SoundManager.play('gameLose');
                         }
                     }
+
                 }
             },
 
@@ -48,6 +86,21 @@ GameObserver = {
                     ctx.turn.set(turn);
                     if (turn.ownerId == Meteor.userId()) {
                         SoundManager.play('turnStart');
+                        if (
+                            (FlowRouter.getRouteName() != 'game') ||
+                            (FlowRouter.getParam('id') != fields.gameId)
+                        ) {
+                            const game = Games.findOne(fields.gameId);
+                            if (game) {
+                                Flasher.set(
+                                    'warning',
+                                    'It\'s your turn in game: <a href="' +
+                                    FlowRouter.path('game', {id: fields.gameId}) + '">' +
+                                    game.title() + '</a>!',
+                                    10000
+                                );
+                            }
+                        }
                     }
                 }
             },
@@ -104,7 +157,12 @@ GameObserver = {
     },
 
     getId(ctx, anonymous = false) {
-        return (anonymous) ? Session.get('currentGameId') : ctx.game.get()._id;
+        if (anonymous) {
+            return Session.get('currentGameId');
+        } else if (ctx.game.get()) {
+            return ctx.game.get()._id;
+        }
+        return null;
     },
 
 }

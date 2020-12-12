@@ -47,7 +47,7 @@ if (Meteor.isServer) {
             }
         }
 
-        if (!user.profile.name) {
+        if (!user.profile.name || (user.profile.name.trim().length == 0)) {
             user.profile.name = 'Unknown';
         }
 

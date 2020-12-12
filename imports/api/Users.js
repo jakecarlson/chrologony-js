@@ -5,6 +5,18 @@ import { Permissions } from '../modules/Permissions';
 
 import { Games } from "./Games";
 
+Meteor.users.ONLINE_THRESHOLD = 15 * 60 * 1000; // Set to 15m
+
+Meteor.users.SELECT_FIELDS = {
+    _id: 1,
+    'profile.name': 1,
+    currentGameId: 1,
+    joinedGameAt: 1,
+    lastLoggedInAt: 1,
+    lastActiveAt: 1,
+    guest: 1,
+};
+
 if (Meteor.isServer) {
 
     // Additional user data
@@ -15,11 +27,7 @@ if (Meteor.isServer) {
                     _id: this.userId,
                 },
                 {
-                    fields: {
-                        currentGameId: 1,
-                        joinedGameAt: 1,
-                        guest: 1,
-                    }
+                    fields: Meteor.users.SELECT_FIELDS,
                 }
             );
         } else {
@@ -27,28 +35,22 @@ if (Meteor.isServer) {
         }
     });
 
-    // Get the players in the game
-    Meteor.publish('players', function playersPublication(gameId) {
-        if (this.userId && gameId) {
-            const game = Games.findOne(gameId);
+    // Get the players in the room
+    Meteor.publish('players', function playersPublication(userIds) {
+        if (this.userId && userIds) {
             return Meteor.users.find(
                 {
-                    _id: {$in: game.players},
+                    _id: {$in: userIds},
                 },
                 {
-                    fields: {
-                        _id: 1,
-                        'profile.name': 1,
-                        currentRoomId: 1,
-                        joinedRoomAt: 1,
-                        guest: 1,
-                    }
+                    fields: Meteor.users.SELECT_FIELDS,
                 }
             );
         } else {
             return this.ready();
         }
     });
+
 
 }
 
@@ -67,6 +69,25 @@ Meteor.users.helpers({
                     return data.email;
                 }
             }
+        }
+        return false;
+    },
+
+    name() {
+        if (this.profile && this.profile.name) {
+            return this.profile.name;
+        }
+        return null;
+    },
+
+    isInGame(gameId) {
+        return (this.currentGameId == gameId);
+    },
+
+    isOnline() {
+        if (this.lastActiveAt) {
+            const timeSinceLastActivity = (new Date().getTime() - this.lastActiveAt.getTime());
+            return (timeSinceLastActivity < Meteor.users.ONLINE_THRESHOLD);
         }
         return false;
     },
@@ -224,6 +245,10 @@ if (Meteor.isServer) {
 
         'user.anonymous'() {
             return this.setUserId('anonymous');
+        },
+
+        'user.activity'() {
+            return Meteor.users.update(this.userId, {$set: {lastActiveAt: new Date()}});
         },
 
     });

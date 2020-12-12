@@ -146,7 +146,7 @@ FlowRouter.route('/terms', {
 FlowRouter.route('/lobby', {
     name: 'lobby',
     title: getTitle('Lobby'),
-    triggersEnter: [redirectToHome],
+    triggersEnter: [redirectToHome, Helpers.updateLastActivity],
     action(params, queryParams) {
         Logger.log("Route: lobby");
         BlazeLayout.render(
@@ -155,13 +155,13 @@ FlowRouter.route('/lobby', {
                 main: 'lobby',
             }
         );
-    }
+    },
 });
 
 FlowRouter.route('/clues', {
     name: 'clues',
     title: getTitle('Manage Clues'),
-    triggersEnter: [redirectToHome],
+    triggersEnter: [redirectToHome, Helpers.updateLastActivity],
     action(params, queryParams) {
         Logger.log("Route: clues");
         BlazeLayout.render(
@@ -179,7 +179,7 @@ FlowRouter.route('/clues/:categoryId', {
         const category = Categories.findOne(params.categoryId);
         return getTitle('Manage Clues: ' + (category ? category.name : 'unknown'));
     },
-    triggersEnter: [redirectToHome],
+    triggersEnter: [redirectToHome, Helpers.updateLastActivity],
     action(params, queryParams) {
         Logger.log("Route: clues.categoryId");
         Logger.track('manageClues', {categoryId: params.categoryId});
@@ -198,7 +198,7 @@ FlowRouter.route('/clues/:categoryId/:clueId', {
         const category = Categories.findOne(params.categoryId);
         return getTitle('Manage Clues: ' + (category ? category.name : 'unknown'));
     },
-    triggersEnter: [redirectToHome],
+    triggersEnter: [redirectToHome, Helpers.updateLastActivity],
     action(params, queryParams) {
         Logger.log("Route: clues.categoryId.clueId");
         Logger.track('manageClues', {categoryId: params.categoryId, clueId: params.clueId});
@@ -214,7 +214,7 @@ FlowRouter.route('/clues/:categoryId/:clueId', {
 FlowRouter.route('/categories', {
     name: 'categories',
     title: getTitle('Manage Categories'),
-    triggersEnter: [redirectToHome],
+    triggersEnter: [redirectToHome, Helpers.updateLastActivity],
     action(params, queryParams) {
         Logger.log("Route: categories");
         BlazeLayout.render(
@@ -235,7 +235,7 @@ FlowRouter.route('/games/:id/:token?', {
         return getTitle(game ? game.title() : 'unknown');
     },
 
-    triggersEnter: [redirectToHome],
+    triggersEnter: [redirectToHome, Helpers.updateLastActivity],
 
     action(params, queryParams) {
 

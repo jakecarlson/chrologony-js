@@ -63,8 +63,8 @@ Template.board.helpers({
             } else {
                 let name = 'Unknown';
                 const owner = this.turn.owner();
-                if (owner && owner.profile && owner.profile.name) {
-                    name = owner.profile.name;
+                if (owner) {
+                    name = owner.name();
                 }
                 title += name + "'s";
             }
@@ -174,9 +174,6 @@ Template.board.helpers({
 
     boardClasses() {
         let str = 'card ';
-        if (!Helpers.isAnonymous()) {
-            str += 'mb-4 ';
-        }
         if (gameHasEnded(this.game)) {
             if (isGameWinner(this.game)) {
                 str += 'border-success';
@@ -234,11 +231,11 @@ Template.board.helpers({
     },
 
     winner() {
-        if (this.game && this.game.winnerId) {
+        if (this.game && this.game.winner()) {
             if (this.game.winnerId == Meteor.userId()) {
                 return 'You';
             } else {
-                return this.game.winner().profile.name;
+                return this.game.winner().name();
             }
         }
         return 'Nobody';
@@ -315,15 +312,19 @@ Template.board.events({
             TourGuide.resume();
         });
 
+        Helpers.updateLastActivity();
+
     },
 
     'click .draw-card'(e, i) {
         drawCard(this.game.currentTurnId);
+        Helpers.updateLastActivity();
     },
 
     'click .end-turn'(e, i) {
         LoadingState.start(e);
         endTurn(this.game);
+        Helpers.updateLastActivity();
     },
 
     'click .move-left'(e, i) {
@@ -362,6 +363,7 @@ Template.board.events({
                     Session.set('lastOwnedGameId', id);
                     Helpers.subscribe(i, 'games', Helpers.currentAndPreviousGameIds());
                     setTimeout(function() {
+                        Flasher.set('success', 'You have successfully created a copy of the previous game.');
                         FlowRouter.go('game', {id: id});
                     }, 100);
                 }

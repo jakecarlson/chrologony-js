@@ -36,7 +36,7 @@ Template.players_list.helpers({
         if (this.game) {
             const leader = this.game.currentLeader();
             if (leader) {
-                return leader.profile.name;
+                return leader.name();
             }
         }
         return '-';

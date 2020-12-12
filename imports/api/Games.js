@@ -55,6 +55,7 @@ Games.PUBLISH_FIELDS = {
     comparisonPrecision: 1,
     displayPrecision: 1,
     players: 1,
+    token: 1,
 };
 
 Games.PUBLIC_MATCH = {
@@ -133,6 +134,7 @@ Games.helpers({
     },
 
     link() {
+        console.log(this.token);
         return Meteor.absoluteUrl(FlowRouter.path('game', {id: this._id, token: this.token}));
     },
 
@@ -329,7 +331,7 @@ if (Meteor.isServer) {
                     };
                     if (additionalGameIds) {
                         selector.$or = [
-                            {players: this.userId},
+                            {players: this.userId, endedAt: null},
                             {_id: {$in: additionalGameIds}},
                             Games.PUBLIC_MATCH,
                         ];
@@ -360,12 +362,6 @@ if (Meteor.isServer) {
                     return this.ready();
                 }
             },
-
-            children: [{
-                find(game) {
-                    return Meteor.users.find({_id: {$in: game.players}}, {fields: {_id: 1, currentGameId: 1}});
-                }
-            }],
             
         }
 
@@ -405,6 +401,8 @@ Meteor.methods({
         check(userId, RecordId);
         Permissions.authenticated();
 
+        Logger.log('User ' + userId + ' Left Game: ' + id);
+
         Logger.audit('leave', {collection: 'Games', documentId: id});
 
         // Make sure the user is the owner of the game that the other user is in, or the user him/herself
@@ -423,29 +421,17 @@ Meteor.methods({
             if (game.currentTurnId) {
                 const turn = game.currentTurn();
                 if (turn.ownerId == userId) {
-                    Meteor.call('turn.next', game._id, function(err, id) {
-                        if (!err) {
-                            Logger.log("Start Turn: " + id);
-                        } else {
-                            throw new Meteor.Error('turn-not-started', 'Could not start the next turn.', JSON.stringify(err));
-                        }
-                    });
+                    Meteor.call('turn.next', game._id);
                 }
             }
         }
 
         // Remove the player from the players array & null out the user's current game ID
-        const updated = Games.update(id, {$pull: {players: Meteor.userId()}});
-        if (!updated) {
-            throw new Meteor.Error('game-not-updated', 'Could not remove player from game.');
+        const user = Meteor.users.findOne(userId);
+        if (user.currentGameId == id) {
+            Meteor.call('user.setGame', null, userId);
         }
-        Meteor.call('user.setGame', null, userId, function(err, id) {
-            if (!err) {
-                Logger.log("Left Game: " + id);
-            } else {
-                throw new Meteor.Error('user-game-not-set', 'Could not set the game to the user.', JSON.stringify(err));
-            }
-        });
+        Meteor.call('game.removePlayer', id, userId);
 
         return userId;
 
@@ -623,19 +609,8 @@ if (Meteor.isServer) {
             }
 
             // Add the user to the players array and set their current game
-            if (!game.players.includes(Meteor.userId())) {
-                const updated = Games.update(id, {$push: {players: Meteor.userId()}});
-                if (!updated) {
-                    throw new Meteor.Error('game-not-updated', 'Could not add player to game.');
-                }
-            }
-            Meteor.call('user.setGame', id, this.userId, function(err, id) {
-                if (!err) {
-                    Logger.log("Joined Game: " + id);
-                } else {
-                    throw new Meteor.Error('user-game-not-set', 'Could not set the game to the user.', JSON.stringify(err));
-                }
-            });
+            Meteor.call('game.addPlayer', id, this.userId);
+            Meteor.call('user.setGame', id, this.userId);
 
             return id;
 
@@ -648,22 +623,11 @@ if (Meteor.isServer) {
             Permissions.authenticated();
 
             if (Hasher.md5.hash(id) == token.trim()) {
-                Meteor.call('user.setGame', id, this.userId, function(err, id) {
-                    if (!err) {
-                        Logger.log("Joined Game: " + id);
-                    } else {
-                        throw new Meteor.Error('game-join-invalid-token', 'Could not join the game by token. Invalid token.', JSON.stringify(err));
-                    }
-                });
+                Meteor.call('game.addPlayer', id, this.userId);
+                Meteor.call('user.setGame', id, this.userId);
                 return id;
             } else {
-                Meteor.call('game.leave', id, this.userId, function(err, id) {
-                    if (!err) {
-                        Logger.log("Left Game: " + id);
-                    } else {
-                        throw new Meteor.Error('game-not-left', 'Could not leave the game.', JSON.stringify(err));
-                    }
-                });
+                Meteor.call('game.leave', id, this.userId);
                 throw new Meteor.Error('not-authorized');
             }
 
@@ -685,13 +649,7 @@ if (Meteor.isServer) {
                 throw new Meteor.Error('game-not-updated', 'Could not start a game.');
             }
 
-            Meteor.call('turn.next', id, function(err, id) {
-                if (!err) {
-                    Logger.log("First Turn: " + id);
-                } else {
-                    throw new Meteor.Error('turn-not-set', 'Could not set the next turn.', JSON.stringify(err));
-                }
-            });
+            Meteor.call('turn.next', id);
 
             return id;
 
@@ -712,7 +670,7 @@ if (Meteor.isServer) {
                     data: {
                         title: game.title(),
                         url: url,
-                        inviter: Meteor.user().profile.name,
+                        inviter: Meteor.user().name(),
                     },
                 });
 
@@ -823,6 +781,33 @@ if (Meteor.isServer) {
 
             return gameId;
 
+        },
+
+        'game.addPlayer'(id, userId = false) {
+            const game = Games.findOne(id);
+            if (!userId) {
+                userId = Meteor.userId();
+            }
+            if (!game.players.includes(userId)) {
+                const updated = Games.update(id, {$push: {players: userId}});
+                if (!updated) {
+                    throw new Meteor.Error('game-not-updated', 'Could not add player to game.');
+                }
+                return updated;
+            }
+            return 0;
+        },
+
+        'game.removePlayer'(id, userId = false) {
+            const game = Games.findOne(id);
+            if (!userId) {
+                userId = Meteor.userId();
+            }
+            const updated = Games.update(id, {$pull: {players: userId}});
+            if (!updated) {
+                throw new Meteor.Error('game-not-updated', 'Could not remove player from game.');
+            }
+            return updated;
         },
 
     });

@@ -16,6 +16,28 @@ Template.player.helpers({
         return (this.game && this.player && this.player.profile);
     },
 
+    status() {
+        return Formatter.capitalize(getStatus(this.player, this.game._id));
+    },
+
+    statusColor() {
+        const status = getStatus(this.player, this.game._id);
+        const colorMap = {
+            here: 'success',
+            online: 'warning',
+            offline: 'muted',
+        };
+        return colorMap[status];
+    },
+
+    isOnline() {
+        return true;
+    },
+
+    isInGame() {
+        return true;
+    },
+
     isTurnOwner() {
         return isTurnOwner(this.turn, this.player._id);
     },
@@ -74,7 +96,7 @@ Template.player.events({
         LoadingState.start(e);
         Meteor.call('game.leave', this.game._id, this.player._id, function(err, id) {
             if (!err) {
-                Logger.log("Player Left Game: " + id);
+                Logger.log("Player Ejected from Game: " + id);
             } else {
                 throw new Meteor.Error('game-not-left', 'Could not leave the game.', JSON.stringify(err));
             }
@@ -86,4 +108,16 @@ Template.player.events({
 
 function isTurnOwner(turn, playerId) {
     return (turn && (turn.ownerId == playerId))
+}
+
+function getStatus(player, gameId) {
+    if (player.isOnline()) {
+        if (player.isInGame(gameId)) {
+            return 'here';
+        } else {
+            return 'online';
+        }
+    } else {
+        return 'offline';
+    }
 }

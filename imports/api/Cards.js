@@ -239,13 +239,7 @@ if (Meteor.isServer) {
             const cardId = drawCard(turn, game);
             Logger.log("Card ID: " + cardId);
 
-            Meteor.call('turn.setCard', turnId, cardId, null, function(err, updated) {
-                if (!err) {
-                    Logger.log("Updated Turn: " + updated);
-                } else {
-                    throw new Meteor.Error('card-not-set', 'Could not set the turn card.', JSON.stringify(err));
-                }
-            });
+            Meteor.call('turn.setCard', turnId, cardId, null);
 
             return cardId;
 
@@ -266,13 +260,7 @@ if (Meteor.isServer) {
             Logger.log("Card Guess Correct?: " + JSON.stringify(correct));
 
             // Null out the current card ID
-            Meteor.call('turn.setCard', card.turn()._id, null, correct, function(err, updated) {
-                if (!err) {
-                    Logger.log("Updated Turn: " + updated);
-                } else {
-                    throw new Meteor.Error('card-not-set', 'Could not set the turn card.', JSON.stringify(err));
-                }
-            });
+            Meteor.call('turn.setCard', card.turn()._id, null, correct);
 
             Logger.log('Update Card: ' + id + ' ' + JSON.stringify({correct: correct}));
 
@@ -290,13 +278,8 @@ if (Meteor.isServer) {
                 throw new Meteor.Error('card-not-updated', 'Could not submit a card guess.', err);
             }
 
-            Meteor.call('clue.calculateDifficulty', card.clueId, function(err, difficulty) {
-                if (!err) {
-                    Logger.log("Updated Clue Difficulty: " + difficulty);
-                } else {
-                    throw new Meteor.Error('difficulty-not-set', 'Could not update the clue difficulty.', JSON.stringify(err));
-                }
-            });
+            const difficulty = Meteor.call('clue.calculateDifficulty', card.clueId);
+            Logger.log("Updated Clue Difficulty: " + difficulty);
 
             // Meteor._sleepForMs(2000);
             return correct;

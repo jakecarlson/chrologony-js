@@ -2,7 +2,7 @@
 
     {{#if dataReady}}
 
-        <div id="board" class="{{boardClasses}}">
+        <div id="board" class="{{#unless isAnonymous}}mb-4{{/unless}} {{boardClasses}}">
 
             <header class="{{headerClasses}}">
 

@@ -182,7 +182,6 @@ Template.game_creator.events({
 
         // Only proceed if a category was selected
         const categoryId = Helpers.getSelectValue(form.categoryId);
-        console.log(categoryId);
         if (categoryId) {
 
             let difficulties = [];

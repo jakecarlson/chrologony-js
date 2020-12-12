@@ -103,8 +103,8 @@ Template.registerHelper('relativeTime', function(val) {
 });
 
 Template.registerHelper('profileName', function(user) {
-    if (user && user.profile && user.profile.name) {
-        return user.profile.name;
+    if (user) {
+        return user.name();
     }
     return null;
 });

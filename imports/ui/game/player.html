@@ -3,6 +3,16 @@
     {{#if dataReady}}
         <li class="list-group-item player {{#if isTurnOwner}}current{{/if}}">
 
+            <i
+                class="
+                    fa
+                    fa-circle
+                    text-{{statusColor}}
+                    status
+                "
+                title="{{status}}"
+            ></i>
+
             {{profileName player}}
 
             {{#if gameInProgress}}

@@ -22,7 +22,13 @@
                             {{else}}
                                 game-open
                             {{/if}}
-                            text-dark
+                            {{#if isPlayer game}}
+                                game-player
+                            {{else}}
+                                {{#if game.startedAt}}
+                                    game-started
+                                {{/if}}
+                            {{/if}}
                             p-3
                         "
                         data-id="{{game._id}}"
@@ -35,14 +41,14 @@
                                     <i class="fa {{#if hasPassword game}}fa-lock text-danger{{else}}fa-unlock-alt text-success{{/if}}"></i>
                                     {{title game}}
                                 </h2>
-                                <p class="game-created text-muted">
+                                <p class="game-created">
                                     {{#if game.startedAt}}
                                         Started {{relativeTime game.startedAt}};
                                     {{/if}}
                                     Created {{relativeTime game.createdAt}}
                                 </p>
                             </div>
-                            <dl class="col-6 text-muted game-meta">
+                            <dl class="col-6 game-meta">
                                 <dt>
                                     <i class="fa fa-folder" title="Category"></i>
                                 </dt>

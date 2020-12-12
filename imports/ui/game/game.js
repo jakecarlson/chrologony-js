@@ -22,6 +22,7 @@ Template.game.onCreated(function gameOnCreated() {
     this.game = new ReactiveVar(null);
     this.turn = new ReactiveVar(null);
     this.clueMore = new ReactiveVar(null);
+    this.players = new ReactiveVar([]);
 
     this.autorun(() => {
 
@@ -29,46 +30,56 @@ Template.game.onCreated(function gameOnCreated() {
         FlowRouter.watchPathChange();
 
         this.game.set(Games.findOne(FlowRouter.getParam('id')));
-        if (this.game.get() && this.game.get().hasPlayer(Meteor.userId())) {
+        if (this.game.get()) {
 
-            Helpers.subscribe(this, 'players', this.game.get()._id);
-            Helpers.subscribe(this, 'turns', this.game.get()._id);
-            Helpers.subscribe(this, 'cards', this.game.get()._id);
-            Helpers.subscribe(this, 'cardClues', this.game.get()._id);
-            Helpers.subscribe(this, 'votes', this.game.get()._id);
+            if (this.game.get().hasPlayer(Meteor.userId())) {
 
-            if (this.game.get().currentTurnId) {
-                this.turn.set(Turns.findOne(this.game.get().currentTurnId));
-            }
+                Helpers.subscribe(this, 'players', this.game.get().players);
+                Helpers.subscribe(this, 'turns', this.game.get()._id);
+                Helpers.subscribe(this, 'cards', this.game.get()._id);
+                Helpers.subscribe(this, 'cardClues', this.game.get()._id);
+                Helpers.subscribe(this, 'votes', this.game.get()._id);
 
-            if (this.subscriptionsReady()) {
+                if (this.game.get().currentTurnId) {
+                    this.turn.set(Turns.findOne(this.game.get().currentTurnId));
+                }
 
-                const self = this;
-                Tracker.afterFlush(() => {
+                if (this.subscriptionsReady()) {
 
-                    let clipboards = new Clipboard('[data-clipboard-text]');
-                    clipboards.on('success', function (e) {
-                        let btn = $(e.trigger);
-                        btn.tooltip('show');
-                        setTimeout(function () {
-                            btn.tooltip('hide');
-                        }, 3000);
+                    const self = this;
+                    Tracker.afterFlush(() => {
+
+                        let clipboards = new Clipboard('[data-clipboard-text]');
+                        clipboards.on('success', function (e) {
+                            let btn = $(e.trigger);
+                            btn.tooltip('show');
+                            setTimeout(function () {
+                                btn.tooltip('hide');
+                            }, 3000);
+                        });
+
+                        $('#clueMore').on('hidden.bs.modal', function (e) {
+                            self.clueMore.set(null);
+                        });
+
                     });
 
-                    $('#clueMore').on('hidden.bs.modal', function (e) {
-                        self.clueMore.set(null);
+                    Meteor.call('user.setGame', this.game.get()._id, null, function(err, updated) {
+                        if (err) {
+                            Meteor.Error('user-game-not-set', 'Could not set user current game.', JSON.stringify(err));
+                        }
                     });
 
-                });
+                    this.initialized = true;
+                    LoadingState.stop();
 
-                this.initialized = true;
-                LoadingState.stop();
+                }
 
+            // Redirect the user back to the lobby if their current game doesn't match this one
+            } else {
+                FlowRouter.go('lobby');
             }
 
-        // Redirect the user back to the lobby if their current game doesn't match this one
-        } else {
-            FlowRouter.go('lobby');
         }
 
     });

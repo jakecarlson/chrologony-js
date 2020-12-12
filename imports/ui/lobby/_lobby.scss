@@ -5,10 +5,18 @@
 /* join */
 .game {
   cursor: pointer;
+  color: $muted !important;
   border-bottom: 1px solid $gray-300;
 }
+.game-player {
+  background: $table-success;
+}
+.game-started {
+  background: $table-warning;
+}
 .game:hover {
-  background: $highlighted;
+  background: $table-hover;
+  color: $dark !important;
 }
 .game:last-child {
   border-bottom: none;
@@ -16,6 +24,7 @@
 .game-title {
   font-size: xx-large;
   margin-bottom: .75rem;
+  color: $dark;
 }
 .game-meta {
   margin-bottom: 0;

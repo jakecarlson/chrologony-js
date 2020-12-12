@@ -11,7 +11,7 @@ Template.player_cards.onCreated(function player_cardsOnCreated() {
 Template.player_cards.helpers({
 
     dataReady() {
-        return (this.game && this.player && this.player.profile && this.player.profile.name);
+        return (this.game && this.player);
     },
 
     id() {
