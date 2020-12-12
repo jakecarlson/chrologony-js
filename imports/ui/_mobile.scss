@@ -42,7 +42,9 @@
 //}
 
 @media (orientation: landscape) {
-  .mobile-app .container-fluid {
+  .mobile-app > .full-width,
+  .mobile-app > .container-fluid
+  {
     padding-left: unquote('max(env(safe-area-inset-left), 15px) !important'); // iOS
     padding-right: unquote('max(env(safe-area-inset-right), 15px) !important'); // iOS
   }

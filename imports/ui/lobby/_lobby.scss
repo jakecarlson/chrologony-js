@@ -3,6 +3,9 @@
 }
 
 /* join */
+#joinGames {
+  list-style: none inside none;
+}
 .game {
   cursor: pointer;
   color: $muted !important;
@@ -23,8 +26,13 @@
 }
 .game-title {
   font-size: xx-large;
-  margin-bottom: .75rem;
+  margin-bottom: 0;
   color: $dark;
+}
+@media (min-width: 576px) {
+  .game-title {
+    margin-bottom: .75rem;
+  }
 }
 .game-meta {
   margin-bottom: 0;

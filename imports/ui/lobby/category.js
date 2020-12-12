@@ -60,7 +60,7 @@ Template.category.helpers({
     },
 
     cluesLink() {
-        return FlowRouter.url('/clues/:categoryId', {categoryId: this.category._id});
+        return FlowRouter.path('/clues/:categoryId', {categoryId: this.category._id});
     },
 
 });

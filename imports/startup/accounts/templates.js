@@ -56,7 +56,7 @@ AccountsTemplates.configure({
             forgotPwd: "Forgot Your Password?",
             resendVerificationEmail: "Re-Send Verification Email",
             resetPwd: "Reset Your Password",
-            signIn: "Log In with Username or Email",
+            signIn: "Log In with Username",
             signUp: "Sign Up with Email",
             verifyEmail: "Verify Your Email",
         },

@@ -36,7 +36,7 @@
                         data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
                     >
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-12 col-sm-6">
                                 <h2 class="game-title">
                                     <i class="fa {{#if hasPassword game}}fa-lock text-danger{{else}}fa-unlock-alt text-success{{/if}}"></i>
                                     {{title game}}
@@ -48,7 +48,7 @@
                                     Created {{relativeTime game.createdAt}}
                                 </p>
                             </div>
-                            <dl class="col-6 game-meta">
+                            <dl class="col-12 col-sm-6 game-meta">
                                 <dt>
                                     <i class="fa fa-folder" title="Category"></i>
                                 </dt>
