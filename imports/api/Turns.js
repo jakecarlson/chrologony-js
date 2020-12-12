@@ -63,14 +63,18 @@ Turns.helpers({
 if (Meteor.isServer) {
 
     Meteor.publish('turns', function turnPublication(gameId) {
-        if (this.userId && gameId) {
+        if (this.userId) {
+            let selector = {};
+            if (gameId) {
+                selector.$or = [
+                    {gameId: gameId},
+                    {ownerId: this.userId, endedAt: null},
+                ];
+            } else {
+                selector.gameId = gameId;
+            }
             return Turns.find(
-                {
-                    $or: [
-                        {gameId: gameId},
-                        {ownerId: this.userId, endedAt: null},
-                    ],
-                },
+                selector,
                 {
                     fields: {
                         _id: 1,

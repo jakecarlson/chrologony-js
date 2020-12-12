@@ -126,7 +126,28 @@ Games.helpers({
     },
 
     hasPlayer(userId) {
+        if (!userId) {
+            userId = Meteor.userId();
+        }
         return this.players.includes(userId);
+    },
+
+    isOwner(userId = false) {
+        if (!userId) {
+            userId = Meteor.userId();
+        }
+        return (userId == this.ownerId);
+    },
+
+    isTurnOwner(userId = false) {
+        if (!userId) {
+            userId = Meteor.userId();
+        }
+        if (this.currentTurnId) {
+            const turn = this.currentTurn();
+            return (turn && (userId == turn.ownerId));
+        }
+        return false;
     },
 
     owner() {

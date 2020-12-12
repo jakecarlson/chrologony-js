@@ -10,12 +10,7 @@
   cursor: pointer;
   color: $muted !important;
   border-bottom: 1px solid $gray-300;
-}
-.game-player {
-  background: $table-success;
-}
-.game-started {
-  background: $table-warning;
+  position: relative;
 }
 .game:hover {
   background: $table-hover;
@@ -27,11 +22,13 @@
 .game-title {
   font-size: xx-large;
   margin-bottom: 0;
+  margin-right: 2rem;
   color: $dark;
 }
 @media (min-width: 576px) {
   .game-title {
     margin-bottom: .75rem;
+    margin-right: 0;
   }
 }
 .game-meta {
@@ -54,9 +51,26 @@
 }
 .game-meta dd:nth-child(2) {
   width: calc(100% - 1.25rem);
+  margin-right: 0;
+}
+@media (min-width: 576px) {
+  .game-meta dd:nth-child(2) {
+    width: calc(100% - 3.75rem);
+    margin-right: 2.5rem;
+  }
 }
 .game-created {
   margin-bottom: 0;
+}
+.game-status {
+  position: absolute;
+  top: 1.25rem;
+  right: 1rem;
+}
+.game-owner {
+  position: absolute;
+  top: 1.25rem;
+  right: 2.25rem;
 }
 
 /*

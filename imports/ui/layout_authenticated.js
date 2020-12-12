@@ -30,6 +30,7 @@ Template.layout_authenticated.onCreated(function layout_authenticatedOnCreated()
 
         FlowRouter.watchPathChange();
         Helpers.subscribe(this, 'games', Helpers.currentAndPreviousGameIds());
+        Helpers.subscribe(this, 'turns', Helpers.currentGameId());
         Helpers.subscribe(this, 'categories');
 
         if (this.subscriptionsReady()) {

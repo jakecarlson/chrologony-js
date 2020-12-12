@@ -67,6 +67,24 @@ main {
     border-right-width: 0 !important;
 }
 
+.bg-active {
+    background-color: $blue !important;
+}
+.btn.btn-active,
+.btn.btn-active.disabled,
+.btn.btn-active:disabled
+{
+    color: #fff;
+    background-color: $blue;
+    border-color: $blue;
+}
+.text-active {
+    color: $blue !important;
+}
+.text-muted-light {
+    color: lighten($muted, 25%);
+}
+
 @import "../imports/ui/_header.scss";
 @import "../imports/ui/_overrides.scss";
 @import "../imports/ui/_embed.scss";

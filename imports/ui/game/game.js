@@ -35,7 +35,7 @@ Template.game.onCreated(function gameOnCreated() {
             if (this.game.get().hasPlayer(Meteor.userId())) {
 
                 Helpers.subscribe(this, 'players', this.game.get().players);
-                Helpers.subscribe(this, 'turns', this.game.get()._id);
+                // Helpers.subscribe(this, 'turns', this.game.get()._id);
                 Helpers.subscribe(this, 'cards', this.game.get()._id);
                 Helpers.subscribe(this, 'cardClues', this.game.get()._id);
                 Helpers.subscribe(this, 'votes', this.game.get()._id);

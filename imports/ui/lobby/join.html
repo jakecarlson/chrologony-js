@@ -22,14 +22,7 @@
                             {{else}}
                                 game-open
                             {{/if}}
-                            {{#if isPlayer game}}
-                                game-player
-                            {{else}}
-                                {{#if game.startedAt}}
-                                    game-started
-                                {{/if}}
-                            {{/if}}
-                            p-3
+                            px-3 pt-3 pb-2
                         "
                         data-id="{{game._id}}"
                         data-toggle="{{#if hasPassword game}}modal{{/if}}"
@@ -41,7 +34,7 @@
                                     <i class="fa {{#if hasPassword game}}fa-lock text-danger{{else}}fa-unlock-alt text-success{{/if}}"></i>
                                     {{title game}}
                                 </h2>
-                                <p class="game-created">
+                                <p class="game-created mb-1 mb-sm-0">
                                     {{#if game.startedAt}}
                                         Started {{relativeTime game.startedAt}};
                                     {{/if}}
@@ -71,6 +64,27 @@
                                     <dd>{{guessTime game}} <span class="d-none d-md-inline">Guess Time Limit</span></dd>
                             </dl>
                         </div>
+
+                        {{#if isOwner game}}
+                            <i
+                                class="fa fa-star text-active game-owner"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="You own this game."
+                            ></i>
+                        {{/if}}
+
+                        <i
+                            class="
+                                fa
+                                fa-circle
+                                game-status
+                                text-{{statusColor game}}
+                            "
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            data-original-title="{{statusMsg game}}"
+                        ></i>
 
                     </li>
 

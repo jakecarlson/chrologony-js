@@ -76,6 +76,50 @@ Template.join.helpers({
         return game.hasPlayer(Meteor.userId());
     },
 
+    isOwner(game) {
+        return game.isOwner();
+    },
+
+    statusColor(game) {
+        if (game.hasPlayer()) {
+            if (game.isTurnOwner()) {
+                return 'active';
+            } else if (game.startedAt) {
+                return 'success';
+            } else {
+                return 'warning';
+            }
+        } else {
+            if (game.startedAt) {
+                return 'danger';
+            } else {
+                return 'muted-light';
+            }
+        }
+    },
+
+    statusMsg(game) {
+        let str = '';
+        if (game.hasPlayer()) {
+            str += 'You have already joined, ';
+            if (game.isTurnOwner()) {
+                str += 'and it\'s your turn!';
+            } else if (game.startedAt) {
+                str += 'and the game is in progress.';
+            } else {
+                str += 'but the game hasn\'t started yet.';
+            }
+        } else {
+            str += 'You have not joined, ';
+            if (game.startedAt) {
+                str += 'and the game is already in progress.';
+            } else {
+                str += 'and the game hasn\'t started yet.';
+            }
+        }
+        return str;
+    },
+
 });
 
 Template.join.events({
