@@ -19,7 +19,7 @@
   box-shadow: 0 0 .1rem .02rem $white;
 }
 @media (min-width: 400px) {
-  .card:not(.game-card) {
+  .card {
     max-width: 100%;
   }
   .card-small {

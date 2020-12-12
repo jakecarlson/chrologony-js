@@ -37,13 +37,13 @@ GameObserver = {
                         if (current.players.length > previous.players.length) {
                             const userId = _.difference(current.players, previous.players)[0];
                             const joinedPlayer = Meteor.users.findOne(userId);
-                            if (joinedPlayer._id != Meteor.userId()) {
+                            if (joinedPlayer && (joinedPlayer._id != Meteor.userId())) {
                                 Flasher.set('warning', joinedPlayer.name() + ' has joined the game.');
                             }
                         } else if (previous.players.length > current.players.length) {
                             const userId = _.difference(previous.players, current.players)[0];
                             const leftPlayer = Meteor.users.findOne(userId);
-                            if (userId != Meteor.userId()) {
+                            if (leftPlayer && (userId != Meteor.userId())) {
                                 Flasher.set('warning', (leftPlayer ? leftPlayer.name() : 'Player') + ' has left the game.');
                             }
                         }
