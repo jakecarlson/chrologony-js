@@ -64,13 +64,24 @@ GameObserver = {
                     if (fields.startedAt) {
                         SoundManager.play('gameStart');
 
-                        // If the game is ended, play appropriate game end sound
+                    // If the game is ended, play appropriate game end sound
                     } else if (fields.endedAt) {
                         if (fields.winnerId == Meteor.userId()) {
                             SoundManager.play('gameWin');
                         } else {
                             SoundManager.play('gameLose');
                         }
+
+                    // Or if the owner was changed to current player, notify them
+                    } else if (fields.ownerId && (fields.ownerId == Meteor.userId())) {
+                        const game = Games.findOne(id);
+                        Flasher.set(
+                            'warning',
+                            'You are now the new owner of a game: <a href="' +
+                            FlowRouter.path('game', {id: id}) +
+                            '">' + game.title() + '</a>.',
+                            10000
+                        );
                     }
 
                 }

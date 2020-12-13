@@ -422,7 +422,6 @@ Meteor.methods({
         Permissions.authenticated();
 
         Logger.log('User ' + userId + ' Left Game: ' + id);
-
         Logger.audit('leave', {collection: 'Games', documentId: id});
 
         // Make sure the user is the owner of the game that the other user is in, or the user him/herself
@@ -444,6 +443,26 @@ Meteor.methods({
                     Meteor.call('turn.next', game._id);
                 }
             }
+        }
+
+        // If the player is the owner, we need to move ownership to the next person in the game or abandon if none
+        if (userId == game.ownerId) {
+
+            if (game.players.length > 1) {
+                Games.update(id, {$set: {ownerId: game.players[1]}});
+            } else {
+                Meteor.call('game.end', id, true);
+            }
+
+            if (Meteor.isClient) {
+                if (Session.get('currentGameId') == game._id) {
+                    Session.set('currentGameId', undefined);
+                }
+                if (Session.get('lastOwnedGameId') == game._id) {
+                    Session.set('lastOwnedGameId', undefined);
+                }
+            }
+
         }
 
         // Remove the player from the players array & null out the user's current game ID
