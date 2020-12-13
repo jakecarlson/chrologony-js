@@ -25,6 +25,34 @@ GameObserver = {
                 }
             },
 
+            changed(id, fields) {
+                if (ctx.initialized && (id == GameObserver.getId(ctx, anonymous))) {
+
+                    // If the game is started, play game start sound
+                    if (fields.startedAt) {
+                        SoundManager.play('gameStart');
+
+                    // If the game is ended, play appropriate game end sound
+                    } else if (fields.endedAt) {
+                        if (fields.winnerId == Meteor.userId()) {
+                            SoundManager.play('gameWin');
+                        } else {
+                            SoundManager.play('gameLose');
+                        }
+
+                    // Or if the owner was changed to current player, notify them
+                    } else if (fields.ownerId && (fields.ownerId == Meteor.userId())) {
+                        const game = Games.findOne(id);
+                        Flasher.info(
+                            'You are now the new owner of a game: ' +
+                            '<a href="' + FlowRouter.path('game', {id: id}) + '">' + game.title() + '</a>.',
+                            false
+                        );
+                    }
+
+                }
+            },
+
         });
 
         Games.find({_id: GameObserver.getId(ctx, anonymous)}).observe({
@@ -48,38 +76,6 @@ GameObserver = {
                             }
                         }
 
-                    }
-
-                }
-            },
-
-        });
-
-        Games.find({_id: GameObserver.getId(ctx, anonymous)}).observeChanges({
-
-            changed(id, fields) {
-                if (ctx.initialized) {
-
-                    // If the game is started, play game start sound
-                    if (fields.startedAt) {
-                        SoundManager.play('gameStart');
-
-                    // If the game is ended, play appropriate game end sound
-                    } else if (fields.endedAt) {
-                        if (fields.winnerId == Meteor.userId()) {
-                            SoundManager.play('gameWin');
-                        } else {
-                            SoundManager.play('gameLose');
-                        }
-
-                    // Or if the owner was changed to current player, notify them
-                    } else if (fields.ownerId && (fields.ownerId == Meteor.userId())) {
-                        const game = Games.findOne(id);
-                        Flasher.info(
-                            'You are now the new owner of a game: ' +
-                            '<a href="' + FlowRouter.path('game', {id: id}) + '">' + game.title() + '</a>.',
-                            false
-                        );
                     }
 
                 }

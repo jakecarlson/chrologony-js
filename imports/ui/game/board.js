@@ -490,7 +490,7 @@ function formatCountdown(s) {
 function countdownCard(i) {
     Meteor.setTimeout(function() {
         const card = i.data.turn.currentCard();
-        if (!cardIsGuessed(card) && (!i.data.game.endedAt)) {
+        if (card && !cardIsGuessed(card) && (!i.data.game.endedAt)) {
             const seconds = moment.utc(card.createdAt).unix() + i.data.game.cardTime - moment.utc().unix();
             i.cardTimer.text(formatCountdown(seconds));
             if (seconds <= 0) {

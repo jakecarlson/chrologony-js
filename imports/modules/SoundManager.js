@@ -30,6 +30,7 @@ SoundManager = {
 
     play(sound) {
         if (this.initialized && !Session.get('muted')) {
+            Logger.log('Play Sound: ' + sound);
             this.sounds[sound].play();
         }
     },
