@@ -66,6 +66,10 @@ main {
     border-left-width: 0 !important;
     border-right-width: 0 !important;
 }
+#layout .full-width .card:not(.game-card) .card-header {
+    padding-left: 15px;
+    padding-right: 15px;
+}
 
 .bg-active {
     background-color: $blue !important;
