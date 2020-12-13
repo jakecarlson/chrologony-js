@@ -87,6 +87,10 @@ Template.layout_authenticated.helpers({
         );
     },
 
+    layoutClass() {
+        return 'route-' + FlowRouter.current().route.name;
+    },
+
 })
 
 Template.layout_authenticated.events({

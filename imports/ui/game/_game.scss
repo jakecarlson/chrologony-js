@@ -1,4 +1,28 @@
 /* Game */
+@media (max-width: 991px) {
+
+  .route-game main.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .route-game .card:not(.game-card) {
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+  }
+
+  #gameTitle,
+  #playerCardsTitle
+  {
+    padding-left: 1.25rem;
+  }
+
+  #gameMenu {
+    padding-right: 1.25rem;
+  }
+
+}
+
 @media (max-width: 575px) {
   #game .row {
     display: block;
@@ -12,6 +36,7 @@
     padding-right: 0;
   }
 }
+
 #gameTitle {
   font-size: xx-large;
   margin-bottom: 0;
@@ -20,13 +45,6 @@
 .full-width #playerCardsTitle
 {
   padding-left: 1.25rem;
-}
-@media (max-width: 575px) {
-  #gameTitle,
-  #playerCardsTitle
-  {
-    padding-left: 0;
-  }
 }
 #gameSide .card-title {
   font-size: medium;
