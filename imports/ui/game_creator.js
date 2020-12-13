@@ -130,6 +130,27 @@ Template.game_creator.helpers({
         return (!this.lastGame || (this.lastGame && (this.lastGame.minDifficulty <= 2) && (this.lastGame.maxDifficulty >= 2)));
     },
 
+    playerLimits() {
+        const selected = (this.lastGame) ? this.lastGame.playerLimit : 8;
+        return [
+            {display: 'Unlimited', value: 0, selected: (0 == selected)},
+            {display: '24', value: 24, selected: (24 == selected)},
+            {display: '16', value: 16, selected: (16 == selected)},
+            {display: '8', value: 8, selected: (8 == selected)},
+            {display: '4', value: 4, selected: (4 == selected)},
+            {display: '2', value: 2, selected: (2 == selected)},
+            {display: 'Solo', value: 1, selected: (1 == selected)},
+        ];
+    },
+
+    noJoinAfterStart() {
+        return (this.lastGame && this.lastGame.noJoinAfterStart);
+    },
+
+    autoShowMore() {
+        return (this.lastGame && this.lastGame.autoShowMore);
+    },
+
 });
 
 Template.game_creator.events({
@@ -211,6 +232,9 @@ Template.game_creator.events({
                 showHints: form.showHints.checked,
                 comparisonPrecision: Helpers.getSelectValue(form.comparisonPrecision),
                 displayPrecision: Helpers.getSelectValue(form.displayPrecision),
+                playerLimit: parseInt(Helpers.getSelectValue(form.playerLimit)),
+                noJoinAfterStart: form.noJoinAfterStart.checked,
+                autoShowMore: form.autoShowMore.checked,
             };
 
             Meteor.call('game.create', attrs, function(err, id) {

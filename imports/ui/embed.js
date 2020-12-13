@@ -114,6 +114,9 @@ Template.embed.events({
             showHints: false,
             comparisonPrecision: 'year',
             displayPrecision: 'year',
+            playerLimit: 1,
+            noJoinAfterStart: false,
+            autoShowMore: false,
         };
 
         Meteor.call('game.create', attrs, function(err, id) {

@@ -196,15 +196,5 @@ function getDifficultyLevel(template) {
 
 function hasMoreInfo(i, turn, card) {
     const clue = Template.instance().clue.get();
-    return (
-        !isCurrent(turn, card) &&
-        (
-            clue.moreInfo ||
-            clue.externalUrl ||
-            clue.externalId ||
-            clue.imageUrl ||
-            clue.thumbnailUrl ||
-            (clue.latitude && clue.longitude)
-        )
-    );
+    return (!isCurrent(turn, card) && clue.hasMoreInfo());
 }

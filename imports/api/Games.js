@@ -54,6 +54,9 @@ Games.PUBLISH_FIELDS = {
     showHints: 1,
     comparisonPrecision: 1,
     displayPrecision: 1,
+    playerLimit: 1,
+    noJoinAfterStart: 1,
+    autoShowMore: 1,
     players: 1,
     token: 1,
 };
@@ -61,7 +64,17 @@ Games.PUBLISH_FIELDS = {
 Games.PUBLIC_MATCH = {
     private: false,
     'players.0': {$exists: true},
-    endedAt: null
+    endedAt: null,
+    $and: [
+        {$or: [
+            {noJoinAfterStart: false},
+            {startedAt: null},
+        ]},
+        {$or: [
+            {playerLimit: 0},
+            {$where:'this.players.length < this.playerLimit'},
+        ]},
+    ],
 };
 
 Games.schema = new SimpleSchema({
@@ -86,6 +99,9 @@ Games.schema = new SimpleSchema({
     showHints: {type: Boolean, defaultValue: false},
     displayPrecision: {type: String, defaultValue: 'date'},
     comparisonPrecision: {type: String, defaultValue: 'date'},
+    playerLimit: {type: SimpleSchema.Integer, defaultValue: 0},
+    noJoinAfterStart: {type: Boolean, defaultValue: false},
+    autoShowMore: {type: Boolean, defaultValue: false},
     players: {type: Array, defaultValue: [], optional: true},
     'players.$': {type: String, max: 17},
 });
@@ -462,9 +478,6 @@ Meteor.methods({
                     if (Session.get('currentGameId') == game._id) {
                         Session.set('currentGameId', undefined);
                     }
-                    if (Session.get('lastOwnedGameId') == game._id) {
-                        Session.set('lastOwnedGameId', undefined);
-                    }
                 }
 
             }
@@ -540,6 +553,9 @@ if (Meteor.isServer) {
                     showHints: Boolean,
                     comparisonPrecision: NonEmptyString,
                     displayPrecision: NonEmptyString,
+                    playerLimit: Match.Integer,
+                    noJoinAfterStart: Boolean,
+                    autoShowMore: Boolean,
                     players: Match.Maybe(Array),
                 }
             );
@@ -600,6 +616,9 @@ if (Meteor.isServer) {
                     showHints: attrs.showHints,
                     comparisonPrecision: attrs.comparisonPrecision,
                     displayPrecision: attrs.displayPrecision,
+                    playerLimit: attrs.playerLimit,
+                    noJoinAfterStart: attrs.noJoinAfterStart,
+                    autoShowMore: attrs.autoShowMore,
                     players: ((attrs.players) ? attrs.players : [Meteor.userId()]),
                 });
 
@@ -647,11 +666,28 @@ if (Meteor.isServer) {
             );
 
             if (game) {
+
+                // Check for the correct password
                 if (password) {
                     Permissions.check(((game.ownerId == this.userId) || Hasher.bcrypt.match(password, game.password)));
                 }
+
+                // Don't allow a player to join if that puts it over the player limit
+                if (
+                    game.playerLimit &&
+                    !game.hasPlayer(userId) &&
+                    (game.numPlayers() >= game.playerLimit)
+                ) {
+                    throw new Meteor.Error('game-full', 'The game is full. Please choose another game.');
+                }
+
+                // Don't allow the player to join if joins aren't allowed after game start, and the game has already started
+                if (game.noJoinAfterStart && game.startedAt) {
+                    throw new Meteor.Error('game-started', 'The game does not allow players to join after it starts. Please choose another game.');
+                }
+
             } else {
-                throw new Meteor.Error('not-found', 'Game does not exist.');
+                throw new Meteor.Error('not-found', 'Game not found.');
             }
 
             // Add the user to the players array and set their current game

@@ -24,7 +24,7 @@ Template.options.helpers({
     },
 
     limit(val, unit = '') {
-        return (val ? val + ' ' + unit : 'None');
+        return (val ? val + ' ' + Formatter.pluralize(unit, val) : 'None');
     },
 
     difficulty(val) {

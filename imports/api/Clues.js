@@ -156,6 +156,17 @@ Clues.helpers({
         return (categories.length == allowedCategories.length);
     },
 
+    hasMoreInfo() {
+        return (
+            this.moreInfo ||
+            this.externalUrl ||
+            this.externalId ||
+            this.imageUrl ||
+            this.thumbnailUrl ||
+            (this.latitude && this.longitude)
+        );
+    },
+
 });
 
 if (Meteor.isServer) {

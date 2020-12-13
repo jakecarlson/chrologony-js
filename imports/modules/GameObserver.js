@@ -132,9 +132,12 @@ GameObserver = {
 
             changed(cardId, fields) {
                 if (ctx.initialized && (fields.correct != null)) {
+
                     const card = Cards.findOne(cardId);
                     Meteor.call('clue.get', card.clueId, function(err, clue) {
+
                         if (!err) {
+
                             Logger.log("Update Clue Data: " + card.clueId);
                             const updated = Clues._collection.update(card.clueId, {$set: clue});
                             if (!updated) {
@@ -145,12 +148,24 @@ GameObserver = {
                             } else {
                                 SoundManager.play('cardWrong');
                             }
+
+                            // If auto-proceed is off and auto show more is on, show the More Info modal
+                            if (ctx.game.get() && !ctx.game.get().autoProceed && ctx.game.get().autoShowMore) {
+                                ctx.clueMore.set(Cards.findOne(cardId).clue());
+                                if (ctx.clueMore.get() && ctx.clueMore.get().hasMoreInfo()) {
+                                    $('#clueMore').modal('show');
+                                }
+                            }
+
                         } else {
                             throw new Meteor.Error('clue-not-received', 'Could not get a card.', JSON.stringify(err));
                         }
+
                         Session.set('waiting', false);
                         LoadingState.stop();
+
                     });
+
                 }
             },
 
