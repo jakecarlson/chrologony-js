@@ -435,42 +435,49 @@ Meteor.methods({
             return userId;
         }
 
-        // Check to see if it's this user's turn currently and end it if so -- but only if it's a multiplayer game
-        if (game && (game.players.length > 1)) {
-            if (game.currentTurnId) {
-                const turn = game.currentTurn();
-                if (turn.ownerId == userId) {
-                    Meteor.call('turn.next', game._id);
-                }
-            }
-        }
-
-        // If the player is the owner, we need to move ownership to the next person in the game or abandon if none
-        if (userId == game.ownerId) {
-
-            if (game.players.length > 1) {
-                Games.update(id, {$set: {ownerId: game.players[1]}});
-            } else {
-                Meteor.call('game.end', id, true);
-            }
-
-            if (Meteor.isClient) {
-                if (Session.get('currentGameId') == game._id) {
-                    Session.set('currentGameId', undefined);
-                }
-                if (Session.get('lastOwnedGameId') == game._id) {
-                    Session.set('lastOwnedGameId', undefined);
-                }
-            }
-
-        }
-
-        // Remove the player from the players array & null out the user's current game ID
+        // We don't want to actually remove the player if the game has already ended
         const user = Meteor.users.findOne(userId);
+        if (!game.endedAt) {
+
+            // Check to see if it's this user's turn currently and end it if so -- but only if it's a multiplayer game
+            if (game && (game.players.length > 1)) {
+                if (game.currentTurnId) {
+                    const turn = game.currentTurn();
+                    if (turn.ownerId == userId) {
+                        Meteor.call('turn.next', game._id);
+                    }
+                }
+            }
+
+            // If the player is the owner, we need to move ownership to the next person in the game or abandon if none
+            if (userId == game.ownerId) {
+
+                if (game.players.length > 1) {
+                    Games.update(id, {$set: {ownerId: game.players[1]}});
+                } else {
+                    Meteor.call('game.end', id, true);
+                }
+
+                if (Meteor.isClient) {
+                    if (Session.get('currentGameId') == game._id) {
+                        Session.set('currentGameId', undefined);
+                    }
+                    if (Session.get('lastOwnedGameId') == game._id) {
+                        Session.set('lastOwnedGameId', undefined);
+                    }
+                }
+
+            }
+
+            // Remove the player from the players array & null out the user's current game ID
+            Meteor.call('game.removePlayer', id, userId);
+
+        }
+
+        // Reset the user's current game
         if (user.currentGameId == id) {
             Meteor.call('user.setGame', null, userId);
         }
-        Meteor.call('game.removePlayer', id, userId);
 
         return userId;
 

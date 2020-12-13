@@ -137,6 +137,7 @@ Template.game_creator.events({
     'click #gameOptionsToggle'(e, i) {
         i.advanced.set(!i.advanced.get());
         $(e.target).closest('.modal').toggleClass('advanced');
+        $('[data-toggle="tooltip"]').tooltip();
     },
 
     'change .difficulty input'(e, i) {

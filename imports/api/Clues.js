@@ -52,7 +52,9 @@ Clues.after.insert(function(id, clue) {
     Logger.auditCreate('Clues', id, clue);
 });
 Clues.after.update(function(id, clue) {
-    updateClueCounts([...clue.categories, ...this.previous.categories]);
+    if (!_.isEqual(_.sortBy(clue.categories), _.sortBy(this.previous.categories))) {
+        updateClueCounts([...clue.categories, ...this.previous.categories]);
+    }
     Logger.auditUpdate('Clues', id, this.previous, clue, ['difficulty', 'score']);
 });
 Clues.after.remove(function(id, clue) {
