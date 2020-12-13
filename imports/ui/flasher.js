@@ -3,7 +3,9 @@ import { Template } from 'meteor/templating';
 import './flasher.html';
 
 Template.flasher.onCreated(function flasherOnCreated() {
-
+    this.autorun(() => {
+        // Logger.log(Flasher.msg());
+    });
 });
 
 Template.flasher.helpers({

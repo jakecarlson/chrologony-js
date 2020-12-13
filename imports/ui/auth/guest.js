@@ -36,7 +36,10 @@ Template.guest.events({
             grecaptcha.reset();
             if (err) {
                 Logger.log(err);
-                Flasher.error('There was an error logging you in as a guest. Please try again.');
+                Flasher.error(
+                    'There was an error logging you in as a guest. Please try again.',
+                    10
+                );
             } else {
                 Meteor.connection.setUserId(id);
                 Logger.audit('login', {guest: true});

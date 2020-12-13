@@ -42,7 +42,8 @@ AccountsTemplates.configureRoute('signUp', {
         if (Meteor.user()) {
             Flasher.success(
                 'You have successfully registered. Create or join a game and give it a try! ' +
-                'Or <a href="#tour" class="tour-link">take the full tour now.</a>'
+                'Or <a href="#tour" class="tour-link">take the full tour now.</a>',
+                false
             );
             Logger.audit('signUp');
             Logger.track('signUp');

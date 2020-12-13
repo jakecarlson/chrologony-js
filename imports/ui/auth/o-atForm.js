@@ -13,7 +13,8 @@ Template.atForm.onCreated(function atFormOnCreated() {
             if (errors && (errors.length > 0)) {
                 Flasher.error(
                     'Email verification token is invalid or has expired. ' +
-                    'Try <a href="' + FlowRouter.path('resendVerificationEmail') + '">re-sending the verification email</a>.'
+                    'Try <a href="' + FlowRouter.path('resendVerificationEmail') + '">re-sending the verification email</a>.',
+                    false
                 );
                 FlowRouter.go('home');
             }

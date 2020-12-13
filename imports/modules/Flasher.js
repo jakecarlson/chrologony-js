@@ -27,6 +27,7 @@ Flasher = {
     error(msg, hideDelay = 5) { return this.set('danger', msg, hideDelay); },
 
     clear() {
+        Logger.log('Flasher: clear');
         Session.set('flasher', false);
     },
 

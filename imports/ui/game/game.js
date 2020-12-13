@@ -20,7 +20,7 @@ Template.game.onCreated(function gameOnCreated() {
 
     this.initialized = false;
     this.game = new ReactiveVar(null);
-    this.turn = new ReactiveVar(null);
+    // this.turn = new ReactiveVar(null);
     this.clueMore = new ReactiveVar(null);
     this.players = new ReactiveVar([]);
 
@@ -35,14 +35,16 @@ Template.game.onCreated(function gameOnCreated() {
             if (this.game.get().hasPlayer(Meteor.userId())) {
 
                 Helpers.subscribe(this, 'players', this.game.get().players);
-                // Helpers.subscribe(this, 'turns', this.game.get()._id);
+                Helpers.subscribe(this, 'turns', this.game.get()._id);
                 Helpers.subscribe(this, 'cards', this.game.get()._id);
                 Helpers.subscribe(this, 'cardClues', this.game.get()._id);
                 Helpers.subscribe(this, 'votes', this.game.get()._id);
 
-                if (this.game.get().currentTurnId) {
-                    this.turn.set(Turns.findOne(this.game.get().currentTurnId));
-                }
+                // if (this.game.get().currentTurnId) {
+                //     this.turn.set(Turns.findOne(this.game.get().currentTurnId));
+                // } else {
+                //     this.turn.set(null);
+                // }
 
                 if (this.subscriptionsReady()) {
 
@@ -108,7 +110,8 @@ Template.game.helpers({
     },
 
     currentTurn() {
-        return getCurrentTurn(Template);
+        return Template.instance().game.get().currentTurn();
+        // return getCurrentTurn(Template);
     },
 
     players() {
@@ -139,7 +142,8 @@ Template.game.helpers({
     },
 
     isNotCurrentPlayer(player) {
-        const turn = getCurrentTurn(Template);
+        // const turn = getCurrentTurn(Template);
+        const turn = Template.instance().game.get().currentTurn();
         return (!turn || (player._id != turn.ownerId));
     },
 
@@ -272,9 +276,10 @@ function leaveGame(id) {
     });
 }
 
-function getCurrentTurn(t) {
-    return t.instance().turn.get();
-}
+// function getCurrentTurn(t) {
+//     return t.instance().game.get().currentTurn();
+//     // return t.instance().turn.get();
+// }
 
 function isOwner(t) {
     return (t.instance().game.get() && (t.instance().game.get().ownerId == Meteor.userId()));

@@ -1,12 +1,12 @@
 import { Meteor } from "meteor/meteor";
 import { Session } from "meteor/session";
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { LoadingState } from "./LoadingState";
 
 import { Games } from "../api/Games";
 import { Turns } from "../api/Turns";
 import { Cards } from "../api/Cards";
 import { Clues } from "../api/Clues";
-import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 GameObserver = {
 
@@ -21,7 +21,7 @@ GameObserver = {
                             Flasher.success('The game owner invited you to a new game!');
                             FlowRouter.go('game', {id: id});
                         }
-                    }, 100);
+                    }, 250);
                 }
             },
 
@@ -78,7 +78,7 @@ GameObserver = {
                         Flasher.info(
                             'You are now the new owner of a game: ' +
                             '<a href="' + FlowRouter.path('game', {id: id}) + '">' + game.title() + '</a>.',
-                            10
+                            false
                         );
                     }
 
@@ -92,7 +92,6 @@ GameObserver = {
             added: function(turnId, fields) {
                 if (ctx.initialized) {
                     const turn = Turns.findOne(turnId);
-                    ctx.turn.set(turn);
                     if (turn.ownerId == Meteor.userId()) {
                         SoundManager.play('turnStart');
                         if (
@@ -104,7 +103,7 @@ GameObserver = {
                                 Flasher.info(
                                     'It\'s your turn in game: ' +
                                     '<a href="' + FlowRouter.path('game', {id: fields.gameId}) + '">' + game.title() + '</a>!',
-                                    10
+                                    false
                                 );
                             }
                         }

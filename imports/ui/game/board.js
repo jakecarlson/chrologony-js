@@ -365,7 +365,7 @@ Template.board.events({
                     setTimeout(function() {
                         Flasher.success('You have successfully created a copy of the previous game.');
                         FlowRouter.go('game', {id: id});
-                    }, 100);
+                    }, 250);
                 }
 
             } else {
@@ -415,7 +415,7 @@ function drawCard(turnId) {
             throw new Meteor.Error('card-not-drawn', 'Could not draw a card.', JSON.stringify(err));
         }
         saveCardPos();
-        // LoadingState.stop();
+        LoadingState.stop();
     });
 }
 
