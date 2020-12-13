@@ -57,6 +57,15 @@ Categories.helpers({
         return Meteor.users.findOne(this.ownerId);
     },
 
+    label() {
+        let str = '';
+        if (this.source == 'user') {
+            str += this.theme + ': '
+        }
+        str += this.name + ' (' + numeral(this.cluesCount).format('0,0') + ')';
+        return str;
+    },
+
     cluesLink() {
         return FlowRouter.url('/clues/:categoryId', {categoryId: this._id});
     },

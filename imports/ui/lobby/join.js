@@ -40,7 +40,11 @@ Template.join.helpers({
     },
 
     category(game) {
-        return game.category().name;
+        const category = game.category();
+        if (category) {
+            return category.label();
+        }
+        return '[Private]';
     },
 
     winCondition(game) {

@@ -54,11 +54,7 @@ Template.categories_selector.helpers({
     },
 
     categoryLabel(category) {
-        let str = '';
-        if (category.source == 'user') {
-            str += category.theme + ': '
-        }
-        str += category.name + ' (' + numeral(category.cluesCount).format('0,0') + ')';
+        let str = category.label();
         if (!category.active) {
             str += ' [inactive]';
         }

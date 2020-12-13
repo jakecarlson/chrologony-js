@@ -16,7 +16,7 @@ Template.options.helpers({
     },
 
     category() {
-        return Categories.findOne(this.game.categoryId).name;
+        return Categories.findOne(this.game.categoryId).label();
     },
 
     boolean(val) {
