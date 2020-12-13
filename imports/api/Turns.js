@@ -55,7 +55,7 @@ Turns.helpers({
 
     hasReachedCardLimit() {
         const game = this.game();
-        return ((game.cardLimit > 0) && (this.cards().count() >= game.cardLimit));
+        return (game && (game.cardLimit > 0) && (this.cards().count() >= game.cardLimit));
     },
 
 });

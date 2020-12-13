@@ -28,7 +28,7 @@ Template.guest.events({
 
         // Short circuit if no username was supplied
         if (username.trim().length == 0) {
-            Flasher.set('danger', "You must enter your name.");
+            Flasher.error('You must enter your name.');
             return;
         }
 
@@ -36,7 +36,7 @@ Template.guest.events({
             grecaptcha.reset();
             if (err) {
                 Logger.log(err);
-                Flasher.set('danger', 'There was an error logging you in as a guest. Please try again.');
+                Flasher.error('There was an error logging you in as a guest. Please try again.');
             } else {
                 Meteor.connection.setUserId(id);
                 Logger.audit('login', {guest: true});

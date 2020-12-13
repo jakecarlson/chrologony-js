@@ -40,10 +40,9 @@ AccountsTemplates.configureRoute('signUp', {
     title: getTitle('Sign Up'),
     redirect: function() {
         if (Meteor.user()) {
-            Flasher.set(
-                'success',
-                'You have successfully registered. Create or join a game and give it a try! Or <a href="#tour" class="tour-link">take the full tour now.</a>',
-                false
+            Flasher.success(
+                'You have successfully registered. Create or join a game and give it a try! ' +
+                'Or <a href="#tour" class="tour-link">take the full tour now.</a>'
             );
             Logger.audit('signUp');
             Logger.track('signUp');
@@ -59,7 +58,7 @@ AccountsTemplates.configureRoute('changePwd', {
     layoutTemplate: 'layout_authenticated',
     redirect: function() {
         if (Meteor.user()) {
-            Flasher.set('success', 'You have successfully changed your password.');
+            Flasher.success('You have successfully changed your password.');
             Logger.audit('changePassword');
             Logger.track('changePassword');
             FlowRouter.go('lobby');
@@ -84,7 +83,7 @@ AccountsTemplates.configureRoute('verifyEmail', {
     title: getTitle('Verify Your Email Address'),
     redirect: function() {
         if (Meteor.user()) {
-            Flasher.set('success', 'You have successfully verified your email address.');
+            Flasher.success('You have successfully verified your email address.');
             Logger.audit('verifyEmail');
             Logger.track('verifyEmail');
             FlowRouter.go('lobby');
@@ -109,7 +108,7 @@ AccountsTemplates.configureRoute('resetPwd', {
     title: getTitle('Reset Your Password'),
     redirect: function() {
         if (Meteor.user()) {
-            Flasher.set('success', 'You have successfully reset your password.');
+            Flasher.success('You have successfully reset your password.');
             FlowRouter.go('lobby');
         }
     },
@@ -245,15 +244,14 @@ FlowRouter.route('/games/:id/:token?', {
             Meteor.call('game.joinByToken', params.id, params.token, function(err, id) {
                 if (err) {
                     Logger.log(err);
-                    Flasher.set('danger', "Game token is not valid.");
+                    Flasher.error('Game token is not valid.');
                     FlowRouter.go('lobby');
                 } else {
                     Logger.log("Game Set: " + id);
                     Meteor.subscribe('games', Helpers.currentAndPreviousGameIds());
-                    Flasher.set(
-                        'success',
+                    Flasher.success(
                         "Success! Invite others to join using any of the options under the 'Invite' button.",
-                        10000
+                        10
                     );
                     renderGame(params);
                 }

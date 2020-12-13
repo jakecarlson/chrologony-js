@@ -216,7 +216,7 @@ Template.game_creator.events({
 
                 if (err) {
                     Logger.log(err);
-                    Flasher.set('danger', "An active game with that name already exists.");
+                    Flasher.error('An active game with that name already exists.');
                 } else {
 
                     Logger.log("Created Game: " + id);
@@ -236,7 +236,7 @@ Template.game_creator.events({
             });
 
         } else {
-            Flasher.set('danger', 'You must select a category to create a game.');
+            Flasher.error('You must select a category to create a game.');
             LoadingState.stop();
         }
 

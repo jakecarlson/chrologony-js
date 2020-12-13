@@ -159,8 +159,8 @@
   width: 16rem;
 }
 .game-card {
-  position: absolute;
   width: 16rem;
+  max-width: none;
   text-align: left;
   transition: top .25s ease-in-out;
   top: 16rem;
@@ -206,6 +206,7 @@
 }
 .game-card .card-title {
   font-size: large;
+  //white-space: nowrap;
 }
 .game-card-action {
   font-size: 1.5rem;

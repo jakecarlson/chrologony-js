@@ -189,10 +189,9 @@ Helpers = {
             if (!err) {
 
                 Logger.log('Joined Game: ' + id);
-                Flasher.set(
-                    'success',
+                Flasher.success(
                     "Success! Invite others to join using any of the options under the 'Invite' button.",
-                    10000
+                    10
                 );
                 Helpers.closeModal();
 
@@ -203,10 +202,7 @@ Helpers = {
                 }
 
             } else {
-                Flasher.set(
-                    'danger',
-                    "Could not join game. Please try again."
-                );
+                Flasher.error('Could not join game. Please try again.');
                 FlowRouter.go('lobby');
             }
 

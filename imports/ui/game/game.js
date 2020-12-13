@@ -207,7 +207,7 @@ Template.game.events({
         Meteor.call('game.end', gameId, true, function(err, gameId) {
             if (!err) {
                 Logger.log("Abandoned Game: " + gameId);
-                Flasher.set('success', 'You have successfully abandoned the game. All players were ejected.');
+                Flasher.success('You have successfully abandoned the game. All players were ejected.');
                 FlowRouter.go('lobby');
             } else {
                 throw new Meteor.Error('game-not-deleted', 'Could not delete the game.', JSON.stringify(err));
@@ -229,7 +229,7 @@ Template.game.events({
         Meteor.call('game.invite', email, game.get()._id, game.get().link(), function(err, id) {
             if (!err) {
                 Logger.log(email + ' invited to game: ' + id);
-                Flasher.set('success', 'You have successfully invited ' + email + ' to join this game.');
+                Flasher.success('You have successfully invited ' + email + ' to join this game.');
                 target.email.value = '';
                 $('.invite-modal').modal('hide');
                 LoadingState.stop();

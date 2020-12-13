@@ -16,7 +16,7 @@ AccountsTemplates.configure({
 
     // Hooks
     onLogoutHook: function() {
-        Flasher.set('success', 'You have successfully logged out.');
+        Flasher.success('You have successfully logged out.');
         FlowRouter.go('home');
         LoadingState.stop();
     },

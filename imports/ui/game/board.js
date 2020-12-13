@@ -363,7 +363,7 @@ Template.board.events({
                     Session.set('lastOwnedGameId', id);
                     Helpers.subscribe(i, 'games', Helpers.currentAndPreviousGameIds());
                     setTimeout(function() {
-                        Flasher.set('success', 'You have successfully created a copy of the previous game.');
+                        Flasher.success('You have successfully created a copy of the previous game.');
                         FlowRouter.go('game', {id: id});
                     }, 100);
                 }

@@ -18,7 +18,7 @@ GameObserver = {
                 if (ctx.initialized && (fields.ownerId != Meteor.userId())) {
                     setTimeout(function() {
                         if (Helpers.currentGameId() == id) {
-                            Flasher.set('success', 'The game owner invited you to a new game!');
+                            Flasher.success('The game owner invited you to a new game!');
                             FlowRouter.go('game', {id: id});
                         }
                     }, 100);
@@ -38,13 +38,13 @@ GameObserver = {
                             const userId = _.difference(current.players, previous.players)[0];
                             const joinedPlayer = Meteor.users.findOne(userId);
                             if (joinedPlayer && (joinedPlayer._id != Meteor.userId())) {
-                                Flasher.set('warning', joinedPlayer.name() + ' has joined the game.');
+                                Flasher.info(joinedPlayer.name() + ' has joined the game.');
                             }
                         } else if (previous.players.length > current.players.length) {
                             const userId = _.difference(previous.players, current.players)[0];
                             const leftPlayer = Meteor.users.findOne(userId);
                             if (leftPlayer && (userId != Meteor.userId())) {
-                                Flasher.set('warning', (leftPlayer ? leftPlayer.name() : 'Player') + ' has left the game.');
+                                Flasher.info((leftPlayer ? leftPlayer.name() : 'Player') + ' has left the game.');
                             }
                         }
 
@@ -75,12 +75,10 @@ GameObserver = {
                     // Or if the owner was changed to current player, notify them
                     } else if (fields.ownerId && (fields.ownerId == Meteor.userId())) {
                         const game = Games.findOne(id);
-                        Flasher.set(
-                            'warning',
-                            'You are now the new owner of a game: <a href="' +
-                            FlowRouter.path('game', {id: id}) +
-                            '">' + game.title() + '</a>.',
-                            10000
+                        Flasher.info(
+                            'You are now the new owner of a game: ' +
+                            '<a href="' + FlowRouter.path('game', {id: id}) + '">' + game.title() + '</a>.',
+                            10
                         );
                     }
 
@@ -103,12 +101,10 @@ GameObserver = {
                         ) {
                             const game = Games.findOne(fields.gameId);
                             if (game) {
-                                Flasher.set(
-                                    'warning',
-                                    'It\'s your turn in game: <a href="' +
-                                    FlowRouter.path('game', {id: fields.gameId}) + '">' +
-                                    game.title() + '</a>!',
-                                    10000
+                                Flasher.info(
+                                    'It\'s your turn in game: ' +
+                                    '<a href="' + FlowRouter.path('game', {id: fields.gameId}) + '">' + game.title() + '</a>!',
+                                    10
                                 );
                             }
                         }
