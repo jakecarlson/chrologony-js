@@ -10,7 +10,7 @@ Template.clue_more.onCreated(function clue_moreOnCreated() {
 Template.clue_more.helpers({
 
     name() {
-        return (this.clue) ? Formatter.date(this.clue.date) : null;
+        return (this.clue) ? this.clue.formattedDate(this.game.displayPrecision) : null;
     },
 
     attr(attr) {
