@@ -22,7 +22,7 @@ export const Schemas = {
         },
     }),
 
-    ownable(loose = false) {
+    ownable(loose = false, optional = false) {
 
         let definition = {
             type: String,
@@ -39,6 +39,10 @@ export const Schemas = {
             definition.max = 17;
         } else {
             definition.regEx = SimpleSchema.RegEx.Id;
+        }
+
+        if (optional) {
+            definition.optional = true;
         }
 
         return new SimpleSchema({

@@ -105,7 +105,7 @@ Games.schema = new SimpleSchema({
     players: {type: Array, defaultValue: [], optional: true},
     'players.$': {type: String, max: 17},
 });
-Games.schema.extend(Schemas.ownable(true));
+Games.schema.extend(Schemas.ownable(true, true));
 Games.schema.extend(Schemas.timestampable);
 Games.schema.extend(Schemas.endable);
 Games.schema.extend(Schemas.softDeletable);
