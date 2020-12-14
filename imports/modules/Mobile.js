@@ -56,11 +56,18 @@ Mobile = {
     },
 
     setOrientationClass() {
+
+        // Set orientation class
         if (Mobile.orientation) {
             Mobile.bodyEl.removeClass(Mobile.getOrientationClass());
         }
         Mobile.orientation = screen.orientation.type;
         Mobile.bodyEl.addClass(Mobile.getOrientationClass());
+
+        // Set edge-to-edge class
+        const xMargins = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--safe-area-inset-x"));
+        Mobile.bodyEl.toggleClass('edge-to-edge', (xMargins == 0));
+
     },
 
     getOrientationClass() {

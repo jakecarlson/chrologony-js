@@ -25,6 +25,7 @@ Template.layout_authenticated.onCreated(function layout_authenticatedOnCreated()
 
     this.currentClue = new ReactiveVar(null);
     this.categories = new ReactiveVar([]);
+    this.routeName = new ReactiveVar(null);
 
     this.autorun(() => {
 
@@ -43,6 +44,8 @@ Template.layout_authenticated.onCreated(function layout_authenticatedOnCreated()
                 });
 
             });
+
+            this.routeName.set(FlowRouter.current().route.name);
 
             LoadingState.stop();
 
@@ -88,7 +91,8 @@ Template.layout_authenticated.helpers({
     },
 
     layoutClass() {
-        return 'route-' + FlowRouter.current().route.name;
+        const routeClass = 'route-' + Template.instance().routeName.get();
+        return routeClass;
     },
 
 })

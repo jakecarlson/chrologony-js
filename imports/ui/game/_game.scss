@@ -15,19 +15,20 @@
     padding-right: 15px;
   }
 
-  #gameTitle,
-  #playerCardsTitle
+  .edge-to-edge #gameTitle,
+  .edge-to-edge #playerCardsTitle
   {
     padding-left: 15px;
   }
 
-  #gameMenu {
+  .edge-to-edge #gameMenu {
     padding-right: 15px;
   }
 
 }
 
 @media (max-width: 575px) {
+
   #game .row {
     display: block;
     margin-left: 0;
@@ -39,6 +40,17 @@
     padding-left: 0;
     padding-right: 0;
   }
+
+  .edge-to-edge #gameTitle,
+  .edge-to-edge #playerCardsTitle
+  {
+    padding-left: 0;
+  }
+
+  .edge-to-edge #gameMenu {
+    padding-right: 0;
+  }
+
 }
 
 #gameTitle {

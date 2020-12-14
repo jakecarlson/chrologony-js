@@ -1,5 +1,6 @@
 :root {
   --safe-area-inset-top: 0px;
+  --safe-area-inset-x: env(safe-area-inset-left);
 }
 
 #status {

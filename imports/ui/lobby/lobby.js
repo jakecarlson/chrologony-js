@@ -31,6 +31,12 @@ Template.lobby.onCreated(function lobbyOnCreated() {
             TourGuide.start();
         }
 
+        Tracker.afterFlush(() => {
+            $(function() {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        });
+
         LoadingState.stop();
 
     });
