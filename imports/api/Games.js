@@ -72,7 +72,8 @@ Games.PUBLIC_MATCH = {
         ]},
         {$or: [
             {playerLimit: 0},
-            {$where:'this.players.length < this.playerLimit'},
+            // {$where:'this.players.length < this.playerLimit'},
+            {$expr:{$lt:["$players.length", "$playerLimit"]}},
         ]},
     ],
 };
