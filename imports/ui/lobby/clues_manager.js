@@ -208,7 +208,9 @@ Template.clues_manager.events({
             i.ownedInput.checked = false;
         }
         resetFilters(i);
-        TourGuide.resume();
+        setTimeout(function() {
+            TourGuide.resume();
+        }, 250);
     },
 
     'click .remove': ModelEvents.remove,

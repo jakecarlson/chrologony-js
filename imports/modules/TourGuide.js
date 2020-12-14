@@ -36,6 +36,7 @@ TourGuide = {
 
         // Instantiate the tour
         this.tour = new Tour({
+
             name: 'intro',
             framework: 'bootstrap4',
             showProgressBar: true,
@@ -46,6 +47,7 @@ TourGuide = {
                 TourGuide.paused = false;
             },
             // debug: true,
+
             localization: {
                 buttonTexts: {
                     prevButton: 'Back',
@@ -53,6 +55,7 @@ TourGuide = {
                     endTourButton: 'End Tour',
                 }
             },
+
             steps: [
                 {
                     element: "#layout",
@@ -62,31 +65,32 @@ TourGuide = {
                     content: "Welcome to " + Meteor.settings.public.app.name + ", the game where players sequence events into a timeline. This is the Lobby, the first screen you will see after logging in. From here you can create a new game or join an existing game.",
                 },
                 {
-                    element: "#join",
+                    element: "#join .create",
                     onShown: this.wait,
                     placement: "top",
-                    title: "Create or Join a Game",
-                    content: "Let's jump right in and create a game! Enter a game name and password, then click / tap 'Create Game'.",
+                    title: "Create a New Game",
+                    content: "Let's jump right in and create a game! Click on the green 'Create a New Game' button in the upper right.",
+                },
+                {
+                    element: "#gameCreatorModal",
+                    onShown: this.wait,
+                    placement: "top",
+                    title: "Create a New Game, cont.",
+                    content: "Select a category, then click / tap 'Create Game'. There are many other options to explore, but let's keep it simple for now.",
                 },
                 {
                     element: "#layout",
                     preventInteraction: true,
                     placement: "right",
                     title: "The Game",
-                    content: "This is a game, where the games actually happen. The game name is on the upper left; the game menu is on the upper right. The first box is the Board, and there are one or more panels that provide more information about what's happening in the game.",
+                    content: "This is the game screen, where the action happens. The game name is on the upper left; the game menu is on the upper right. The first box is the Board, and the next is the players panel.",
                 },
                 {
                     element: "#players",
+                    preventInteraction: true,
                     placement: "right",
                     title: "Players in this Game",
                     content: "This is the list of players currently in this game. Each player's score is shown to the right of their name. If you are the game owner, you will also see an 'x' next to all players (besides yourself), which will allow you to eject that player from the game.",
-                },
-                {
-                    element: "#game",
-                    onShown: this.wait,
-                    placement: "right",
-                    title: "Start a New Game",
-                    content: "Only the owner of a game can start a new game. You can start a new game whenever you wish, but note that the current game will be discarded when you do so. Select a category to use, then click / tap on the 'Start' button.",
                 },
                 {
                     element: "#board",
@@ -94,6 +98,13 @@ TourGuide = {
                     placement: "left",
                     title: "The Board",
                     content: "The Board shows what's going on for the current player's turn. Everyone can see it, but only the player whose turn it is can take any actions. The only exception is that the game owner can end another player's turn on his/her behalf to keep the game moving. The title bar and border of the Board will become blue when it's your turn.",
+                },
+                {
+                    element: "#game .start",
+                    onShown: this.wait,
+                    placement: "left",
+                    title: "Start the Game",
+                    content: "As the owner of the game, only you are allowed to start it. Click the green 'Start' button to start the game.",
                 },
                 {
                     element: "#board",
@@ -117,7 +128,7 @@ TourGuide = {
                     content: "Now let's end your turn by clicking / tapping on the 'End Turn' button. If you are the only player in the game, it will be your turn again; otherwise it will be the next player's turn. Any cards you guessed right will turn green to indicate that they are locked in. Note that if a new player enters the game when a game is in progress, that player will get as many turns as it takes for him/her to catch up to the rest of the players in the game.",
                 },
                 {
-                    element: "#invitePlayers",
+                    element: "#invitePlayersButton",
                     preventInteraction: true,
                     placement: "right",
                     title: "Invite Players",
@@ -174,9 +185,10 @@ TourGuide = {
                     preventInteraction: true,
                     placement: "bottom",
                     title: "The End",
-                    content: "That's it! You now know how to create a game and play the game. You also learned how to create your own categories and clues. There's plenty more to explore, but you have the basics down. Go have fun! Click / tap on the 'End Tour' button.",
+                    content: "That's it! You now know how to create and play games. You also learned how to create your own categories and clues. There's plenty more to explore, but you have the basics down. Go have fun! Click / tap on the 'End Tour' button.",
                 }
             ],
+
         });
 
         // Start the tour

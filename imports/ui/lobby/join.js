@@ -151,6 +151,12 @@ Template.join.events({
         Helpers.joinGame(i.currentGame.get()._id, form.password.value);
     },
 
+    'click #join .create'(e, i) {
+        setTimeout(function() {
+            TourGuide.resume();
+        }, 250);
+    },
+
 });
 
 function getGame(e) {

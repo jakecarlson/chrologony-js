@@ -184,6 +184,7 @@ Template.game.events({
             } else {
                 throw new Meteor.Error('difficulty-not-set', 'Could not update the clue difficulty.', JSON.stringify(err));
             }
+            TourGuide.resume();
             LoadingState.stop();
         });
     },
