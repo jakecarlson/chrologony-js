@@ -185,23 +185,6 @@ Helpers = {
 
         LoadingState.start();
 
-        // Don't allow a player to join if that puts it over the player limit
-        const game = Games.findOne(id);
-        if (
-            game.playerLimit &&
-            !game.hasPlayer(userId) &&
-            (game.numPlayers() >= game.playerLimit)
-        ) {
-            Flasher.error('The game is full. Please choose another game.');
-            return false;
-        }
-
-        // Don't allow the player to join if joins aren't allowed after game start, and the game has already started
-        if (game.noJoinAfterStart && game.startedAt) {
-            Flasher.error('The game does not allow players to join after it starts. Please choose another game.', 10);
-            return false;
-        }
-
         Meteor.call('game.join', id, password, userId, function(err, id) {
 
             if (!err) {
