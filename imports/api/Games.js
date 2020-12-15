@@ -61,23 +61,6 @@ Games.PUBLISH_FIELDS = {
     token: 1,
 };
 
-Games.PUBLIC_MATCH = {
-    private: false,
-    'players.0': {$exists: true},
-    endedAt: null,
-    $and: [
-        {$or: [
-            {noJoinAfterStart: false},
-            {startedAt: null},
-        ]},
-        {$or: [
-            {playerLimit: 0},
-            // {$where:'this.players.length < this.playerLimit'},
-            {$expr:{$lt:["$players.length", "$playerLimit"]}},
-        ]},
-    ],
-};
-
 Games.schema = new SimpleSchema({
     name: {type: String, max: 40, defaultValue: null, optional: true},
     password: {type: String, max: 72, defaultValue: null, optional: true},
@@ -365,15 +348,28 @@ if (Meteor.isServer) {
 
                     let selector = {
                         deletedAt: null,
+                        $or: [
+                            {players: this.userId, endedAt: null},
+                            {
+                                private: false,
+                                'players.0': {$exists: true},
+                                endedAt: null,
+                                $and: [
+                                    {$or: [
+                                        {noJoinAfterStart: false},
+                                        {startedAt: null},
+                                    ]},
+                                    /*{$or: [
+                                        {playerLimit: 0},
+                                        // {$where:'this.players.length < this.playerLimit'},
+                                        {$expr:{$lt:["$players.length", "$playerLimit"]}},
+                                    ]},*/
+                                ],
+                            },
+                        ],
                     };
                     if (additionalGameIds) {
-                        selector.$or = [
-                            {players: this.userId, endedAt: null},
-                            {_id: {$in: additionalGameIds}},
-                            Games.PUBLIC_MATCH,
-                        ];
-                    } else {
-                        selector = Object.assign(selector, Games.PUBLIC_MATCH);
+                        selector.$or.push({_id: {$in: additionalGameIds}});
                     }
 
                     return Games.find(
@@ -386,7 +382,7 @@ if (Meteor.isServer) {
                             },
                             limit: 100,
                             transform: function(doc) {
-                                if (additionalGameIds.includes(doc._id)) {
+                                if (additionalGameIds && additionalGameIds.includes(doc._id)) {
                                     doc.token = Hasher.md5.hash(doc._id);
                                 }
                                 doc.password = (doc.password ? true : false);

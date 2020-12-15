@@ -174,11 +174,14 @@ Helpers = {
     },
 
     currentAndPreviousGameIds() {
-        let gameIds = [this.currentGameId()];
+        let gameIds = [];
+        if (this.currentGameId()) {
+            gameIds.push(this.currentGameId());
+        }
         if (Session.get('lastOwnedGameId')) {
             gameIds.push(Session.get('lastOwnedGameId'));
         }
-        return gameIds;
+        return ((gameIds.length > 0) ? gameIds : null);
     },
 
     joinGame(id, password = null, userId = null) {
