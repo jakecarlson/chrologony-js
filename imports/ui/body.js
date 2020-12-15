@@ -1,12 +1,10 @@
 import { Template } from "meteor/templating";
 import { LoadingState } from "../modules/LoadingState";
 
+import './body.html';
 import './layout_authenticated.js';
 import './layout_unauthenticated.js';
 import './embed.js';
-import './flasher.js';
-
-import './body.html';
 
 Template.body.onCreated(function bodyOnCreated() {
 

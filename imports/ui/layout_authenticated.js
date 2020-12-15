@@ -2,10 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from "meteor/templating";
-import { LoadingState } from "../modules/LoadingState";
 import { Session } from "meteor/session";
-
+import { LoadingState } from "../modules/LoadingState";
 import '../modules/TourGuide';
+
 import './layout_authenticated.html';
 import './content/privacy.js';
 import './content/terms.js';

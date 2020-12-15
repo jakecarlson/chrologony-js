@@ -34,6 +34,9 @@ Template.lobby.onCreated(function lobbyOnCreated() {
         Tracker.afterFlush(() => {
             $(function() {
                 $('[data-toggle="tooltip"]').tooltip();
+                if (Mobile.is()) {
+                    $('.game i[data-toggle="tooltip"]').tooltip('disable');
+                }
             });
         });
 

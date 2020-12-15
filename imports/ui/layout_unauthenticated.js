@@ -13,7 +13,7 @@ import './auth/o-atOauth.html';
 import './auth/o-atPwdForm.html';
 import './auth/o-atPwdFormBtn.html';
 import './auth/o-atPwdLink.html';
-import './auth/o-atReCaptcha.html';
+import './auth/o-atReCaptcha.js';
 import './auth/o-atResendVerificationEmailLink.html';
 import './auth/o-atResult.html';
 import './auth/o-atSep.html';

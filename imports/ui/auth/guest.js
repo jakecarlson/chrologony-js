@@ -5,10 +5,6 @@ import { LoadingState } from '../../modules/LoadingState';
 
 import './guest.html';
 
-Template.guest.onCreated(function guestOnCreated() {
-
-});
-
 Template.guest.helpers({
 
     signupLink() {
