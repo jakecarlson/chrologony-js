@@ -248,7 +248,7 @@ Helpers = {
         if (Meteor.userId()) {
             Meteor.call('user.activity', function(err, updated) {
                 if (err) {
-                    Logger.log('Failed to Update Activity: ' + JSON.stringify(err.reason));
+                    Logger.log('Failed to Update Activity: ' + err.reason);
                 }
             });
         }
