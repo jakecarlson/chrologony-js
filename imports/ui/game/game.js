@@ -68,7 +68,7 @@ Template.game.onCreated(function gameOnCreated() {
 
                     Meteor.call('user.setGame', this.game.get()._id, null, function(err, updated) {
                         if (err) {
-                            Meteor.Error('user-game-not-set', 'Could not set user current game.');
+                            Meteor.Error('user-game-not-set', 'Could not set user current game.', err);
                         }
                     });
 
@@ -182,7 +182,7 @@ Template.game.events({
             if (!err) {
                 Logger.log("Started Game: " + gameId);
             } else {
-                throw new Meteor.Error('difficulty-not-set', 'Could not update the clue difficulty.');
+                throw new Meteor.Error('game-not-started', 'Could not start the game', err);
             }
             TourGuide.resume();
             LoadingState.stop();
@@ -200,7 +200,7 @@ Template.game.events({
             if (!err) {
                 Logger.log("Ended Game: " + gameId);
             } else {
-                throw new Meteor.Error('game-not-ended', 'Could not end the game.');
+                throw new Meteor.Error('game-not-ended', 'Could not end the game.', err);
             }
             LoadingState.stop();
         });
@@ -215,7 +215,7 @@ Template.game.events({
                 Flasher.success('You have successfully abandoned the game. All players were ejected.');
                 FlowRouter.go('lobby');
             } else {
-                throw new Meteor.Error('game-not-deleted', 'Could not delete the game.');
+                throw new Meteor.Error('game-not-deleted', 'Could not delete the game.', err);
             }
             LoadingState.stop();
         });
@@ -239,7 +239,7 @@ Template.game.events({
                 $('.invite-modal').modal('hide');
                 LoadingState.stop();
             } else {
-                throw new Meteor.Error('player-not-invited', 'Could not invite a player.');
+                throw new Meteor.Error('player-not-invited', 'Could not invite a player.', err);
             }
         });
 
@@ -269,7 +269,7 @@ function leaveGame(id) {
         if (!err) {
             Logger.log("Player Left Game: " + id);
         } else {
-            throw new Meteor.Error('game-not-left', 'Could not leave the game.');
+            throw new Meteor.Error('game-not-left', 'Could not leave the game.', err);
         }
         Flasher.clear();
         delete Session.keys['gamePassword'];

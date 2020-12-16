@@ -238,7 +238,7 @@ if (Meteor.isServer) {
                 this.setUserId(userId);
                 return userId;
             } catch (err) {
-                throw new Meteor.Error(err.error, err.message);
+                throw new Meteor.Error(err.error, err.message, err);
             }
 
         },

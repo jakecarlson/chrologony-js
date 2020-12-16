@@ -98,7 +98,7 @@ Template.player.events({
             if (!err) {
                 Logger.log("Player Ejected from Game: " + id);
             } else {
-                throw new Meteor.Error('game-not-left', 'Could not leave the game.');
+                throw new Meteor.Error('game-not-left', 'Could not leave the game.', err);
             }
             LoadingState.stop();
         });

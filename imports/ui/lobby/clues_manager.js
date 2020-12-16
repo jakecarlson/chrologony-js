@@ -238,7 +238,7 @@ Template.clues_manager.events({
                 Logger.log('Updated Clue: ' + updated);
                 form.modal('hide');
             } else {
-                throw new Meteor.Error('clue-not-updated', 'Could not update the clue.');
+                throw new Meteor.Error('clue-not-updated', 'Could not update the clue.', err);
             }
             LoadingState.stop();
         });
@@ -274,7 +274,7 @@ Template.clues_manager.events({
                 if (!err) {
                     Logger.log('Added Category to ' + updated + ' Clues: ' + categoryId);
                 } else {
-                    throw new Meteor.Error('clue-category-not-added', 'Could not add a category to a clue.');
+                    throw new Meteor.Error('clue-category-not-added', 'Could not add a category to a clue.', err);
                 }
                 LoadingState.stop();
             });

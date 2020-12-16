@@ -679,7 +679,7 @@ if (Meteor.isServer) {
 
                 // Don't allow the player to join if joins aren't allowed after game start, and the game has already started
                 if (game.noJoinAfterStart && game.startedAt) {
-                    throw new Meteor.Error('game-started', 'The game does not allow players to join after it starts. Please choose another game.');
+                    throw new Meteor.Error('game-not-started', 'The game does not allow players to join after it starts. Please choose another game.');
                 }
 
             } else {

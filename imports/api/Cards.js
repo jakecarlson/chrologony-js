@@ -23,7 +23,7 @@ Cards.DIFFICULTIES = {
 Cards.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
     turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
+    clueId: {type: String, max: 24},
     ownerId: {type: String, max: 17},
     correct: {type: Boolean, defaultValue: null, optional: true},
     guessedAt: {type: Date, defaultValue: null, optional: true},
@@ -275,7 +275,7 @@ if (Meteor.isServer) {
                 }
             );
             if (!updated) {
-                throw new Meteor.Error('card-not-updated', 'Could not submit a card guess.', err);
+                throw new Meteor.Error('card-not-updated', 'Could not submit a card guess.');
             }
 
             const difficulty = Meteor.call('clue.calculateDifficulty', card.clueId);

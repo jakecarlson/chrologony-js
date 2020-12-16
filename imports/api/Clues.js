@@ -256,7 +256,7 @@ Meteor.methods({
         check(
             attrs,
             {
-                _id: RecordId,
+                _id: String,
                 description: NonEmptyString,
                 date: NonEmptyString,
                 categoryId: RecordId,
@@ -294,7 +294,7 @@ Meteor.methods({
     // Set Categories
     'clue.setCategories'(id, categories) {
 
-        check(id, RecordId);
+        check(id, String);
         check(categories, [RecordId]);
         Permissions.authenticated();
         Permissions.notGuest();
@@ -324,7 +324,7 @@ Meteor.methods({
     // Add Category
     'clue.addCategory'(ids, categoryId) {
 
-        check(ids, [RecordId]);
+        check(ids, [String]);
         check(categoryId, RecordId);
         Permissions.authenticated();
         Permissions.notGuest();
@@ -355,7 +355,7 @@ Meteor.methods({
     // Remove Category
     'clue.removeCategory'(ids, categoryId) {
 
-        check(ids, [RecordId]);
+        check(ids, [String]);
         check(categoryId, RecordId);
         Permissions.authenticated();
         Permissions.notGuest();
@@ -389,7 +389,7 @@ Meteor.methods({
         check(
             attrs,
             {
-                _id: RecordId,
+                _id: String,
                 categoryId: RecordId,
                 externalUrl: Match.OneOf(null, String),
                 externalId: Match.OneOf(null, String),
@@ -436,7 +436,7 @@ Meteor.methods({
     // Delete
     'clue.remove'(id) {
 
-        check(id, RecordId);
+        check(id, String);
         Permissions.authenticated();
         Permissions.notGuest();
         Permissions.owned(Clues.findOne(id));
@@ -474,7 +474,7 @@ if (Meteor.isServer) {
         // Calculate the score
         'clue.calculateScore'(clueId) {
 
-            check(clueId, RecordId);
+            check(clueId, String);
 
             // Get the sum of all votes
             const votes = Promise.await(
@@ -503,7 +503,7 @@ if (Meteor.isServer) {
         // Calculate the difficulty
         'clue.calculateDifficulty'(clueId) {
 
-            check(clueId, RecordId);
+            check(clueId, String);
 
             // Get the total cards that have used this clue
             const totalCards = Cards.find({clueId: clueId}).count();
@@ -629,7 +629,7 @@ function updateClueCounts(categoryIds) {
         if (!err) {
             Logger.log("Updated Category Clue Counts: " + updated);
         } else {
-            throw new Meteor.Error('category-clues-not-set', 'Could not update the category clue counts.');
+            throw new Meteor.Error('category-clues-not-set', 'Could not update the category clue counts.', err);
         }
     });
 }

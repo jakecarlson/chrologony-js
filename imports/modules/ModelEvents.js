@@ -63,7 +63,7 @@ export const ModelEvents = {
             if (!err) {
                 Logger.log('Deleted ' + Formatter.capitalize(modelName) + ': ' + deleted);
             } else {
-                throw new Meteor.Error(modelName + '-not-removed', 'Could not remove the ' + modelName + '.');
+                throw new Meteor.Error(modelName + '-not-removed', 'Could not remove the ' + modelName + '.', err);
             }
             LoadingState.stop();
         });
