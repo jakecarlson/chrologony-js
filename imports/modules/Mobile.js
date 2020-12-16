@@ -34,7 +34,7 @@ Mobile = {
                 check: 'everyStart', // Check for new code every time the app starts
                 checkTimer: 3000,  // Wait 3 seconds to see if new code is available
                 refresh: 'startAndResume', // Refresh to already downloaded code on both start and resume
-                idleCutoff: 1000  // Wait 1 minute before treating a resume as a start
+                idleCutoff: 1000 * 60 // Wait 1 minute before treating a resume as a start
             });
         }
 

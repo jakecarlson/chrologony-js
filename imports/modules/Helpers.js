@@ -170,7 +170,11 @@ Helpers = {
     },
 
     currentGameId() {
-        return (Meteor.userId() ? Meteor.user({fields: {currentGameId: 1}}).currentGameId : null);
+        const user = Meteor.user({fields: {currentGameId: 1}});
+        if (user) {
+            return user.currentGameId;
+        }
+        return null;
     },
 
     currentAndPreviousGameIds() {
