@@ -81,6 +81,7 @@ Mobile = {
     initIOS() {
         Mobile.statusBarEl.style.display = "none";
         setTimeout(Mobile.start, 250);
+        Keyboard.shrinkView(true);
     },
 
     initDefault() {
