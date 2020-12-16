@@ -132,7 +132,7 @@ Template.embed.events({
                     LoadingState.stop();
                 });
             } else {
-                throw new Meteor.Error('game-not-created', 'Could not create the game.', JSON.stringify(err));
+                throw new Meteor.Error('game-not-created', 'Could not create the game.');
             }
         });
 

@@ -629,7 +629,7 @@ function updateClueCounts(categoryIds) {
         if (!err) {
             Logger.log("Updated Category Clue Counts: " + updated);
         } else {
-            throw new Meteor.Error('category-clues-not-set', 'Could not update the category clue counts.', JSON.stringify(err));
+            throw new Meteor.Error('category-clues-not-set', 'Could not update the category clue counts.');
         }
     });
 }

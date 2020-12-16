@@ -100,7 +100,7 @@ Meteor.methods({
                     if (!err) {
                         Logger.log("Updated Clue Score: " + clueId);
                     } else {
-                        throw new Meteor.Error('clue-score-not-calculated', 'Could not calculate a clue score.', JSON.stringify(err));
+                        throw new Meteor.Error('clue-score-not-calculated', 'Could not calculate a clue score.');
                     }
                 });
 

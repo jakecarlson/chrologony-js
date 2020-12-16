@@ -307,7 +307,7 @@ Template.board.events({
                     }
                 }
             } else {
-                throw new Meteor.Error('card-not-submitted', 'Could not submit a guess for the card.', JSON.stringify(err));
+                throw new Meteor.Error('card-not-submitted', 'Could not submit a guess for the card.');
             }
             TourGuide.resume();
         });
@@ -369,7 +369,7 @@ Template.board.events({
                 }
 
             } else {
-                throw new Meteor.Error('game-not-cloned', 'Could not clone the game.', JSON.stringify(err));
+                throw new Meteor.Error('game-not-cloned', 'Could not clone the game.');
             }
 
             LoadingState.stop();
@@ -400,7 +400,7 @@ function saveCardPos() {
         if (!err) {
             Logger.log("Card Positions Updated: " + updated);
         } else {
-            throw new Meteor.Error('card-positions-not-set', 'Could not set card positions.', JSON.stringify(err));
+            throw new Meteor.Error('card-positions-not-set', 'Could not set card positions.');
         }
     });
 
@@ -412,7 +412,7 @@ function drawCard(turnId) {
         if (!err) {
             Logger.log("Created Card: " + id);
         } else {
-            throw new Meteor.Error('card-not-drawn', 'Could not draw a card.', JSON.stringify(err));
+            throw new Meteor.Error('card-not-drawn', 'Could not draw a card.');
         }
         saveCardPos();
         LoadingState.stop();
@@ -427,7 +427,7 @@ function endTurn(game) {
         if (!err) {
             Logger.log("Start Turn: " + id);
         } else {
-            throw new Meteor.Error('turn-not-set', 'Could not set a turn.', JSON.stringify(err));
+            throw new Meteor.Error('turn-not-set', 'Could not set a turn.');
         }
         Session.set('waiting', false);
         LoadingState.stop();

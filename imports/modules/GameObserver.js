@@ -158,7 +158,7 @@ GameObserver = {
                             }
 
                         } else {
-                            throw new Meteor.Error('clue-not-received', 'Could not get a card.', JSON.stringify(err));
+                            throw new Meteor.Error('clue-not-received', 'Could not get a card.');
                         }
 
                         Session.set('waiting', false);

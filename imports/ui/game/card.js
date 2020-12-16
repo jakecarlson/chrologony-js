@@ -180,7 +180,7 @@ function submitVote(clueId, value) {
         if (!err) {
             Logger.log('Voted for Clue: ' + clueId);
         } else {
-            throw new Meteor.Error('vote-not-set', 'Could not set a vote.', JSON.stringify(err));
+            throw new Meteor.Error('vote-not-set', 'Could not set a vote.');
         }
         LoadingState.stop();
     });
