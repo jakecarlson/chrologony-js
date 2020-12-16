@@ -187,7 +187,7 @@ if (Meteor.isServer) {
                     // If we need to have equal turns, find out if anyone has won and if everyone has had equal turns
                     if (game.equalTurns) {
                         const leader = game.calculateCurrentLeader();
-                        if (leader.cards >= game.winPoints) {
+                        if (leader && (leader.cards >= game.winPoints)) {
                             let equalTurns = true;
                             game.getPlayerTurnCounts().forEach(function(player) {
                                 if (player.turns < leader.turns) {
