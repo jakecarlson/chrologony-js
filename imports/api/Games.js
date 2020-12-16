@@ -359,11 +359,10 @@ if (Meteor.isServer) {
                                         {noJoinAfterStart: false},
                                         {startedAt: null},
                                     ]},
-                                    /*{$or: [
+                                    {$or: [
                                         {playerLimit: 0},
-                                        // {$where:'this.players.length < this.playerLimit'},
-                                        {$expr:{$lt:["$players.length", "$playerLimit"]}},
-                                    ]},*/
+                                        {$expr:{$lt:[{$size:"$players"}, "$playerLimit"]}},
+                                    ]},
                                 ],
                             },
                         ],
