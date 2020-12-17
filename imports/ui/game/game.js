@@ -40,12 +40,6 @@ Template.game.onCreated(function gameOnCreated() {
                 Helpers.subscribe(this, 'cardClues', this.game.get()._id);
                 Helpers.subscribe(this, 'votes', this.game.get()._id);
 
-                // if (this.game.get().currentTurnId) {
-                //     this.turn.set(Turns.findOne(this.game.get().currentTurnId));
-                // } else {
-                //     this.turn.set(null);
-                // }
-
                 if (this.subscriptionsReady()) {
 
                     const self = this;
@@ -82,6 +76,12 @@ Template.game.onCreated(function gameOnCreated() {
                 FlowRouter.go('lobby');
             }
 
+        } else {
+            Flasher.info(
+                'The game is invalid or was abandoned by the owner. ' +
+                '<a href="' + FlowRouter.path('lobby') + '">Go back to the lobby.</a>',
+                false
+            )
         }
 
     });
@@ -111,7 +111,6 @@ Template.game.helpers({
 
     currentTurn() {
         return Template.instance().game.get().currentTurn();
-        // return getCurrentTurn(Template);
     },
 
     players() {
@@ -142,7 +141,6 @@ Template.game.helpers({
     },
 
     isNotCurrentPlayer(player) {
-        // const turn = getCurrentTurn(Template);
         const turn = Template.instance().game.get().currentTurn();
         return (!turn || (player._id != turn.ownerId));
     },
@@ -276,11 +274,6 @@ function leaveGame(id) {
         FlowRouter.go('lobby');
     });
 }
-
-// function getCurrentTurn(t) {
-//     return t.instance().game.get().currentTurn();
-//     // return t.instance().turn.get();
-// }
 
 function isOwner(t) {
     return (t.instance().game.get() && (t.instance().game.get().ownerId == Meteor.userId()));

@@ -124,6 +124,10 @@ Template.layout_authenticated.events({
         }
     },
 
+    'click .alert a'(e, i) {
+        Flasher.clear();
+    },
+
 });
 
 function launchCategoriesModal(i, categories) {
