@@ -20,7 +20,6 @@ Template.game.onCreated(function gameOnCreated() {
 
     this.initialized = false;
     this.game = new ReactiveVar(null);
-    // this.turn = new ReactiveVar(null);
     this.clueMore = new ReactiveVar(null);
     this.players = new ReactiveVar([]);
 
@@ -76,12 +75,13 @@ Template.game.onCreated(function gameOnCreated() {
                 FlowRouter.go('lobby');
             }
 
+        // If the game isn't available, redirect the user to the lobby
         } else {
             Flasher.info(
-                'The game is invalid or was abandoned by the owner. ' +
-                '<a href="' + FlowRouter.path('lobby') + '">Go back to the lobby.</a>',
-                false
-            )
+                'The game is invalid or was abandoned by the owner.',
+                10
+            );
+            FlowRouter.go('lobby');
         }
 
     });
