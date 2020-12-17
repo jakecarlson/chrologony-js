@@ -28,23 +28,38 @@ Template.guest.events({
             return;
         }
 
-        Meteor.call('user.guest', username, grecaptcha.getResponse(), function(err, id) {
+        Meteor.call('user.guest', username, grecaptcha.getResponse(), function(err, user) {
+
             grecaptcha.reset();
-            if (err) {
-                Logger.log(err);
-                Flasher.error(
-                    'There was an error logging you in as a guest. Please try again.',
-                    10
-                );
+
+            if (!err) {
+
+                Meteor.loginWithToken(user.token, function(err, res) {
+                    if (!err) {
+                        Logger.audit('login', {guest: true});
+                        Logger.track('login', {guest: true});
+                        Helpers.redirectToPrevious('lobby');
+                    } else {
+                        setGuestError(err);
+                    }
+                });
+
             } else {
-                Meteor.connection.setUserId(id);
-                Logger.audit('login', {guest: true});
-                Logger.track('login', {guest: true});
-                Helpers.redirectToPrevious('lobby');
+                setGuestError(err);
             }
+
             LoadingState.stop();
+
         });
 
     },
 
 });
+
+function setGuestError(err) {
+    Logger.log(err);
+    Flasher.error(
+        'There was an error logging you in as a guest. Please try again.',
+        10
+    );
+}

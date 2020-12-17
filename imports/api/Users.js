@@ -230,13 +230,28 @@ if (Meteor.isServer) {
             username += ' [' + Helpers.randomStr(4) + ']';
 
             try {
+
                 const userId = Accounts.createUser({username: username});
                 const updated = Meteor.users.update(userId, {$set: {guest: true}});
                 if (!updated) {
                     throw new Meteor.Error('user-not-updated', 'Could not update user to guest.');
                 }
+
+                const token = Accounts._generateStampedLoginToken();
+                Accounts._insertLoginToken(userId, token);
+                Accounts._setLoginToken(
+                    userId,
+                    this.connection,
+                    Accounts._hashLoginToken(token.token)
+                );
                 this.setUserId(userId);
-                return userId;
+
+                return {
+                    id: userId,
+                    token: token.token,
+                    tokenExpires: Accounts._tokenExpiration(token.when)
+                };
+
             } catch (err) {
                 throw new Meteor.Error(err.error, err.message, err);
             }
