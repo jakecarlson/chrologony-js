@@ -155,6 +155,12 @@
 
             {{> clue_more clue=clueMore game=currentGame}}
 
+        {{else}}
+
+            <div class="mb-4 p-3 text-center card">
+                <p class="mb-0">The game is invalid or was abandoned by the owner. <a href="{{lobbyLink}}">Go back to the lobby.</a></p>
+            </div>
+
         {{/if}}
 
     </section>

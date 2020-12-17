@@ -700,7 +700,8 @@ if (Meteor.isServer) {
             check(token, NonEmptyString);
             Permissions.authenticated();
 
-            if (Hasher.md5.hash(id) == token.trim()) {
+            const game = Games.findOne({_id: id, deletedAt: null});
+            if (game && (Hasher.md5.hash(id) == token.trim())) {
                 Meteor.call('game.addPlayer', id, this.userId);
                 Meteor.call('user.setGame', id, this.userId);
                 return id;

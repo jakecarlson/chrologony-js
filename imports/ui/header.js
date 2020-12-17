@@ -28,10 +28,6 @@ Template.header.helpers({
         return FlowRouter.path('signUp');
     },
 
-    lobbyLink() {
-        return FlowRouter.path('lobby');
-    },
-
     cluesLink() {
         return FlowRouter.path('clues');
     },

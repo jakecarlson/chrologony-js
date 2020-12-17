@@ -86,6 +86,10 @@ Template.registerHelper('supportLink', function() {
     return Meteor.settings.public.app.supportUrl;
 });
 
+Template.registerHelper('lobbyLink', function() {
+    return FlowRouter.path('lobby');
+});
+
 Template.registerHelper('capitalize', function(str) {
     return Formatter.capitalize(str);
 });

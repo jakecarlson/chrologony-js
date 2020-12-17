@@ -7,7 +7,6 @@ import Clipboard from "clipboard";
 
 import '../../api/Users';
 import { Games } from '../../api/Games';
-import { Turns } from '../../api/Turns';
 
 import './game.html';
 import './player_cards.js';
@@ -75,13 +74,8 @@ Template.game.onCreated(function gameOnCreated() {
                 FlowRouter.go('lobby');
             }
 
-        // If the game isn't available, redirect the user to the lobby
         } else {
-            Flasher.info(
-                'The game is invalid or was abandoned by the owner.',
-                10
-            );
-            FlowRouter.go('lobby');
+            LoadingState.stop();
         }
 
     });
