@@ -66,7 +66,7 @@ Template.categories_manager.helpers({
         return Categories.find(
             {ownerId: Meteor.userId()},
             {
-                sort: {theme: 1, name: 1},
+                sort: {name: 1, theme: 1},
                 skip: Helpers.getPageStart(Template.instance().page.get(), Session.get('pageSize')),
                 limit: Session.get('pageSize'),
             }
