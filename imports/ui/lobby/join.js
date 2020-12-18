@@ -18,7 +18,9 @@ Template.join.helpers({
 
     games() {
         return Games.find(
-            {},
+            {
+                endedAt: null,
+            },
             {
                 sort: {
                     createdAt: -1,
