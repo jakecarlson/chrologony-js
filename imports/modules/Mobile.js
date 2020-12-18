@@ -39,7 +39,9 @@ Mobile = {
         }
 
         if (Reloader.updateAvailable.get()) {
-            Logger.log('New Update Downloaded');
+            Logger.log('New updates available!');
+        } else {
+            Logger.log('No new updates available.');
         }
 
     },
