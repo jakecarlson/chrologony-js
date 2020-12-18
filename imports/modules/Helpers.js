@@ -6,6 +6,7 @@ import { LoadingState } from "./LoadingState";
 
 import { Games } from "../api/Games";
 import { Cards } from "../api/Cards";
+import {Random} from "meteor/random";
 
 Helpers = {
 
@@ -115,7 +116,7 @@ Helpers = {
     },
 
     randomStr(numChars) {
-        return Math.random().toString(36).substr(2, numChars).toUpperCase();
+        return Random.id(numChars);
     },
 
     redirectToPrevious(defaultRoute = 'lobby') {

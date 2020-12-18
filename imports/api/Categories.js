@@ -271,9 +271,9 @@ Meteor.methods({
         ids.forEach(function(id) {
             const cluesCount = Clues.find({categories: id, active: true}).count();
             const updated = Categories.update(id, {$set: {cluesCount: cluesCount}});
-            // if (!updated) {
-            //     throw new Meteor.Error('category-not-updated', 'Could not update clue count for a category.');
-            // }
+            if (!updated) {
+                throw new Meteor.Error('category-not-updated', 'Could not update clue count for a category.');
+            }
         });
 
         return ids.length;
