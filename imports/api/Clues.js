@@ -294,7 +294,7 @@ Meteor.methods({
     // Set Categories
     'clue.setCategories'(id, categories) {
 
-        check(id, String);
+        check(id, RecordId);
         check(categories, [RecordId]);
         Permissions.authenticated();
         Permissions.notGuest();
@@ -436,7 +436,7 @@ Meteor.methods({
     // Delete
     'clue.remove'(id) {
 
-        check(id, String);
+        check(id, RecordId);
         Permissions.authenticated();
         Permissions.notGuest();
         Permissions.owned(Clues.findOne(id));
@@ -474,7 +474,7 @@ if (Meteor.isServer) {
         // Calculate the score
         'clue.calculateScore'(clueId) {
 
-            check(clueId, String);
+            check(clueId, RecordId);
 
             // Get the sum of all votes
             const votes = Promise.await(
@@ -503,7 +503,7 @@ if (Meteor.isServer) {
         // Calculate the difficulty
         'clue.calculateDifficulty'(clueId) {
 
-            check(clueId, String);
+            check(clueId, RecordId);
 
             // Get the total cards that have used this clue
             const totalCards = Cards.find({clueId: clueId}).count();

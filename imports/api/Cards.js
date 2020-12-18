@@ -23,7 +23,7 @@ Cards.DIFFICULTIES = {
 Cards.schema = new SimpleSchema({
     gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
     turnId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    clueId: {type: String, max: 24},
+    clueId: {type: String, regEx: SimpleSchema.RegEx.Id},
     ownerId: {type: String, max: 17},
     correct: {type: Boolean, defaultValue: null, optional: true},
     guessedAt: {type: Date, defaultValue: null, optional: true},
