@@ -327,7 +327,7 @@
 
 
 /* VERTICAL MODE */
-@media screen and (max-width: 575px) /*and (orientation: portrait)*/ {
+@media screen and (max-width: 575px) and (orientation: portrait) {
 
   .player-cards-wrapper {
     height: auto;
