@@ -285,24 +285,23 @@ Games.helpers({
         });
 
         // Get all players in the game that haven't had turns yet
-        const users = Meteor.users.find(
-            {
-                currentGameId: this._id,
-                _id: {$nin: alreadyPlayed},
-            },
-            {
-                sort: {
-                    joinedGameAt: -1,
-                }
-            }
-        ).fetch();
-        users.forEach(function(user) {
-            players.push({
-                _id: user._id,
-                turns: 0,
-                lastTurn: null,
+        const notPlayed = _.difference(this.players, alreadyPlayed);
+        if (notPlayed.length > 0) {
+            const users = Meteor.users.find(
+                {_id: {$in: notPlayed}},
+                {sort: {joinedGameAt: -1}}
+            ).fetch();
+            const sortedUsers = _.sortBy(users, function(doc) {
+                return notPlayed.indexOf(doc._id);
             });
-        });
+            sortedUsers.forEach(function(user) {
+                players.push({
+                    _id: user._id,
+                    turns: 0,
+                    lastTurn: null,
+                });
+            });
+        }
 
         return players;
 

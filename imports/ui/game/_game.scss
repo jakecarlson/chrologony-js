@@ -234,6 +234,8 @@
 .game-card .card-header .menu {
   max-height: 1.25rem;
   margin-bottom: 0;
+  float: right;
+  margin-left: 1rem;
 }
 .game-card .card-title {
   font-size: large;
@@ -258,10 +260,10 @@
   padding-right: 1.25rem;
   line-height: 3rem;
 }
-.game-card-action.move-left {
+.game-card-action.move-back {
   left: 0;
 }
-.game-card-action.move-right {
+.game-card-action.move-forward {
   right: 0;
 }
 
@@ -321,4 +323,64 @@
 }
 #board.border-active .card-timer {
   display: block;
+}
+
+
+/* VERTICAL MODE */
+@media screen and (max-width: 575px) /*and (orientation: portrait)*/ {
+
+  .player-cards-wrapper {
+    height: auto;
+    overflow-x: hidden;
+  }
+  .player-cards {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .clue-col {
+    float: none;
+    width: auto !important;
+    top: auto;
+    height: 2.75rem;
+    overflow: hidden;
+  }
+  .clue-col.current-col,
+  .inactive .clue-col:hover
+  {
+    height: auto;
+  }
+
+  .game-card {
+    overflow: hidden;
+    transition: left .25s ease-in-out;
+    top: auto;
+    left: -10rem;
+    min-height: auto;
+  }
+  .game-card .card-title {
+    text-align: right;
+  }
+  .game-card .card-header .menu {
+    float: left;
+    margin-right: 1rem;
+    margin-left: 0;
+  }
+
+  .clue-col:hover .game-card,
+  .game-card.current
+  {
+    top: auto;
+    left: 0;
+  }
+
+  .move-back i:before {
+    content: "\f0aa";
+  }
+  .move-forward i:before {
+    content: "\f0ab";
+  }
+
 }

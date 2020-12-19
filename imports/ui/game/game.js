@@ -38,7 +38,7 @@ Template.game.onCreated(function gameOnCreated() {
                 Helpers.subscribe(this, 'cardClues', this.game.get()._id);
                 Helpers.subscribe(this, 'votes', this.game.get()._id);
 
-                if (this.subscriptionsReady()) {
+                // if (this.subscriptionsReady()) {
 
                     const self = this;
                     Tracker.afterFlush(() => {
@@ -67,7 +67,7 @@ Template.game.onCreated(function gameOnCreated() {
                     this.initialized = true;
                     LoadingState.stop();
 
-                }
+                // }
 
             // Redirect the user back to the lobby if their current game doesn't match this one
             } else {

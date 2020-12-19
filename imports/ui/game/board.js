@@ -327,7 +327,7 @@ Template.board.events({
         Helpers.updateLastActivity();
     },
 
-    'click .move-left'(e, i) {
+    'click .move-back'(e, i) {
         e.preventDefault();
         const currentCol = $(e.target).closest('.clue-col');
         const destinationCol = currentCol.prev();
@@ -337,7 +337,7 @@ Template.board.events({
         }
     },
 
-    'click .move-right'(e, i) {
+    'click .move-forward'(e, i) {
         e.preventDefault();
         const currentCol = $(e.target).closest('.clue-col');
         const destinationCol = currentCol.next();

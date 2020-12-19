@@ -8,14 +8,14 @@
 
                 {{#if canMoveCard}}
 
-                    <a href="#" class="game-card-action move move-left"><i class="fa fa-arrow-circle-left" title="Move Left"></i></a>
-                    <a href="#" class="game-card-action move move-right"><i class="fa fa-arrow-circle-right" title="Move Right"></i></a>
+                    <a href="#" class="game-card-action move move-back"><i class="fa fa-arrow-circle-left" title="Move Back"></i></a>
+                    <a href="#" class="game-card-action move move-forward"><i class="fa fa-arrow-circle-right" title="Move Forward"></i></a>
 
                 {{else}}
 
                     {{#unless isCurrent}}
 
-                        <div class="dropdown menu ml-2 float-right">
+                        <div class="dropdown menu">
 
                             <span class="game-card-action difficulty" title="Difficulty: {{difficultyName}}">
                                 {{#each difficultyDots}}
