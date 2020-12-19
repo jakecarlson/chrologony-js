@@ -13,7 +13,7 @@ Template.header.onCreated(function headerOnCreated() {
 Template.header.helpers({
 
     dataReady() {
-        return Meteor.user();
+        return true;
     },
 
     passwordLink() {
