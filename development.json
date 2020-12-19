@@ -64,6 +64,13 @@
       "apiKey": "AIzaSyA9LjQcUjrvpLjAg4lmaEX_gtbq3Si_IKY",
       "zoom": 4,
       "type": "satellite"
+    },
+    "packages": {
+      "quave:reloader": {
+        "check": false,
+        "refresh": "instantly",
+        "launchScreenDelay": 200
+      }
     }
   },
   "robots": {

@@ -23,27 +23,7 @@ Mobile = {
     },
 
     handleUpdate() {
-
-        if (Meteor.isDevelopment) {
-            Reloader.configure({
-                check: false, // don't check on startup
-                refresh: 'instantly' // refresh as soon as updates are available
-            });
-        } else {
-            Reloader.configure({
-                check: 'everyStart', // Check for new code every time the app starts
-                checkTimer: 3000,  // Wait 3 seconds to see if new code is available
-                refresh: 'startAndResume', // Refresh to already downloaded code on both start and resume
-                idleCutoff: 1000 * 60 // Wait 1 minute before treating a resume as a start
-            });
-        }
-
-        if (Reloader.updateAvailable.get()) {
-            Logger.log('New updates available!');
-        } else {
-            Logger.log('No new updates available.');
-        }
-
+        // No-op for now; replaced by env config
     },
 
     registerViewportChangeHandlers() {
