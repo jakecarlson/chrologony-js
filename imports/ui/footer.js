@@ -18,6 +18,14 @@ Template.footer.helpers({
         }
     },
 
+    iosLink() {
+        return Meteor.settings.public.app.iosUrl;
+    },
+
+    androidLink() {
+        return Meteor.settings.public.app.androidUrl;
+    },
+
 });
 
 Template.footer.events({

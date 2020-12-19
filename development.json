@@ -25,7 +25,9 @@
         }
       },
       "feedbackEmail": "chrologony@carlsonville.com",
-      "supportUrl": "https://chrologony.com/support"
+      "supportUrl": "https://chrologony.com/support",
+      "iosUrl": "https://apps.apple.com/us/app/chrologony/id1539854415?itsct=apps_box&itscg=30200",
+      "androidUrl": "https://play.google.com/store/apps/details?id=com.chrologony&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
     },
     "themes": [
       "Arts",
