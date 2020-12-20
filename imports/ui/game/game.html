@@ -4,7 +4,7 @@
 
         {{#if dataReady}}
 
-            <header class="clearfix mb-4">
+            <header class="clearfix mb-4" id="gameHeader">
 
                 <h1 class="float-sm-left text-white text-center mb-2 mb-sm-0" id="gameTitle">{{title}}</h1>
 
@@ -119,7 +119,7 @@
 
             </header>
 
-            <div class="{{#if columnLayout}}row{{/if}}">
+            <div class="{{#if columnLayout}}row{{/if}}" id="gameBody">
 
                 <div class="{{#if columnLayout}}col-lg-9{{/if}}" id="gameMain">
 
