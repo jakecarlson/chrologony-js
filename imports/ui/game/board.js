@@ -18,7 +18,7 @@ Template.board.onCreated(function boardOnCreated() {
         if (
             this.data.turn &&
             (this.data.turn.ownerId != Meteor.userId()) &&
-            (!this.data.turn.ownerId || (this.data.turn.owner().currentGameId != this.data.game._id))
+            !this.data.game.hasPlayer(this.data.turn.ownerId)
         ) {
             endTurn(this.data.game);
         }

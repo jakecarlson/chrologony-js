@@ -14,14 +14,18 @@ GameObserver = {
 
         Games.find().observeChanges({
 
+            // If a new game was added less than 2 seconds ago, this is probably a replay; let's notify the user
             added(id, fields) {
                 if (ctx.initialized && (fields.ownerId != Meteor.userId())) {
-                    setTimeout(function() {
-                        if (Helpers.currentGameId() == id) {
-                            Flasher.success('The game owner invited you to a new game!');
-                            FlowRouter.go('game', {id: id});
-                        }
-                    }, 250);
+                    const secondsSinceCreate = (new Date() - fields.createdAt) / 1000;
+                    if (secondsSinceCreate < 2) {
+                        setTimeout(function() {
+                            if (Helpers.currentGameId() == id) {
+                                Flasher.success('The game owner invited you to a new game!');
+                                FlowRouter.go('game', {id: id});
+                            }
+                        }, 250);
+                    }
                 }
             },
 
