@@ -87,6 +87,8 @@ mongo@1.10.0
 mongo-decimal@0.1.2
 mongo-dev-server@1.1.0
 mongo-id@1.0.7
+msavin:sjobs@4.0.0
+msavin:sjobs-ui-blaze@3.0.1
 npm-bcrypt@0.9.3
 npm-mongo@3.8.1
 numeral:numeral@1.5.3_1

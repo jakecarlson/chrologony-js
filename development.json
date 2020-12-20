@@ -86,5 +86,11 @@
   "crypt": {
     "saltRounds": 10,
     "salt": "JXo8G2ZDMwvQxcoYJ"
+  },
+  "jobs": {
+    "clearStaleGames": {
+      "thresholdInHours": 72,
+      "nextRunInHours": 24
+    }
   }
 }

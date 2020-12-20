@@ -12,6 +12,7 @@ import '../imports/startup/template-helpers';
 
 import './db/migrations';
 import './db/importer';
+import './jobs';
 
 import '../imports/api/Users';
 import '../imports/api/Cards';
@@ -32,6 +33,9 @@ Meteor.startup(() => {
 
     // Do any imports that are queued up
     Meteor.call('importer.importQueued');
+
+    // Initialize jobs
+    JobsQueue.init();
 
 });
 

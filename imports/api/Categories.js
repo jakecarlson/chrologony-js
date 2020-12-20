@@ -381,6 +381,8 @@ function sendCollaboratorEmail(category, userId, action, text) {
             },
         });
 
+        this.unblock();
+
         Email.send({
             from: Meteor.settings.public.app.sendEmail,
             to: user.email(),

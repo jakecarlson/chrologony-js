@@ -754,6 +754,8 @@ if (Meteor.isServer) {
 
                 Logger.audit('invite', {collection: 'Games', documentId: id, attrs: {email: email}});
 
+                this.unblock();
+
                 Email.send({
                     from: Meteor.settings.public.app.sendEmail,
                     to: email,

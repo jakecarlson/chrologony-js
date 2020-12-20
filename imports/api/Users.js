@@ -198,6 +198,8 @@ if (Meteor.isServer) {
                     },
                 });
 
+                this.unblock();
+
                 Email.send({
                     from: Meteor.settings.public.app.sendEmail,
                     to: userEmail,
