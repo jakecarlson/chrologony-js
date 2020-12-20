@@ -10,7 +10,7 @@ import './card.html';
 Template.card.onCreated(function boardOnCreated() {
     this.clue = new ReactiveVar(null);
     this.autorun(() => {
-        this.clue.set(this.data.card.clue());
+        this.clue.set(Template.currentData().card.clue());
     });
 });
 
