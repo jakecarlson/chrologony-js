@@ -23,6 +23,7 @@ GameObserver = {
                             if (Helpers.currentGameId() == id) {
                                 Flasher.success('The game owner invited you to a new game!');
                                 FlowRouter.go('game', {id: id});
+                                LoadingState.stop();
                             }
                         }, 250);
                     }
