@@ -12,7 +12,7 @@ Template.child_manager.onCreated(function child_managerOnCreated() {
 
     this.autorun(() => {
 
-        this.children.set(this.view.templateInstance().data.childItems); // Hacky? Why does this re-evaluate but this.data.childItems doesn't?
+        this.children.set(Template.currentData().childItems);
 
         if (this.view.isRendered) {
             Meteor.typeahead.inject();
