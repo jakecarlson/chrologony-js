@@ -17,8 +17,8 @@ Migrations.add({
             doc._id = newId;
             const insertId = Clues.rawCollection().insert(doc);
             if (insertId) {
-                Cards.rawCollection().update({clueId: oldId}, {$set: {clueId: newId}}, {multi: true});
-                Clues.rawCollection().remove({_id: oldId});
+                Cards.direct.update({clueId: oldId}, {$set: {clueId: newId}}, {multi: true}, {validate: false});
+                Clues.direct.remove({_id: oldId}, {validate: false});
             }
             Logger.log(oldId + ' --> ' + newId, 3);
         });

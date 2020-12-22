@@ -220,7 +220,7 @@ if (Meteor.isServer) {
 
                     // Import the clue
                     try {
-                        Clues.upsert({importId: doc.importId}, {$setOnInsert: doc});
+                        Clues.direct.upsert({importId: doc.importId}, {$setOnInsert: doc}, {validate: false});
                     } catch(err) {
                         throw new Meteor.Error('clue-not-imported', 'Could not import the clue.', err);
                     }
