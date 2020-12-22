@@ -18,31 +18,40 @@ Helpers = {
         return this.getValues(cursor, '_id');
     },
 
-    getCategoriesSelector(filters) {
-        let selector = {};
-        if (filters.active) {
-            selector.active = true;
-        };
-        if (filters.private !== false) {
-            selector.$or = [
+    getCategoriesSelector(filters = {}) {
+
+        let selector = {
+            $or: [
                 {ownerId: Meteor.userId()},
                 {collaborators: Meteor.userId()},
-            ];
-        }
-        if (filters.private === null) {
+            ],
+        };
+
+        if (!filters.editor) {
             selector.$or.push({private: false});
-        } else {
+        }
+
+        if (typeof(filters.active) != 'undefined') {
+            selector.active = filters.active;
+        }
+
+        if (typeof(filters.user) != 'undefined') {
+            selector.source = (filters.user) ? 'user' : {$ne: 'user'};
+        }
+
+        if (typeof(filters.private) != 'undefined') {
             selector.private = filters.private;
         }
-        if (filters.user) {
-            selector.source = 'user';
-        } else {
-            selector.source = {$ne: 'user'};
-        }
+
         if (filters.exclude) {
-            selector._id = {$ne: filters.exclude};
+            if (typeof(filters.exclude) != 'array') {
+                filters.exclude = [filters.exclude];
+            }
+            selector._id = {$nin: filters.exclude};
         }
+        
         return selector;
+
     },
 
     getPageStart(pageNum, pageSize) {

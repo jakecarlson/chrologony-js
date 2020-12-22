@@ -79,7 +79,7 @@ Template.layout_authenticated.helpers({
     },
 
     whitelistedCategories() {
-        const categories = Categories.find({source: 'user'});
+        const categories = Categories.find(Helpers.getCategoriesSelector({editor: true}));
         return categories.fetch().map(function(category) { return category._id; });
     },
 

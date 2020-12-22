@@ -148,7 +148,7 @@ Clues.helpers({
     },
 
     canSetCategories(categories) {
-        const userCategories = Helpers.getIds(Categories.find(Helpers.getCategoriesSelector({private: null, user: true})));
+        const userCategories = Helpers.getIds(Categories.find(Helpers.getCategoriesSelector({editor: true})));
         const whitelistedCategories = this.categories.concat(userCategories);
         const allowedCategories = categories.filter(function(item) {
             return whitelistedCategories.includes(item);

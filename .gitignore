@@ -114,3 +114,6 @@ dist
 
 # MacOS
 .DS_Store
+
+# Commands List
+commands.txt

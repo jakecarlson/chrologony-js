@@ -87,9 +87,7 @@ if (Meteor.isServer) {
     Meteor.publish('categories', function categoriesPublication() {
         if (this.userId) {
             return Categories.find(
-                {
-                    $or: getAllowedConditions(),
-                },
+                Helpers.getCategoriesSelector(),
                 {
                     fields: {
                         _id: 1,
@@ -301,13 +299,12 @@ if (Meteor.isServer) {
             Permissions.notGuest();
 
             const regex = new RegExp(query, 'i');
+
             const selector = {
                 $and: [
-                    {active: true, source: 'user'},
-                    {_id: {$nin: excludeIds}},
+                    Helpers.getCategoriesSelector({exclude: excludeIds, editor: true}),
                     // {$text: {$search: query}},
                     {$or: [{theme: {$regex: regex}}, {name: {$regex: regex}}]},
-                    {$or: getAllowedConditions()},
                 ],
             };
             return Categories.find(
@@ -330,11 +327,10 @@ if (Meteor.isServer) {
             Permissions.authenticated();
             Permissions.notGuest();
 
+            let selector = Helpers.getCategoriesSelector();
+            selector._id = {$in: ids};
             return Categories.find(
-                {
-                    _id: {$in: ids},
-                    $or: getAllowedConditions(),
-                },
+                selector,
                 {
                     sort: getSort(),
                 }
@@ -343,14 +339,6 @@ if (Meteor.isServer) {
 
     });
 
-}
-
-function getAllowedConditions() {
-    return [
-        {ownerId: Meteor.userId()},
-        {private: false},
-        {collaborators: Meteor.userId()},
-    ];
 }
 
 function getSort() {
