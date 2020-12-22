@@ -204,6 +204,8 @@ Meteor.methods({
 
         Logger.log('Update Category Collaborators: ' + id + ' ' + JSON.stringify(collaborators));
 
+        this.unblock();
+
         // Get added and removed collaborators
         const category = Categories.findOne(id);
         const previousCollaborators = category.collaborators;
@@ -380,8 +382,6 @@ function sendCollaboratorEmail(category, userId, action, text) {
                 url: category.cluesLink(),
             },
         });
-
-        this.unblock();
 
         Email.send({
             from: Meteor.settings.public.app.sendEmail,
