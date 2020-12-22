@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../../imports/startup/validations";
 import { Clues } from "../../imports/api/Clues";
+import { Promise } from "meteor/promise";
 
 export const ImportSets = new Mongo.Collection('import_sets');
 export const Imports = new Mongo.Collection('imports');
@@ -66,6 +67,62 @@ if (Meteor.isServer) {
                         Logger.log("Imported Set: " + importSet._id, 3);
                     }
                 });
+            });
+
+        },
+
+        // Purge duplicates in a set that exist in another set
+        'importer.purgeDuplicates'(setId, previousSetId) {
+
+            const clues = Promise.await(
+                Imports.rawCollection().aggregate([
+                    {
+                        $match : {setId: {$in: [setId, previousSetId]}},
+                    },
+                    {
+                        $group: {
+                            _id: "$description",
+                            count: {$sum: 1},
+                            setIds: {$push: "$setId"},
+                            importIds: {$push: "$_id"},
+                            dates: {$push: "$date"},
+                        }
+                    }
+                ]).toArray()
+            );
+
+            let removed = [];
+            let notRemoved = [];
+            let newUniqueClues = [];
+            let oldUniqueClues = [];
+            clues.forEach(function(clue) {
+                if (clue.count > 1) {
+                    const didRemove = Imports.remove({setId: setId, description: clue._id});
+                    if (didRemove) {
+                        removed.push(clue);
+                    } else {
+                        notRemoved.push(clue);
+                    }
+                } else if (clue.setIds[0] == setId) {
+                    newUniqueClues.push(clue);
+                } else if (clue.setIds[0] == previousSetId) {
+                    oldUniqueClues.push(clue);
+                }
+            });
+
+            const groups = [
+                {title: "DUPLICATE CLUES REMOVED", clues: removed},
+                {title: "DUPLICATE CLUES COULD NOT BE REMOVED", clues: notRemoved},
+                {title: "NEW CLUES", clues: newUniqueClues},
+                {title: "OLD CLUES NOT IN NEW SET", clues: oldUniqueClues},
+            ];
+
+            groups.forEach(function(group) {
+                Logger.log(group.title + " (" + group.clues.length + ")\n--------------------------------");
+                group.clues.forEach(function(clue) {
+                    Logger.log(clue.dates[0] + ': ' + clue._id + ' ' + JSON.stringify(clue.importIds));
+                });
+                Logger.log("\n");
             });
 
         },

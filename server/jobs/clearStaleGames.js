@@ -3,7 +3,7 @@ import { Games } from '../../imports/api/Games';
 
 Jobs.register({
 
-    'clearStaleGames'(thresholdInHours = 72, nextRunInHours = 1) {
+    'clearStaleGames'(thresholdInHours = 72, frequencyInHours = 1) {
         const instance = this;
 
         const hoursAgo = moment.utc().subtract(thresholdInHours, 'hours');
@@ -20,7 +20,7 @@ Jobs.register({
 
         instance.replicate({
             in: {
-                hours: nextRunInHours,
+                hours: frequencyInHours,
             }
         });
         instance.remove();

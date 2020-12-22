@@ -90,7 +90,10 @@
   "jobs": {
     "clearStaleGames": {
       "thresholdInHours": 72,
-      "nextRunInHours": 24
+      "frequencyInHours": false
+    },
+    "importQueued": {
+      "frequencyInHours": false
     }
   }
 }
