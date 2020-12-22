@@ -32,7 +32,7 @@ Meteor.startup(() => {
     Migrations.migrateTo('latest');
 
     // Do any imports that are queued up
-    // Meteor.call('importer.importQueued');
+    Meteor.call('importer.importQueued');
 
     // Initialize jobs
     JobsQueue.init();

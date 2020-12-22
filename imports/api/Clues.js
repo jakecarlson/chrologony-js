@@ -32,8 +32,8 @@ Clues.schema = new SimpleSchema(
         externalId: {type: String, defaultValue: null},
         externalUrl: {type: SimpleSchema.RegEx.Url, max: 960, defaultValue: null},
         moreInfo: {type: String, max: 3840, defaultValue: null},
-        importId: {type: String, defaultValue: null, max: 27, optional: true},
-        importSetId: {type: RecordId, defaultValue: null, optional: true},
+        importId: {type: String, defaultValue: null, max: 27},
+        importSetId: {type: RecordId, defaultValue: null},
         score: {type: SimpleSchema.Integer, defaultValue: Clues.DEFAULT_SCORE},
         difficulty: {type: Number, defaultValue: Clues.DEFAULT_DIFFICULTY},
         approximation: {type: Boolean, defaultValue: false},
@@ -43,7 +43,7 @@ Clues.schema = new SimpleSchema(
     }
 );
 Clues.schema.extend(Schemas.timestampable);
-Clues.schema.extend(Schemas.ownable());
+Clues.schema.extend(Schemas.ownable(false, true));
 Clues.attachSchema(Clues.schema);
 
 // Collection hooks

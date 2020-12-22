@@ -2,8 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../../imports/startup/validations";
-import { Clues } from "../../imports/api/Clues";
 import { Promise } from "meteor/promise";
+
+import { Clues } from "../../imports/api/Clues";
 
 export const ImportSets = new Mongo.Collection('import_sets');
 export const Imports = new Mongo.Collection('imports');
@@ -164,7 +165,7 @@ if (Meteor.isServer) {
 
                 Logger.log("Importing " + (start+1) + " - " + (start+imports.count()) + " of " + total, 3);
                 Logger.log("-".repeat(64), 3);
-                imports.fetch().forEach(function (doc) {
+                imports.fetch().forEach(function(doc) {
 
                     // Make sure the description is less than 240 chars
                     if (doc.description.length > 240) {
@@ -218,15 +219,20 @@ if (Meteor.isServer) {
                     }
 
                     // Import the clue
-                    Clues.upsert({importId: doc.importId}, {$setOnInsert: doc});
+                    try {
+                        Clues.upsert({importId: doc.importId}, {$setOnInsert: doc});
+                    } catch(err) {
+                        throw new Meteor.Error('clue-not-imported', 'Could not import the clue.', err);
+                    }
 
                     Logger.log(date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ': ' + doc.description, 3);
 
                 });
-                ImportSets.update(setId, {$set: {completedAt: new Date()}});
-                Logger.log("", 3);
 
             }
+
+            ImportSets.update(setId, {$set: {completedAt: new Date()}});
+            Logger.log("", 3);
 
         },
 
