@@ -46,6 +46,10 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
                     modal.find('.remove').attr('data-id', id);
                 });
 
+                $('#manageChildCollaborators').on('shown.bs.modal', function () {
+                    $('#userSearch').trigger('focus')
+                })
+
                 $('#manageChildCollaborators').on('hidden.bs.modal', function(e) {
                     instance.state.set('currentCategory', null);
                 });

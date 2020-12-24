@@ -39,6 +39,10 @@ Template.layout_authenticated.onCreated(function layout_authenticatedOnCreated()
             const self = this;
             Tracker.afterFlush(() => {
 
+                $('#manageChildCategories').on('shown.bs.modal', function () {
+                    $('#categorySearch').trigger('focus')
+                });
+
                 $('#manageChildCategories').on('hidden.bs.modal', function(e) {
                     self.currentClue.set(null);
                 });
