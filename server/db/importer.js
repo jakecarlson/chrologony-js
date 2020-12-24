@@ -5,6 +5,7 @@ import { NonEmptyString, RecordId } from "../../imports/startup/validations";
 import { Promise } from "meteor/promise";
 
 import { Clues } from "../../imports/api/Clues";
+import { Categories } from "../../imports/api/Categories";
 
 export const ImportSets = new Mongo.Collection('import_sets');
 export const Imports = new Mongo.Collection('imports', {idGeneration: 'MONGO'});
@@ -246,6 +247,9 @@ if (Meteor.isServer) {
             const categoryId = importSet.categoryId;
 
             // Loop through in chunks
+            let inserted = [];
+            let updated = [];
+            let errors = [];
             for (let i = 0; i < numChunks; ++i) {
 
                 const start = i * chunkSize;
@@ -331,17 +335,62 @@ if (Meteor.isServer) {
                         createdAt: new Date(),
                     };
 
-                    // Import the clue
-                    Clues.direct.upsert({importId: doc.importId}, {$set: doc, $setOnInsert: insertDoc}, {validate: false});
+                    // Try to import the clue
+                    const result = Clues.direct.upsert({importId: doc.importId}, {$set: doc, $setOnInsert: insertDoc}, {validate: false});
 
-                    Logger.log(date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ': ' + doc.description, 3);
+                    // Put the result in the correct bucket
+                    const log = date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ' (' + doc.importId + '): ' + doc.description;
+                    let action = null;
+                    if (result) {
+                        if (result.insertedId) {
+                            inserted.push(log);
+                            action = 'INSERT';
+                        } else {
+                            updated.push(log);
+                            action = 'UPDATE';
+                        }
+                    } else {
+                        errors.push(log);
+                        action = 'ERROR';
+                    }
+
+                    Logger.log('[' + action + '] ' + log, 3);
 
                 });
 
             }
 
+            // Mark the import timestamp
             Imports.update(importSelector, {$set: {lastImportedAt: new Date()}}, {multi: true});
-            Logger.log("Imported Set: " + importSet._id + "\n\n", 3);
+
+            // Update the clue count of the insert category
+            const cluesCount = Clues.find({categories: categoryId, active: true}).count();
+            Categories.update(categoryId, {$set: {cluesCount: cluesCount}});
+
+            Logger.log("Imported Set: " + importSet._id + "\n", 3);
+
+            // Send an email to notify of successful import
+            const subject = Meteor.settings.public.app.name + " Import Successful: " + importSet.name;
+            const email = Helpers.renderHtmlEmail({
+                subject: subject,
+                preview: subject,
+                template: 'import',
+                data: {
+                    importSet: importSet,
+                    category: Categories.findOne(categoryId),
+                    numTotal: (inserted.length + updated.length),
+                    numInserted: inserted.length,
+                    numUpdated: updated.length,
+                    errors: errors,
+                },
+            });
+            Email.send({
+                from: Meteor.settings.public.app.sendEmail,
+                to: Meteor.settings.public.app.feedbackEmail,
+                subject: subject,
+                text: email.text,
+                html: email.html,
+            });
 
         },
 

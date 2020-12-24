@@ -1,0 +1,15 @@
+<p>Import was successful for <strong>{{importSet.name}}</strong>:</p>
+<ul>
+    <li><strong>{{numTotal}}</strong> clues upserted</li>
+    <li><strong>{{numInserted}}</strong> clues inserted, added to <strong>{{category.name}}</strong> category</li>
+    <li><strong>{{numUpdated}}</strong> clues updated</li>
+    <li><strong>{{errors.length}}</strong> errors</li>
+</ul>
+
+{{#if errors.length}}
+    <ul>
+        {{#each error in errors}}
+            <li>{{error}}</li>
+        {{/each}}
+    </ul>
+{{/if}}
