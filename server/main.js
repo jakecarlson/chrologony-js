@@ -31,9 +31,6 @@ Meteor.startup(() => {
     // Run any migrations that haven't run
     Migrations.migrateTo('latest');
 
-    // Do any imports that are queued up
-    Meteor.call('importer.importQueued');
-
     // Initialize jobs
     JobsQueue.init();
 

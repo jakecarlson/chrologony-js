@@ -117,3 +117,6 @@ dist
 
 # Commands List
 commands.txt
+
+# Output dir
+out/*

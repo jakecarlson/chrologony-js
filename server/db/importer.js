@@ -7,7 +7,7 @@ import { Promise } from "meteor/promise";
 import { Clues } from "../../imports/api/Clues";
 
 export const ImportSets = new Mongo.Collection('import_sets');
-export const Imports = new Mongo.Collection('imports');
+export const Imports = new Mongo.Collection('imports', {idGeneration: 'MONGO'});
 
 if (Meteor.isServer) {
 
@@ -62,68 +62,155 @@ if (Meteor.isServer) {
         // Import queued sets
         'importer.importQueued'(chunkSize = 1000) {
 
-            ImportSets.find({startedAt: null, completedAt: null}).fetch().forEach(function(importSet) {
-                Meteor.call('importer.import', importSet._id, chunkSize, function(err, res) {
-                    if (!err) {
-                        Logger.log("Imported Set: " + importSet._id, 3);
-                    }
-                });
+            ImportSets.find({startedAt: null, completedAt: null}, {sort: {createdAt: 1}}).fetch().forEach(function(importSet) {
+                Meteor.call('importer.import', importSet._id, chunkSize);
             });
 
         },
 
         // Purge duplicates in a set that exist in another set
-        'importer.purgeDuplicates'(setId, previousSetId) {
+        'importer.purgeDuplicates'(setId, deleteThreshold = .5, reportThreshold = .3) {
 
-            const clues = Promise.await(
+            // We'll get one big output string so that we can write that to file
+            let out = '';
+
+            // Find dupes grouping by date + external ID
+            const imports = Promise.await(
                 Imports.rawCollection().aggregate([
                     {
-                        $match : {setId: {$in: [setId, previousSetId]}},
+                        $match : {setId: setId},
                     },
                     {
                         $group: {
-                            _id: "$description",
+                            _id: {date: "$date", externalId: "$externalId"},
                             count: {$sum: 1},
-                            setIds: {$push: "$setId"},
                             importIds: {$push: "$_id"},
-                            dates: {$push: "$date"},
+                            descriptions: {$push: "$description"},
+                            externalIds: {$push: "$externalId"},
                         }
+                    },
+                    {
+                        $sort: {
+                            date: 1,
+                            externalId: 1,
+                            createdAt: 1,
+                            description: 1,
+                        },
+                    },
+                    {
+                        $match: {count: {$gt: 1}}
                     }
                 ]).toArray()
             );
 
-            let removed = [];
-            let notRemoved = [];
-            let newUniqueClues = [];
-            let oldUniqueClues = [];
-            clues.forEach(function(clue) {
-                if (clue.count > 1) {
-                    const didRemove = Imports.remove({setId: setId, description: clue._id});
-                    if (didRemove) {
-                        removed.push(clue);
-                    } else {
-                        notRemoved.push(clue);
+            // Loop through all groupings and save the dupes
+            const ss = require('string-similarity');
+            let dupes = [];
+            imports.forEach(function(clue) {
+
+                // Loop through clues and only consider ones with 70%+ similarity as a true duplicate
+                const numClues = clue.count;
+                for (let i = 0; i < numClues; ++i) {
+                    for (let n = i+1; n < numClues; ++n) {
+                        const percMatch = ss.compareTwoStrings(clue.descriptions[i], clue.descriptions[n]);
+                        if (percMatch >= reportThreshold) {
+                            dupes.push({
+                                date: clue._id.date,
+                                externalId: clue._id.externalId,
+                                percMatch: percMatch,
+                                oldImportId: clue.importIds[i],
+                                newImportId: clue.importIds[n],
+                                oldDescription: clue.descriptions[i],
+                                newDescription: clue.descriptions[n],
+                            });
+                        }
                     }
-                } else if (clue.setIds[0] == setId) {
-                    newUniqueClues.push(clue);
-                } else if (clue.setIds[0] == previousSetId) {
-                    oldUniqueClues.push(clue);
                 }
+
             });
 
-            const groups = [
-                {title: "DUPLICATE CLUES REMOVED", clues: removed},
-                {title: "DUPLICATE CLUES COULD NOT BE REMOVED", clues: notRemoved},
-                {title: "NEW CLUES", clues: newUniqueClues},
-                {title: "OLD CLUES NOT IN NEW SET", clues: oldUniqueClues},
-            ];
+            // Loop through dupes, update the old one, and delete the new one
+            let removed = [];
+            let notRemoved = [];
+            let manualReview = [];
+            let removedIds = [];
+            dupes.forEach(function(dupe) {
 
+                // If this dupe is above the delete threshold, attempt it
+                if (dupe.percMatch >= deleteThreshold) {
+
+                    // Get the newer import
+                    let didRemove = false;
+                    const oldImportId = new Mongo.ObjectID(dupe.oldImportId.toString());
+                    const newImportId = new Mongo.ObjectID(dupe.newImportId.toString());
+                    const newImport = Imports.findOne(newImportId);
+
+                    // Set fields to update the old import with
+                    const doc = _.pick(
+                        newImport,
+                        'description',
+                        'hint',
+                        'thumbnail',
+                        'imageUrl',
+                        'latitude',
+                        'longitude',
+                        'externalUrl',
+                        'moreInfo'
+                    );
+                    doc.updatedAt = new Date();
+
+                    // Update the old import and delete the new one
+                    const didUpdate = Imports.update(oldImportId, {$set: doc});
+                    if (didUpdate) {
+                        removedIds.push(newImportId.toString());
+                        didRemove = Imports.remove(newImportId);
+                    }
+
+                    // Add the clue to the appropriate list depending on the outcome of the removal of the new one
+                    if (didRemove) {
+                        removed.push(dupe);
+                    } else {
+                        notRemoved.push(dupe);
+                    }
+
+                // Otherwise just report for manual review
+                } else {
+                    manualReview.push(dupe);
+                }
+
+            });
+
+            // Loop through the buckets and output accordingly
+            const groups = [
+                {title: "DUPLICATE CLUES REMOVED", dupes: removed},
+                {title: "DUPLICATE CLUES COULD NOT BE REMOVED", dupes: notRemoved},
+                {title: "POSSIBLE DUPLICATE CLUES FOR MANUAL REVIEW", dupes: manualReview},
+            ];
             groups.forEach(function(group) {
-                Logger.log(group.title + " (" + group.clues.length + ")\n--------------------------------");
-                group.clues.forEach(function(clue) {
-                    Logger.log(clue.dates[0] + ': ' + clue._id + ' ' + JSON.stringify(clue.importIds));
+                out += group.title + " (" + group.dupes.length + ")" + hr();
+                group.dupes.forEach(function(dupe) {
+                    out += dupe.date + " [" + dupe.externalId + "]: " + (dupe.percMatch * 100).toFixed(2) + "%\n";
+                    out += "[" + dupe.oldImportId + "] " + dupe.oldDescription + "\n";
+                    out += "[" + dupe.newImportId + "] " + dupe.newDescription + "\n";
+                    out += "\n";
                 });
-                Logger.log("\n");
+                out += "\n";
+            });
+
+            // Add a list of dupe IDs that were deleted at the end in case we need to manually delete
+            out += "REMOVED THE FOLLOWING IMPORTS (" + removedIds.length + ")" + hr() + JSON.stringify(removedIds) + "\n\n";
+
+            // Output the logs to STDOUT + a log file
+            Logger.log(out, 3);
+            const fs = require('fs');
+            const dir = process.cwd() + '/../../../../../out/';
+            const file = dir + 'dedupe_' + setId + '_' + new Date().getTime() + '.txt';
+            fs.writeFile(file, out, (err) => {
+                if (err) {
+                    Logger.log(err, 3);
+                } else {
+                    Logger.log("Results output to " + file);
+                }
             });
 
         },
@@ -163,8 +250,7 @@ if (Meteor.isServer) {
                     }
                 );
 
-                Logger.log("Importing " + (start+1) + " - " + (start+imports.count()) + " of " + total, 3);
-                Logger.log("-".repeat(64), 3);
+                Logger.log("Importing " + (start+1) + " - " + (start+imports.count()) + " of " + total + hr(), 3);
                 imports.fetch().forEach(function(doc) {
 
                     // Make sure the description is less than 240 chars
@@ -195,7 +281,7 @@ if (Meteor.isServer) {
                     doc.longitude = parseCoord(doc.longitude);
 
                     // Handle the category
-                    doc.categories = [importSet.categoryId];
+                    doc.$addToSet = {categories: importSet.categoryId};
 
                     // Set the other defaults
                     doc.active = true;
@@ -204,7 +290,7 @@ if (Meteor.isServer) {
                     doc.updatedAt = new Date();
 
                     // Get rid of the ID
-                    doc.importId = doc._id + '';
+                    doc.importId = doc._id._str;
                     delete doc._id;
 
                     // Ditch the set ID
@@ -220,7 +306,7 @@ if (Meteor.isServer) {
 
                     // Import the clue
                     try {
-                        Clues.direct.upsert({importId: doc.importId}, {$setOnInsert: doc}, {validate: false});
+                        Clues.direct.upsert({importId: doc.importId}, {$set: doc}, {validate: false});
                     } catch(err) {
                         throw new Meteor.Error('clue-not-imported', 'Could not import the clue.', err);
                     }
@@ -232,7 +318,8 @@ if (Meteor.isServer) {
             }
 
             ImportSets.update(setId, {$set: {completedAt: new Date()}});
-            Logger.log("", 3);
+            Imports.update({setId: setId}, {$set: {lastImportedAt: new Date()}}, {multi: true});
+            Logger.log("Imported Set: " + importSet._id + "\n\n", 3);
 
         },
 
@@ -247,4 +334,8 @@ function parseCoord(coord) {
     } else {
         return parsedCoord;
     }
+}
+
+function hr() {
+    return "\n" + "-".repeat(64) + "\n";
 }

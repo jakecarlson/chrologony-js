@@ -869,7 +869,7 @@ if (Meteor.isServer) {
                 userId = Meteor.userId();
             }
             if (!game.players.includes(userId)) {
-                const updated = Games.update(id, {$push: {players: userId}});
+                const updated = Games.update(id, {$addToSet: {players: userId}});
                 if (!updated) {
                     throw new Meteor.Error('game-not-updated', 'Could not add player to game.');
                 }

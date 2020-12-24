@@ -340,7 +340,7 @@ Meteor.methods({
                 _id: {$in: ids},
             },
             {
-                $push: {categories: categoryId}
+                $addToSet: {categories: categoryId}
             },
             {multi: true}
         );
@@ -531,7 +531,7 @@ if (Meteor.isServer) {
 
             const updated = Clues.update(
                 selector,
-                {$push: {categories: categoryId}},
+                {$addToSet: {categories: categoryId}},
                 {multi: true}
             );
             if (!updated) {

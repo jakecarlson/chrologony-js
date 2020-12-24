@@ -49,7 +49,7 @@ Helpers = {
             }
             selector._id = {$nin: filters.exclude};
         }
-        
+
         return selector;
 
     },
