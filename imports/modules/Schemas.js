@@ -72,4 +72,26 @@ export const Schemas = {
         },
     }),
 
+    createIndexes(indexes) {
+        indexes.forEach(function(attrs) {
+            for (const name in attrs.indexes) {
+                attrs.collection.rawCollection().createIndex(
+                    attrs.indexes[name],
+                    {
+                        name: name,
+                        background: true,
+                    }
+                );
+            }
+        });
+    },
+
+    dropIndexes(indexes) {
+        indexes.forEach(function(attrs) {
+            for (const name in attrs.indexes) {
+                attrs.collection.rawCollection().dropIndex(name);
+            }
+        });
+    },
+
 };

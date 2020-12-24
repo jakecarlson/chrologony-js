@@ -1,3 +1,4 @@
+import { Schemas } from "../../../imports/modules/Schemas";
 import { Meteor } from 'meteor/meteor';
 import { Cards } from "../../../imports/api/Cards";
 import { Categories } from "../../../imports/api/Categories";
@@ -76,25 +77,11 @@ Migrations.add({
 
     up: function() {
         Meteor.users.update({joinedRoomAt: {$exists: false}}, {$set: {joinedRoomAt: null}}, {multi: true});
-        INDEXES.forEach(function(attrs) {
-            for (const name in attrs.indexes) {
-                attrs.collection.rawCollection().createIndex(
-                    attrs.indexes[name],
-                    {
-                        name: name,
-                        background: true,
-                    }
-                );
-            }
-        });
+        Schemas.createIndexes(INDEXES);
     },
 
     down: function() {
-        INDEXES.forEach(function(attrs) {
-            for (const name in attrs.indexes) {
-                attrs.collection.rawCollection().dropIndex(name);
-            }
-        });
+        Schemas.dropIndexes(INDEXES);
         Meteor.users.update({}, {$unset: {joinedRoomAt: 1}}, {multi: true});
     }
 

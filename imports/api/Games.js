@@ -113,7 +113,7 @@ Games.helpers({
                 _id: {$in: userIds},
             },
             {
-                sort: {joinedGameAt: 1, 'profile.name': 1},
+                sort: {'profile.name': 1},
             }
         ).fetch();
         return _.sortBy(players, function(doc) {
