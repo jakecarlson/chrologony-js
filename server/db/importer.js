@@ -63,7 +63,7 @@ if (Meteor.isServer) {
         },
 
         // Purge duplicates in a set that exist in another set
-        'importer.purgeDuplicates'(setId, deleteThreshold = .5, reportThreshold = .3) {
+        'importer.purgeDuplicates'(setId, deleteThreshold = .5, beginningThreshold = .9, reportThreshold = .3) {
 
             // We'll get one big output string so that we can write that to file
             let out = '';
@@ -108,10 +108,13 @@ if (Meteor.isServer) {
                     for (let n = i+1; n < numClues; ++n) {
                         const percMatch = ss.compareTwoStrings(clue.descriptions[i], clue.descriptions[n]);
                         if (percMatch >= reportThreshold) {
+                            const minLength = (clue.descriptions[i].length > clue.descriptions[n].length) ? clue.descriptions[n].length : clue.descriptions[i].length;
+                            const beginningPercMatch = ss.compareTwoStrings(clue.descriptions[i].substr(0, minLength), clue.descriptions[n].substr(0, minLength));
                             dupes.push({
                                 date: clue._id.date,
                                 externalId: clue._id.externalId,
                                 percMatch: percMatch,
+                                beginningPercMatch: beginningPercMatch,
                                 oldImportId: clue.importIds[i],
                                 newImportId: clue.importIds[n],
                                 oldDescription: clue.descriptions[i],
@@ -130,13 +133,16 @@ if (Meteor.isServer) {
             let removedIds = [];
             dupes.forEach(function(dupe) {
 
-                // If this dupe is above the delete threshold, attempt it
-                if (dupe.percMatch >= deleteThreshold) {
+                // If this dupe is above the delete threshold, or the beginning is above the beginning threshold similar, then delete the dupe
+                if (
+                    (dupe.percMatch >= deleteThreshold) ||
+                    (dupe.beginningPercMatch >= beginningThreshold)
+                ) {
 
                     // Get the newer import
                     let didRemove = false;
-                    const oldImportId = new Mongo.ObjectID(dupe.oldImportId.valueOf());
-                    const newImportId = new Mongo.ObjectID(dupe.newImportId.valueOf());
+                    const oldImportId = new Mongo.ObjectID(dupe.oldImportId.toString());
+                    const newImportId = new Mongo.ObjectID(dupe.newImportId.toString());
                     const newImport = Imports.findOne(newImportId);
 
                     // Set fields to update the old import with
@@ -183,7 +189,9 @@ if (Meteor.isServer) {
             groups.forEach(function(group) {
                 out += group.title + " (" + group.dupes.length + ")" + hr();
                 group.dupes.forEach(function(dupe) {
-                    out += dupe.date + " [" + dupe.externalId + "]: " + (dupe.percMatch * 100).toFixed(2) + "%\n";
+                    const formattedPercMatch = (dupe.percMatch * 100).toFixed(2) + "%";
+                    const formattedBeginningPercMatch = (dupe.beginningPercMatch * 100).toFixed(2) + "%";
+                    out += dupe.date + " [" + dupe.externalId + "]: " + formattedPercMatch + " (" + formattedBeginningPercMatch + " beginning)\n";
                     out += "[" + dupe.oldImportId + "] " + dupe.oldDescription + "\n";
                     out += "[" + dupe.newImportId + "] " + dupe.newDescription + "\n";
                     out += "\n";
@@ -233,9 +241,9 @@ if (Meteor.isServer) {
             }
             const numChunks = Math.ceil(total / chunkSize);
 
-            // Handle only adding the category on inserts
+            // Get the category ID to use for inserts
             const importSet = ImportSets.findOne(setId);
-            const insertDoc = {categories: [importSet.categoryId]};
+            const categoryId = importSet.categoryId;
 
             // Loop through in chunks
             for (let i = 0; i < numChunks; ++i) {
@@ -297,7 +305,6 @@ if (Meteor.isServer) {
                     // Set the other defaults
                     doc.active = true;
                     doc.ownerId = null;
-                    doc.createdAt = new Date();
                     doc.updatedAt = new Date();
                     doc.score = 10;
                     doc.difficulty = 0.5;
@@ -318,6 +325,11 @@ if (Meteor.isServer) {
                             doc[attr] = null;
                         }
                     }
+
+                    const insertDoc = {
+                        categories: [categoryId],
+                        createdAt: new Date(),
+                    };
 
                     // Import the clue
                     Clues.direct.upsert({importId: doc.importId}, {$set: doc, $setOnInsert: insertDoc}, {validate: false});
