@@ -17,6 +17,9 @@
   max-height: calc(100vh - 12rem);
   overflow: auto;
 }
+.child-manager .modal-body {
+  overflow: visible;
+}
 
 /* cards */
 .card:not(.game-card),

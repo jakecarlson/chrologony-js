@@ -48,7 +48,7 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
 
                 $('#manageChildCollaborators').on('shown.bs.modal', function () {
                     $('#userSearch').trigger('focus')
-                })
+                });
 
                 $('#manageChildCollaborators').on('hidden.bs.modal', function(e) {
                     instance.state.set('currentCategory', null);
