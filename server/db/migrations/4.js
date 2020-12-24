@@ -246,7 +246,7 @@ Migrations.add({
                 {
                     name: 'Early Modern Period',
                     theme: 'History',
-                    selector: {$and: [{date: {$gte: new Date('1500-01-01')}}, {date: {$lte: new Date('1800-01-01')}}]},
+                    selector: {$and: [{date: {$gte: new Date('1500-01-01')}}, {date: {$lte: new Date('1750-01-01')}}]},
                 },
                 {
                     name: 'Late Modern Period',
