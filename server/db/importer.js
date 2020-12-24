@@ -22,47 +22,41 @@ if (Meteor.isServer) {
             return ImportSets.insert({
                 name: name,
                 categoryId: categoryId,
+                active: true,
                 createdAt: new Date(),
-                startedAt: null,
-                completedAt: null,
+                updatedAt: new Date(),
             });
 
         },
 
-        // Reset import set
-        'importer.resetSet'(id, removeClues = false) {
-
-            check(id, RecordId);
-
-            if (removeClues) {
-                Clues.remove({importSetId: id});
-            }
-
-            return ImportSets.update(
-                id,
-                {
-                    $set: {
-                        startedAt: null,
-                        completedAt: null,
-                    }
-                }
-            );
-
+        // Remove imports from set
+        'importer.removeImports'(setId) {
+            check(setId, RecordId);
+            return Imports.remove({setId: setId});
         },
 
         // Delete import set
         'importer.removeSet'(id) {
-
             check(id, RecordId);
-
             return ImportSets.remove(id);
+        },
 
+        // Disable Set
+        'importer.disableSet'(id) {
+            check(id, RecordId);
+            return ImportSets.update(id, {$set: {active: false}});
+        },
+
+        // Enable Set
+        'importer.enableSet'(id) {
+            check(id, RecordId);
+            return ImportSets.update(id, {$set: {active: true}});
         },
 
         // Import queued sets
         'importer.importQueued'(chunkSize = 1000) {
 
-            ImportSets.find({startedAt: null, completedAt: null}, {sort: {createdAt: 1}}).fetch().forEach(function(importSet) {
+            ImportSets.find({active: true}, {sort: {createdAt: 1}}).fetch().forEach(function(importSet) {
                 Meteor.call('importer.import', importSet._id, chunkSize);
             });
 
@@ -141,8 +135,8 @@ if (Meteor.isServer) {
 
                     // Get the newer import
                     let didRemove = false;
-                    const oldImportId = new Mongo.ObjectID(dupe.oldImportId.toString());
-                    const newImportId = new Mongo.ObjectID(dupe.newImportId.toString());
+                    const oldImportId = new Mongo.ObjectID(dupe.oldImportId.valueOf());
+                    const newImportId = new Mongo.ObjectID(dupe.newImportId.valueOf());
                     const newImport = Imports.findOne(newImportId);
 
                     // Set fields to update the old import with
@@ -162,7 +156,7 @@ if (Meteor.isServer) {
                     // Update the old import and delete the new one
                     const didUpdate = Imports.update(oldImportId, {$set: doc});
                     if (didUpdate) {
-                        removedIds.push(newImportId.toString());
+                        removedIds.push(newImportId.valueOf());
                         didRemove = Imports.remove(newImportId);
                     }
 
@@ -221,28 +215,34 @@ if (Meteor.isServer) {
             check(setId, RecordId);
             check(chunkSize, Match.Integer);
 
-            const importSet = ImportSets.findOne(setId);
-            if (importSet.startedAt || importSet.completedAt) {
-                Logger.log('Import set ' + setId + ' has already been imported. Aborting.', 3);
-                return;
-            }
+            // Set the filter criteria on which imports to operate on
+            const importSelector = {
+                setId: setId,
+                $or: [
+                    {lastImportedAt: null},
+                    {lastImportedAt: {$exists: false}},
+                    {$expr: {$gt: ["$updatedAt" , "$lastImportedAt"]}},
+                ],
+            };
 
-            const total = Imports.find({setId: setId}).count();
-            const numChunks = Math.ceil(total / chunkSize);
-
+            // Set basic chunking math
+            const total = Imports.find(importSelector).count();
             if (total == 0) {
                 Logger.log('No clues to import for set ' + setId + '. Aborting.', 3);
                 return;
             }
+            const numChunks = Math.ceil(total / chunkSize);
 
-            ImportSets.update(setId, {$set: {startedAt: new Date()}});
+            // Handle only adding the category on inserts
+            const importSet = ImportSets.findOne(setId);
+            const insertDoc = {categories: [importSet.categoryId]};
+
+            // Loop through in chunks
             for (let i = 0; i < numChunks; ++i) {
 
                 const start = i * chunkSize;
                 const imports = Imports.find(
-                    {
-                        setId: setId,
-                    },
+                    importSelector,
                     {
                         sort: {date: 1, description: 1},
                         skip: start,
@@ -251,7 +251,21 @@ if (Meteor.isServer) {
                 );
 
                 Logger.log("Importing " + (start+1) + " - " + (start+imports.count()) + " of " + total + hr(), 3);
-                imports.fetch().forEach(function(doc) {
+                imports.fetch().forEach(function(clue) {
+
+                    const doc = _.pick(
+                        clue,
+                        'date',
+                        'description',
+                        'hint',
+                        'thumbnail',
+                        'imageUrl',
+                        'latitude',
+                        'longitude',
+                        'externalUrl',
+                        'externalId',
+                        'moreInfo',
+                    );
 
                     // Make sure the description is less than 240 chars
                     if (doc.description.length > 240) {
@@ -280,36 +294,33 @@ if (Meteor.isServer) {
                     doc.latitude = parseCoord(doc.latitude);
                     doc.longitude = parseCoord(doc.longitude);
 
-                    // Handle the category
-                    doc.$addToSet = {categories: importSet.categoryId};
-
                     // Set the other defaults
                     doc.active = true;
                     doc.ownerId = null;
                     doc.createdAt = new Date();
                     doc.updatedAt = new Date();
+                    doc.score = 10;
+                    doc.difficulty = 0.5;
+                    doc.approximation = false;
 
-                    // Get rid of the ID
-                    doc.importId = doc._id._str;
-                    delete doc._id;
-
-                    // Ditch the set ID
-                    doc.importSetId = doc.setId;
-                    delete doc.setId;
+                    // Set the import ID
+                    doc.importId = clue._id.valueOf();
 
                     // Get rid of 'null' strings
                     for (const attr in doc) {
-                        if (doc[attr] == 'null') {
+                        if (
+                            (typeof(doc[attr]) == 'string') &&
+                            (
+                                (doc[attr] == 'null') ||
+                                (doc[attr].trim().length == 0)
+                            )
+                        ) {
                             doc[attr] = null;
                         }
                     }
 
                     // Import the clue
-                    try {
-                        Clues.direct.upsert({importId: doc.importId}, {$set: doc}, {validate: false});
-                    } catch(err) {
-                        throw new Meteor.Error('clue-not-imported', 'Could not import the clue.', err);
-                    }
+                    Clues.direct.upsert({importId: doc.importId}, {$set: doc, $setOnInsert: insertDoc}, {validate: false});
 
                     Logger.log(date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ': ' + doc.description, 3);
 
@@ -317,9 +328,44 @@ if (Meteor.isServer) {
 
             }
 
-            ImportSets.update(setId, {$set: {completedAt: new Date()}});
-            Imports.update({setId: setId}, {$set: {lastImportedAt: new Date()}}, {multi: true});
+            Imports.update(importSelector, {$set: {lastImportedAt: new Date()}}, {multi: true});
             Logger.log("Imported Set: " + importSet._id + "\n\n", 3);
+
+        },
+
+        // Preview the next import
+        'importer.preview'(setId) {
+
+            check(setId, RecordId);
+
+            // Get the imports that will be updated vs inserted
+            const updates = Imports.find({
+                setId: setId,
+                lastImportedAt: {$ne: null},
+                $expr: {$gt: ["$updatedAt" , "$lastImportedAt"]},
+            });
+            const inserts = Imports.find({
+                setId: setId,
+                $or: [
+                    {lastImportedAt: null},
+                    {lastImportedAt: {$exists: false}},
+                ],
+            });
+
+            const total = updates.count() + inserts.count();
+            Logger.log("TOTAL UPSERTS: " + total + " (" + updates.count() + " updates + " + inserts.count() + " inserts)\n");
+
+            const groups = [
+                {title: "UPDATES", imports: updates},
+                {title: "INSERTS", imports: inserts},
+            ];
+            groups.forEach(function(group) {
+                Logger.log(group.title + " (" + group.imports.count() + ")" + hr());
+                group.imports.forEach(function(clue) {
+                    Logger.log(clue.date + ": " + clue.description + " [" + clue._id.valueOf() + "]");
+                });
+                Logger.log("\n");
+            });
 
         },
 
