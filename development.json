@@ -89,13 +89,19 @@
   },
   "jobs": {
     "clearStaleGames": {
-      "thresholdInHours": 72,
+      "thresholdInHours": 24,
       "frequencyInHours": false
     },
     "importQueued": {
       "frequencyInHours": false
     },
     "updateClueCounts": {
+      "frequencyInHours": false
+    },
+    "updateClueScores": {
+      "frequencyInHours": false
+    },
+    "updateClueDifficulties": {
       "frequencyInHours": false
     }
   }

@@ -29,12 +29,14 @@ Jobs.register({
 
         Logger.log('Category Clue Counts Updated: ' + numUpdated);
 
-        instance.replicate({
-            in: {
-                hours: frequencyInHours,
-            }
-        });
-        instance.remove();
+        if (frequencyInHours) {
+            instance.replicate({
+                in: {
+                    hours: frequencyInHours,
+                }
+            });
+            instance.remove();
+        }
 
     }
 

@@ -2,6 +2,8 @@ import { Jobs } from 'meteor/msavin:sjobs'
 import './clearStaleGames';
 import './importQueued';
 import './updateClueCounts';
+import './updateClueScores';
+import './updateClueDifficulties';
 
 JobsQueue = {
     init() {
@@ -30,6 +32,24 @@ JobsQueue = {
             Jobs.run(
                 'updateClueCounts',
                 Meteor.settings.jobs.updateClueCounts.frequencyInHours,
+                {singular: true}
+            );
+        }
+
+        // Update clue scores
+        if (Meteor.settings.jobs.updateClueScores.frequencyInHours) {
+            Jobs.run(
+                'updateClueScores',
+                Meteor.settings.jobs.updateClueScores.frequencyInHours,
+                {singular: true}
+            );
+        }
+
+        // Update clue difficulties
+        if (Meteor.settings.jobs.updateClueDifficulties.frequencyInHours) {
+            Jobs.run(
+                'updateClueDifficulties',
+                Meteor.settings.jobs.updateClueDifficulties.frequencyInHours,
                 {singular: true}
             );
         }

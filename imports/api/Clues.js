@@ -481,12 +481,11 @@ if (Meteor.isServer) {
                 Votes.rawCollection().aggregate(
                     [
                         {$match: {clueId: clueId}},
-                        {$group: {_id: null, sum: {$sum: "$value"}}},
-                        {$project: {_id: 0, sum: 1}},
+                        {$group: {_id: null, score: {$sum: "$value"}}},
                     ]
                 ).toArray()
             );
-            const score = votes[0].sum;
+            const score = votes[0].score + Clues.DEFAULT_SCORE;
 
             const updated = Clues.update(
                 {_id: clueId},

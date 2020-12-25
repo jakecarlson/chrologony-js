@@ -4,11 +4,11 @@ import { check, Match } from 'meteor/check';
 import { RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from 'simpl-schema';
+import { Promise } from "meteor/promise";
 import { Schemas } from '../modules/Schemas';
 
 import { Clues } from "./Clues";
 import { Cards } from "./Cards";
-import { Promise } from "meteor/promise";
 
 export const Votes = new Mongo.Collection('votes');
 

@@ -18,12 +18,14 @@ Jobs.register({
 
         Logger.log('Stale Games Deleted: ' + numDeleted);
 
-        instance.replicate({
-            in: {
-                hours: frequencyInHours,
-            }
-        });
-        instance.remove();
+        if (frequencyInHours) {
+            instance.replicate({
+                in: {
+                    hours: frequencyInHours,
+                }
+            });
+            instance.remove();
+        }
 
     }
 
