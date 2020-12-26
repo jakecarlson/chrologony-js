@@ -18,7 +18,10 @@ Template.registerHelper('notLoading', function() {
     return !LoadingState.active();
 });
 
-Template.registerHelper('selectedValue', function(id) {
+Template.registerHelper('selectedValue', function(id, val = false) {
+    if (!val) {
+        val = this.val;
+    }
     return (id == this.val);
 });
 

@@ -51,8 +51,12 @@ Template.clue.helpers({
         return this.clue.description;
     },
 
-    date() {
+    formattedDate() {
         return Formatter.date(this.clue.date);
+    },
+
+    date() {
+        return getDate(this.clue).toISOString();
     },
 
     active() {
@@ -82,6 +86,65 @@ Template.clue.helpers({
         return Permissions.owned(this.clue, true);
     },
 
+    showTime() {
+        return showTime(this);
+    },
+
+    months() {
+        let months = [];
+        for (let i = 1; i < 13; ++i) {
+            const val = Formatter.zeroPad(i);
+            months.push({id: val, val: val});
+        }
+        return months;
+    },
+
+    days() {
+        let days = [];
+        for (let i = 1; i < 32; ++i) {
+            const val = Formatter.zeroPad(i);
+            days.push({id: val, val: val});
+        }
+        return days;
+    },
+
+    year() {
+        return Math.abs(getDate(this.clue).getUTCFullYear());
+    },
+
+    month() {
+        return getDate(this.clue).getUTCMonth();
+    },
+
+    day() {
+        return getDate(this.clue).getUTCDate();
+    },
+
+    hours() {
+        return getDate(this.clue).getUTCHours();
+    },
+
+    minutes() {
+        return getDate(this.clue).getUTCMinutes();
+    },
+
+    seconds() {
+        return getDate(this.clue).getUTCSeconds();
+    },
+
+    selectedMonth(month) {
+        return (Formatter.zeroPad(getDate(this.clue).getUTCMonth() + 1) == month);
+    },
+
+    selectedDay(day) {
+        return (Formatter.zeroPad(getDate(this.clue).getUTCDate()) == day);
+    },
+
+    selectedEra(era) {
+        const val = (getDate(this.clue).getUTCFullYear() > 0) ? 1 : -1;
+        return (era == val);
+    },
+
 });
 
 Template.clue.events({
@@ -95,4 +158,35 @@ Template.clue.events({
         i.state.set('selected', e.target.checked);
     },
 
+    'change [name="year"]': setDate,
+    'change [name="month"]': setDate,
+    'change [name="day"]': setDate,
+    'change [name="hours"]': setDate,
+    'change [name="minutes"]': setDate,
+    'change [name="seconds"]': setDate,
+
 });
+
+function getDate(clue) {
+    return (clue) ? clue.date : new Date();
+}
+
+function setDate(e, i) {
+    const era = getFieldVal(i, 'era');
+    const year = getFieldVal(i, 'year') * era;
+    const month = parseInt(getFieldVal(i, 'month')) - 1;
+    const day = parseInt(getFieldVal(i, 'day'));
+    let hours = getFieldVal(i, 'hours');
+    let minutes = getFieldVal(i, 'minutes');
+    let seconds = getFieldVal(i, 'seconds');
+    const date = new Date(year, month, day, hours, minutes, seconds);
+    $(i.find('[name="date"]')).val(date.toISOString());
+}
+
+function showTime(ctx) {
+    return (['hour', 'minute', 'second'].includes(ctx.categoryPrecision));
+}
+
+function getFieldVal(i, field) {
+    return $(i.find('[name="' + field + '"]')).val();
+}

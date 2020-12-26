@@ -1,3 +1,5 @@
+
+
 Formatter = {
 
     second(date) {
@@ -68,6 +70,10 @@ Formatter = {
 
     nl2br(str) {
         return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    },
+
+    zeroPad(num, length = 2) {
+        return ('000000000' + num).substr(-length);
     },
 
 };

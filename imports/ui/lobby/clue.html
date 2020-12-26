@@ -31,18 +31,53 @@
             {{/if}}
         </td>
 
-        <td>
+        <td class="description">
             <textarea class="attr form-control form-control-sm {{#if viewing}}d-none{{/if}}" name="description" required maxlength="240" rows="1">{{description}}</textarea>
             <label class="{{#if editing}}d-none{{/if}}" for="clue-{{id}}">{{description}}</label>
         </td>
 
-        <td colspan="{{#if clue}}1{{else}}4{{/if}}">
-            <input class="attr form-control form-control-sm {{#if viewing}}d-none{{/if}}" type="date" name="date" value="{{date}}" required maxlength="10">
-            <span class="{{#if editing}}d-none{{/if}}">{{date}}</span>
+        <td>
+            <div class="datetime-wrapper form-inline {{#if viewing}}d-none{{/if}}">
+
+                <input name="year" type="number" min="1" max="999999999999" class="form-control form-control-sm" value="{{year}}">
+                &ndash;
+                <select name="month" class="form-control form-control-sm">
+                    {{#each thisMonth in months}}
+                        <option value="{{thisMonth.id}}" selected="{{selectedMonth thisMonth.id}}">{{thisMonth.val}}</option>
+                    {{/each}}
+                </select>
+                &ndash;
+                <select name="day" class="form-control form-control-sm">
+                    {{#each thisDay in days}}
+                        <option value="{{thisDay.id}}" selected="{{selectedDay thisDay.id}}">{{thisDay.val}}</option>
+                    {{/each}}
+                </select>
+                &nbsp;
+                <select name="era" class="form-control form-control-sm">
+                    <option value="-1" selected="{{selectedEra -1}}">BCE</option>
+                    <option value="1" selected="{{selectedEra 1}}">CE</option>
+                </select>
+
+                <div class="{{#unless showTime}}d-none{{/unless}}">
+                    <input name="hours" type="number" min="0" max="23" class="form-control form-control-sm" value="{{hours}}">
+                    :
+                    <input name="minutes" type="number" min="0" max="59" class="form-control form-control-sm" value="{{minutes}}">
+                    :
+                    <input name="seconds" type="number" min="0" max="59" class="form-control form-control-sm" value="{{seconds}}">
+                </div>
+
+                <input name="date" class="attr" type="hidden" value="{{date}}" required>
+
+            </div>
+
+            <span class="{{#if editing}}d-none{{/if}}">{{formattedDate}}</span>
+
         </td>
 
         {{#if clue}}
+
             <td>
+
                 <span class="{{#if viewing}}d-none{{/if}}">
                     <input
                         class="attr form-check-input"
@@ -58,6 +93,7 @@
                         data-size="mini"
                     >
                 </span>
+
                 <span class="badge badge-{{#if active}}success{{else}}secondary{{/if}} {{#if editing}}d-none{{/if}}">
                     {{#if active}}
                         Active
@@ -67,15 +103,19 @@
                 </span>
 
             </td>
-        {{/if}}
 
-        {{#if clue}}
             <td>
                 <a href="#" class="categories" data-id="{{id}}" title="Manage Categories"><i class="fa fa-folder table-icon"></i></a>
             </td>
+
             <td>
                 <a href="#" class="more" data-id="{{id}}" title="More Info"><i class="fa fa-info-circle table-icon"></i></a>
             </td>
+
+        {{else}}
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
         {{/if}}
 
         <td>

@@ -300,21 +300,21 @@
   margin-top: .8rem;
 }
 #cluesManager .description {
-  width: 35%;
+  width: 30%;
 }
 #cluesManager .date {
-  width: 15%;
+  width: 30%;
 }
 #cluesManager .status {
-  width: 7.5%;
+  width: 5%;
 }
 #cluesManager .categories,
 #cluesManager .more
 {
-  width: 5%;
+  width: 2.5%;
 }
 .clue .actions {
-  width: 32.5%;
+  width: 27.5%;
 }
 .clue .toggle.btn {
   min-width: 4.5rem;
@@ -340,6 +340,15 @@
 }
 #manageClueMore fieldset.form-group {
   margin: 0;
+}
+.datetime-wrapper {
+  white-space: nowrap;
+}
+.datetime-wrapper .form-control {
+  width: auto;
+}
+.datetime-wrapper [name="year"] {
+  width: 4rem !important;
 }
 
 /* pager */

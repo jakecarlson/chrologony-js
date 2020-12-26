@@ -84,14 +84,13 @@
                         </thead>
 
                         <tbody>
-
-                        {{#if clues}}
-                            {{#each clueCard in clues}}
-                                {{> clue clue=clueCard categoryId=categoryId}}
-                            {{/each}}
-                        {{else}}
-                            <tr><td colspan="7">Loading ...</td></tr>
-                        {{/if}}
+                            {{#if clues}}
+                                {{#each clueCard in clues}}
+                                    {{> clue clue=clueCard categoryId=categoryId categoryPrecision=categoryPrecision}}
+                                {{/each}}
+                            {{else}}
+                                <tr><td colspan="7">Loading ...</td></tr>
+                            {{/if}}
                         </tbody>
 
                     </table>

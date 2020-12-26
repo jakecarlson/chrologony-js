@@ -123,6 +123,11 @@ Template.clues_manager.helpers({
         return Template.instance().filters.get('categoryId');
     },
 
+    categoryPrecision() {
+        const category = Categories.findOne(Template.instance().filters.get('categoryId'));
+        return category.precision;
+    },
+
     cluesCount() {
         return Counts.get('cluesCount');
     },
