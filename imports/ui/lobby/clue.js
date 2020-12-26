@@ -52,7 +52,11 @@ Template.clue.helpers({
     },
 
     formattedDate() {
-        return Formatter.date(this.clue.date);
+        if (showTime(this)) {
+            return Formatter.datetime(this.clue.date);
+        } else {
+            return Formatter.date(this.clue.date);
+        }
     },
 
     date() {
