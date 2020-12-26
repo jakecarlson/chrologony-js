@@ -237,6 +237,8 @@ Template.clues_manager.events({
         const form = $(e.target);
         const id = form.find('.save').attr('data-id');
         const attrs = ModelEvents.getAttrs(form);
+        attrs.latitude = parseFloat(attrs.latitude);
+        attrs.longitude = parseFloat(attrs.longitude);
         attrs._id = id;
         Meteor.call('clue.updateMore', attrs, function(err, updated) {
             if (!err) {
