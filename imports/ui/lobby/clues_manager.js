@@ -237,13 +237,18 @@ Template.clues_manager.events({
         const form = $(e.target);
         const id = form.find('.save').attr('data-id');
         const attrs = ModelEvents.getAttrs(form);
-        attrs.latitude = parseFloat(attrs.latitude);
-        attrs.longitude = parseFloat(attrs.longitude);
+        if (attrs.latitude) {
+            attrs.latitude = parseFloat(attrs.latitude);
+        }
+        if (attrs.longitude) {
+            attrs.longitude = parseFloat(attrs.longitude);
+        }
         attrs._id = id;
         Meteor.call('clue.updateMore', attrs, function(err, updated) {
             if (!err) {
                 Logger.log('Updated Clue: ' + updated);
                 form.modal('hide');
+                i.state.set('currentClue', null);
             } else {
                 throw new Meteor.Error('clue-not-updated', 'Could not update the clue.', err);
             }
