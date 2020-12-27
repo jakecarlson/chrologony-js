@@ -370,19 +370,18 @@ Meteor.methods({
 
         Logger.log('Remove category ' + categoryId + ' from: ' + JSON.stringify(ids));
 
-        // Update the clue categories
+        // Update the clue categories; only remove the category if the clue has the category and it won't leave the clue with no categories
         const updated = Clues.update(
             {
                 _id: {$in: ids},
+                categories: categoryId,
+                'categories.1': {$exists: true},
             },
             {
                 $pull: {categories: categoryId}
             },
             {multi: true}
         );
-        if (!updated) {
-            throw new Meteor.Error('clue-not-updated', 'Could not remove a category from a clue.');
-        }
 
         return updated;
 

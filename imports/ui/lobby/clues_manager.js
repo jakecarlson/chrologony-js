@@ -113,7 +113,7 @@ Template.clues_manager.helpers({
         const i = Template.instance();
         if (i.dataReady.get()) {
             const skip = Helpers.getPageStart(i.filters.get('page'), Session.get('pageSize'));
-            const clues = Clues.find({}, {skip: skip, limit: Session.get('pageSize')});
+            const clues = Clues.find({}, {sort: {date: -1}, skip: skip, limit: Session.get('pageSize')});
             return clues;
         }
         return false;
@@ -284,82 +284,48 @@ Template.clues_manager.events({
         $('[name="id"]:checked').each(function() {
             clueIds.push(this.value);
         });
+        let categoryId = i.filters.get('categoryId');
 
         // Bulk add category
         if (i.state.get('bulkAction') == 'add_category') {
-            const categoryId = i.state.get('bulkAddCategoryId');
+            categoryId = i.state.get('bulkAddCategoryId');
             Meteor.call('clue.addCategory', clueIds, categoryId, function(err, updated) {
                 if (!err) {
                     Logger.log('Added Category to ' + updated + ' Clues: ' + categoryId);
                 } else {
                     throw new Meteor.Error('clue-category-not-added', 'Could not add a category to a clue.', err);
                 }
-                LoadingState.stop();
+                reload();
             });
+            $('#cluesBulkActionCategory')[0].selectedIndex = 0;
+            i.state.set('bulkAddCategoryId', null);
 
         // Bulk remove category
         } else if (i.state.get('bulkAction') == 'remove_category') {
-            const categoryId = i.filters.get('categoryId');
             Meteor.call('clue.removeCategory', clueIds, categoryId, function(err, updated) {
                 if (!err) {
                     Logger.log('Removed Category from ' + updated + ' Clues: ' + categoryId);
+                    if (updated != clueIds.length) {
+                        const notRemoved = clueIds.length - updated;
+                        Flasher.info(
+                            '<strong>' + notRemoved + '</strong> ' +
+                            Formatter.pluralize('clue', notRemoved) +
+                            ' could not removed from this category because this is ' + Formatter.possessify(notRemoved) + ' only category.'
+                        );
+                    }
                 } else {
                     throw new Meteor.Error('clue-category-not-removed', 'Could not remove a category from a clue.');
                 }
-                LoadingState.stop();
+                reload();
             });
 
         // Activate clues
-        } else if (i.state.get('bulkAction') == 'activate') {
-            Meteor.call('clue.activate', clueIds, function(err, updated) {
-                if (!err) {
-                    Logger.log('Activated ' + updated + ' Clues: ' + i.filters.get('categoryId'));
-                } else {
-                    throw new Meteor.Error('clues-not-activated', 'Could not activate clues.');
-                }
-                LoadingState.stop();
-            });
-
-        // Deactivate clues
-        } else if (i.state.get('bulkAction') == 'deactivate') {
-            Meteor.call('clue.deactivate', clueIds, function(err, updated) {
-                if (!err) {
-                    Logger.log('Deactivated ' + updated + ' Clues: ' + i.filters.get('categoryId'));
-                } else {
-                    throw new Meteor.Error('clues-not-deactivated', 'Could not deactivate clues.');
-                }
-                LoadingState.stop();
-            });
-
-        // Open clues
-        } else if (i.state.get('bulkAction') == 'open') {
-            Meteor.call('clue.open', clueIds, function(err, updated) {
-                if (!err) {
-                    Logger.log('Opened ' + updated + ' Clues: ' + i.filters.get('categoryId'));
-                } else {
-                    throw new Meteor.Error('clues-not-opened', 'Could not open clues.');
-                }
-                LoadingState.stop();
-            });
-
-        // Lock clues
-        } else if (i.state.get('bulkAction') == 'lock') {
-            Meteor.call('clue.lock', clueIds, function(err, updated) {
-                if (!err) {
-                    Logger.log('Locked ' + updated + ' Clues: ' + i.filters.get('categoryId'));
-                } else {
-                    throw new Meteor.Error('clues-not-locked', 'Could not lock clues.');
-                }
-                LoadingState.stop();
-            });
+        } else if (['activate', 'deactivate', 'open', 'lock'].includes(i.state.get('bulkAction'))) {
+            handleBulkAction(i.state.get('bulkAction'), clueIds, categoryId);
         }
 
         $('#cluesBulkAction')[0].selectedIndex = 0;
         i.state.set('bulkAction', null);
-        if (i.state.get('bulkAddCategoryId')) {
-            $('#cluesBulkActionCategory')[0].selectedIndex = 0;
-            i.state.set('bulkAddCategoryId', null);
-        }
         $('[name="id"]:checked, [name="all"]:checked').prop('checked', false).trigger('change');
 
     },
@@ -396,4 +362,33 @@ function cluesLoaded(i) {
         limit = total;
     }
     return (Clues.find({}).count() >= limit);
+}
+
+function reload() {
+    FlowRouter.reload();
+    LoadingState.stop();
+}
+
+function handleBulkAction(action, clueIds, categoryId) {
+    const actioned = Formatter.pastTensify(action);
+    const attempted = clueIds.length;
+    Meteor.call('clue.' + action, clueIds, function(err, updated) {
+        if (!err) {
+            Logger.log(Formatter.capitalize(actioned) + ' ' + updated + ' Clues: ' + categoryId);
+            if (updated != attempted) {
+                const notUpdated = attempted - updated;
+                Flasher.info(
+                    '<strong>' + notUpdated + '</strong> ' +
+                    Formatter.pluralize('clue', notUpdated) +
+                    ' could not be ' + actioned + ' because you are not the clue owner.'
+                );
+            }
+        } else {
+            throw new Meteor.Error(
+                'clues-not-' + actioned,
+                'Could not ' + action + ' ' + Formatter.pluralize('clues', attempted) + '.'
+            );
+        }
+        reload();
+    });
 }

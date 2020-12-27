@@ -68,6 +68,16 @@ Formatter = {
         }
     },
 
+    possessify(qty) {
+        return ((qty == 1) ? 'its' : 'their');
+    },
+
+    pastTensify(str) {
+        str += (str.substr(str.length-1) != 'e') ? 'e' : '';
+        str += 'd';
+        return str;
+    },
+
     nl2br(str) {
         return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
     },
