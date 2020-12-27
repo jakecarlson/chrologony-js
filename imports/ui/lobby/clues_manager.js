@@ -186,6 +186,11 @@ Template.clues_manager.helpers({
         );
     },
 
+    isCategoryOwner() {
+        const category = Categories.findOne(Template.instance().filters.get('categoryId'));
+        return Permissions.owned(category, true);
+    },
+
 });
 
 Template.clues_manager.events({
@@ -280,6 +285,7 @@ Template.clues_manager.events({
             clueIds.push(this.value);
         });
 
+        // Bulk add category
         if (i.state.get('bulkAction') == 'add_category') {
             const categoryId = i.state.get('bulkAddCategoryId');
             Meteor.call('clue.addCategory', clueIds, categoryId, function(err, updated) {
@@ -290,6 +296,8 @@ Template.clues_manager.events({
                 }
                 LoadingState.stop();
             });
+
+        // Bulk remove category
         } else if (i.state.get('bulkAction') == 'remove_category') {
             const categoryId = i.filters.get('categoryId');
             Meteor.call('clue.removeCategory', clueIds, categoryId, function(err, updated) {
@@ -297,6 +305,50 @@ Template.clues_manager.events({
                     Logger.log('Removed Category from ' + updated + ' Clues: ' + categoryId);
                 } else {
                     throw new Meteor.Error('clue-category-not-removed', 'Could not remove a category from a clue.');
+                }
+                LoadingState.stop();
+            });
+
+        // Activate clues
+        } else if (i.state.get('bulkAction') == 'activate') {
+            Meteor.call('clue.activate', clueIds, function(err, updated) {
+                if (!err) {
+                    Logger.log('Activated ' + updated + ' Clues: ' + i.filters.get('categoryId'));
+                } else {
+                    throw new Meteor.Error('clues-not-activated', 'Could not activate clues.');
+                }
+                LoadingState.stop();
+            });
+
+        // Deactivate clues
+        } else if (i.state.get('bulkAction') == 'deactivate') {
+            Meteor.call('clue.deactivate', clueIds, function(err, updated) {
+                if (!err) {
+                    Logger.log('Deactivated ' + updated + ' Clues: ' + i.filters.get('categoryId'));
+                } else {
+                    throw new Meteor.Error('clues-not-deactivated', 'Could not deactivate clues.');
+                }
+                LoadingState.stop();
+            });
+
+        // Open clues
+        } else if (i.state.get('bulkAction') == 'open') {
+            Meteor.call('clue.open', clueIds, function(err, updated) {
+                if (!err) {
+                    Logger.log('Opened ' + updated + ' Clues: ' + i.filters.get('categoryId'));
+                } else {
+                    throw new Meteor.Error('clues-not-opened', 'Could not open clues.');
+                }
+                LoadingState.stop();
+            });
+
+        // Lock clues
+        } else if (i.state.get('bulkAction') == 'lock') {
+            Meteor.call('clue.lock', clueIds, function(err, updated) {
+                if (!err) {
+                    Logger.log('Locked ' + updated + ' Clues: ' + i.filters.get('categoryId'));
+                } else {
+                    throw new Meteor.Error('clues-not-locked', 'Could not lock clues.');
                 }
                 LoadingState.stop();
             });

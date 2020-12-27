@@ -464,6 +464,98 @@ Meteor.methods({
 
     },
 
+    // Activate clues
+    'clue.activate'(ids) {
+
+        check(ids, [RecordId]);
+        Permissions.authenticated();
+        Permissions.notGuest();
+
+        Logger.log('Activate Clues: ' + JSON.stringify(ids));
+
+        // Update only the clues that are owned by user
+        const updated = Clues.update(
+            {_id: {$in: ids}, ownerId: Meteor.userId()},
+            {$set: {active: true}},
+            {multi: true}
+        );
+        if (!updated) {
+            throw new Meteor.Error('clues-not-activated', 'Could not activate clues.');
+        }
+
+        return updated;
+
+    },
+
+    // Dectivate clues
+    'clue.deactivate'(ids) {
+
+        check(ids, [RecordId]);
+        Permissions.authenticated();
+        Permissions.notGuest();
+
+        Logger.log('Deactivate Clues: ' + JSON.stringify(ids));
+
+        // Update only the clues that are owned by user
+        const updated = Clues.update(
+            {_id: {$in: ids}, ownerId: Meteor.userId()},
+            {$set: {active: false}},
+            {multi: true}
+        );
+        if (!updated) {
+            throw new Meteor.Error('clues-not-deactivated', 'Could not deactivate clues.');
+        }
+
+        return updated;
+
+    },
+
+    // Open clues
+    'clue.open'(ids) {
+
+        check(ids, [RecordId]);
+        Permissions.authenticated();
+        Permissions.notGuest();
+
+        Logger.log('Open Clues: ' + JSON.stringify(ids));
+
+        // Update only the clues that are owned by user
+        const updated = Clues.update(
+            {_id: {$in: ids}, ownerId: Meteor.userId()},
+            {$set: {open: true}},
+            {multi: true}
+        );
+        if (!updated) {
+            throw new Meteor.Error('clues-not-opened', 'Could not open clues.');
+        }
+
+        return updated;
+
+    },
+
+    // Lock clues
+    'clue.lock'(ids) {
+
+        check(ids, [RecordId]);
+        Permissions.authenticated();
+        Permissions.notGuest();
+
+        Logger.log('Lock Clues: ' + JSON.stringify(ids));
+
+        // Update only the clues that are owned by user
+        const updated = Clues.update(
+            {_id: {$in: ids}, ownerId: Meteor.userId()},
+            {$set: {open: false}},
+            {multi: true}
+        );
+        if (!updated) {
+            throw new Meteor.Error('clues-not-locked', 'Could not lock clues.');
+        }
+
+        return updated;
+
+    },
+
 });
 
 
