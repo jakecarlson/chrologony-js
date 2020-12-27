@@ -1,17 +1,17 @@
-import { Games } from '../../../imports/api/Games';
+import { Clues } from '../../../imports/api/Clues';
 
-// Add game options playerLimit, noJoinAfterStart, and autoShowMore.
+// Add private flag to clues.
 Migrations.add({
 
-    version: 26,
-    name: 'Add game options playerLimit, noJoinAfterStart, and autoShowMore.',
+    version: 29,
+    name: 'Add private flag to clues.',
 
     up: function() {
-        Games.update({}, {$set: {playerLimit: 0, noJoinAfterStart: false, autoShowMore: false}}, {multi: true});
+        Clues.update({}, {$set: {open: false}}, {multi: true});
     },
 
     down: function() {
-        Games.update({}, {$unset: {playerLimit: 1, noJoinAfterStart: 1, autoShowMore: 1}}, {multi: true});
+        Clues.update({}, {$unset: {open: 1}}, {multi: true});
     },
 
 });

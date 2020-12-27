@@ -160,7 +160,7 @@
 
 /* categories manager */
 #categoriesManager {
-  min-width: 60rem;
+  min-width: 1200px;
 }
 #categoriesManager .name {
   width: 25%;
@@ -268,7 +268,7 @@
 
 /* clues manager */
 #cluesManager {
-  min-width: 60rem;
+  min-width: 1200px;
 }
 #cluesManager label,
 #cluesManager span
@@ -290,22 +290,24 @@
 #cluesManager tbody .form-check-input {
   margin-top: .5rem;
 }
-#cluesManager .select {
-  width: 2.5%;
-}
 #cluesManager.table thead th:first-child {
   vertical-align: top;
 }
 #cluesManager.table thead th:first-child .form-check-input {
   margin-top: .8rem;
 }
+#cluesManager .select {
+  width: 2.5%;
+}
 #cluesManager .description {
   width: 30%;
 }
 #cluesManager .date {
-  width: 30%;
+  width: 25%;
 }
-#cluesManager .status {
+#cluesManager .open,
+#cluesManager .status
+{
   width: 5%;
 }
 #cluesManager .categories,

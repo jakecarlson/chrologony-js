@@ -27,7 +27,10 @@ Template.clue.onRendered(function clueOnRendered() {
 
 Template.clue.helpers({
 
-    editing() {
+    editing(owner = null) {
+        if (owner === false) {
+            return false;
+        }
         return Template.instance().state.get('editing');
     },
 
@@ -35,7 +38,10 @@ Template.clue.helpers({
         return Template.instance().state.get('error');
     },
 
-    viewing() {
+    viewing(owner = null) {
+        if (owner === false) {
+            return true;
+        }
         return !Template.instance().state.get('editing');
     },
 
@@ -65,6 +71,14 @@ Template.clue.helpers({
 
     active() {
         return this.clue.active;
+    },
+
+    open() {
+        return this.clue.open;
+    },
+
+    isOwner() {
+        return Permissions.owned(this.clue, true);
     },
 
     categoryId() {

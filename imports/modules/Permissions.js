@@ -28,7 +28,7 @@ export const Permissions = {
     clue: {
 
         canEdit(clue, categoryId) {
-            if (Permissions.owned(clue, true)) {
+            if (Permissions.owned(clue, true) || clue.open) {
                 return true;
             }
             const category = Categories.findOne(categoryId);

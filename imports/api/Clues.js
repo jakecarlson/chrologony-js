@@ -21,10 +21,11 @@ Clues.schema = new SimpleSchema(
     {
         description: {type: String, max: 240, required: true},
         date: {type: Date, required: true},
-        hint: {type: String, max: 960, defaultValue: null},
         active: {type: Boolean, defaultValue: true, required: true},
+        open: {type: Boolean, defaultValue: false},
         categories: {type: Array, minCount: 1, required: true},
         'categories.$': {type: String, regEx: SimpleSchema.RegEx.Id},
+        hint: {type: String, max: 960, defaultValue: null},
         thumbnailUrl: {type: SimpleSchema.RegEx.Url, max: 960, defaultValue: null},
         imageUrl: {type: SimpleSchema.RegEx.Url, max: 960, defaultValue: null},
         latitude: {type: Number, defaultValue: null},
@@ -189,6 +190,7 @@ if (Meteor.isServer) {
                         description: 1,
                         date: 1,
                         active: 1,
+                        open: 1,
                         categories: 1,
                         ownerId: 1,
                         score: 1,
@@ -261,11 +263,13 @@ Meteor.methods({
                 date: NonEmptyString,
                 categoryId: RecordId,
                 active: Boolean,
+                open: Boolean,
             }
         );
         Permissions.authenticated();
         Permissions.notGuest();
-        Permissions.check(Clues.findOne(attrs._id).canEdit(attrs.categoryId));
+        const clue = Clues.findOne(attrs._id);
+        Permissions.check(clue.canEdit(attrs.categoryId));
 
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
@@ -274,12 +278,13 @@ Meteor.methods({
 
         // If there is an ID, this is an update
         const updated = Clues.update(
-            getClueUpdateSelector(attrs),
+            getClueUpdateSelector(clue, attrs.categoryId),
             {
                 $set: {
                     description: attrs.description,
                     date: attrs.date,
                     active: attrs.active,
+                    open: attrs.open,
                 }
             }
         );
@@ -404,13 +409,14 @@ Meteor.methods({
         );
         Permissions.authenticated();
         Permissions.notGuest();
-        Permissions.check(Clues.findOne(attrs._id).canEdit(attrs.categoryId));
+        const clue = Clues.findOne(attrs._id);
+        Permissions.check(clue.canEdit(attrs.categoryId));
 
         Logger.log('Update Clue: ' + attrs._id + ' ' + JSON.stringify(attrs));
 
         // If there is an ID, this is an update
         const updated = Clues.update(
-            getClueUpdateSelector(attrs),
+            getClueUpdateSelector(clue, attrs.categoryId),
             {
                 $set: {
                     externalUrl: attrs.externalUrl,
@@ -564,17 +570,20 @@ if (Meteor.isServer) {
 
 }
 
-function getClueUpdateSelector(attrs) {
+function getClueUpdateSelector(clue, categoryId) {
     let selector = {
-        _id: attrs._id,
+        _id: clue._id,
         $or: [
             {ownerId: Meteor.userId()},
         ],
     };
-    if (attrs.categoryId) {
-        const category = Categories.findOne(attrs.categoryId);
-        if (category.ownerId == Meteor.userId()) {
-            selector.$or.push({categories: attrs.categoryId});
+    if (categoryId) {
+        const category = Categories.findOne(categoryId);
+        if (
+            (category.ownerId == Meteor.userId()) ||
+            (category.collaborators.includes(Meteor.userId()) && clue.open)
+        ) {
+            selector.$or.push({categories: categoryId});
         }
     }
     return selector;
