@@ -246,6 +246,18 @@ if (Meteor.isServer) {
             const importSet = ImportSets.findOne(setId);
             const categoryId = importSet.categoryId;
 
+            // Set
+            const insertDoc = {
+                categories: [categoryId],
+                ownerId: null,
+                active: true,
+                open: false,
+                score: Clues.DEFAULT_SCORE,
+                difficulty: Clues.DEFAULT_DIFFICULTY,
+                approximation: false,
+                createdAt: new Date(),
+            };
+
             // Loop through in chunks
             let inserted = [];
             let updated = [];
@@ -306,16 +318,11 @@ if (Meteor.isServer) {
                     doc.latitude = parseCoord(doc.latitude);
                     doc.longitude = parseCoord(doc.longitude);
 
-                    // Set the other defaults
-                    doc.active = true;
-                    doc.ownerId = null;
-                    doc.updatedAt = new Date();
-                    doc.score = 10;
-                    doc.difficulty = 0.5;
-                    doc.approximation = false;
-
                     // Set the import ID
                     doc.importId = clue._id.valueOf();
+
+                    // Set updated at
+                    doc.updatedAt = new Date();
 
                     // Get rid of 'null' strings
                     for (const attr in doc) {
@@ -330,13 +337,8 @@ if (Meteor.isServer) {
                         }
                     }
 
-                    const insertDoc = {
-                        categories: [categoryId],
-                        createdAt: new Date(),
-                    };
-
                     // Try to import the clue
-                    const result = Clues.direct.upsert({importId: doc.importId}, {$set: doc, $setOnInsert: insertDoc}, {validate: false});
+                    const result = Clues.direct.upsert({importId: doc.importId}, {$set: doc, $setOnInsert: insertDoc}, {validate: false, getAutoValues: false});
 
                     // Put the result in the correct bucket
                     const log = date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ' (' + doc.importId + '): ' + doc.description;
