@@ -7,6 +7,7 @@ import { LoadingState } from "../modules/LoadingState";
 import '../modules/TourGuide';
 
 import './layout_authenticated.html';
+import './auth/profile.js';
 import './content/privacy.js';
 import './content/terms.js';
 import './lobby/lobby.js';

@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 
@@ -16,6 +16,54 @@ Meteor.users.SELECT_FIELDS = {
     lastActiveAt: 1,
     guest: 1,
 };
+
+Meteor.users.helpers({
+
+    currentGame() {
+        return Games.findOne({_id: this.currentGameId, deletedAt: null});
+    },
+
+    email() {
+        if (this.emails && (this.emails.length > 0)) {
+            return this.emails[0].address;
+        } else if (this.services) {
+            for (const [service, data] of Object.entries(this.services)) {
+                if (data.email) {
+                    return data.email;
+                }
+            }
+        }
+        return false;
+    },
+
+    name() {
+        if (this.profile && this.profile.name) {
+            return this.profile.name;
+        }
+        return null;
+    },
+
+    pageSize() {
+        return this.profile.pageSize;
+    },
+
+    canChangePassword() {
+        return (!this.guest && this.username);
+    },
+
+    isInGame(gameId) {
+        return (this.currentGameId == gameId);
+    },
+
+    isOnline() {
+        if (this.lastActiveAt) {
+            const timeSinceLastActivity = (new Date().getTime() - this.lastActiveAt.getTime());
+            return (timeSinceLastActivity < Meteor.users.ONLINE_THRESHOLD);
+        }
+        return false;
+    },
+
+});
 
 if (Meteor.isServer) {
 
@@ -54,42 +102,22 @@ if (Meteor.isServer) {
 
 }
 
-Meteor.users.helpers({
+Meteor.methods({
 
-    currentGame() {
-        return Games.findOne({_id: this.currentGameId, deletedAt: null});
-    },
+    'user.updateProfile'(attrs) {
 
-    email() {
-        if (this.emails && (this.emails.length > 0)) {
-            return this.emails[0].address;
-        } else if (this.services) {
-            for (const [service, data] of Object.entries(this.services)) {
-                if (data.email) {
-                    return data.email;
-                }
+        check(
+            attrs,
+            {
+                name: Match.Maybe(String),
+                pageSize: Match.Maybe(Number),
+                mute: Match.Maybe(Boolean),
             }
-        }
-        return false;
-    },
+        );
+        Permissions.authenticated();
 
-    name() {
-        if (this.profile && this.profile.name) {
-            return this.profile.name;
-        }
-        return null;
-    },
+        return Meteor.users.update(this.userId, {$set: {profile: attrs}});
 
-    isInGame(gameId) {
-        return (this.currentGameId == gameId);
-    },
-
-    isOnline() {
-        if (this.lastActiveAt) {
-            const timeSinceLastActivity = (new Date().getTime() - this.lastActiveAt.getTime());
-            return (timeSinceLastActivity < Meteor.users.ONLINE_THRESHOLD);
-        }
-        return false;
     },
 
 });
@@ -265,6 +293,7 @@ if (Meteor.isServer) {
         },
 
         'user.activity'() {
+            Permissions.authenticated();
             return Meteor.users.update(this.userId, {$set: {lastActiveAt: new Date()}});
         },
 

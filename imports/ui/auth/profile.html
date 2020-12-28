@@ -1,0 +1,27 @@
+<template name="profile">
+
+    <div id="profile" class="card card-small border-primary text-white mx-auto mb-4">
+
+        <header class="card-header bg-primary">
+            <h1 class="card-title text-white text-center">Profile</h1>
+        </header>
+
+        <form class="card-body justify-content-center text-dark" autocomplete="off">
+
+            <div class="form-group">
+                <label for="name">
+                    Display Name
+                    <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-placement="top" title="This is the name other users will see. {{#if currentUser.username}}Changing this will not change your username you log in with.{{/if}}"></i>
+                </label>
+                <input type="text" value="{{name}}" class="form-control" name="name" id="name" placeholder="Display Name" maxlength="40" autocapitalize="none" autocomplete="off" autocorrect="off" required>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary" disabled="{{loading}}">Save Profile</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</template>

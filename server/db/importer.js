@@ -313,6 +313,7 @@ if (Meteor.isServer) {
                         date.setFullYear(year);
                     }
                     doc.date = date;
+                    doc.timeZone = Clues.DEFAULT_TIMEZONE;
 
                     // Sort out coordinates
                     doc.latitude = parseCoord(doc.latitude);

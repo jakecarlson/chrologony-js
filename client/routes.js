@@ -115,6 +115,21 @@ AccountsTemplates.configureRoute('resetPwd', {
     },
 });
 
+FlowRouter.route('/profile', {
+    name: 'profile',
+    title: getTitle('Profile'),
+    triggersEnter: [redirectToHome, Helpers.updateLastActivity],
+    action(params, queryParams) {
+        Logger.log("Route: profile");
+        BlazeLayout.render(
+            'layout_authenticated',
+            {
+                main: 'profile',
+            }
+        );
+    },
+});
+
 FlowRouter.route('/privacy', {
     name: 'privacy',
     title: getTitle('Privacy Policy'),

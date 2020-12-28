@@ -44,6 +44,10 @@ Template.header.helpers({
         return !Meteor.user().guest;
     },
 
+    showPasswordLink() {
+        return Meteor.user().canChangePassword();
+    },
+
     privacyLink() {
         return FlowRouter.path('privacy');
     },
@@ -54,6 +58,10 @@ Template.header.helpers({
 
     supportLink() {
         return Meteor.settings.public.app.supportUrl;
+    },
+
+    profileLink() {
+        return FlowRouter.path('profile');
     },
 
 });
