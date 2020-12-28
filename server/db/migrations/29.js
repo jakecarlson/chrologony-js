@@ -1,10 +1,10 @@
 import { Clues } from '../../../imports/api/Clues';
 
-// Add private flag to clues.
+// Add open flag to clues.
 Migrations.add({
 
     version: 29,
-    name: 'Add private flag to clues.',
+    name: 'Add open flag to clues.',
 
     up: function() {
         Clues.update({}, {$set: {open: false}}, {multi: true});

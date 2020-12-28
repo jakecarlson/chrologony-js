@@ -54,8 +54,8 @@ Helpers = {
 
     },
 
-    getPageStart(pageNum, pageSize) {
-        return (pageNum - 1) * pageSize;
+    getPageStart(pageNum) {
+        return (pageNum - 1) * this.pageSize();
     },
 
     getSelectValue(select) {
@@ -181,10 +181,7 @@ Helpers = {
 
     currentGameId() {
         const user = Meteor.user({fields: {currentGameId: 1}});
-        if (user) {
-            return user.currentGameId;
-        }
-        return null;
+        return (user) ? user.currentGameId : null;
     },
 
     currentAndPreviousGameIds() {
@@ -262,6 +259,15 @@ Helpers = {
                 }
             });
         }
+    },
+
+    isMuted() {
+        return Meteor.user({fields: {'profile.muted': 1}}).profile.muted;
+    },
+
+    pageSize() {
+        const user = Meteor.user({fields: {'profile.pageSize': 1}});
+        return (user && user.profile && user.profile.pageSize) ? user.profile.pageSize : Meteor.users.DEFAULT_PAGE_SIZE;
     },
 
 };

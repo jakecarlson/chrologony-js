@@ -51,6 +51,9 @@ if (Meteor.isServer) {
             user.profile.name = 'Unknown';
         }
 
+        user.profile.pageSize = Meteor.users.DEFAULT_PAGE_SIZE;
+        user.profile.muted = false;
+
         return user;
 
     });

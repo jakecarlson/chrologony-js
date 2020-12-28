@@ -41,7 +41,7 @@
                 <label class="text-muted mr-2" for="pageSize{{rand}}">{{items}} per Page:</label>
                 <select name="size" class="form-control" id="pageSize{{rand}}">
                     {{#each size in sizes}}
-                        <option value="{{size}}" selected="{{sizeSelected size}}">{{size}}</option>
+                        <option value="{{size}}" selected="{{sizeSelected size}}">{{formatSize size}}</option>
                     {{/each}}
                 </select>
             </form>

@@ -37,7 +37,7 @@ Template.header.helpers({
     },
 
     isMuted() {
-        return Session.get('muted');
+        return Helpers.isMuted();
     },
 
     isNotGuest() {
@@ -98,7 +98,11 @@ Template.header.events({
 
     'click #mute'(e, i) {
         e.preventDefault();
-        Session.set('muted', !Session.get('muted'));
+        Meteor.call('user.updateProfile', {muted: !Helpers.isMuted()}, function(err) {
+            if (err) {
+                Flasher.error('Mute setting failed to save. Please try again.');
+            }
+        });
     },
 
 });

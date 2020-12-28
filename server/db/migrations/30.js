@@ -1,6 +1,5 @@
 import { Clues } from '../../../imports/api/Clues';
-import {Promise} from "meteor/promise";
-import {Cards} from "../../../imports/api/Cards";
+import { Promise } from "meteor/promise";
 
 // Add time zone field to clues.
 Migrations.add({

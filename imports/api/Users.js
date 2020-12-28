@@ -6,6 +6,7 @@ import { Permissions } from '../modules/Permissions';
 import { Games } from "./Games";
 
 Meteor.users.ONLINE_THRESHOLD = 15 * 60 * 1000; // Set to 15m
+Meteor.users.DEFAULT_PAGE_SIZE = 25;
 
 Meteor.users.SELECT_FIELDS = {
     _id: 1,
@@ -41,10 +42,6 @@ Meteor.users.helpers({
             return this.profile.name;
         }
         return null;
-    },
-
-    pageSize() {
-        return this.profile.pageSize;
     },
 
     canChangePassword() {
@@ -111,11 +108,14 @@ Meteor.methods({
             {
                 name: Match.Maybe(String),
                 pageSize: Match.Maybe(Number),
-                mute: Match.Maybe(Boolean),
+                muted: Match.Maybe(Boolean),
             }
         );
         Permissions.authenticated();
 
+        Logger.log('Update user profile: ' + JSON.stringify(attrs));
+
+        attrs = _.defaults(attrs, Meteor.user().profile);
         return Meteor.users.update(this.userId, {$set: {profile: attrs}});
 
     },

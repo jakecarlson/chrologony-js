@@ -17,7 +17,6 @@ import './pager';
 
 Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
-    Session.setDefault('pageSize', 25);
     this.pagesDisplayed = 7;
 
     this.filters = new ReactiveDict();
@@ -25,7 +24,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.filters.set('owned', false);
     this.filters.set('categoryId', null);
     this.filters.set('page', 1);
-    this.filters.set('pageSize', Session.get('pageSize'));
+    this.filters.set('pageSize', Helpers.pageSize());
 
     this.state = new ReactiveDict();
     this.state.set('currentClue', null);
@@ -114,8 +113,8 @@ Template.clues_manager.helpers({
     clues() {
         const i = Template.instance();
         if (i.dataReady.get()) {
-            const skip = Helpers.getPageStart(i.filters.get('page'), Session.get('pageSize'));
-            const clues = Clues.find({}, {sort: {date: -1}, skip: skip, limit: Session.get('pageSize')});
+            const skip = Helpers.getPageStart(i.filters.get('page'));
+            const clues = Clues.find({}, {sort: {date: -1}, skip: skip, limit: Helpers.pageSize()});
             return clues;
         }
         return false;
@@ -159,10 +158,6 @@ Template.clues_manager.helpers({
 
     page() {
         return Template.instance().filters.get('page');
-    },
-
-    pageSize() {
-        return Session.get('pageSize');
     },
 
     pagesDisplayed() {
@@ -276,7 +271,7 @@ Template.clues_manager.events({
     },
 
     'click [data-page]'(e, i) {
-        e.preventDefault();
+        LoadingState.start(e);
         const page = parseInt($(e.target).closest('a').attr('data-page'));
         i.filters.set('page', page);
     },
@@ -379,8 +374,8 @@ Template.clues_manager.events({
     },
 
     'change .pager-size [name="size"]'(e, i) {
+        LoadingState.start();
         const pageSize = parseInt(e.target.value);
-        Session.set('pageSize', pageSize);
         i.filters.set('pageSize', pageSize);
         i.filters.set('page', 1);
     },

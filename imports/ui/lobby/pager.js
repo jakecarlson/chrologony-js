@@ -1,6 +1,7 @@
 import { Template } from 'meteor/templating';
 
 import './pager.html';
+import {Meteor} from "meteor/meteor";
 
 Template.pager.onCreated(function pagerOnCreated() {
 
@@ -19,11 +20,11 @@ Template.pager.helpers({
     },
 
     first() {
-        return numeral(getFirst(this.page, this.size) + 1).format('0,0');
+        return numeral(getFirst(this.page) + 1).format('0,0');
     },
 
     last() {
-        return numeral(getLast(this.page, this.size, this.total)).format('0,0');
+        return numeral(getLast(this.page, this.total)).format('0,0');
     },
 
     previous() {
@@ -35,7 +36,7 @@ Template.pager.helpers({
     },
 
     next() {
-        const numPages = getNumPages(this.total, this.size);
+        const numPages = getNumPages(this.total);
         let next = this.page + 1;
         if (next > numPages) {
             next = false;
@@ -56,12 +57,12 @@ Template.pager.helpers({
     },
 
     showPages() {
-        return (!this.hidePages && (getNumPages(this.total, this.size) > 1));
+        return (!this.hidePages && (getNumPages(this.total) > 1));
     },
 
     pages() {
 
-        const numPages = getNumPages(this.total, this.size);
+        const numPages = getNumPages(this.total);
         const sides = Math.floor(Template.instance().displayed / 2);
 
         let min = this.page - sides;
@@ -95,11 +96,15 @@ Template.pager.helpers({
     },
 
     sizes() {
-        return [5,10,25,50,100];
+        return [5, 10, 25, 50, 100];
     },
 
     sizeSelected(size) {
-        return (size == this.size);
+        return (size == Helpers.pageSize());
+    },
+
+    formatSize(size) {
+        return numeral(size).format('0,0');
     },
 
     rand() {
@@ -110,20 +115,29 @@ Template.pager.helpers({
 
 Template.pager.events({
 
+    'change .pager-size [name="size"]'(e, i) {
+        const pageSize = parseInt(e.target.value);
+        Meteor.call('user.updateProfile', {pageSize: pageSize}, function(err) {
+            if (err) {
+                Flasher.error('Page size setting failed to save. Please try again.');
+            }
+        });
+    },
+
 });
 
-function getFirst(pageNum, pageSize) {
-    return (pageNum - 1) * pageSize;
+function getFirst(pageNum) {
+    return Helpers.getPageStart(pageNum);
 }
 
-function getLast(pageNum, pageSize, total) {
-    let last = pageNum * pageSize;
+function getLast(pageNum, total) {
+    let last = pageNum * Helpers.pageSize();
     if (last > total) {
         last = total;
     }
     return last;
 }
 
-function getNumPages(total, pageSize) {
-    return Math.ceil(total / pageSize);
+function getNumPages(total) {
+    return Math.ceil(total / Helpers.pageSize());
 };

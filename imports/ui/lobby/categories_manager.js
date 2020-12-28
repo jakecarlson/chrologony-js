@@ -21,7 +21,6 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
         FlowRouter.reload();
     }
 
-    Session.setDefault('pageSize', 5);
     this.pagesDisplayed = 7;
 
     this.page = new ReactiveVar(1);
@@ -71,8 +70,8 @@ Template.categories_manager.helpers({
             {ownerId: Meteor.userId()},
             {
                 sort: {name: 1, theme: 1},
-                skip: Helpers.getPageStart(Template.instance().page.get(), Session.get('pageSize')),
-                limit: Session.get('pageSize'),
+                skip: Helpers.getPageStart(Template.instance().page.get()),
+                limit: Helpers.pageSize(),
             }
         );
     },
@@ -99,10 +98,6 @@ Template.categories_manager.helpers({
 
     page() {
         return Template.instance().page.get();
-    },
-
-    pageSize() {
-        return Session.get('pageSize');
     },
 
     pagesDisplayed() {
@@ -144,7 +139,6 @@ Template.categories_manager.events({
     },
 
     'change .pager-size [name="size"]'(e, i) {
-        Session.set('pageSize', parseInt(e.target.value));
         i.page.set(1);
     },
 
