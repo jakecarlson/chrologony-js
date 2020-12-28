@@ -39,7 +39,7 @@ Template.board.onCreated(function boardOnCreated() {
                         handle: '.board-card.current.owned',
                         direction: 'horizontal',
                         filter: '.board-card .move',
-                        forceFallback: true,
+                        // forceFallback: true,
                         onStart: function (e) {
                             $('#boardCards').removeClass('inactive');
                         },
