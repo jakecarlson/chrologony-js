@@ -50,7 +50,7 @@
                         </tr>
 
                         {{#if canAddClue}}
-                            {{> clue clue=false categoryId=categoryId}}
+                            {{> clue clue=false categoryId=categoryId categoryPrecision=categoryPrecision}}
                         {{/if}}
 
                         {{#if hasSelectedClues}}
@@ -72,6 +72,7 @@
                                             <option value="deactivate">Deactivate Owned Clues in this Category</option>
                                             <option value="open">Open Owned Clues in this Category</option>
                                             <option value="lock">Lock Owned Clues in this Category</option>
+                                            <option value="set_time_zone">Set Time Zone for Clues in this Category</option>
 
                                         </select>
 
@@ -80,7 +81,12 @@
                                             {{> categories_selector id="cluesBulkActionCategory" showInactive=true excludeCategoryId=categoryId small=true}}
                                         {{/if}}
 
-                                        <button type="submit" class="btn btn-primary btn-sm {{#if showCategorySelector}}ml-3{{/if}}" disabled="{{disableBulkSubmit}}">Submit</button>
+                                        {{#if showTimeZoneSelector}}
+                                            <label for="cluesBulkTimeZone" class="sr-only">Time Zone to Set:</label>
+                                            {{> time_zones_selector id="cluesBulkActionTimeZone"}}
+                                        {{/if}}
+
+                                        <button type="submit" class="btn btn-primary btn-sm {{#if showCategoryOrTimeZoneSelector}}ml-3{{/if}}" disabled="{{disableBulkSubmit}}">Submit</button>
 
                                     </form>
                                 </td>

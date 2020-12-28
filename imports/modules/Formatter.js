@@ -3,15 +3,15 @@
 Formatter = {
 
     second(date) {
-        return moment.utc(date).format("h:mm:ss A");
+        return moment.utc(date).format("kk:mm:ss A");
     },
 
     minute(date) {
-        return moment.utc(date).format("h:mm A");
+        return moment.utc(date).format("kk:mm");
     },
 
     hour(date) {
-        return moment.utc(date).format("h A");
+        return moment.utc(date).format("kk");
     },
 
     date(date) {
@@ -19,7 +19,7 @@ Formatter = {
     },
 
     datetime(datetime) {
-        return moment.utc(datetime).format("Y-MM-DD h:mm A");
+        return moment.utc(datetime).format("Y-MM-DD kk:mm");
     },
 
     relativeTime(datetime) {

@@ -11,8 +11,9 @@ import { Clues } from "../../api/Clues";
 
 import './clues_manager.html';
 import './clue.js';
-import './clues_filter.js';
-import './pager.js';
+import './clues_filter';
+import '../time_zones_selector';
+import './pager';
 
 Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
@@ -32,6 +33,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('filterChanged', false);
     this.state.set('bulkAction', null);
     this.state.set('bulkAddCategoryId', null);
+    this.state.set('bulkTimeZone', null);
     this.state.set('cluesSelected', false);
 
     this.dataReady = new ReactiveVar(false);
@@ -172,7 +174,15 @@ Template.clues_manager.helpers({
     },
 
     showCategorySelector() {
-        return (Template.instance().state.get('bulkAction') == 'add_category');
+        return addCategoryBulkActionSelected();
+    },
+
+    showTimeZoneSelector() {
+        return setTimeZoneBulkActionSelected();
+    },
+
+    showCategoryOrTimeZoneSelector() {
+        return (addCategoryBulkActionSelected() || setTimeZoneBulkActionSelected());
     },
 
     disableBulkSubmit() {
@@ -180,8 +190,12 @@ Template.clues_manager.helpers({
             LoadingState.active() ||
             !Template.instance().state.get('bulkAction') ||
             (
-                (Template.instance().state.get('bulkAction') == 'add_category') &&
+                addCategoryBulkActionSelected() &&
                 !Template.instance().state.get('bulkAddCategoryId')
+            ) ||
+            (
+                setTimeZoneBulkActionSelected() &&
+                !Template.instance().state.get('bulkTimeZone')
             )
         );
     },
@@ -287,7 +301,7 @@ Template.clues_manager.events({
         let categoryId = i.filters.get('categoryId');
 
         // Bulk add category
-        if (i.state.get('bulkAction') == 'add_category') {
+        if (addCategoryBulkActionSelected()) {
             categoryId = i.state.get('bulkAddCategoryId');
             Meteor.call('clue.addCategory', clueIds, categoryId, function(err, updated) {
                 if (!err) {
@@ -302,7 +316,7 @@ Template.clues_manager.events({
 
         // Bulk remove category
         } else if (i.state.get('bulkAction') == 'remove_category') {
-            Meteor.call('clue.removeCategory', clueIds, categoryId, function(err, updated) {
+            Meteor.call('clue.removeCategory', clueIds, categoryId, function (err, updated) {
                 if (!err) {
                     Logger.log('Removed Category from ' + updated + ' Clues: ' + categoryId);
                     if (updated != clueIds.length) {
@@ -319,7 +333,29 @@ Template.clues_manager.events({
                 reload();
             });
 
-        // Activate clues
+        // Bulk set time zone
+        } else if (setTimeZoneBulkActionSelected()) {
+            const timeZone = i.state.get('bulkTimeZone');
+            Meteor.call('clue.setTimeZone', clueIds, timeZone, function(err, updated) {
+                if (!err) {
+                    Logger.log('Set Time Zone for ' + updated + ' Clues: ' + timeZone);
+                    if (updated != clueIds.length) {
+                        const notUpdated = clueIds.length - updated;
+                        Flasher.info(
+                            '<strong>' + notUpdated + '</strong> ' +
+                            Formatter.pluralize('clue', notUpdated) +
+                            ' could not be updated with the time zone because you are not the clue owner.'
+                        );
+                    }
+                } else {
+                    throw new Meteor.Error('clue-time-zone-not-updated', 'Could not update time zone for a clue.', err);
+                }
+                reload();
+            });
+            $('#cluesBulkActionTimeZone')[0].selectedIndex = 0;
+            i.state.set('bulkTimeZone', null);
+
+        // Activate / deactivate / open / lock clues
         } else if (['activate', 'deactivate', 'open', 'lock'].includes(i.state.get('bulkAction'))) {
             handleBulkAction(i.state.get('bulkAction'), clueIds, categoryId);
         }
@@ -336,6 +372,10 @@ Template.clues_manager.events({
 
     'change #cluesBulkActionCategory'(e, i) {
         i.state.set('bulkAddCategoryId', e.target.value);
+    },
+
+    'change #cluesBulkActionTimeZone'(e, i) {
+        i.state.set('bulkTimeZone', e.target.value);
     },
 
     'change .pager-size [name="size"]'(e, i) {
@@ -391,4 +431,12 @@ function handleBulkAction(action, clueIds, categoryId) {
         }
         reload();
     });
+}
+
+function addCategoryBulkActionSelected() {
+    return (Template.instance().state.get('bulkAction') == 'add_category');
+}
+
+function setTimeZoneBulkActionSelected() {
+    return (Template.instance().state.get('bulkAction') == 'set_time_zone');
 }

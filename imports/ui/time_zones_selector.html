@@ -1,0 +1,10 @@
+<template name="time_zones_selector">
+
+    <select class="attr form-control form-control-sm" name="timeZone" id="{{id}}" required disabled="{{unready}}">
+        <option disabled selected="{{selectedValue null}}" value="">Select a Time Zone ...</option>
+        {{#each tz in timeZones}}
+            <option value="{{tz}}" selected="{{selectedValue tz}}">{{tz}}</option>
+        {{/each}}
+    </select>
+
+</template>

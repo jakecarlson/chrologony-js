@@ -352,6 +352,10 @@
 .datetime-wrapper [name="year"] {
   width: 4rem !important;
 }
+.datetime-wrapper [name="timeZone"] {
+  max-width: 6rem;
+  margin-left: .25rem;
+}
 
 /* pager */
 .pager-size label {

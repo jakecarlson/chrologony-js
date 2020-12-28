@@ -11,16 +11,19 @@ import { Categories } from "./Categories";
 import { Games } from "./Games";
 import { Cards } from "./Cards";
 import { Votes } from "./Votes";
+import moment from "moment-timezone";
 
 export const Clues = new Mongo.Collection('clues');
 
 Clues.DEFAULT_SCORE = 10;
 Clues.DEFAULT_DIFFICULTY = .5;
+Clues.DEFAULT_TIMEZONE = 'UTC';
 
 Clues.schema = new SimpleSchema(
     {
         description: {type: String, max: 240, required: true},
         date: {type: Date, required: true},
+        timeZone: {type: String, defaultValue: Clues.DEFAULT_TIMEZONE, required: true},
         active: {type: Boolean, defaultValue: true, required: true},
         open: {type: Boolean, defaultValue: false},
         categories: {type: Array, minCount: 1, required: true},
@@ -189,6 +192,7 @@ if (Meteor.isServer) {
                         _id: 1,
                         description: 1,
                         date: 1,
+                        timeZone: 1,
                         active: 1,
                         open: 1,
                         categories: 1,
@@ -226,6 +230,7 @@ Meteor.methods({
             {
                 description: NonEmptyString,
                 date: NonEmptyString,
+                timeZone: String,
                 categoryId: RecordId,
             }
         );
@@ -244,6 +249,7 @@ Meteor.methods({
             return Clues.insert({
                 description: attrs.description,
                 date: attrs.date,
+                timeZone: attrs.timeZone,
                 categories: [attrs.categoryId],
             });
         } catch(err) {
@@ -261,6 +267,7 @@ Meteor.methods({
                 _id: String,
                 description: NonEmptyString,
                 date: NonEmptyString,
+                timeZone: String,
                 categoryId: RecordId,
                 active: Boolean,
                 open: Boolean,
@@ -283,6 +290,7 @@ Meteor.methods({
                 $set: {
                     description: attrs.description,
                     date: attrs.date,
+                    timeZone: attrs.timeZone,
                     active: attrs.active,
                     open: attrs.open,
                 }
@@ -549,6 +557,45 @@ Meteor.methods({
         );
         if (!updated) {
             throw new Meteor.Error('clues-not-locked', 'Could not lock clues.');
+        }
+
+        return updated;
+
+    },
+
+    // Set clue time zones
+    'clue.setTimeZone'(ids, timeZone) {
+
+        check(ids, [RecordId]);
+        Permissions.authenticated();
+        Permissions.notGuest();
+
+        Logger.log('Set Clue Time Zones: ' + JSON.stringify(ids));
+
+        // Update only the clues that are owned by user or are open
+        const clues = Clues.find(
+            {
+                _id: {$in: ids},
+                timeZone: {$ne: timeZone},
+                $or: [
+                    {ownerId: Meteor.userId()},
+                    {open: true},
+                ]
+            },
+        );
+        let updated = 0;
+        clues.forEach(function(clue) {
+            const oldDate = moment.utc(clue.date);
+            const previousOffset = moment.tz.zone(clue.timeZone).utcOffset(oldDate);
+            const newOffset = moment.tz.zone(timeZone).utcOffset(oldDate);
+            const offset = newOffset - previousOffset;
+            const newDate = oldDate.add(offset, 'minutes');
+            const update = Clues.update(clue._id, {$set: {date: newDate.toISOString(), timeZone: timeZone}});
+            updated += update;
+        });
+
+        if (!updated) {
+            throw new Meteor.Error('clues-not-updated', 'Could not update clues.');
         }
 
         return updated;
