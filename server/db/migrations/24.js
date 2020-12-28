@@ -25,11 +25,11 @@ Migrations.add({
             }
             Games.update(game._id, {$set: {ownerId: ownerId}});
         });
-        Meteor.users.update({}, {$set: {currentGameId: null, gameJoinedAt: null}}, {multi: true});
+        Meteor.users.update({}, {$set: {currentGameId: null, joinedGameAt: null}}, {multi: true});
     },
 
     down: function() {
-        Meteor.users.update({}, {$unset: {currentGameId: 1, gameJoinedAt: 1}}, {multi: true});
+        Meteor.users.update({}, {$unset: {currentGameId: 1, joinedGameAt: 1}}, {multi: true});
         Games.update({}, {$unset: {name: 1, password: 1, private: 1, ownerId: 1, players: 1, deletedAt: 1}}, {multi: true});
     },
 
