@@ -102,8 +102,11 @@ Games.helpers({
             return this.name;
         } else {
             const category = Categories.findOne(this.categoryId);
-            return category.name;
+            if (category) {
+                return category.name;
+            }
         }
+        return 'Unknown';
     },
 
     playersWithNames() {
