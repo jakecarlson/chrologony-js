@@ -2,6 +2,10 @@ import { LoadingState } from '../modules/LoadingState';
 import {Meteor} from "meteor/meteor";
 import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
+Template.registerHelper('dump', function(varToDump) {
+    return JSON.stringify(varToDump);
+});
+
 Template.registerHelper('collectionNotEmpty', function(collection) {
     return (collection.count() > 0);
 });
