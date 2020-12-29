@@ -31,8 +31,9 @@ Template.board.onCreated(function boardOnCreated() {
     this.autorun(() => {
 
         if (this.subscriptionsReady()) {
-            const data = Template.currentData();
+            // const data = Template.currentData();
             Tracker.afterFlush(() => {
+
                 const cardsSortable = new Sortable(
                     document.getElementById('boardCards'),
                     {
@@ -52,14 +53,15 @@ Template.board.onCreated(function boardOnCreated() {
 
                 this.cardTimer = $('.card-timer');
 
-                $('html').off('keyup').keyup(function(e) {
-                    Logger.log('Key Press: ' + e.keyCode);
-                    handleKeyPress(e, data);
-                });
-
             });
         }
 
+    });
+
+    let ctx = this;
+    $('html').off('keyup').keyup(function(e) {
+        Logger.log('Key Press: ' + e.keyCode);
+        handleKeyPress(e, Blaze.getData(ctx.view));
     });
 
 });
