@@ -262,7 +262,8 @@ Helpers = {
     },
 
     isMuted() {
-        return Meteor.user({fields: {'profile.muted': 1}}).profile.muted;
+        const user = Meteor.user({fields: {'profile.muted': 1}});
+        return (user && user.profile && user.profile.muted);
     },
 
     pageSize() {
