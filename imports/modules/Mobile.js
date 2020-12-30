@@ -58,6 +58,7 @@ Mobile = {
 
     initAndroid() {
         Mobile.start();
+        screen.orientation.unlock();
     },
 
     initIOS() {
