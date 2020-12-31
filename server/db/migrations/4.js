@@ -9,7 +9,7 @@ Migrations.add({
 
     up: function() {
 
-        const wotdCategory = Categories.findOne({ownerId: null, source: 'wikipedia'}, {sort: {createdAt: 1}});
+        const wotdCategory = Categories.findOne({ownerId: null, source: 'Wikipedia'}, {sort: {createdAt: 1}});
         if (wotdCategory) {
 
             const wotdCategoryId = wotdCategory._id;
@@ -274,7 +274,7 @@ Migrations.add({
                     theme: category.theme,
                     private: false,
                     active: true,
-                    source: 'wikipedia',
+                    source: 'Wikipedia',
                     collaborators: [],
                     ownerId: null,
                 });
@@ -298,9 +298,9 @@ Migrations.add({
 
     down: function() {
 
-        const wotdCategory = Categories.findOne({ownerId: null, source: 'wikipedia'}, {sort: {createdAt: 1}});
+        const wotdCategory = Categories.findOne({ownerId: null, source: 'Wikipedia'}, {sort: {createdAt: 1}});
         if (wotdCategory) {
-            const newCategories = Categories.find({ownerId: null, source: 'wikipedia', _id: {$ne: wotdCategory._id}}, {sort: {createdAt: 1}}).fetch();
+            const newCategories = Categories.find({ownerId: null, source: 'Wikipedia', _id: {$ne: wotdCategory._id}}, {sort: {createdAt: 1}}).fetch();
             newCategories.forEach(function(category) {
                 const updated = Clues.update(
                     {categories: category._id},

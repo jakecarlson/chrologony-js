@@ -50,10 +50,6 @@
       "Sports",
       "Technology"
     ],
-    "sources": {
-      "user": {},
-      "wikipedia": {}
-    },
     "analyticsSettings": {
       "Google Analytics" : {"trackingId": false}
     },

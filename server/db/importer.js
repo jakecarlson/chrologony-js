@@ -15,10 +15,10 @@ if (Meteor.isServer) {
     Meteor.methods({
 
         // Add import set
-        'importer.addSet'(name, categoryId) {
+        'importer.addSet'(name, categoryId = null) {
 
             check(name, NonEmptyString);
-            check(categoryId, RecordId);
+            check(categoryId, Match.OneOf(RecordId, null));
 
             return ImportSets.insert({
                 name: name,
