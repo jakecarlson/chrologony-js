@@ -230,7 +230,7 @@ Meteor.methods({
             {
                 description: NonEmptyString,
                 date: NonEmptyString,
-                timeZone: String,
+                timeZone: Match.OneOf(null, String),
                 categoryId: RecordId,
             }
         );
@@ -241,6 +241,11 @@ Meteor.methods({
 
         // Convert date to ISODate
         attrs.date = new Date(attrs.date);
+
+        // Default time zone to UTC
+        if (!attrs.timeZone) {
+            attrs.timeZone = Clues.DEFAULT_TIMEZONE;
+        }
 
         Logger.log('Create Clue: ' + JSON.stringify(attrs));
 
