@@ -239,6 +239,8 @@ if (Meteor.isServer) {
             if (total == 0) {
                 Logger.log('No clues to import for set ' + setId + '. Aborting.', 3);
                 return;
+            } else {
+                Logger.log('Found ' + total + ' new or updated clues to import for set ' + setId + '. Importing ...', 3);
             }
             const numChunks = Math.ceil(total / chunkSize);
 
@@ -274,7 +276,7 @@ if (Meteor.isServer) {
                     }
                 );
 
-                Logger.log("Importing " + (start+1) + " - " + (start+imports.count()) + " of " + total + hr(), 3);
+                Logger.log("\nImporting " + (start+1) + " - " + (start + imports.count(true)) + " of " + total + hr(), 3);
                 imports.fetch().forEach(function(clue) {
 
                     const doc = _.pick(
@@ -345,6 +347,7 @@ if (Meteor.isServer) {
                     const log = date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ' (' + doc.importId + '): ' + doc.description;
                     let action = null;
                     if (result) {
+
                         if (result.insertedId) {
                             inserted.push(log);
                             action = 'INSERT';
@@ -352,7 +355,13 @@ if (Meteor.isServer) {
                             updated.push(log);
                             action = 'UPDATE';
                         }
-                        Imports.update(doc.importId, {$set: {lastImportedAt: new Date()}});
+
+                        const importTimestamped = Imports.update(clue._id, {$set: {lastImportedAt: new Date()}});
+                        if (!importTimestamped) {
+                            Logger.log('Import ' + doc.importId + ' could not be marked as imported!', 3);
+                            return;
+                        }
+
                     } else {
                         errors.push(log);
                         action = 'ERROR';
