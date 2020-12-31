@@ -58,12 +58,14 @@ Categories.helpers({
     },
 
     label() {
-        let str = '';
+        let label = '';
         if (this.source == 'user') {
-            str += this.theme + ': '
+            label += this.theme + ': ' + this.name;
+        } else {
+            label += this.name + ' [' + this.source + ']';
         }
-        str += this.name + ' (' + numeral(this.cluesCount).format('0,0') + ')';
-        return str;
+        label += ' (' + numeral(this.cluesCount).format('0,0') + ')';
+        return label;
     },
 
     cluesLink() {
