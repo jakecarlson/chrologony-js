@@ -352,6 +352,7 @@ if (Meteor.isServer) {
                             updated.push(log);
                             action = 'UPDATE';
                         }
+                        Imports.update(doc.importId, {$set: {lastImportedAt: new Date()}});
                     } else {
                         errors.push(log);
                         action = 'ERROR';
@@ -362,9 +363,6 @@ if (Meteor.isServer) {
                 });
 
             }
-
-            // Mark the import timestamp
-            Imports.update(importSelector, {$set: {lastImportedAt: new Date()}}, {multi: true});
 
             // Update the clue count of the insert category
             const cluesCount = Clues.find({categories: categoryId, active: true}).count();
