@@ -31,7 +31,7 @@ GameObserver = {
             },
 
             changed(id, fields) {
-                if (ctx.initialized && (id == GameObserver.getId(ctx, anonymous))) {
+                if (ctx.initialized && GameObserver.isInGame(id, ctx, anonymous)) {
 
                     // If the game is started, play game start sound
                     if (fields.startedAt) {
@@ -113,7 +113,8 @@ GameObserver = {
             },
 
             changed(turnId, fields) {
-                if (ctx.initialized && (fields.endedAt != null)) {
+                const turn = Turns.findOne(turnId);
+                if (ctx.initialized && (fields.endedAt != null) && GameObserver.isInGame(turn.gameId, ctx, anonymous)) {
                     SoundManager.play('turnEnd');
                 }
             },
@@ -123,7 +124,8 @@ GameObserver = {
         Cards.find().observeChanges({
 
             added: function(cardId, fields) {
-                if (ctx.initialized) {
+                const turn = Turns.findOne(fields.turnId);
+                if (ctx.initialized && GameObserver.isInGame(turn.gameId, ctx, anonymous)) {
                     Helpers.subscribe(Meteor, 'cards', GameObserver.getId(ctx, anonymous));
                     Helpers.subscribe(Meteor, 'cardClues', GameObserver.getId(ctx, anonymous));
                     SoundManager.play('cardDraw');
@@ -136,9 +138,10 @@ GameObserver = {
             },
 
             changed(cardId, fields) {
-                if (ctx.initialized && (fields.correct != null)) {
+                const card = Cards.findOne(cardId);
+                const turn = Turns.findOne(card.turnId);
+                if (ctx.initialized && (fields.correct != null) && GameObserver.isInGame(turn.gameId, ctx, anonymous)) {
 
-                    const card = Cards.findOne(cardId);
                     Meteor.call('clue.get', card.clueId, function(err, clue) {
 
                         if (!err) {
@@ -185,6 +188,10 @@ GameObserver = {
             return ctx.game.get()._id;
         }
         return null;
+    },
+
+    isInGame(gameId, ctx, anonymous = false) {
+        return (gameId == GameObserver.getId(ctx, anonymous));
     },
 
 }

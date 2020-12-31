@@ -66,9 +66,9 @@ Template.game.onCreated(function gameOnCreated() {
                     });
 
                     this.initialized = true;
-                    LoadingState.stop();
 
                 }
+                LoadingState.stop();
 
             // Redirect the user back to the lobby if their current game doesn't match this one
             } else {
