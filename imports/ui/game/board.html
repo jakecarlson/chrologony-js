@@ -83,6 +83,32 @@
 
         </div>
 
+        <div class="modal fade" id="confirmEndTurn" tabindex="-1" role="dialog" aria-labelledby="confirmEndTurnTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content border-primary">
+
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="confirmEndTurnTitle">Confirm End Turn</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <p class="modal-body mb-0">
+                        <strong>A guess is in progress. Any cards not locked in will be lost.</strong>
+                        As game owner, you can end anyone's turn at any time.
+                        However, this should only be done to keep the game moving if the current player is taking too long.
+                    </p>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary confirm" disabled="{{loading}}">End Turn</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     {{/if}}
 
 </template>

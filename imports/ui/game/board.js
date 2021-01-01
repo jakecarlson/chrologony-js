@@ -283,7 +283,19 @@ Template.board.events({
     },
 
     'click .end-turn'(e, i) {
+
+        // If this the game owner ending the turn early, prompt before going through with it
+        if (['waiting', 'guessing'].includes(getStatus(this.turn))) {
+            $('#confirmEndTurn').modal('show');
+        } else {
+            endTurn(this, e);
+        }
+
+    },
+
+    'click #confirmEndTurn .confirm'(e, i) {
         endTurn(this, e);
+        $('#confirmEndTurn').modal('hide');
     },
 
     'click .move-back'(e, i) {
@@ -443,6 +455,10 @@ function getColor(turn) {
 
 function gameHasEnded(game) {
     return (game && game.endedAt);
+}
+
+function gameHasStarted(game) {
+    return (game && game.startedAt);
 }
 
 function isGameWinner(game) {
@@ -611,6 +627,7 @@ function canDrawCard(data) {
 function canEndTurn(data) {
     return !(
         gameHasEnded(data.game) ||
+        !gameHasStarted(data.game) ||
         (
             (
                 !isGameOwner(data.game) ||
