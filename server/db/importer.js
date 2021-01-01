@@ -78,31 +78,34 @@ if (Meteor.isServer) {
 
             // Find dupes grouping by date + external ID
             const imports = Promise.await(
-                Imports.rawCollection().aggregate([
-                    {
-                        $match : {setId: setId},
-                    },
-                    {
-                        $group: {
-                            _id: {date: "$date", externalId: "$externalId"},
-                            count: {$sum: 1},
-                            importIds: {$push: "$_id"},
-                            descriptions: {$push: "$description"},
-                            externalIds: {$push: "$externalId"},
-                        }
-                    },
-                    {
-                        $sort: {
-                            date: 1,
-                            externalId: 1,
-                            createdAt: 1,
-                            description: 1,
+                Imports.rawCollection().aggregate(
+                    [
+                        {
+                            $match : {setId: setId},
                         },
-                    },
-                    {
-                        $match: {count: {$gt: 1}}
-                    }
-                ]).toArray()
+                        {
+                            $group: {
+                                _id: {date: "$date", externalId: "$externalId"},
+                                count: {$sum: 1},
+                                importIds: {$push: "$_id"},
+                                descriptions: {$push: "$description"},
+                                externalIds: {$push: "$externalId"},
+                            }
+                        },
+                        {
+                            $sort: {
+                                date: 1,
+                                externalId: 1,
+                                createdAt: 1,
+                                description: 1,
+                            },
+                        },
+                        {
+                            $match: {count: {$gt: 1}}
+                        }
+                    ],
+                    {allowDiskUse: true}
+                ).toArray()
             );
 
             // Loop through all groupings and save the dupes
@@ -154,24 +157,28 @@ if (Meteor.isServer) {
                     const newImport = Imports.findOne(newImportId);
 
                     // Set fields to update the old import with
-                    const doc = _.pick(
-                        newImport,
-                        'description',
-                        'hint',
-                        'thumbnail',
-                        'imageUrl',
-                        'latitude',
-                        'longitude',
-                        'externalUrl',
-                        'moreInfo'
-                    );
-                    doc.updatedAt = new Date();
+                    if (newImport) {
 
-                    // Update the old import and delete the new one
-                    const didUpdate = Imports.update(oldImportId, {$set: doc});
-                    if (didUpdate) {
-                        removedIds.push(newImportId.valueOf());
-                        didRemove = Imports.remove(newImportId);
+                        const doc = _.pick(
+                            newImport,
+                            'description',
+                            'hint',
+                            'thumbnail',
+                            'imageUrl',
+                            'latitude',
+                            'longitude',
+                            'externalUrl',
+                            'moreInfo'
+                        );
+                        doc.updatedAt = new Date();
+
+                        // Update the old import and delete the new one
+                        const didUpdate = Imports.update(oldImportId, {$set: doc});
+                        if (didUpdate) {
+                            removedIds.push(newImportId.valueOf());
+                            didRemove = Imports.remove(newImportId);
+                        }
+
                     }
 
                     // Add the clue to the appropriate list depending on the outcome of the removal of the new one
