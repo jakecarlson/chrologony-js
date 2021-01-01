@@ -1,13 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 
-// Attempt to fix import UTF-8 character encoding issues retroactively.
+// Create source categories.
 Migrations.add({
 
     version: 32,
-    name: 'Attempt to fix import UTF-8 character encoding issues retroactively.',
+    name: 'Create source categories.',
 
     up: function() {
-        Meteor.call('importer.fixEncodings')
+        Meteor.call('importer.addSourceCategories');
     },
 
     down: function() {
