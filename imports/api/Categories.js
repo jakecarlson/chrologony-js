@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
@@ -267,9 +267,13 @@ Meteor.methods({
 
     'category.updateClueCounts'(ids) {
 
+        check(ids, Match.OneOf(RecordId, [RecordId]));
         Permissions.authenticated();
         Permissions.notGuest();
 
+        if (typeof(ids) != 'array') {
+            ids = [ids];
+        }
         ids.forEach(function(id) {
             const cluesCount = Clues.find({categories: id, active: true}).count();
             const updated = Categories.update(id, {$set: {cluesCount: cluesCount}});

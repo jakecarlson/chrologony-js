@@ -100,5 +100,9 @@
     "updateClueDifficulties": {
       "frequencyInHours": false
     }
+  },
+  "users": {
+    "anonymous": "anonymous",
+    "admin": "z2y8W9mFWScbjg43R"
   }
 }
