@@ -89,7 +89,7 @@ if (Meteor.isServer) {
     Meteor.publish('categories', function categoriesPublication() {
         if (this.userId) {
             return Categories.find(
-                Helpers.getCategoriesSelector(),
+                Helpers.getCategoriesSelector({active: false}),
                 {
                     fields: {
                         _id: 1,

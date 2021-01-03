@@ -31,8 +31,8 @@ Helpers = {
             selector.$or.push({private: false});
         }
 
-        if (typeof(filters.active) != 'undefined') {
-            selector.active = filters.active;
+        if (filters.active !== false) {
+            selector.active = true;
         }
 
         if (typeof(filters.user) != 'undefined') {

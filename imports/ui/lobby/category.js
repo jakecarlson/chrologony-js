@@ -36,11 +36,14 @@ Template.category.helpers({
     },
 
     name() {
-        let str = this.category.name;
-        if (this.category.source != 'user') {
-            str += ' [' + this.category.source + ']';
+        if (this.category) {
+            let str = this.category.name;
+            if (this.category.source != 'user') {
+                str += ' [' + this.category.source + ']';
+            }
+            return str;
         }
-        return str;
+        return null;
     },
 
     private() {

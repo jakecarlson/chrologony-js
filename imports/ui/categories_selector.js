@@ -25,21 +25,21 @@ Template.categories_selector.helpers({
 
     publicCategories() {
         return Categories.find(
-            Helpers.getCategoriesSelector({private: false, user: true, active: this.showInactive, exclude: this.excludeCategoryId}),
+            Helpers.getCategoriesSelector({private: false, user: true, active: !this.showInactive, exclude: this.excludeCategoryId}),
             {sort: {name: 1}}
         );
     },
 
     privateCategories() {
         return Categories.find(
-            Helpers.getCategoriesSelector({private: true, user: true, active: this.showInactive, exclude: this.excludeCategoryId}),
+            Helpers.getCategoriesSelector({private: true, user: true, active: !this.showInactive, exclude: this.excludeCategoryId}),
             {sort: {name: 1}}
         );
     },
 
     systemCategories() {
         return Categories.find(
-            Helpers.getCategoriesSelector({private: false, user: false, active: this.showInactive, exclude: this.excludeCategoryId}),
+            Helpers.getCategoriesSelector({private: false, user: false, active: !this.showInactive, exclude: this.excludeCategoryId}),
             {sort: {name: 1}}
         );
     },
