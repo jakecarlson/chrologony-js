@@ -206,6 +206,28 @@
 {
   width: 100%;
 }
+#cluesFilter .form-group-owned {
+  margin-bottom: -1rem;
+}
+#cluesFilter .form-group-date {
+  position: relative;
+  width: 100%;
+}
+#cluesFilter .form-group-date {
+  padding-left: 2.75rem;
+}
+#cluesFilter .form-group-date legend {
+  position: absolute;
+  left: 0;
+  top: .1rem;
+  width: auto;
+}
+#cluesFilter .form-group-date .form-control {
+  width: 4rem;
+}
+#cluesFilter .btn-primary {
+  margin-top: -1rem;
+}
 @media (min-width: 576px) {
   #cluesFilter .form-group {
     float: left;
@@ -222,8 +244,20 @@
   {
     display: inline-block;
   }
-  #cluesFilter .form-check {
-    margin-right: .75rem;
+  #cluesFilter .form-group-owned {
+    margin-bottom: 0;
+  }
+  #cluesFilter .form-group-date-start {
+    padding-start: .75rem;
+  }
+  #cluesFilter .form-group-date-end {
+    padding-left: 2.5rem;
+  }
+  #cluesFilter .form-group-date-end legend {
+    left: .75rem;
+  }
+  #cluesFilter .btn-primary {
+    margin-top: 0;
   }
 }
 @media (min-width: 768px) {
@@ -251,6 +285,15 @@
   #cluesFilter .form-group input
   {
     width: 15rem;
+  }
+  #cluesFilter .form-group-date-start {
+    padding-start: 0;
+  }
+  #cluesFilter .form-group-date-end {
+    padding-left: 1.75rem;
+  }
+  #cluesFilter .form-group-date-end legend {
+    left: 0;
   }
 }
 #cluesFilterCategory,

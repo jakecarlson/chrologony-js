@@ -15,19 +15,27 @@ Template.clues_filter.helpers({
         return (LoadingState.active() || !Template.instance().changed.get());
     },
 
+    months() {
+        let months = [];
+        for (let i = 1; i < 13; ++i) {
+            months.push(Formatter.zeroPad(i));
+        }
+        return months;
+    },
+
+    days() {
+        let days = [];
+        for (let i = 1; i < 32; ++i) {
+            days.push(Formatter.zeroPad(i));
+        }
+        return days;
+    },
+
 });
 
 Template.clues_filter.events({
 
-    'keyup #cluesFilter [name="keyword"]'(e, i) {
-        i.changed.set(true);
-    },
-
-    'change #cluesFilter [name="owned"]'(e, i) {
-        i.changed.set(true);
-    },
-
-    'change #cluesFilter [name="categoryId"]'(e, i) {
+    'keyup [type="text"], keyup [type="number"], change [type="number"], change [type="checkbox"], change select'(e, i) {
         i.changed.set(true);
     },
 

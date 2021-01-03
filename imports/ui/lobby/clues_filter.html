@@ -1,6 +1,6 @@
 <template name="clues_filter">
 
-    <form id="cluesFilter" class="mb-4 pl-3 pr-3 justify-content-center text-muted">
+    <form id="cluesFilter" class="mb-4 pl-3 pr-3 justify-content-center text-muted" novalidate>
 
         <div class="form-group form-group-category">
             <label class="sr-only" for="cluesFilterCategory">Category:</label>
@@ -8,6 +8,7 @@
         </div>
 
         {{#if categoryId}}
+
             <div class="form-group form-group-keyword">
                 <label class="sr-only">Search:</label>
                 <input type="text" id="cluesFilterKeyword" name="keyword" value="{{keyword}}" placeholder="Keyword" class="form-control">
@@ -16,7 +17,63 @@
                 <input type="checkbox" id="cluesFilterOwned" name="owned" value="true" checked="{{owned}}" class="form-check-input form-check-inline">
                 <label for="clueFilterOwned">Mine Only</label>
             </div>
-            <button type="submit" class="btn btn-primary ml-1" disabled="{{submitDisabled}}">Filter</button>
+
+            <br>
+
+            <fieldset class="form-group form-group-date form-group-date-start form-inline">
+                <legend class="col-form-label-sm">From</legend>
+                <input name="start_year" type="number" min="1" max="999999999999" class="form-control form-control-sm" placeholder="YYYY">
+                –
+                <select name="start_month" class="form-control form-control-sm" required>
+                    <option disabled selected value="">MM</option>
+                    {{#each month in months}}
+                        <option value="{{month}}">{{month}}</option>
+                    {{/each}}
+                </select>
+                –
+                <select name="start_day" class="form-control form-control-sm" required>
+                    <option disabled selected value="">DD</option>
+                    {{#each day in days}}
+                        <option value="{{day}}">{{day}}</option>
+                    {{/each}}
+                </select>
+                &nbsp;&nbsp;
+                <select name="start_era" class="form-control form-control-sm" required>
+                    <option disabled selected value="">Era</option>
+                    <option value="1">CE</option>
+                    <option value="-1">BCE</option>
+                </select>
+            </fieldset>
+
+            <fieldset class="form-group form-group-date form-group-date-end form-inline">
+                <legend class="col-form-label-sm">To</legend>
+                <input name="end_year" type="number" min="1" max="999999999999" class="form-control form-control-sm" placeholder="YYYY">
+                –
+                <select name="end_month" class="form-control form-control-sm" required>
+                    <option disabled selected value="">MM</option>
+                    {{#each month in months}}
+                        <option value="{{month}}">{{month}}</option>
+                    {{/each}}
+                </select>
+                –
+                <select name="end_day" class="form-control form-control-sm" required>
+                    <option disabled selected value="">DD</option>
+                    {{#each day in days}}
+                        <option value="{{day}}">{{day}}</option>
+                    {{/each}}
+                </select>
+                &nbsp;&nbsp;
+                <select name="end_era" class="form-control form-control-sm" required>
+                    <option disabled selected value="">Era</option>
+                    <option value="1">CE</option>
+                    <option value="-1">BCE</option>
+                </select>
+            </fieldset>
+
+            <br>
+
+            <button type="submit" class="btn btn-primary" disabled="{{submitDisabled}}">Filter</button>
+
         {{/if}}
 
     </form>

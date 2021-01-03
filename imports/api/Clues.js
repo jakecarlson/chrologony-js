@@ -18,6 +18,27 @@ export const Clues = new Mongo.Collection('clues');
 Clues.DEFAULT_SCORE = 10;
 Clues.DEFAULT_DIFFICULTY = .5;
 Clues.DEFAULT_TIMEZONE = 'UTC';
+Clues.PUBLISH_FIELDS = {
+    _id: 1,
+    description: 1,
+    date: 1,
+    timeZone: 1,
+    active: 1,
+    open: 1,
+    categories: 1,
+    ownerId: 1,
+    score: 1,
+    difficulty: 1,
+    hint: 1,
+    thumbnailUrl: 1,
+    imageUrl: 1,
+    latitude: 1,
+    longitude: 1,
+    externalId: 1,
+    externalUrl: 1,
+    moreInfo: 1,
+    approximation: 1,
+};
 
 Clues.schema = new SimpleSchema(
     {
@@ -41,6 +62,36 @@ Clues.schema = new SimpleSchema(
         score: {type: SimpleSchema.Integer, defaultValue: Clues.DEFAULT_SCORE},
         difficulty: {type: Number, defaultValue: Clues.DEFAULT_DIFFICULTY},
         approximation: {type: Boolean, defaultValue: false},
+        year: {
+            type: Number,
+            autoValue: function() {
+                const date = this.field('date');
+                if (date.isSet) {
+                    return date.value.getUTCFullYear();
+                }
+                return;
+            }
+        },
+        month: {
+            type: Number,
+            autoValue: function() {
+                const date = this.field('date');
+                if (date.isSet) {
+                    return date.value.getUTCMonth()+1;
+                }
+                return;
+            }
+        },
+        day: {
+            type: Number,
+            autoValue: function() {
+                const date = this.field('date');
+                if (date.isSet) {
+                    return date.value.getUTCDate();
+                }
+                return;
+            }
+        },
     },
     {
         requiredByDefault: false,
@@ -181,34 +232,14 @@ if (Meteor.isServer) {
             const selector = getCluePublicationSelector(filters, legacy);
             const limit = filters.page * filters.pageSize;
 
-            Counts.publish(this, 'cluesCount', Clues.find(selector));
+            Counts.publish(this, 'cluesCount', Clues.find(selector), {noReady: true});
 
             return Clues.find(
                 selector,
                 {
                     sort: {date: -1},
                     limit: limit,
-                    fields: {
-                        _id: 1,
-                        description: 1,
-                        date: 1,
-                        timeZone: 1,
-                        active: 1,
-                        open: 1,
-                        categories: 1,
-                        ownerId: 1,
-                        score: 1,
-                        difficulty: 1,
-                        hint: 1,
-                        thumbnailUrl: 1,
-                        imageUrl: 1,
-                        latitude: 1,
-                        longitude: 1,
-                        externalId: 1,
-                        externalUrl: 1,
-                        moreInfo: 1,
-                        approximation: 1,
-                    },
+                    fields: Clues.PUBLISH_FIELDS,
                 }
             );
 
@@ -767,6 +798,57 @@ function getCluePublicationSelector(filters, legacy = false) {
                 selector.$text = {$search: filters.keyword};
             }
 
+        }
+        
+        // start date
+        let startYear = parseInt(filters.startYear);
+        let startMonth = parseInt(filters.startMonth);
+        let startDay = parseInt(filters.startDay);
+        if (startYear) {
+            const startEra = parseInt(filters.startEra);
+            if (startEra == -1) {
+                startYear = startYear * -1;
+            }
+        }
+
+        // end date
+        let endYear = parseInt(filters.endYear);
+        let endMonth = parseInt(filters.endMonth);
+        let endDay = parseInt(filters.endDay);
+        if (endYear) {
+            const endEra = parseInt(filters.endEra);
+            if (endEra == -1) {
+                endYear = endYear * -1;
+            }
+        }
+
+        const $and = [];
+        if (startYear) {
+            const startDate = new Date(Date.UTC(startYear, (startMonth ? startMonth-1 : null), (startDay ? startDay : null), 12));
+            $and.push({date: {$gte: startDate}});
+        } else if (startMonth || startDay) {
+            if (startMonth) {
+                $and.push({month: {$gte: startMonth}});
+            }
+            if (startDay) {
+                $and.push({day: {$gte: startDay}});
+            }
+        }
+
+        if (endYear) {
+            const endDate = new Date(Date.UTC(endYear, (endMonth ? endMonth-1 : null), (endDay ? endDay : null), 12));
+            $and.push({date: {$lte: endDate}});
+        } else if (endMonth || endDay) {
+            if (endMonth) {
+                $and.push({month: {$lte: endMonth}});
+            }
+            if (endDay) {
+                $and.push({day: {$lte: endDay}});
+            }
+        }
+
+        if ($and.length > 0) {
+            selector.$and = $and;
         }
 
     }

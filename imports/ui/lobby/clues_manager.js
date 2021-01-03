@@ -15,14 +15,28 @@ import './clues_filter';
 import '../time_zones_selector';
 import './pager';
 
+const FILTER_FIELDS = {
+    keyword: 'keyword',
+    owned: 'owned',
+    startYear: 'start_year',
+    startMonth: 'start_month',
+    startDay: 'start_day',
+    startEra: 'start_era',
+    endYear: 'end_year',
+    endMonth: 'end_month',
+    endDay: 'end_day',
+    endEra: 'end_era',
+}
+
 Template.clues_manager.onCreated(function clues_managerOnCreated() {
 
     this.pagesDisplayed = 7;
 
     this.filters = new ReactiveDict();
-    this.filters.set('keyword', '');
-    this.filters.set('owned', false);
     this.filters.set('categoryId', null);
+    for (const field in FILTER_FIELDS) {
+        this.filters.set(field, null);
+    }
     this.filters.set('page', 1);
     this.filters.set('pageSize', Helpers.pageSize());
 
@@ -70,8 +84,10 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
                         self.state.set('currentClue', null);
                     });
 
-                    self.keywordInput = self.find('[name="keyword"]');
-                    self.ownedInput = self.find('[name="owned"]');
+                    self.filterInputs = {};
+                    for (const field in FILTER_FIELDS) {
+                        self.filterInputs[field] = $(self.find('[name="' + FILTER_FIELDS[field] + '"]'));
+                    }
 
                 });
 
@@ -204,11 +220,7 @@ Template.clues_manager.helpers({
 
 Template.clues_manager.events({
 
-    'change #cluesFilter [name="keyword"]'(e, i) {
-        i.state.set('filterChanged', true);
-    },
-
-    'change #cluesFilter [name="owned"]'(e, i) {
+    'keyup #cluesFilter [type="text"], keyup #cluesFilter [type="number"], change #cluesFilter [type="number"], change #cluesFilter [type="checkbox"], change #cluesFilter select'(e, i) {
         i.state.set('filterChanged', true);
     },
 
@@ -222,9 +234,14 @@ Template.clues_manager.events({
         const categoryId = e.target.options[e.target.selectedIndex].value;
         FlowRouter.go('clues.categoryId', {categoryId: categoryId});
         i.filters.set('categoryId', categoryId);
-        if (i.keywordInput) {
-            i.keywordInput.value = '';
-            i.ownedInput.checked = false;
+        if (i.filterInputs.keyword) {
+            for (const field in FILTER_FIELDS) {
+                if (i.filterInputs[field].attr('type') == 'checkbox') {
+                    i.filterInputs[field].prop('checked', false);
+                } else {
+                    i.filterInputs[field].val(null);
+                }
+            }
         }
         resetFilters(i);
         setTimeout(function() {
@@ -384,9 +401,14 @@ Template.clues_manager.events({
 
 function resetFilters(i) {
     i.filters.set('page', 1);
-    if (i.keywordInput) {
-        i.filters.set('keyword', i.keywordInput.value);
-        i.filters.set('owned', i.ownedInput.checked);
+    if (i.filterInputs.keyword) {
+        for (const field in FILTER_FIELDS) {
+            if (i.filterInputs[field].attr('type') == 'checkbox') {
+                i.filters.set(field, i.filterInputs[field].prop('checked'));
+            } else {
+                i.filters.set(field, i.filterInputs[field].val());
+            }
+        }
     }
 }
 

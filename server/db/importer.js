@@ -108,6 +108,8 @@ if (Meteor.isServer) {
                 ).toArray()
             );
 
+            Logger.log('Found ' + imports.length + ' groups of possible dupes.');
+
             // Loop through all groupings and save the dupes
             const ss = require('string-similarity');
             let dupes = [];
@@ -131,6 +133,7 @@ if (Meteor.isServer) {
                                 oldDescription: clue.descriptions[i],
                                 newDescription: clue.descriptions[n],
                             });
+                            Logger.log('[' + (percMatch * 100).toFixed(2) + "%" + '] ' + clue.importIds[i] + ' vs ' + clue.importIds[n]);
                         }
                     }
                 }
@@ -308,7 +311,11 @@ if (Meteor.isServer) {
                     );
 
                     // Make sure the description is less than 240 chars
+                    doc.description = doc.description.trim();
                     if (doc.description.length > 240) {
+                        if (!doc.moreInfo) {
+                            doc.moreInfo = doc.description;
+                        }
                         const lastPeriod = doc.description.lastIndexOf('.', 240);
                         if (lastPeriod === -1) {
                             const lastSpace = doc.description.lastIndexOf(' ', 236);
@@ -319,17 +326,22 @@ if (Meteor.isServer) {
                     }
 
                     // Figure out the date
-                    const parts = doc.date.split("-");
-                    const n = (parts.length > 3) ? 1 : 0;
-                    const year = parseInt(parts[n]) * ((parts.length > 3) ? -1 : 1);
-                    const month = parseInt(parts[n+1]) - 1;
-                    const day = parseInt(parts[n+2]);
-                    const date = new Date(year, month, day);
-                    if ((year > 0) && (year < 100)) {
-                        date.setFullYear(year);
+                    if (typeof(doc.date) == 'string') {
+                        const parts = doc.date.split("-");
+                        const n = (parts.length > 3) ? 1 : 0;
+                        const year = parseInt(parts[n]) * ((parts.length > 3) ? -1 : 1);
+                        const month = parseInt(parts[n+1]) - 1;
+                        const day = parseInt(parts[n+2]);
+                        const date = new Date(year, month, day);
+                        if ((year > 0) && (year < 100)) {
+                            date.setFullYear(year);
+                        }
+                        doc.date = date;
                     }
-                    doc.date = date;
                     doc.timeZone = Clues.DEFAULT_TIMEZONE;
+                    doc.year = doc.date.getUTCFullYear();
+                    doc.month = doc.date.getUTCMonth()+1;
+                    doc.day = doc.date.getUTCDate();
 
                     // Sort out coordinates
                     doc.latitude = parseCoord(doc.latitude);
@@ -358,7 +370,7 @@ if (Meteor.isServer) {
                     const result = Clues.direct.upsert({importId: doc.importId}, {$set: doc, $setOnInsert: insertDoc}, {validate: false, getAutoValues: false});
 
                     // Put the result in the correct bucket
-                    const log = date.getUTCFullYear() + '-' + date.getUTCMonth() + '-' + date.getUTCDate() + ' (' + doc.importId + '): ' + doc.description;
+                    const log = doc.date.getUTCFullYear() + '-' + (doc.date.getUTCMonth()+1) + '-' + doc.date.getUTCDate() + ' (' + doc.importId + '): ' + doc.description;
                     let action = null;
                     if (result) {
 
