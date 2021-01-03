@@ -1,17 +1,53 @@
-import { Meteor } from 'meteor/meteor';
+import { Schemas } from "../../../imports/modules/Schemas";
+import { ImportSets } from '../importer';
+import { Imports } from '../importer';
+import { Rooms } from '../../../imports/api/Rooms';
 
-// Create source categories.
+const INDEXES = [
+
+    {
+        collection: ImportSets,
+        indexes: {
+            active: {
+                active: 1,
+            },
+            sort: {
+                createdAt: 1,
+            },
+        },
+    },
+
+    {
+        collection: Imports,
+        indexes: {
+            notImported: {
+                setId: 1,
+                updatedAt: 1,
+                lastImportedAt: 1,
+            },
+            sort: {
+                date: 1,
+                description: 1,
+            }
+        },
+    },
+
+];
+
+// Add importer indexes to increase import performance.
 Migrations.add({
 
     version: 33,
-    name: 'Create source categories.',
+    name: 'Add importer indexes to increase import performance.',
 
     up: function() {
-        Meteor.call('importer.addSourceCategories');
+        ImportSets.rawCollection().dropIndex('status');
+        Rooms.rawCollection().dropIndex('deleted');
+        Schemas.createIndexes(INDEXES);
     },
 
     down: function() {
-        // There's no going back
-    },
+        Schemas.dropIndexes(INDEXES);
+    }
 
 });
