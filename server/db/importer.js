@@ -293,7 +293,13 @@ if (Meteor.isServer) {
                     }
                 );
 
-                Logger.log("\nImporting " + (start+1) + " - " + (start + imports.count(true)) + " of " + total + hr(), 3);
+                // If count is not reporting correctly, just add chunkSize to start
+                let end = start + imports.count(true);
+                if (start == end) {
+                    end = start + chunkSize;
+                }
+
+                Logger.log("\nImporting " + (start+1) + " - " + end + " of " + total + hr(), 3);
                 imports.fetch().forEach(function(clue) {
 
                     const doc = _.pick(
