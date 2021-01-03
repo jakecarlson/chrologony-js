@@ -232,8 +232,6 @@ if (Meteor.isServer) {
             const selector = getCluePublicationSelector(filters, legacy);
             const limit = filters.page * filters.pageSize;
 
-            Counts.publish(this, 'cluesCount', Clues.find(selector), {noReady: true});
-
             return Clues.find(
                 selector,
                 {
@@ -243,6 +241,15 @@ if (Meteor.isServer) {
                 }
             );
 
+        } else {
+            return this.ready();
+        }
+
+    });
+
+    Meteor.publish('cluesCount', function cluesPublication(filters, legacy = false) {
+        if (this.userId && filters) {
+            return new Counter('cluesCount', Clues.find(getCluePublicationSelector(filters, legacy)));
         } else {
             return this.ready();
         }

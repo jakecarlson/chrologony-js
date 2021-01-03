@@ -61,6 +61,7 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
             LoadingState.start();
             const legacy = FlowRouter.getQueryParam('legacy');
             this.subscribe('clues', this.filters.all(), legacy);
+            this.subscribe('cluesCount', this.filters.all(), legacy);
 
             if (this.subscriptionsReady()) {
 
@@ -146,7 +147,7 @@ Template.clues_manager.helpers({
     },
 
     cluesCount() {
-        return Counts.get('cluesCount');
+        return Counter.get('cluesCount');
     },
 
     currentClue() {
@@ -414,7 +415,7 @@ function resetFilters(i) {
 
 function cluesLoaded(i) {
     let limit = i.filters.get('page') * i.filters.get('pageSize');
-    const total = Counts.get('cluesCount');
+    const total = Counter.get('cluesCount');
     if (total < limit) {
         limit = total;
     }

@@ -1,4 +1,27 @@
+import { Schemas } from "../../../imports/modules/Schemas";
 import { Clues } from '../../../imports/api/Clues';
+
+const INDEXES = [
+
+    {
+        collection: Clues,
+        indexes: {
+            date: {
+                date: 1,
+            },
+            year: {
+                year: 1,
+            },
+            month: {
+                month: 1,
+            },
+            day: {
+                day: 1,
+            },
+        },
+    },
+
+];
 
 // Add date parts to all clues.
 Migrations.add({
@@ -19,9 +42,11 @@ Migrations.add({
                 }
             ]
         );
+        Schemas.createIndexes(INDEXES);
     },
 
     down: function() {
+        Schemas.dropIndexes(INDEXES);
         Clues.update({}, {$unset: {year: 1, month: 1, day: 1}}, {multi: true});
     },
 
