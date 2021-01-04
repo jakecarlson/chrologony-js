@@ -508,7 +508,7 @@ if (Meteor.isServer) {
 
         },
 
-        'importer.addSourceCategories'(source = null) {
+        'importer.addSourceCategories'(source = null, categoryThreshold = 100) {
 
             check(source, Match.OneOf(null, String));
 
@@ -549,70 +549,80 @@ if (Meteor.isServer) {
                             },
                         ]).toArray()
                     );
-                    const categoryImports = tmpImports[0];
 
-                    Logger.log('-- Found ' + categoryImports.importCount + ' matching imports', 3);
+                    // Only proceed if there were results
+                    if (tmpImports.length > 0) {
 
-                    // Only make it a category if there are more than 100 clues
-                    if (categoryImports.importCount > 100) {
+                        const categoryImports = tmpImports[0];
 
-                        const existingCategory = Categories.findOne({source: source, name: category});
-                        let categoryId = null;
-                        if (existingCategory) {
-                            categoryId = existingCategory._id;
-                            Logger.log('-- Category already exists: ' + categoryId, 3);
-                        } else {
-                            const doc = {
-                                name: category,
-                                theme: 'General',
-                                precision: 'date',
-                                private: false,
-                                active: true,
-                                source: source,
-                                collaborators: [],
-                                cluesCount: 0,
-                                ownerId: Meteor.settings.users.admin,
-                            };
-                            categoryId = Categories.insert(doc, {validate: false});
-                            if (categoryId) {
-                                Logger.log('-- New category created: ' + categoryId, 3);
+                        Logger.log('-- Found ' + categoryImports.importCount + ' matching imports', 3);
+
+                        // Only make it a category if there are more than 100 clues
+                        if (categoryImports.importCount > categoryThreshold) {
+
+                            const existingCategory = Categories.findOne({source: source, name: category});
+                            let categoryId = null;
+                            if (existingCategory) {
+                                categoryId = existingCategory._id;
+                                Logger.log('-- Category already exists: ' + categoryId, 3);
                             } else {
-                                Meteor.throw('category-not-created', 'Category could not be created. Aborting.')
-                            }
-                        }
-
-                        // Add all matching clues to it
-                        if (categoryId) {
-
-                            // We'll need to chunk the updates so we don't run out of memory
-                            const chunkSize = 1000;
-                            const numChunks = Math.ceil(categoryImports.importCount / chunkSize);
-                            let numClues = 0;
-                            for (let i = 0; i < numChunks; ++i) {
-                                const start = i * chunkSize;
-                                const end = ((i+1) * chunkSize) - 1;
-                                const importIds = categoryImports.importIds.slice(start, end);
-                                Logger.log('-- Adding category to clues ' + (start+1) + ' - ' + (start + importIds.length + 1), 3);
-                                numClues += Clues.direct.update(
-                                    {importId: {$in: importIds}},
-                                    {$addToSet: {categories: categoryId}},
-                                    {multi: true}
-                                );
+                                const doc = {
+                                    name: category,
+                                    theme: 'General',
+                                    precision: 'date',
+                                    private: false,
+                                    active: true,
+                                    source: source,
+                                    collaborators: [],
+                                    cluesCount: 0,
+                                    ownerId: Meteor.settings.users.admin,
+                                };
+                                categoryId = Categories.insert(doc, {validate: false, getAutoValues: false});
+                                if (categoryId) {
+                                    Logger.log('-- New category created: ' + categoryId, 3);
+                                } else {
+                                    Meteor.throw('category-not-created', 'Category could not be created. Aborting.')
+                                }
                             }
 
-                            const cluesCount = Clues.find({categories: categoryId, active: true}).count();
-                            const updated = Categories.update(categoryId, {$set: {cluesCount: cluesCount}});
-                            if (!updated) {
-                                throw new Meteor.Error('category-not-updated', 'Could not update clue count for a category.');
+                            // Add all matching clues to it
+                            if (categoryId) {
+
+                                // We'll need to chunk the updates so we don't run out of memory
+                                const chunkSize = 1000;
+                                const numChunks = Math.ceil(categoryImports.importCount / chunkSize);
+                                let numClues = 0;
+                                for (let i = 0; i < numChunks; ++i) {
+                                    const start = i * chunkSize;
+                                    const end = ((i+1) * chunkSize) - 1;
+                                    const importIds = categoryImports.importIds.slice(start, end);
+                                    Logger.log('-- Adding category to clues ' + (start+1) + ' - ' + (start + importIds.length + 1), 3);
+                                    numClues += Clues.direct.update(
+                                        {importId: {$in: importIds}},
+                                        {$addToSet: {categories: categoryId}},
+                                        {multi: true}
+                                    );
+                                }
+
+                                const cluesCount = Clues.find({categories: categoryId, active: true}).count();
+                                const updated = Categories.update(categoryId, {$set: {cluesCount: cluesCount}});
+                                if (!updated) {
+                                    throw new Meteor.Error('category-not-updated', 'Could not update clue count for a category.');
+                                }
+
+                                Logger.log('-- ' + numClues + ' clues updated', 3);
+
                             }
 
-                            Logger.log('-- ' + numClues + ' clues updated', 3);
-
+                        } else {
+                            Logger.log('-- Not enough clues to create a category; skipping', 3);
                         }
 
                     } else {
                         Logger.log('-- Not enough clues to create a category; skipping', 3);
                     }
+
+
                     Logger.log('', 3);
 
                 });
