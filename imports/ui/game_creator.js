@@ -27,7 +27,7 @@ Template.game_creator.onCreated(function gameOnCreated() {
 Template.game_creator.helpers({
 
     category() {
-        return this.lastGame;
+        return (this.lastGame) ? this.lastGame.category() : null;
     },
 
     basic() {
