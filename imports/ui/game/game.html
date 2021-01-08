@@ -6,28 +6,28 @@
 
             <header class="clearfix mb-4" id="gameHeader">
 
-                <h1 class="float-sm-left text-white text-center mb-2 mb-sm-0" id="gameTitle">{{title}}</h1>
+                <h1 class="float-md-left text-white text-center mb-2 mb-md-0" id="gameTitle">{{title}}</h1>
 
-                <div class="float-sm-right text-center mb-2" id="gameMenu">
+                <div class="float-md-right text-center mb-2" id="gameMenu">
 
                     {{#if isOwner}}
 
                         {{#if inProgress}}
 
                             <button
-                                class="btn btn-warning {{#if manualEndOnly}}btn-lg{{/if}} mr-2 end"
+                                class="btn btn-light {{#if manualEndOnly}}btn-lg{{/if}} mr-2 end"
                                 disabled="{{loading}}"
                             >
                                 <i class="fa fa-stop-circle"></i>
-                                <span class="d-none d-md-inline">End</span>
+                                End <span class="d-none d-lg-inline">Game</span>
                             </button>
 
                             <button
-                                class="btn btn-danger mr-2 abandon"
+                                class="btn btn-light mr-2 abandon"
                                 disabled="{{loading}}"
                             >
                                 <i class="fa fa-remove"></i>
-                                <span class="d-none d-md-inline">Abandon</span>
+                                Abandon <span class="d-none d-lg-inline">Game</span>
                             </button>
 
                         {{else}}
@@ -37,17 +37,17 @@
                                     disabled="{{loading}}"
                                 >
                                     <i class="fa fa-play-circle"></i>
-                                    <span class="d-none d-md-inline">Start</span>
+                                    Start <span class="d-none d-lg-inline">Game</span>
                                 </button>
                             {{/unless}}
                         {{/if}}
 
                     {{/if}}
 
-                    <div class="dropdown d-inline-block mr-2">
+                    <div class="dropdown {{#if inProgress}}d-none d-sm-inline-block{{else}}d-inline-block{{/if}} mr-2">
                         <button class="btn btn-light" type="button" id="invitePlayersButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-paper-plane"></i>
-                            <span class="d-none d-md-inline">Invite</span>
+                            Invite <span class="d-none d-lg-inline">Players</span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right invite-menu" aria-labelledby="invitePlayersButton">
 
@@ -112,7 +112,7 @@
                         disabled="{{loading}}"
                     >
                         <i class="fa fa-sign-out"></i>
-                        <span class="d-none d-md-inline">Leave</span>
+                        Leave <span class="d-none d-md-inline">Game</span>
                     </button>
 
                 </div>
