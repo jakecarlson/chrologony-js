@@ -81,10 +81,11 @@
 }
 
 /* Typeahead overrides */
-span.twitter-typeahead .tt-menu {
-  cursor: pointer;
+.tt-hint {
+  color: $muted;
 }
 span.twitter-typeahead .tt-menu {
+  cursor: pointer;
   position: absolute;
   top: 100%;
   left: 0;
@@ -116,7 +117,7 @@ span.twitter-typeahead .tt-suggestion {
   clear: both;
   font-weight: normal;
   line-height: 1.5;
-  color: #373a3c;
+  color: $dark;
   text-align: inherit;
   white-space: nowrap;
   background: none;
@@ -124,21 +125,35 @@ span.twitter-typeahead .tt-suggestion {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-span.twitter-typeahead .tt-suggestion:focus, .dropdown-item:hover, span.twitter-typeahead .tt-suggestion:hover {
+span.twitter-typeahead .tt-suggestion:focus,
+.dropdown-item:hover,
+span.twitter-typeahead .tt-suggestion:hover
+{
   color: $dark;
   text-decoration: none;
   background-color: $light;
 }
-span.twitter-typeahead .active.tt-suggestion, span.twitter-typeahead .tt-suggestion.tt-cursor, span.twitter-typeahead .active.tt-suggestion:focus, span.twitter-typeahead .tt-suggestion.tt-cursor:focus, span.twitter-typeahead .active.tt-suggestion:hover, span.twitter-typeahead .tt-suggestion.tt-cursor:hover {
+span.twitter-typeahead .active.tt-suggestion,
+span.twitter-typeahead .tt-suggestion.tt-cursor,
+span.twitter-typeahead .active.tt-suggestion:focus,
+span.twitter-typeahead .tt-suggestion.tt-cursor:focus,
+span.twitter-typeahead .active.tt-suggestion:hover,
+span.twitter-typeahead .tt-suggestion.tt-cursor:hover
+{
   color: $white;
   text-decoration: none;
   background-color: $primary;
   outline: 0;
 }
-span.twitter-typeahead .disabled.tt-suggestion, span.twitter-typeahead .disabled.tt-suggestion:focus, span.twitter-typeahead .disabled.tt-suggestion:hover {
+span.twitter-typeahead .disabled.tt-suggestion,
+span.twitter-typeahead .disabled.tt-suggestion:focus,
+span.twitter-typeahead .disabled.tt-suggestion:hover
+{
   color: $light;
 }
-span.twitter-typeahead .disabled.tt-suggestion:focus, span.twitter-typeahead .disabled.tt-suggestion:hover {
+span.twitter-typeahead .disabled.tt-suggestion:focus,
+span.twitter-typeahead .disabled.tt-suggestion:hover
+{
   text-decoration: none;
   cursor: not-allowed;
   background-color: transparent;

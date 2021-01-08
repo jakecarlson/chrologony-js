@@ -58,7 +58,7 @@
                     <option value="-1" selected="{{selectedEra -1}}">BCE</option>
                 </select>
 
-                <div class="mt-2 {{#unless showTime}}d-none{{/unless}}">
+                <div class="mt-2 form-inline {{#unless showTime}}d-none{{/unless}}">
                     <input name="hours" type="number" min="0" max="23" class="form-control form-control-sm" value="{{hours}}">
                     :
                     <input name="minutes" type="number" min="0" max="59" class="form-control form-control-sm" value="{{minutes}}">
