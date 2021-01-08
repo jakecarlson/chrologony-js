@@ -31,11 +31,19 @@ Template.clues_filter.helpers({
         return days;
     },
 
+    categoryLabel() {
+        return this.category.label();
+    },
+
+    dataReady() {
+        return this.category;
+    },
+
 });
 
 Template.clues_filter.events({
 
-    'keyup [type="text"], keyup [type="number"], change [type="number"], change [type="checkbox"], change select'(e, i) {
+    'keyup [type="text"], keyup [type="number"], change [type="number"], change [type="hidden"], change [type="checkbox"], change select'(e, i) {
         i.changed.set(true);
     },
 

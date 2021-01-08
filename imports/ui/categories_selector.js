@@ -9,6 +9,8 @@ Template.categories_selector.onCreated(function categories_selectorOnCreated() {
 
     this.loaded = new ReactiveVar(false);
 
+
+
     this.autorun(() => {
 
         this.loaded.set(false);

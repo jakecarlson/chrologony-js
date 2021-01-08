@@ -1,0 +1,20 @@
+<template name="categories_search">
+
+    <input
+        id="{{id}}Search"
+        class="form-control {{#if small}}form-control-sm{{/if}} typeahead"
+        name="categoryIdSearch"
+        type="search"
+        value="{{display}}"
+        placeholder="{{placeholder}}"
+        autocomplete="off"
+        spellcheck="off"
+        data-source="searchCategories"
+        data-select="saveCategory"
+        data-limit="100"
+        data-min-length="0"
+        required
+    >
+    <input type="hidden" name="categoryId" class="attr" value="{{val}}" id="{{id}}">
+
+</template>

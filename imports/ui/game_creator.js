@@ -8,6 +8,7 @@ import { Categories } from '../api/Categories';
 
 import './game_creator.html';
 import './precisions_selector.js';
+import './categories_search.js';
 
 Template.game_creator.onCreated(function gameOnCreated() {
 
@@ -25,8 +26,8 @@ Template.game_creator.onCreated(function gameOnCreated() {
 
 Template.game_creator.helpers({
 
-    categoryId() {
-        return (this.lastGame) ? this.lastGame.categoryId : null;
+    category() {
+        return this.lastGame;
     },
 
     basic() {
@@ -35,6 +36,10 @@ Template.game_creator.helpers({
 
     advanced() {
         return Template.instance().advanced.get();
+    },
+
+    categorySearchPlaceholder() {
+        return (!Template.instance().advanced.get()) ? 'Search for Game Category (required) ...' : false;
     },
 
     winConditions() {
@@ -191,7 +196,7 @@ Template.game_creator.events({
 
     'change #gameCategoryId'(e, i) {
         const form = e.target.form;
-        const categoryId = Helpers.getSelectValue(e.target);
+        const categoryId = $(e.target).val();
         const category = Categories.findOne(categoryId);
         Helpers.setSelectValue(form.comparisonPrecision, category.precision);
         Helpers.setSelectValue(form.displayPrecision, category.precision);
@@ -203,7 +208,7 @@ Template.game_creator.events({
         const form = e.target;
 
         // Only proceed if a category was selected
-        const categoryId = Helpers.getSelectValue(form.categoryId);
+        const categoryId = $(form.categoryId).val();
         if (categoryId) {
 
             let difficulties = [];

@@ -9,18 +9,16 @@ import { Games } from "../api/Games";
 import { Turns } from "../api/Turns";
 
 import './embed.html';
+import './categories_selector.js';
 import './game/board.js';
 import './game/clue_more.js';
 
 Template.embed.onCreated(function embedOnCreated() {
 
     LoadingState.start();
-
     Meteor.call('user.anonymous', function(err, success) {
         Meteor.connection.setUserId('anonymous');
     });
-
-    // Session.set('muted', true);
 
     this.initialized = false;
     this.game = new ReactiveVar(null);
@@ -29,10 +27,11 @@ Template.embed.onCreated(function embedOnCreated() {
 
     this.autorun((computation) => {
 
+        Helpers.subscribe(this, 'categories');
+
         if (Session.get('currentGameId')) {
 
             LoadingState.start();
-
             Helpers.subscribe(this, 'anonymousGame', Session.get('currentGameId'));
             Helpers.subscribe(this, 'turns', Session.get('currentGameId'));
             Helpers.subscribe(this, 'cards', Session.get('currentGameId'));
@@ -85,6 +84,10 @@ Template.embed.helpers({
 
     title() {
         return Meteor.settings.public.app.name + ': ' + Meteor.settings.public.app.tagline;
+    },
+
+    signupLink() {
+        return Meteor.absoluteUrl('sign-up');
     },
 
 });

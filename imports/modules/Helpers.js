@@ -50,8 +50,29 @@ Helpers = {
             selector._id = {$nin: filters.exclude};
         }
 
+        if (filters.include) {
+            if (typeof(filters.include) != 'array') {
+                filters.include = [filters.include];
+            }
+            selector._id = {$in: filters.include};
+        }
+
         return selector;
 
+    },
+
+    getCategoryLabel(category) {
+        if (category) {
+            let label = '';
+            if (category.source == 'user') {
+                label += category.theme + ': ' + category.name;
+            } else {
+                label += category.name + ' [' + category.source + ']';
+            }
+            label += ' (' + numeral(category.cluesCount).format('0,0') + ')';
+            return label;
+        }
+        return null;
     },
 
     getPageStart(pageNum) {

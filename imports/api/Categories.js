@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 import SimpleSchema from "simpl-schema";
@@ -8,9 +9,21 @@ import { Schemas } from "../modules/Schemas";
 
 import { Games } from "./Games";
 import { Clues } from "./Clues";
-import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 export const Categories = new Mongo.Collection('categories');
+
+Categories.PUBLISH_FIELDS = {
+    _id: 1,
+    name: 1,
+    theme: 1,
+    active: 1,
+    private: 1,
+    source: 1,
+    collaborators: 1,
+    ownerId: 1,
+    precision: 1,
+    cluesCount: 1,
+};
 
 Categories.schema = new SimpleSchema({
     name: {type: String, max: 80},
@@ -58,14 +71,7 @@ Categories.helpers({
     },
 
     label() {
-        let label = '';
-        if (this.source == 'user') {
-            label += this.theme + ': ' + this.name;
-        } else {
-            label += this.name + ' [' + this.source + ']';
-        }
-        label += ' (' + numeral(this.cluesCount).format('0,0') + ')';
-        return label;
+        return Helpers.getCategoryLabel(this);
     },
 
     cluesLink() {
@@ -91,18 +97,20 @@ if (Meteor.isServer) {
             return Categories.find(
                 Helpers.getCategoriesSelector({active: false}),
                 {
-                    fields: {
-                        _id: 1,
-                        name: 1,
-                        theme: 1,
-                        active: 1,
-                        private: 1,
-                        source: 1,
-                        collaborators: 1,
-                        ownerId: 1,
-                        precision: 1,
-                        cluesCount: 1,
-                    },
+                    fields: Categories.PUBLISH_FIELDS,
+                }
+            );
+        } else {
+            return this.ready();
+        }
+    });
+
+    Meteor.publish('cluesCategory', function cluesCategoryPublication(categoryId) {
+        if (this.userId) {
+            return Categories.find(
+                Helpers.getCategoriesSelector({active: false, include: categoryId}),
+                {
+                    fields: Categories.PUBLISH_FIELDS,
                 }
             );
         } else {
@@ -299,20 +307,20 @@ if (Meteor.isServer) {
                 excludeIds = [excludeIds];
             }
 
-            check(query, NonEmptyString);
+            check(query, String);
             check(excludeIds, [RecordId]);
             Permissions.authenticated();
             Permissions.notGuest();
 
-            const regex = new RegExp(query, 'i');
-
-            const selector = {
+            let selector = {
                 $and: [
                     Helpers.getCategoriesSelector({exclude: excludeIds, editor: true}),
-                    // {$text: {$search: query}},
-                    {$or: [{theme: {$regex: regex}}, {name: {$regex: regex}}]},
                 ],
             };
+            if (query.length > 0) {
+                selector.$and.push({$text: {$search: query}});
+            }
+
             return Categories.find(
                 selector,
                 {

@@ -3,11 +3,11 @@
     <form id="cluesFilter" class="mb-4 pl-3 pr-3 justify-content-center text-muted" novalidate>
 
         <div class="form-group form-group-category">
-            <label class="sr-only" for="cluesFilterCategory">Category:</label>
-            {{> categories_selector val=categoryId id="cluesFilterCategory" showInactive=true}}
+            <label class="sr-only" for="cluesFilterCategorySearch">Category:</label>
+            {{> categories_selector val=category._id id="cluesFilterCategory" showInactive=true}}
         </div>
 
-        {{#if categoryId}}
+        {{#if category}}
 
             <div class="form-group form-group-keyword">
                 <label class="sr-only">Search:</label>

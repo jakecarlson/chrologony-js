@@ -15,8 +15,8 @@
                     {{/if}}
                 "
             >
-                <label for="gameCategoryId" class="{{#if basic}}sr-only{{/if}}">Category:</label>
-                {{> categories_selector id="gameCategoryId" val=categoryId}}
+                <label for="gameCategoryIdSearch" class="{{#if basic}}sr-only{{/if}}">Game Category (required):</label>
+                {{> categories_search id="gameCategoryId" category=category placeholder=categorySearchPlaceholder}}
             </div>
 
             <div class="form-group {{#if basic}}col-md-12{{else}}col-sm-6 col-lg-3{{/if}}">

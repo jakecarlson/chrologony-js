@@ -9,10 +9,10 @@
         <div class="card-body px-0">
 
             {{#if categoryView}}
-                {{> clues_filter categoryId=categoryId}}
+                {{> clues_filter category=category}}
             {{/if}}
 
-            {{#if categoryId}}
+            {{#if category}}
 
                 {{#if categoryView}}
                     {{> pager page=page total=cluesCount displayed=pagesDisplayed items="Clues"}}
@@ -50,7 +50,7 @@
                         </tr>
 
                         {{#if canAddClue}}
-                            {{> clue clue=false categoryId=categoryId categoryPrecision=categoryPrecision}}
+                            {{> clue clue=false categoryId=category._id categoryPrecision=category.precision}}
                         {{/if}}
 
                         {{#if hasSelectedClues}}
@@ -77,8 +77,8 @@
                                         </select>
 
                                         {{#if showCategorySelector}}
-                                            <label for="cluesBulkActionCategory" class="sr-only">Category to Add:</label>
-                                            {{> categories_selector id="cluesBulkActionCategory" showInactive=true excludeCategoryId=categoryId small=true}}
+                                            <label for="cluesBulkActionCategorySearch" class="sr-only">Category to Add:</label>
+                                            {{> categories_selector id="cluesBulkActionCategory" showInactive=true excludeCategoryId=category._id small=true}}
                                         {{/if}}
 
                                         {{#if showTimeZoneSelector}}
@@ -99,7 +99,7 @@
                         <tbody>
                             {{#if clues}}
                                 {{#each clueCard in clues}}
-                                    {{> clue clue=clueCard categoryId=categoryId categoryPrecision=categoryPrecision}}
+                                    {{> clue clue=clueCard categoryId=category._id categoryPrecision=category.precision}}
                                 {{/each}}
                             {{else}}
                                 <tr><td colspan="7">Loading ...</td></tr>
@@ -203,7 +203,7 @@
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                                <input type="hidden" class="attr" name="categoryId" value="{{categoryId}}">
+                                <input type="hidden" class="attr" name="categoryId" value="{{category._id}}">
                                 <button type="submit" class="btn btn-primary save" data-id="" disabled="{{cannotEditCurrentClue}}">Save</button>
                             </div>
 

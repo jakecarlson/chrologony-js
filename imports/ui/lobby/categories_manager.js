@@ -32,6 +32,7 @@ Template.categories_manager.onCreated(function categories_managerOnCreated() {
     this.autorun(() => {
 
         LoadingState.start();
+        Helpers.subscribe(this,'categories');
 
         if (this.subscriptionsReady()) {
 

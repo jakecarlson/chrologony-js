@@ -12,8 +12,7 @@ Template.body.onCreated(function bodyOnCreated() {
 
         LoadingState.start();
 
-        this.subscribe('userData');
-        this.subscribe('categories');
+        Helpers.subscribe(this, 'userData');
 
         if (this.subscriptionsReady()) {
 

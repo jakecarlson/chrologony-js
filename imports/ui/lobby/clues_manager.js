@@ -50,22 +50,25 @@ Template.clues_manager.onCreated(function clues_managerOnCreated() {
     this.state.set('cluesSelected', false);
 
     this.dataReady = new ReactiveVar(false);
+    this.category = new ReactiveVar(null);
 
     this.filters.set('categoryId', FlowRouter.getParam('categoryId'));
     this.filters.set('clueId', FlowRouter.getParam('clueId'));
 
     this.autorun(() => {
 
-        if (Categories.findOne(this.filters.get('categoryId'))) {
+        if (this.filters.get('categoryId')) {
 
             LoadingState.start();
             const legacy = FlowRouter.getQueryParam('legacy');
-            this.subscribe('clues', this.filters.all(), legacy);
-            this.subscribe('cluesCount', this.filters.all(), legacy);
+            Helpers.subscribe(this, 'cluesCategory', this.filters.get('categoryId'));
+            Helpers.subscribe(this, 'clues', this.filters.all(), legacy);
+            Helpers.subscribe(this, 'cluesCount', this.filters.all(), legacy);
 
             if (this.subscriptionsReady()) {
 
                 Logger.log('Clues Loaded: ' + Clues.find({}).count());
+                this.category.set(Categories.findOne(this.filters.get('categoryId')));
 
                 const self = this;
                 Tracker.afterFlush(() => {
@@ -137,13 +140,8 @@ Template.clues_manager.helpers({
         return false;
     },
 
-    categoryId() {
-        return Template.instance().filters.get('categoryId');
-    },
-
-    categoryPrecision() {
-        const category = Categories.findOne(Template.instance().filters.get('categoryId'));
-        return category.precision;
+    category() {
+        return Template.instance().category.get();
     },
 
     cluesCount() {
@@ -221,7 +219,7 @@ Template.clues_manager.helpers({
 
 Template.clues_manager.events({
 
-    'keyup #cluesFilter [type="text"], keyup #cluesFilter [type="number"], change #cluesFilter [type="number"], change #cluesFilter [type="checkbox"], change #cluesFilter select'(e, i) {
+    'keyup #cluesFilter [type="text"], keyup #cluesFilter [type="number"], change #cluesFilter [type="number"], change #cluesFilter [type="hidden"], change #cluesFilter [type="checkbox"], change #cluesFilter select'(e, i) {
         i.state.set('filterChanged', true);
     },
 
@@ -232,7 +230,7 @@ Template.clues_manager.events({
 
     'change #cluesFilter [name="categoryId"]'(e, i) {
         LoadingState.start(e);
-        const categoryId = e.target.options[e.target.selectedIndex].value;
+        const categoryId = e.target.value;
         FlowRouter.go('clues.categoryId', {categoryId: categoryId});
         i.filters.set('categoryId', categoryId);
         if (i.filterInputs.keyword) {

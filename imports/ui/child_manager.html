@@ -19,7 +19,18 @@
                                 </button>
                             </div>
                         {{/if}}
-                        <input id="{{childType}}Search" class="form-control typeahead" name="child" type="text" placeholder="Search for {{childrenName}} ..." autocomplete="off" spellcheck="off" data-source="searchChildren" data-select="addChild">
+                        <input
+                            id="{{childType}}Search"
+                            class="form-control typeahead"
+                            name="child"
+                            type="search"
+                            placeholder="Search for {{childrenName}} ..."
+                            autocomplete="off"
+                            spellcheck="off"
+                            data-source="searchChildren"
+                            data-select="addChild"
+                            data-limit="100"
+                        >
                     </li>
                     {{#each child in children}}
                         <li class="list-group-item {{#if removable child.id}}removable{{else}}bg-light text-muted{{/if}}">

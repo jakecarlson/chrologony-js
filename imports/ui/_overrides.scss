@@ -22,7 +22,9 @@
   max-height: calc(100vh - 12rem);
   overflow: auto;
 }
-.child-manager .modal-body {
+.child-manager .modal-body,
+#gameCreatorModal .modal-body
+{
   overflow: visible;
 }
 
@@ -84,14 +86,14 @@
 span.twitter-typeahead .tt-menu {
   cursor: pointer;
 }
-.dropdown-menu, span.twitter-typeahead .tt-menu {
+span.twitter-typeahead .tt-menu {
   position: absolute;
   top: 100%;
   left: 0;
   z-index: 1000;
   display: none;
   width: 100%;
-  min-width: 160px;
+  min-width: 25rem;
   padding: 5px 0;
   padding-top: 0;
   margin: 2px 0 0;
@@ -104,6 +106,9 @@ span.twitter-typeahead .tt-menu {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-bottom-left-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
+  box-shadow: 0 0 .5rem .125rem $gray-400;
+  overflow: auto;
+  max-height: 10rem;
 }
 
 span.twitter-typeahead .tt-suggestion {
@@ -118,6 +123,8 @@ span.twitter-typeahead .tt-suggestion {
   white-space: nowrap;
   background: none;
   border: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 span.twitter-typeahead .tt-suggestion:focus, .dropdown-item:hover, span.twitter-typeahead .tt-suggestion:hover {
   color: $dark;
