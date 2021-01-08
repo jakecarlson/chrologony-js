@@ -142,5 +142,5 @@ function launchCategoriesModal(i, categories) {
 }
 
 function getCategoryMapper() {
-    return (function(category){ return {id: category._id, value: category.theme + ': ' + category.name} });
+    return (function(category){ return {id: category._id, value: Helpers.getCategoryLabel(category)}});
 }

@@ -22,9 +22,7 @@
   max-height: calc(100vh - 12rem);
   overflow: auto;
 }
-.child-manager .modal-body,
-#gameCreatorModal .modal-body
-{
+.child-manager .modal-body {
   overflow: visible;
 }
 
@@ -93,7 +91,7 @@ span.twitter-typeahead .tt-menu {
   z-index: 1000;
   display: none;
   width: 100%;
-  min-width: 25rem;
+  //min-width: 25rem;
   padding: 5px 0;
   padding-top: 0;
   margin: 2px 0 0;
