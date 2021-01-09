@@ -1,11 +1,13 @@
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { ModelEvents } from "../../modules/ModelEvents";
+
+import { Categories } from '../api/Categories';
 
 import './category.html';
 import './themes_selector.js';
 import '../precisions_selector.js';
-import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 Template.category.onCreated(function categoryOnCreated() {
     this.state = new ReactiveDict();
@@ -59,11 +61,11 @@ Template.category.helpers({
     },
 
     precision() {
-        return (this.category) ? this.category.precision : 'date';
+        return (this.category) ? this.category.precision : Categories.DEFAULT_PRECISION;
     },
 
     formattedPrecision() {
-        return Formatter.capitalize((this.category) ? this.category.precision : 'date');
+        return Formatter.capitalize((this.category) ? this.category.precision : Categories.DEFAULT_PRECISION);
     },
 
     cluesLink() {

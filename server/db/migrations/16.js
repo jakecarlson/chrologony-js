@@ -8,7 +8,7 @@ Migrations.add({
         Categories.update(
             {},
             {
-                $set: {precision: 'date'},
+                $set: {precision: Categories.DEFAULT_PRECISION},
                 $unset: {
                     comparisonPrecision: 1,
                     displayPrecision: 1,
@@ -23,8 +23,8 @@ Migrations.add({
             {
                 $unset: {precision: 1},
                 $set: {
-                    comparisonPrecision: 'date',
-                    displayPrecision: 'date',
+                    comparisonPrecision: Categories.DEFAULT_PRECISION,
+                    displayPrecision: Categories.DEFAULT_PRECISION,
                 },
             },
             {multi: true}

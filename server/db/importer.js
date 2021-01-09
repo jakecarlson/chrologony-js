@@ -569,7 +569,7 @@ if (Meteor.isServer) {
                                 const doc = {
                                     name: category,
                                     theme: 'General',
-                                    precision: 'date',
+                                    precision: Categories.DEFAULT_PRECISION,
                                     private: false,
                                     active: true,
                                     source: source,

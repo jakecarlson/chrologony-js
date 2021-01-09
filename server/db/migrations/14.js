@@ -10,8 +10,8 @@ Migrations.add({
             {},
             {
                 $set: {
-                    displayPrecision: 'date',
-                    comparisonPrecision: 'date',
+                    displayPrecision: Categories.DEFAULT_PRECISION,
+                    comparisonPrecision: Categories.DEFAULT_PRECISION,
                 },
             },
             {multi: true}
@@ -20,8 +20,8 @@ Migrations.add({
             {},
             {
                 $set: {
-                    displayPrecision: 'date',
-                    comparisonPrecision: 'date',
+                    displayPrecision: Categories.DEFAULT_PRECISION,
+                    comparisonPrecision: Categories.DEFAULT_PRECISION,
                 },
             },
             {multi: true}

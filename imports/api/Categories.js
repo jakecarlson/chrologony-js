@@ -25,15 +25,18 @@ Categories.PUBLISH_FIELDS = {
     cluesCount: 1,
 };
 
+Categories.DEFAULT_PRECISION = 'date';
+Categories.DEFAULT_SOURCE = 'user';
+
 Categories.schema = new SimpleSchema({
     name: {type: String, max: 80},
     active: {type: Boolean, defaultValue: false},
     private: {type: Boolean, defaultValue: true},
     theme: {type: String, max: 40},
-    source: {type: String, max: 40, defaultValue: 'user'},
+    source: {type: String, max: 40, defaultValue: Categories.DEFAULT_SOURCE},
     collaborators: {type: Array, defaultValue: [], optional: true},
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
-    precision: {type: String, defaultValue: 'date'},
+    precision: {type: String, defaultValue: Categories.DEFAULT_PRECISION},
     cluesCount: {type: SimpleSchema.Integer, defaultValue: 0, optional: true},
 });
 Categories.schema.extend(Schemas.timestampable);

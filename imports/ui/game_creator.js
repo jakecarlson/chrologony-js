@@ -5,11 +5,11 @@ import { Session } from "meteor/session";
 import { LoadingState } from '../modules/LoadingState';
 
 import { Categories } from '../api/Categories';
+import { Games } from '../api/Games';
 
 import './game_creator.html';
 import './precisions_selector.js';
 import './categories_search.js';
-import {Games} from "../api/Games";
 
 Template.game_creator.onCreated(function gameOnCreated() {
 
@@ -117,11 +117,11 @@ Template.game_creator.helpers({
     },
 
     comparisonPrecision() {
-        return (this.lastGame) ? this.lastGame.comparisonPrecision : 'date';
+        return (this.lastGame) ? this.lastGame.comparisonPrecision : Games.DEFAULT_PRECISION;
     },
 
     displayPrecision() {
-        return (this.lastGame) ? this.lastGame.displayPrecision : 'date';
+        return (this.lastGame) ? this.lastGame.displayPrecision : Games.DEFAULT_PRECISION;
     },
 
     easy() {
