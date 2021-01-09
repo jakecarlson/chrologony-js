@@ -1,6 +1,8 @@
+import { Meteor } from "meteor/meteor";
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { Template } from "meteor/templating";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+import { LoadingState } from "../../modules/LoadingState";
 
 import './o-atForm.html';
 import './o-atError.js';
@@ -57,6 +59,14 @@ Template.atForm.helpers({
 
     showGuestLogin() {
         return ['signIn'].includes(AccountsTemplates.getState());
+    },
+
+});
+
+Template.atForm.events({
+
+    'submit #at-pwd-form'(e, i) {
+        LoadingState.start();
     },
 
 });

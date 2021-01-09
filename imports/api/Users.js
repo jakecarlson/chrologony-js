@@ -4,6 +4,7 @@ import { NonEmptyString, RecordId } from "../startup/validations";
 import { Permissions } from '../modules/Permissions';
 
 import { Games } from "./Games";
+import { Categories } from "./Categories";
 
 Meteor.users.ONLINE_THRESHOLD = 15 * 60 * 1000; // Set to 15m
 Meteor.users.DEFAULT_PAGE_SIZE = 25;
@@ -204,6 +205,38 @@ if (Meteor.isServer) {
                     },
                 }
             ).fetch();
+
+        },
+
+        // Create the user's first game
+        'user.createFirstGame'() {
+
+            const gameName = Meteor.user().name() + "'s Private Game";
+            const category = Categories.findOne(Meteor.settings.categories.default);
+            const attrs = {
+                categoryId: category._id,
+                name: gameName,
+                password: null,
+                private: true,
+                winPoints: Games.DEFAULT_WIN_POINTS,
+                equalTurns: true,
+                minDifficulty: Games.MIN_DIFFICULTY,
+                maxDifficulty: Games.MAX_DIFFICULTY,
+                minScore: Games.DEFAULT_MIN_SCORE,
+                cardLimit: 0,
+                autoProceed: false,
+                cardTime: 0,
+                turnOrder: Games.DEFAULT_TURN_ORDER,
+                recycleCards: false,
+                showHints: false,
+                comparisonPrecision: category.precision,
+                displayPrecision: category.precision,
+                playerLimit: 0,
+                noJoinAfterStart: false,
+                autoShowMore: true,
+            };
+
+            return Meteor.call('game.create', attrs);
 
         },
 

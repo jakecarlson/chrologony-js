@@ -61,6 +61,13 @@ Games.PUBLISH_FIELDS = {
     token: 1,
 };
 
+Games.DEFAULT_TURN_ORDER = 'sequential';
+Games.DEFAULT_PRECISION = 'date';
+Games.DEFAULT_MIN_SCORE = 0;
+Games.DEFAULT_WIN_POINTS = 10;
+Games.MIN_DIFFICULTY = 1;
+Games.MAX_DIFFICULTY = 3;
+
 Games.schema = new SimpleSchema({
     name: {type: String, max: 40, defaultValue: null, optional: true},
     password: {type: String, max: 72, defaultValue: null, optional: true},
@@ -70,19 +77,19 @@ Games.schema = new SimpleSchema({
     currentRound: {type: Number, defaultValue: 1},
     currentLeaderId: {type: String, max: 17, defaultValue: null, optional: true},
     winnerId: {type: String, max: 17, defaultValue: null, optional: true},
-    winPoints: {type: SimpleSchema.Integer, defaultValue: 10},
+    winPoints: {type: SimpleSchema.Integer, defaultValue: Games.DEFAULT_WIN_POINTS},
     equalTurns: {type: Boolean, defaultValue: false},
-    minDifficulty: {type: Number, defaultValue: 0},
-    maxDifficulty: {type: Number, defaultValue: 0},
-    minScore: {type: SimpleSchema.Integer, defaultValue: 0},
+    minDifficulty: {type: Number, defaultValue: Games.MIN_DIFFICULTY},
+    maxDifficulty: {type: Number, defaultValue: Games.MAX_DIFFICULTY},
+    minScore: {type: SimpleSchema.Integer, defaultValue: Games.DEFAULT_MIN_SCORE},
     cardLimit: {type: SimpleSchema.Integer, defaultValue: 0},
     autoProceed: {type: Boolean, defaultValue: false},
     cardTime: {type: SimpleSchema.Integer, defaultValue: 0},
-    turnOrder: {type: String, defaultValue: 'sequential'},
+    turnOrder: {type: String, defaultValue: Games.DEFAULT_TURN_ORDER},
     recycleCards: {type: Boolean, defaultValue: false},
     showHints: {type: Boolean, defaultValue: false},
-    displayPrecision: {type: String, defaultValue: 'date'},
-    comparisonPrecision: {type: String, defaultValue: 'date'},
+    displayPrecision: {type: String, defaultValue: Games.DEFAULT_PRECISION},
+    comparisonPrecision: {type: String, defaultValue: Games.DEFAULT_PRECISION},
     playerLimit: {type: SimpleSchema.Integer, defaultValue: 0},
     noJoinAfterStart: {type: Boolean, defaultValue: false},
     autoShowMore: {type: Boolean, defaultValue: false},

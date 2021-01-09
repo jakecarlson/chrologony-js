@@ -9,6 +9,7 @@ import { Categories } from '../api/Categories';
 import './game_creator.html';
 import './precisions_selector.js';
 import './categories_search.js';
+import {Games} from "../api/Games";
 
 Template.game_creator.onCreated(function gameOnCreated() {
 
@@ -67,7 +68,7 @@ Template.game_creator.helpers({
     },
 
     turnOrders() {
-        const selected = (this.lastGame) ? this.lastGame.turnOrder : 'sequential';
+        const selected = (this.lastGame) ? this.lastGame.turnOrder : Games.DEFAULT_TURN_ORDER;
         return [
             {display: 'Sequential', value: 'sequential', selected: ('sequential' == selected)},
             {display: 'Snake', value: 'snake', selected: ('snake' == selected)},

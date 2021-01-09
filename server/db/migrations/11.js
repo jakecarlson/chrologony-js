@@ -1,6 +1,5 @@
 import { Games } from '../../../imports/api/Games';
 
-const DEFAULT_TURN_ORDER = 'sequential';
 const DEFAULT_MIN_DIFFICULTY = 1;
 const DEFAULT_MAX_DIFFICULTY = 3;
 
@@ -17,7 +16,7 @@ Migrations.add({
                     equalTurns: false,
                     cardLimit: 0,
                     cardTime: 0,
-                    turnOrder: DEFAULT_TURN_ORDER,
+                    turnOrder: Games.DEFAULT_TURN_ORDER,
                     recycleCards: true,
                     minDifficulty: DEFAULT_MIN_DIFFICULTY,
                     maxDifficulty: DEFAULT_MAX_DIFFICULTY,

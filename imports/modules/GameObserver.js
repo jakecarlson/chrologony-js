@@ -128,7 +128,7 @@ GameObserver = {
 
             added: function(cardId, fields) {
                 const turn = Turns.findOne(fields.turnId);
-                if (ctx.initialized && GameObserver.isInGame(turn.gameId, ctx, anonymous)) {
+                if (ctx.initialized && turn && GameObserver.isInGame(turn.gameId, ctx, anonymous)) {
                     Helpers.subscribe(Meteor, 'cards', GameObserver.getId(ctx, anonymous));
                     Helpers.subscribe(Meteor, 'cardClues', GameObserver.getId(ctx, anonymous));
                     // Move to board???
