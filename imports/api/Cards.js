@@ -209,9 +209,6 @@ Meteor.methods({
                 }
             }
         );
-        if (!updated) {
-            throw new Meteor.Error('card-not-updated', 'Could not lock a card.');
-        }
 
         return updated;
 

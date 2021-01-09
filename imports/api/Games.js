@@ -453,6 +453,9 @@ Meteor.methods({
         const user = Meteor.users.findOne(userId);
         if (!game.endedAt) {
 
+            // Remove the player from the players array & null out the user's current game ID
+            Meteor.call('game.removePlayer', id, userId);
+
             // Check to see if it's this user's turn currently and end it if so -- but only if it's a multiplayer game
             if (game && (game.players.length > 1)) {
                 if (game.currentTurnId) {
@@ -479,9 +482,6 @@ Meteor.methods({
                 }
 
             }
-
-            // Remove the player from the players array & null out the user's current game ID
-            Meteor.call('game.removePlayer', id, userId);
 
         }
 
