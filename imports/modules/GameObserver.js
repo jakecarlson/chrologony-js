@@ -33,8 +33,11 @@ GameObserver = {
             changed(id, fields) {
                 if (ctx.initialized && GameObserver.isInGame(id, ctx, anonymous)) {
 
+                    const game = Games.findOne(id);
+                    const isGameOwner = (game.ownerId == Meteor.userId());
+
                     // If the game is started, play game start sound
-                    if (fields.startedAt) {
+                    if (!isGameOwner && fields.startedAt) {
                         SoundManager.play('gameStart');
 
                     // If the game is ended, play appropriate game end sound
@@ -47,7 +50,7 @@ GameObserver = {
 
                     // Or if the owner was changed to current player, notify them
                     } else if (fields.ownerId && (fields.ownerId == Meteor.userId())) {
-                        const game = Games.findOne(id);
+
                         Flasher.info(
                             'You are now the new owner of a game: ' +
                             '<a href="' + FlowRouter.path('game', {id: id}) + '">' + game.title() + '</a>.',
@@ -114,7 +117,7 @@ GameObserver = {
 
             changed(turnId, fields) {
                 const turn = Turns.findOne(turnId);
-                if (ctx.initialized && (fields.endedAt != null) && GameObserver.isInGame(turn.gameId, ctx, anonymous)) {
+                if (ctx.initialized && (fields.endedAt != null) && (turn.ownerId != Meteor.userId()) && GameObserver.isInGame(turn.gameId, ctx, anonymous)) {
                     SoundManager.play('turnEnd');
                 }
             },
@@ -128,11 +131,13 @@ GameObserver = {
                 if (ctx.initialized && GameObserver.isInGame(turn.gameId, ctx, anonymous)) {
                     Helpers.subscribe(Meteor, 'cards', GameObserver.getId(ctx, anonymous));
                     Helpers.subscribe(Meteor, 'cardClues', GameObserver.getId(ctx, anonymous));
-                    SoundManager.play('cardDraw');
+                    // Move to board???
                     if (fields.ownerId == Meteor.userId()) {
                         $('.player-cards-wrapper').animate({
                             scrollLeft: 0
                         }, 250);
+                    } else {
+                        SoundManager.play('cardDraw');
                     }
                 }
             },
@@ -151,10 +156,13 @@ GameObserver = {
                             if (!updated) {
                                 throw new Meteor.Error('clue-not-updated', '[client] Could not update a clue.');
                             }
-                            if (card.correct) {
-                                SoundManager.play('cardRight');
-                            } else {
-                                SoundManager.play('cardWrong');
+
+                            if (turn.ownerId != Meteor.userId()) {
+                                if (card.correct) {
+                                    SoundManager.play('cardRight');
+                                } else {
+                                    SoundManager.play('cardWrong');
+                                }
                             }
 
                             // If auto-proceed is off and auto show more is on, show the More Info modal

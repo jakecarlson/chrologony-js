@@ -374,6 +374,7 @@ function drawCard(data) {
         Meteor.call('card.draw', data.game.currentTurnId, function(err, id) {
             if (!err) {
                 Logger.log("Created Card: " + id);
+                SoundManager.play('cardDraw');
             } else {
                 throw new Meteor.Error('card-not-drawn', 'Could not draw a card.', err);
             }
@@ -394,6 +395,9 @@ function endTurn(data, e = false) {
         if (e) {
             LoadingState.start(e);
         }
+
+        SoundManager.play('turnEnd');
+
         Session.set('waiting', true);
         Logger.log('End Turn: ' + data.game.currentTurnId);
 
@@ -584,7 +588,15 @@ function submitGuess(data, e) {
 
         Meteor.call('card.submitGuess', currentCardId, currentCardPos, function(err, correct) {
             if (!err) {
+
                 Logger.log('Guess Correct for ' + currentCardId + ': ' + correct);
+
+                if (correct) {
+                    SoundManager.play('cardRight');
+                } else {
+                    SoundManager.play('cardWrong');
+                }
+
                 if (correct && data.game.autoProceed) {
                     if (data.turn.hasReachedCardLimit()) {
                         endTurn(data);
@@ -592,10 +604,13 @@ function submitGuess(data, e) {
                         drawCard(data);
                     }
                 }
+
             } else {
                 throw new Meteor.Error('card-not-submitted', 'Could not submit a guess for the card.', err);
             }
+
             TourGuide.resume();
+
         });
 
         Helpers.updateLastActivity();
