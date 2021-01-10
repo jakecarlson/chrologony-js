@@ -616,6 +616,7 @@ if (Meteor.isServer) {
 
                         } else {
                             Logger.log('-- Not enough clues to create a category; skipping', 3);
+                            Logger.log('-- Import IDs: ' + JSON.stringify(categoryImports.importIds), 3);
                         }
 
                     } else {
