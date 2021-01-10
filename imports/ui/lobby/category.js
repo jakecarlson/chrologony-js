@@ -3,7 +3,7 @@ import { ReactiveDict } from "meteor/reactive-dict";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { ModelEvents } from "../../modules/ModelEvents";
 
-import { Categories } from '../api/Categories';
+import { Categories } from '../../api/Categories';
 
 import './category.html';
 import './themes_selector.js';
@@ -38,6 +38,10 @@ Template.category.helpers({
     },
 
     name() {
+        return this.category.name;
+    },
+
+    label() {
         if (this.category) {
             let str = this.category.name;
             if (this.category.source != 'user') {

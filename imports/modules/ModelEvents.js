@@ -88,9 +88,7 @@ export const ModelEvents = {
     resetAttrs(parent) {
         const inputs = $(parent).find('input.attr, textarea.attr');
         for (input of inputs) {
-            if (input.type == 'checkbox') {
-                input.checked = false;
-            } else if (input.type != 'hidden') {
+            if (!['hidden','checkbox'].includes(input.type)) {
                 input.value = '';
             }
         }
