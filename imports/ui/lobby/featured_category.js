@@ -2,13 +2,10 @@ import { Template } from 'meteor/templating';
 import { LoadingState } from '../../modules/LoadingState';
 import { Meteor } from "meteor/meteor";
 
-import { Games } from '../../api/Games';
-import { Categories } from '../../api/Categories';
-
 import './featured_category.html';
 import {Session} from "meteor/session";
 
-Template.featured_category.onCreated(function joinOnCreated() {
+Template.featured_category.onCreated(function featured_categoryOnCreated() {
 });
 
 Template.featured_category.helpers({

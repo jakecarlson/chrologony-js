@@ -28,63 +28,7 @@
                         data-toggle="{{#if hasPassword game}}modal{{/if}}"
                         data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
                     >
-                        <div class="row">
-                            <div class="col-12 col-sm-6">
-                                <h2 class="game-title">
-                                    <i class="fa {{#if hasPassword game}}fa-lock text-danger{{else}}fa-unlock-alt text-success{{/if}}"></i>
-                                    {{title game}}
-                                </h2>
-                                <p class="game-created mb-1 mb-sm-0">
-                                    {{#if game.startedAt}}
-                                        Started {{relativeTime game.startedAt}};
-                                    {{/if}}
-                                    Created {{relativeTime game.createdAt}}
-                                </p>
-                            </div>
-                            <dl class="col-12 col-sm-6 game-meta">
-                                <dt>
-                                    <i class="fa fa-folder" title="Category"></i>
-                                </dt>
-                                    <dd>{{category game}}</dd>
-                                <dt>
-                                    <i class="fa fa-user" title="# Players"></i>
-                                </dt>
-                                    <dd>{{numPlayers game}} <span class="d-none d-md-inline">{{playersStr game}}</span></dd>
-                                <dt>
-                                    <i class="fa fa-asterisk" title="Difficulty"></i>
-                                </dt>
-                                    <dd>{{difficulty game}} <span class="d-none d-md-inline">Difficulty</span></dd>
-                                <dt>
-                                    <i class="fa fa-certificate" title="Win Condition"></i>
-                                </dt>
-                                    <dd>{{winCondition game}} <span class="d-none d-md-inline">Cards</span></dd>
-                                <dt>
-                                    <i class="fa fa-clock-o" title="Guess Time Limit"></i>
-                                </dt>
-                                    <dd>{{guessTime game}} <span class="d-none d-md-inline">Guess Time Limit</span></dd>
-                            </dl>
-                        </div>
-
-                        {{#if isOwner game}}
-                            <i
-                                class="fa fa-star text-active game-owner"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                data-original-title="You own this game."
-                            ></i>
-                        {{/if}}
-
-                        <i
-                            class="
-                                fa
-                                fa-circle
-                                game-status
-                                text-{{statusColor game}}
-                            "
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            data-original-title="{{statusMsg game}}"
-                        ></i>
+                        {{> lobby_game game=game}}
 
                     </li>
 

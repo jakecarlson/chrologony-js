@@ -216,23 +216,9 @@ if (Meteor.isServer) {
             const attrs = {
                 categoryId: category._id,
                 name: gameName,
-                password: null,
                 private: true,
-                winPoints: Games.DEFAULT_WIN_POINTS,
-                equalTurns: true,
-                minDifficulty: Games.MIN_DIFFICULTY,
-                maxDifficulty: Games.MAX_DIFFICULTY,
-                minScore: Games.DEFAULT_MIN_SCORE,
-                cardLimit: 0,
-                autoProceed: false,
-                cardTime: 0,
-                turnOrder: Games.DEFAULT_TURN_ORDER,
-                recycleCards: false,
-                showHints: false,
                 comparisonPrecision: category.precision,
                 displayPrecision: category.precision,
-                playerLimit: 0,
-                noJoinAfterStart: false,
                 autoShowMore: true,
             };
 
