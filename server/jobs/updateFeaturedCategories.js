@@ -3,7 +3,7 @@ import { Meteor } from "meteor/meteor";
 
 Jobs.register({
 
-    'setFeaturedCategories'() {
+    'updateFeaturedCategories'(frequencyInHours = 24) {
         const instance = this;
 
         Meteor.call(
