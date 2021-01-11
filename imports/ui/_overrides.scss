@@ -26,6 +26,7 @@
   overflow: visible;
 }
 
+
 /* cards */
 .card:not(.game-card),
 .modal-content
@@ -52,6 +53,10 @@
 }
 .card .form-control {
   width: 100%;
+}
+.card-instructions {
+  margin-bottom: 0;
+  margin-top: .25rem;
 }
 
 /* alert */

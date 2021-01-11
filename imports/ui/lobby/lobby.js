@@ -10,6 +10,7 @@ import './join.js';
 import '../game_creator.js';
 import './categories_manager.js';
 import './clues_manager.js';
+import './featured.js';
 
 Template.lobby.onCreated(function lobbyOnCreated() {
 

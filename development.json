@@ -100,7 +100,7 @@
       "thresholdInHours": 24,
       "frequencyInHours": false
     },
-    "importQueued": {
+    "importQueuedImports": {
       "frequencyInHours": false
     },
     "updateClueCounts": {
@@ -111,6 +111,9 @@
     },
     "updateClueDifficulties": {
       "frequencyInHours": false
+    },
+    "updateFeaturedCategories": {
+      "frequencyInHours": false
     }
   },
   "users": {
@@ -118,6 +121,8 @@
     "admin": "z2y8W9mFWScbjg43R"
   },
   "categories": {
-    "default": "3hGiXh2K9tcnzHYoz"
+    "default": "3hGiXh2K9tcnzHYoz",
+    "numFeatured": 3,
+    "featuredSource": "Wikipedia OTD"
   }
 }

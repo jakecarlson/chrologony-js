@@ -9,6 +9,7 @@ import { Schemas } from "../modules/Schemas";
 
 import { Games } from "./Games";
 import { Clues } from "./Clues";
+import {Promise} from "meteor/promise";
 
 export const Categories = new Mongo.Collection('categories');
 
@@ -23,6 +24,7 @@ Categories.PUBLISH_FIELDS = {
     ownerId: 1,
     precision: 1,
     cluesCount: 1,
+    featured: 1,
 };
 
 Categories.DEFAULT_PRECISION = 'date';
@@ -38,6 +40,9 @@ Categories.schema = new SimpleSchema({
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
     precision: {type: String, defaultValue: Categories.DEFAULT_PRECISION},
     cluesCount: {type: SimpleSchema.Integer, defaultValue: 0, optional: true},
+    featured: {type: Boolean, defaultValue: false},
+    featuredStartedAt: {type: Date, defaultValue: null},
+    featuredEndedAt: {type: Date, defaultValue: null},
 });
 Categories.schema.extend(Schemas.timestampable);
 Categories.schema.extend(Schemas.ownable());
@@ -116,6 +121,20 @@ if (Meteor.isServer) {
                     fields: Categories.PUBLISH_FIELDS,
                 }
             );
+        } else {
+            return this.ready();
+        }
+    });
+
+    Meteor.publish('featuredCategories', function featuredCategoriesPublication() {
+        if (this.userId) {
+            const categories = Categories.find(
+                {featured: true, private: false, active: true},
+                {
+                    fields: Categories.PUBLISH_FIELDS,
+                }
+            );
+            return categories;
         } else {
             return this.ready();
         }
@@ -352,6 +371,40 @@ if (Meteor.isServer) {
                     sort: getSort(),
                 }
             ).fetch();
+        },
+
+        // Set Featured
+        'category.setFeatured'(num = 3, source = null) {
+
+            check(num, Match.Integer);
+
+            // Get 3 randomly selected categories
+            let selector = {
+                featured: false,
+                private: false,
+                source: (source) ? source : {$ne: 'user'},
+            };
+            const possibleCategories = Promise.await(
+                Categories.rawCollection().aggregate(
+                    [
+                        {$match: selector},
+                        {$sample: {size: num}},
+                    ]
+                ).toArray()
+            );
+            let featuredIds = [];
+            possibleCategories.forEach(function(category) {
+                featuredIds.push(category._id);
+            });
+
+            // Get all currently featured categories and stop featuring them
+            const unfeatured = Categories.update({featured: true}, {$set: {featured: false, featuredEndedAt: new Date()}}, {multi: true});
+            Logger.log('Stopped Featuring ' + unfeatured + ' categories');
+
+            // Set the new categories to featured
+            const featured = Categories.update({_id: {$in: featuredIds}}, {$set: {featured: true, featuredStartedAt: new Date()}}, {multi: true});
+            Logger.log('Started Featuring ' + unfeatured + ' categories');
+
         },
 
     });

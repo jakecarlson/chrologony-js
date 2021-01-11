@@ -3,7 +3,7 @@ import { Meteor } from "meteor/meteor";
 
 Jobs.register({
 
-    'importQueued'(frequencyInHours = 1) {
+    'importQueuedImports'(frequencyInHours = 1) {
         const instance = this;
 
         Meteor.call('importer.importQueued');

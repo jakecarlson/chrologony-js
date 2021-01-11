@@ -12,6 +12,7 @@ import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { Turns } from './Turns';
 import { Cards } from "./Cards";
 import { Categories } from "./Categories";
+import { Clues } from "./Clues";
 
 export const Games = new Mongo.Collection('games');
 
@@ -542,25 +543,25 @@ if (Meteor.isServer) {
                 attrs,
                 {
                     categoryId: RecordId,
-                    name: Match.OneOf(String, null),
-                    password: Match.OneOf(String, null),
-                    private: Boolean,
-                    winPoints: Match.Integer,
-                    equalTurns: Boolean,
-                    minDifficulty: Match.Integer,
-                    maxDifficulty: Match.Integer,
-                    minScore: Match.Integer,
-                    cardLimit: Match.Integer,
-                    autoProceed: Boolean,
-                    cardTime: Match.Integer,
-                    turnOrder: NonEmptyString,
-                    recycleCards: Boolean,
-                    showHints: Boolean,
-                    comparisonPrecision: NonEmptyString,
-                    displayPrecision: NonEmptyString,
-                    playerLimit: Match.Integer,
-                    noJoinAfterStart: Boolean,
-                    autoShowMore: Boolean,
+                    name: Match.Maybe(Match.OneOf(String, null)),
+                    password: Match.Maybe(Match.OneOf(String, null)),
+                    private: Match.Maybe(Match.OneOf(Boolean, null)),
+                    winPoints: Match.Maybe(Match.Integer),
+                    equalTurns: Match.Maybe(Boolean),
+                    minDifficulty: Match.Maybe(Match.Integer),
+                    maxDifficulty: Match.Maybe(Match.Integer),
+                    minScore: Match.Maybe(Match.Integer),
+                    cardLimit: Match.Maybe(Match.Integer),
+                    autoProceed: Match.Maybe(Boolean),
+                    cardTime: Match.Maybe(Match.Integer),
+                    turnOrder: Match.Maybe(NonEmptyString),
+                    recycleCards: Match.Maybe(Boolean),
+                    showHints: Match.Maybe(Boolean),
+                    comparisonPrecision: Match.Maybe(NonEmptyString),
+                    displayPrecision: Match.Maybe(NonEmptyString),
+                    playerLimit: Match.Maybe(Match.Integer),
+                    noJoinAfterStart: Match.Maybe(Boolean),
+                    autoShowMore: Match.Maybe(Boolean),
                     players: Match.Maybe(Array),
                 }
             );
@@ -588,6 +589,26 @@ if (Meteor.isServer) {
                     throw new Meteor.Error('duplicate-object', 'A game with that name already exists.');
                 }
             }
+
+            // Add defaults
+            attrs.name = attrs.name || null;
+            attrs.password = attrs.password || null;
+            attrs.private = attrs.private || false;
+            attrs.winPoints = attrs.winPoints || Games.DEFAULT_WIN_POINTS;
+            attrs.equalTurns = attrs.equalTurns || true;
+            attrs.minDifficulty = attrs.minDifficulty || Clues.MIN_DIFFICULTY;
+            attrs.maxDifficulty = attrs.maxDifficulty || Clues.MAX_DIFFICULTY;
+            attrs.minScore = attrs.minScore || Games.DEFAULT_MIN_SCORE;
+            attrs.cardLimit = attrs.cardLimit || 0;
+            attrs.autoProceed = attrs.autoProceed || false;
+            attrs.turnOrder = attrs.turnOrder || Games.DEFAULT_TURN_ORDER;
+            attrs.recycleCards = attrs.recycleCards || false;
+            attrs.showHints = attrs.showHints || false;
+            attrs.comparisonPrecision = attrs.comparisonPrecision || Categories.DEFAULT_PRECISION;
+            attrs.displayPrecision = attrs.displayPrecision || Categories.DEFAULT_PRECISION;
+            attrs.playerLimit = attrs.playerLimit || 0;
+            attrs.noJoinAfterStart = attrs.noJoinAfterStart || false;
+            attrs.autoShowMore = attrs.autoShowMore || false;
 
             // Check the precision values
             Permissions.check(Games.PRECISION_OPTIONS.includes(attrs.comparisonPrecision));

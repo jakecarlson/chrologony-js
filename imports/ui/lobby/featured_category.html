@@ -1,0 +1,15 @@
+<template name="featured_category">
+
+    <div class="row">
+        <h2 class="category-title col-12 col-sm-6">{{category.name}}</h2>
+        <dl class="col-12 col-sm-6 category-meta">
+            <dt><i class="fa fa-folder" title="Theme / Source"></i></dt>
+                <dd>{{category.theme}} / {{category.source}}</dd>
+            <dt><i class="fa fa-clone" title="# Clues"></i></dt>
+                <dd>{{category.cluesCount}}</dd>
+            <dt><i class="fa fa-calendar-o" title="Datetime Precision"></i></dt>
+                <dd>{{capitalize category.precision}}</dd>
+        </dl>
+    </div>
+
+</template>

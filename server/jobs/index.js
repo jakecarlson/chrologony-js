@@ -1,9 +1,10 @@
 import { Jobs } from 'meteor/msavin:sjobs'
 import './clearStaleGames';
-import './importQueued';
+import './importQueuedImports';
 import './updateClueCounts';
 import './updateClueScores';
 import './updateClueDifficulties';
+import './updateFeaturedCategories';
 
 JobsQueue = {
     init() {
@@ -19,40 +20,29 @@ JobsQueue = {
         }
 
         // Run the importer
-        if (Meteor.settings.jobs.importQueued.frequencyInHours) {
-            Jobs.run(
-                'importQueued',
-                Meteor.settings.jobs.importQueued.frequencyInHours,
-                {singular: true}
-            );
-        }
+        initJob('importQueuedImports', Meteor.settings.jobs.importQueuedImports.frequencyInHours);
 
         // Update clue counts
-        if (Meteor.settings.jobs.updateClueCounts.frequencyInHours) {
-            Jobs.run(
-                'updateClueCounts',
-                Meteor.settings.jobs.updateClueCounts.frequencyInHours,
-                {singular: true}
-            );
-        }
+        initJob('updateClueCounts', Meteor.settings.jobs.updateClueCounts.frequencyInHours);
 
         // Update clue scores
-        if (Meteor.settings.jobs.updateClueScores.frequencyInHours) {
-            Jobs.run(
-                'updateClueScores',
-                Meteor.settings.jobs.updateClueScores.frequencyInHours,
-                {singular: true}
-            );
-        }
+        initJob('updateClueScores', Meteor.settings.jobs.updateClueScores.frequencyInHours);
 
         // Update clue difficulties
-        if (Meteor.settings.jobs.updateClueDifficulties.frequencyInHours) {
-            Jobs.run(
-                'updateClueDifficulties',
-                Meteor.settings.jobs.updateClueDifficulties.frequencyInHours,
-                {singular: true}
-            );
-        }
+        initJob('updateClueDifficulties', Meteor.settings.jobs.updateClueDifficulties.frequencyInHours);
 
+        // Update featured categories
+        initJob('updateFeaturedCategories', Meteor.settings.jobs.updateFeaturedCategories.frequencyInHours);
+
+    }
+}
+
+function initJob(name, frequencyInHours) {
+    if (frequencyInHours) {
+        Jobs.run(
+            name,
+            frequencyInHours,
+            {singular: true}
+        );
     }
 }
