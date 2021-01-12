@@ -2,33 +2,7 @@ import { LoadingState } from '../modules/LoadingState';
 import {Meteor} from "meteor/meteor";
 import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
-Template.registerHelper('dump', function(varToDump) {
-    return JSON.stringify(varToDump);
-});
-
-Template.registerHelper('collectionNotEmpty', function(collection) {
-    return (collection.count() > 0);
-});
-
-Template.registerHelper('arrayNotEmpty', function(array) {
-    return (array.length > 0);
-});
-
-Template.registerHelper('loading', function() {
-    return LoadingState.active();
-});
-
-Template.registerHelper('notLoading', function() {
-    return !LoadingState.active();
-});
-
-Template.registerHelper('selectedValue', function(id, val = false) {
-    if (!val) {
-        val = this.val;
-    }
-    return (id == this.val);
-});
-
+/* Application */
 Template.registerHelper('appName', function() {
     return Meteor.settings.public.app.name;
 });
@@ -61,6 +35,34 @@ Template.registerHelper('appColor', function() {
     return Meteor.settings.robots.color;
 });
 
+/* Utilities */
+Template.registerHelper('dump', function(varToDump) {
+    return JSON.stringify(varToDump);
+});
+
+/* Control */
+Template.registerHelper('collectionNotEmpty', function(collection) {
+    return (collection.count() > 0);
+});
+
+Template.registerHelper('arrayNotEmpty', function(array) {
+    return (array.length > 0);
+});
+
+/* State */
+Template.registerHelper('loading', function() {
+    return LoadingState.active();
+});
+
+Template.registerHelper('notLoading', function() {
+    return !LoadingState.active();
+});
+
+/* Meta / Analytics */
+Template.registerHelper('doctype', function() {
+    return "<!DOCTYPE html>";
+});
+
 Template.registerHelper('gaPropertyId', function() {
     return Meteor.settings.public.analyticsSettings['Google Analytics'].trackingId;
 });
@@ -73,14 +75,23 @@ Template.registerHelper('fbAppId', function() {
     return Meteor.settings.robots.facebookAppId;
 });
 
-Template.registerHelper('doctype', function() {
-    return "<!DOCTYPE html>";
+/* Helpers */
+Template.registerHelper('selectedValue', function(id, val = false) {
+    if (!val) {
+        val = this.val;
+    }
+    return (id == this.val);
 });
 
 Template.registerHelper('mobileApp', function() {
     return Meteor.isCordova;
 });
 
+Template.registerHelper('profileName', function(user) {
+    return (user) ? user.name() : null;
+});
+
+/* Links */
 Template.registerHelper('privacyLink', function() {
     return FlowRouter.path('privacy');
 });
@@ -97,6 +108,7 @@ Template.registerHelper('lobbyLink', function() {
     return FlowRouter.path('lobby');
 });
 
+/* Formatters */
 Template.registerHelper('capitalize', function(str) {
     return Formatter.capitalize(str);
 });
@@ -113,9 +125,6 @@ Template.registerHelper('relativeTime', function(val) {
     return (val ? Formatter.relativeTime(val) : null);
 });
 
-Template.registerHelper('profileName', function(user) {
-    if (user) {
-        return user.name();
-    }
-    return null;
+Template.registerHelper('number', function(val) {
+    return numeral(val).format('0,0');
 });
