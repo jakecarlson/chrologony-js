@@ -1,106 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
-import { NonEmptyString, RecordId } from "../startup/validations";
-import { Permissions } from '../modules/Permissions';
+import { NonEmptyString, RecordId } from "../../startup/validations";
+import { Permissions } from '../../modules/Permissions';
 
-import { Games } from "./Games";
-import { Categories } from "./Categories";
-
-Meteor.users.ONLINE_THRESHOLD = 15 * 60 * 1000; // Set to 15m
-Meteor.users.DEFAULT_PAGE_SIZE = 25;
-
-Meteor.users.SELECT_FIELDS = {
-    _id: 1,
-    'profile.name': 1,
-    'profile.muted': 1,
-    'profile.pageSize': 1,
-    currentGameId: 1,
-    joinedGameAt: 1,
-    lastLoggedInAt: 1,
-    lastActiveAt: 1,
-    guest: 1,
-};
-
-Meteor.users.helpers({
-
-    currentGame() {
-        return Games.findOne({_id: this.currentGameId, deletedAt: null});
-    },
-
-    email() {
-        if (this.emails && (this.emails.length > 0)) {
-            return this.emails[0].address;
-        } else if (this.services) {
-            for (const [service, data] of Object.entries(this.services)) {
-                if (data.email) {
-                    return data.email;
-                }
-            }
-        }
-        return false;
-    },
-
-    name() {
-        if (this.profile && this.profile.name) {
-            return this.profile.name;
-        }
-        return null;
-    },
-
-    canChangePassword() {
-        return (!this.guest && this.username);
-    },
-
-    isInGame(gameId) {
-        return (this.currentGameId == gameId);
-    },
-
-    isOnline() {
-        if (this.lastActiveAt) {
-            const timeSinceLastActivity = (new Date().getTime() - this.lastActiveAt.getTime());
-            return (timeSinceLastActivity < Meteor.users.ONLINE_THRESHOLD);
-        }
-        return false;
-    },
-
-});
-
-if (Meteor.isServer) {
-
-    // Additional user data
-    Meteor.publish('userData', function () {
-        if (this.userId) {
-            return Meteor.users.find(
-                {
-                    _id: this.userId,
-                },
-                {
-                    fields: Meteor.users.SELECT_FIELDS,
-                }
-            );
-        } else {
-            this.ready();
-        }
-    });
-
-    // Get the players in the room
-    Meteor.publish('players', function playersPublication(userIds) {
-        if (this.userId && userIds) {
-            return Meteor.users.find(
-                {
-                    _id: {$in: userIds},
-                },
-                {
-                    fields: Meteor.users.SELECT_FIELDS,
-                }
-            );
-        } else {
-            return this.ready();
-        }
-    });
-
-
-}
+import { Categories } from "../Categories";
 
 Meteor.methods({
 
@@ -197,8 +100,8 @@ if (Meteor.isServer) {
 
             return Meteor.users.find(
                 {
-                        _id: {$in: ids},
-                    },
+                    _id: {$in: ids},
+                },
                 {
                     sort: {
                         'profile.name': 1,

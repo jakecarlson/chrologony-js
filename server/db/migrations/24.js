@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { Rooms } from '../../../imports/api/Rooms';
 import { Games } from '../../../imports/api/Games';
 
 // Add name, password, and private to games.
@@ -19,10 +18,6 @@ Migrations.add({
         );
         Games.find({}).fetch().forEach(function(game) {
             let ownerId = game.ownerId;
-            if (!ownerId && game.roomId) {
-                const room = Rooms.findOne(game.roomId);
-                ownerId = room.ownerId;
-            }
             Games.update(game._id, {$set: {ownerId: ownerId}});
         });
         Meteor.users.update({}, {$set: {currentGameId: null, joinedGameAt: null}}, {multi: true});

@@ -1,106 +1,11 @@
 import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
-import { NonEmptyString, RecordId } from "../startup/validations";
-import { Permissions } from '../modules/Permissions';
-import SimpleSchema from "simpl-schema";
-import { Schemas } from "../modules/Schemas";
+import { RecordId } from "../../startup/validations";
+import { Permissions } from '../../modules/Permissions';
 
-import { Games } from './Games';
-import { Cards } from './Cards';
-
-export const Turns = new Mongo.Collection('turns');
-
-Turns.schema = new SimpleSchema({
-    gameId: {type: String, regEx: SimpleSchema.RegEx.Id},
-    ownerId: {type: String, max: 17},
-    currentCardId: {type: String, regEx: SimpleSchema.RegEx.Id, defaultValue: null, optional: true},
-    lastCardCorrect: {type: Boolean, defaultValue: null, optional: true},
-});
-Turns.schema.extend(Schemas.timestampable);
-Turns.schema.extend(Schemas.endable);
-Turns.attachSchema(Turns.schema);
-
-Turns.helpers({
-
-    game() {
-        return Games.findOne(this.gameId);
-    },
-
-    cards(correct = null) {
-        let selector = {
-            turnId: this._id,
-        };
-        if (correct !== null) {
-            selector.correct = correct;
-        }
-        return Cards.find(
-            selector,
-            {
-                sort: {
-                    pos: 1,
-                    createdAt: -1,
-                }
-            }
-        );
-    },
-
-    currentCard() {
-        return Cards.findOne(this.currentCardId);
-    },
-
-    owner() {
-        return Meteor.users.findOne(this.ownerId);
-    },
-
-    hasReachedCardLimit() {
-        const game = this.game();
-        return (game && (game.cardLimit > 0) && (this.cards().count() >= game.cardLimit));
-    },
-
-});
-
-if (Meteor.isServer) {
-
-    Meteor.publish('turns', function turnPublication(gameId) {
-        if (this.userId) {
-            let selector = {};
-            if (gameId) {
-                selector.$or = [
-                    {gameId: gameId},
-                    {ownerId: this.userId, endedAt: null},
-                ];
-            } else {
-                selector.gameId = gameId;
-            }
-            return Turns.find(
-                selector,
-                {
-                    fields: {
-                        _id: 1,
-                        gameId: 1,
-                        currentCardId: 1,
-                        ownerId: 1,
-                        lastCardCorrect: 1,
-                        endedAt: 1,
-                    },
-                    sort: {
-                        createdAt: -1,
-                    },
-                    limit: 2,
-                }
-            );
-        } else {
-            return this.ready();
-        }
-    });
-
-    Turns.deny({
-        insert() { return true; },
-        remove() { return true; },
-    });
-
-}
+import { Games } from '../Games';
+import { Cards } from '../Cards';
+import { Turns } from "./index";
 
 Meteor.methods({
 
@@ -198,7 +103,7 @@ if (Meteor.isServer) {
                             endGame = equalTurns;
                         }
 
-                    // Otherwise end the game if the current player has enough cards
+                        // Otherwise end the game if the current player has enough cards
                     } else {
                         const numLockedCards = game.playerCards(turn.ownerId, true).count();
                         endGame = (numLockedCards >= game.winPoints);
@@ -209,7 +114,7 @@ if (Meteor.isServer) {
                         Meteor.call('game.end', game._id, false);
                     }
 
-                // If the game already ended, don't try to end it again
+                    // If the game already ended, don't try to end it again
                 } else if (game.endedAt) {
                     endGame = true;
                 }

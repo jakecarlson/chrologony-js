@@ -1,11 +1,10 @@
 import { Meteor } from 'meteor/meteor';
-import { Rooms } from '../../../imports/api/Rooms';
 
-// Add anonymous user and room.
+// Add anonymous user.
 Migrations.add({
 
     version: 21,
-    name: 'Add anonymous user and room.',
+    name: 'Add anonymous user.',
 
     up: function() {
 
@@ -18,17 +17,9 @@ Migrations.add({
             }
         });
 
-        Rooms.rawCollection().insert({
-            _id: 'anonymous',
-            name: 'anonymous',
-            ownerId: 'anonymous',
-            deletedAt: null,
-        });
-
     },
 
     down: function() {
-        Rooms.rawCollection().remove('anonymous');
         Meteor.users.rawCollection().remove('anonymous');
     }
 

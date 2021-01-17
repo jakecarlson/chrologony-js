@@ -1,7 +1,6 @@
 import { Schemas } from "../../../imports/modules/Schemas";
 import { ImportSets } from '../importer';
 import { Imports } from '../importer';
-import { Rooms } from '../../../imports/api/Rooms';
 
 const INDEXES = [
 
@@ -42,7 +41,6 @@ Migrations.add({
 
     up: function() {
         ImportSets.rawCollection().dropIndex('status');
-        Rooms.rawCollection().dropIndex('deleted');
         Schemas.createIndexes(INDEXES);
     },
 

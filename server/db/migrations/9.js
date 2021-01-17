@@ -6,7 +6,6 @@ import { Clues } from '../../../imports/api/Clues';
 import { Games } from '../../../imports/api/Games';
 import { ImportSets } from '../importer';
 import { Imports } from '../importer';
-import { Rooms } from '../../../imports/api/Rooms';
 import { Turns } from '../../../imports/api/Turns';
 import { Votes } from '../../../imports/api/Votes';
 
@@ -120,15 +119,6 @@ const INDEXES = [
         indexes: {
             set: {
                 setId: 1,
-            },
-        },
-    },
-
-    {
-        collection: Rooms,
-        indexes: {
-            deleted: {
-                deletedAt: 1,
             },
         },
     },
