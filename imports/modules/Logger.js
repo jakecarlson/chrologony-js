@@ -26,7 +26,7 @@ Logger = {
     },
 
     log(str, level = 1) {
-        if (typeof str !== 'string') {
+        if (typeof(str) !== 'string') {
             str = JSON.stringify(str);
         }
         if ((level >= this._config.level) || FlowRouter.getQueryParam('debug')) {

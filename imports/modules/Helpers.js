@@ -44,14 +44,14 @@ Helpers = {
         }
 
         if (filters.exclude) {
-            if (typeof(filters.exclude) != 'array') {
+            if (typeof(filters.exclude) == 'string') {
                 filters.exclude = [filters.exclude];
             }
             selector._id = {$nin: filters.exclude};
         }
 
         if (filters.include) {
-            if (typeof(filters.include) != 'array') {
+            if (typeof(filters.include) == 'string') {
                 filters.include = [filters.include];
             }
             selector._id = {$in: filters.include};

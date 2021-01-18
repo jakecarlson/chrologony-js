@@ -167,14 +167,15 @@ Meteor.methods({
         Permissions.authenticated();
         Permissions.notGuest();
 
-        if (typeof(ids) != 'array') {
+        if (typeof(ids) == 'string') {
             ids = [ids];
         }
         ids.forEach(function(id) {
             const cluesCount = Clues.find({categories: id, active: true}).count();
-            const updated = Categories.update(id, {$set: {cluesCount: cluesCount}});
-            if (!updated) {
-                throw new Meteor.Error('category-not-updated', 'Could not update clue count for a category.');
+            try {
+                const updated = Categories.update(id, {$set: {cluesCount: cluesCount}});
+            } catch (err) {
+                throw new Meteor.Error('category-not-updated', 'Could not update clue count for a category.', err);
             }
         });
 
@@ -191,7 +192,7 @@ if (Meteor.isServer) {
         // Search
         'category.search'(query, excludeIds = []) {
 
-            if (typeof(excludeIds) != 'object') {
+            if (typeof(excludeIds) == 'string') {
                 excludeIds = [excludeIds];
             }
 
@@ -219,9 +220,9 @@ if (Meteor.isServer) {
         },
 
         // Get
-        'category.get'(ids) {
+        'category.get'(ids = []) {
 
-            if (typeof(ids) != 'object') {
+            if (typeof(ids) == 'string') {
                 ids = [ids];
             }
 

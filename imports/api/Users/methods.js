@@ -62,7 +62,7 @@ if (Meteor.isServer) {
         // Search
         'user.search'(query, excludeIds = []) {
 
-            if (typeof(excludeIds) != 'object') {
+            if (typeof(excludeIds) == 'string') {
                 excludeIds = [excludeIds];
             }
 
@@ -90,7 +90,7 @@ if (Meteor.isServer) {
         // Get
         'user.get'(ids) {
 
-            if (typeof(ids) != 'object') {
+            if (typeof(ids) == 'string') {
                 ids = [ids];
             }
 
