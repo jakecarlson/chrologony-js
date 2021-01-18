@@ -178,10 +178,8 @@ Games.helpers({
         // Get turn counts for players who have had turns in the current game and are still in the game
         let sort = {
             turns: -1,
+            lastTurn: (this.turnOrder == 'snake') ? -1 : 1,
         };
-        if (this.turnOrder != 'random') {
-            sort.lastTurn = (this.turnOrder == 'snake') ? 1 : -1;
-        }
 
         const players = Promise.await(
             Turns.rawCollection().aggregate(
@@ -229,21 +227,23 @@ Games.helpers({
         const players = this.getPlayerTurnCounts();
         Logger.log('Player Turn Counts: ' + JSON.stringify(players));
 
+        // Get the group of players with the least amount of turns
+        let leastTurnPlayers = [];
+        const lastIndex = players.length-1;
+        const minTurns = players[lastIndex].turns;
+        for (let i = lastIndex; i >= 0; --i) {
+            if (players[i].turns != minTurns) break;
+            leastTurnPlayers.push(players[i]);
+        }
+
         // If the turn order is random, randomly select one of the players with the fewest turns
         let nextPlayer = null;
         if (this.turnOrder == 'random') {
-            let leastTurnPlayers = [];
-            const lastIndex = players.length-1;
-            const minTurns = players[players.length-1].turns;
-            for (let i = lastIndex; i >= 0; --i) {
-                if (players[i].turns != minTurns) break;
-                leastTurnPlayers.push(players[i]);
-            }
             nextPlayer = leastTurnPlayers[Math.floor(Math.random() * leastTurnPlayers.length)];
 
-            // Otherwise just pluck the bottom player
+        // Otherwise default to sequential (if snake order, this will be reversed)
         } else {
-            nextPlayer = players[players.length-1];
+            nextPlayer = leastTurnPlayers[leastTurnPlayers.length-1];
         }
 
         return nextPlayer;

@@ -46,6 +46,10 @@ Games.PUBLISH_FIELDS = {
     token: 1,
 };
 
+Games.TURN_ORDER_OPTIONS = [
+
+];
+
 Games.DEFAULT_TURN_ORDER = 'sequential';
 Games.DEFAULT_PRECISION = 'date';
 Games.DEFAULT_MIN_SCORE = 0;
