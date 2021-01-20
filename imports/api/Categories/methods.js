@@ -190,7 +190,7 @@ if (Meteor.isServer) {
     Meteor.methods({
 
         // Search
-        'category.search'(query, excludeIds = []) {
+        'category.search'(query, excludeIds = [], includeNotOwned = false) {
 
             if (typeof(excludeIds) == 'string') {
                 excludeIds = [excludeIds];
@@ -203,7 +203,7 @@ if (Meteor.isServer) {
 
             let selector = {
                 $and: [
-                    Helpers.getCategoriesSelector({exclude: excludeIds, editor: true}),
+                    Helpers.getCategoriesSelector({exclude: excludeIds, editor: !includeNotOwned}),
                 ],
             };
             if (query.length > 0) {

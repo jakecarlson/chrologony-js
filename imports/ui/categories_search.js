@@ -36,7 +36,7 @@ Template.categories_search.helpers({
     searchCategories(query, sync, callback) {
         let categories = [];
         const categoryMapper = function(category) { return {id: category._id, value: Helpers.getCategoryLabel(category)}};
-        Meteor.call('category.search', query, categories, function(err, res) {
+        Meteor.call('category.search', query, categories, true, function(err, res) {
             if (err) {
                 Logger.log(err, 3);
                 return;

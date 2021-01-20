@@ -13,9 +13,9 @@ Categories.schema = new SimpleSchema({
     'collaborators.$': {type: String, regEx: SimpleSchema.RegEx.Id},
     precision: {type: String, defaultValue: Categories.DEFAULT_PRECISION},
     cluesCount: {type: SimpleSchema.Integer, defaultValue: 0, optional: true},
-    featured: {type: Boolean, defaultValue: false},
-    featuredStartedAt: {type: Date, defaultValue: null},
-    featuredEndedAt: {type: Date, defaultValue: null},
+    featured: {type: Boolean, defaultValue: false, optional: true},
+    featuredStartedAt: {type: Date, defaultValue: null, optional: true},
+    featuredEndedAt: {type: Date, defaultValue: null, optional: true},
 });
 Categories.schema.extend(Schemas.timestampable);
 Categories.schema.extend(Schemas.ownable());
