@@ -4,9 +4,11 @@
 
         <header class="card-header bg-primary">
             <h1 class="card-title text-white float-left">Join a Game</h1>
-            <button class="btn btn-success float-right create" title="Create a New Game" data-toggle="modal" data-target="#gameCreatorModal">
-                Create a New Game
-            </button>
+            {{#if collectionNotEmpty games}}
+                <button class="btn btn-success float-right create" title="Create a New Game" data-toggle="modal" data-target="#gameCreatorModal">
+                    Create a New Game
+                </button>
+            {{/if}}
         </header>
 
         {{#if collectionNotEmpty games}}
@@ -29,7 +31,6 @@
                         data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
                     >
                         {{> lobby_game game=game}}
-
                     </li>
 
                 {{/each}}
