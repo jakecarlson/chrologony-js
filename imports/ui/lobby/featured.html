@@ -1,22 +1,18 @@
 <template name="featured">
+    
+    <div id="featuredCategories" class="full-width card border-primary text-white mx-auto mb-4">
 
-    {{#if collectionNotEmpty categories}}
+        <header class="card-header bg-primary">
+            <h1 class="card-title text-white float-left">Featured Categories</h1>
+            <p class="card-instructions d-none d-sm-block text-white float-right">Select one to start a quick game.</p>
+        </header>
 
-        <div id="featuredCategories" class="full-width card border-primary text-white mx-auto mb-4">
+        <ul class="list-group list-group-flush">
+            {{#each category in categories}}
+                <li class="featured-category px-3 pt-3 pb-2">{{> featured_category category=category}}</li>
+            {{/each}}
+        </ul>
 
-            <header class="card-header bg-primary">
-                <h1 class="card-title text-white float-left">Featured Categories</h1>
-                <p class="card-instructions d-none d-sm-block text-white float-right">Select one to start a quick game.</p>
-            </header>
-
-            <ul class="list-group list-group-flush">
-                {{#each category in categories}}
-                    <li class="featured-category px-3 pt-3 pb-2">{{> featured_category category=category}}</li>
-                {{/each}}
-            </ul>
-
-        </div>
-
-    {{/if}}
+    </div>
 
 </template>
