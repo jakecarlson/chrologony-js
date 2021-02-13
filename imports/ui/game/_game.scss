@@ -252,10 +252,14 @@
   font-size: large;
   //white-space: nowrap;
 }
+.game-card-menu {
+  position: absolute;
+  top: .5rem;
+  right: 15px;
+}
 .game-card-action {
   font-size: 1.5rem;
   line-height: 1;
-  margin-top: -.15rem;
   color: $white;
 }
 .game-card-action:hover,
@@ -265,7 +269,7 @@
   color: $white;
 }
 .game-card-action.move {
-  top: 0;
+  top: -.15rem;
   position: absolute;
   padding-left: 1.25rem;
   padding-right: 1.25rem;
@@ -276,13 +280,6 @@
 }
 .game-card-action.move-forward {
   right: 0;
-}
-
-.game-card-action.difficulty {
-  font-size: medium;
-  position: relative;
-  top: -.25rem;
-  mix-blend-mode: soft-light;
 }
 .game-card.bg-warning .game-card-action {
   color: $dark;
@@ -299,11 +296,18 @@
 }
 .vote {
   font-size: large;
+  color: $dark;
+  mix-blend-mode: soft-light;
 }
-.upvote:hover i,
-.downvote:hover i
+.vote:hover,
+.vote.active
 {
-  color: $primary;
+  color: $white;
+  mix-blend-mode: normal;
+}
+.options {
+  position: relative;
+  top: .25rem;
 }
 
 /* winner */

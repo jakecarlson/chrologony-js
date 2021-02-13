@@ -134,15 +134,6 @@ Template.card.helpers({
         return Cards.DIFFICULTIES[level];
     },
 
-    difficultyDots() {
-        const level = getDifficultyLevel(Template);
-        let dots = [];
-        for (let i = 0; i < level; ++i) {
-            dots.push(i);
-        }
-        return dots;
-    },
-
     isAnonymous() {
         return Helpers.isAnonymous();
     },
@@ -163,6 +154,12 @@ Template.card.events({
     'click .downvote'(e, i) {
         LoadingState.start(e);
         return submitVote(this.card.clueId, -1);
+    },
+
+    'mouseleave .game-card'(e, i) {
+        if (!$(i.find('.dropdown-menu')).is(":hidden")){
+            $(i.find('.options')).dropdown('toggle');
+        }
     },
 
 });
