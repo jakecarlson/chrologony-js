@@ -15,6 +15,7 @@ import './board.js';
 import './players_list.js';
 import './options.js';
 import './clue_more.js';
+import '../confirm_modal.js';
 
 Template.game.onCreated(function gameOnCreated() {
 
@@ -164,6 +165,24 @@ Template.game.helpers({
         return !Template.instance().game.get().winPoints;
     },
 
+    gameEndBody() {
+        let str = "Are you sure you want to end the game? ";
+        if (Template.instance().game.get() && Template.instance().game.get().winPoints) {
+            str += "This game is set to end at <strong>" + Template.instance().game.get().winPoints + " points</strong>. " +
+                "Nobody will win if you end it before someone reaches that many points.";
+        }
+        return str;
+    },
+
+    gameLeaveBody() {
+        let str = "Are you sure you want to leave the game? ";
+        if (isOwner(Template)) {
+            str += "Since you are the current owner, ownership will be transferred to the next player. ";
+        }
+        str += "You don't need to leave the game to navigate away temporarily.";
+        return str;
+    },
+
 });
 
 Template.game.events({
@@ -182,11 +201,12 @@ Template.game.events({
         });
     },
 
-    'click .leave'(e, i) {
+    'click #gameLeaveModal .confirm'(e, i) {
         leaveGame(i.game.get()._id);
+        Helpers.closeModal('gameLeave');
     },
 
-    'click .end'(e, i) {
+    'click #gameEndModal .confirm'(e, i) {
         LoadingState.start(e);
         const gameId = i.game.get()._id;
         Meteor.call('game.end', gameId, false, function(err, gameId) {
@@ -195,11 +215,12 @@ Template.game.events({
             } else {
                 throw new Meteor.Error('game-not-ended', 'Could not end the game.', err);
             }
+            Helpers.closeModal('gameEnd');
             LoadingState.stop();
         });
     },
 
-    'click .abandon'(e, i) {
+    'click #gameAbandonModal .confirm'(e, i) {
         LoadingState.start(e);
         const gameId = i.game.get()._id;
         Meteor.call('game.end', gameId, true, function(err, gameId) {
@@ -210,6 +231,7 @@ Template.game.events({
             } else {
                 throw new Meteor.Error('game-not-deleted', 'Could not delete the game.', err);
             }
+            Helpers.closeModal('gameAbandon');
             LoadingState.stop();
         });
     },

@@ -11,6 +11,7 @@ import { Turns } from '../../api/Turns';
 
 import './board.html';
 import './card.js';
+import '../confirm_modal.js';
 
 Template.board.onCreated(function boardOnCreated() {
 
@@ -282,20 +283,18 @@ Template.board.events({
         drawCard(this, e);
     },
 
+    // If this the game owner ending the turn early, prompt before going through with it
     'click .end-turn'(e, i) {
-
-        // If this the game owner ending the turn early, prompt before going through with it
         if (['waiting', 'guessing'].includes(getStatus(this.turn))) {
-            $('#confirmEndTurn').modal('show');
+            $('#turnEndModal').modal('show');
         } else {
             endTurn(this, e);
         }
-
     },
 
-    'click #confirmEndTurn .confirm'(e, i) {
-        endTurn(this, e);
-        $('#confirmEndTurn').modal('hide');
+    'click #turnEndModal .confirm'(e, i) {
+        $('#turnEndModal').modal('hide');
+        endTurn(Template.currentData(), e);
     },
 
     'click .move-back'(e, i) {

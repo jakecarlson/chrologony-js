@@ -1,0 +1,23 @@
+<template name="confirm_modal">
+
+    <div class="modal fade" id="{{id}}Modal" tabindex="-1" role="dialog" aria-labelledby="{{id}}ModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content border-primary">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="{{id}}ModalTitle">{{action}}?</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <p class="modal-body mb-0">
+                    {{{body}}}
+                </p>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary confirm" disabled="{{loading}}">{{action}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>

@@ -263,7 +263,10 @@ Helpers = {
     },
 
     // Hack to hide modal backdrop
-    closeModal() {
+    closeModal(id) {
+        if (id) {
+            $('#' + id + 'Modal').modal('hide');
+        }
         $(document.body).removeClass('modal-open');
         $('.modal-backdrop').hide();
     },

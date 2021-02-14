@@ -17,6 +17,8 @@
                             <button
                                 class="btn btn-light {{#if manualEndOnly}}btn-lg{{/if}} mr-2 end"
                                 disabled="{{loading}}"
+                                data-toggle="modal"
+                                data-target="#gameEndModal"
                             >
                                 <i class="fa fa-stop-circle"></i>
                                 End <span class="d-none d-lg-inline">Game</span>
@@ -25,6 +27,8 @@
                             <button
                                 class="btn btn-light mr-2 abandon"
                                 disabled="{{loading}}"
+                                data-toggle="modal"
+                                data-target="#gameAbandonModal"
                             >
                                 <i class="fa fa-remove"></i>
                                 Abandon <span class="d-none d-lg-inline">Game</span>
@@ -110,6 +114,8 @@
                     <button
                         class="btn btn-light d-inline-block leave"
                         disabled="{{loading}}"
+                        data-toggle="modal"
+                        data-target="#gameLeaveModal"
                     >
                         <i class="fa fa-sign-out"></i>
                         Leave <span class="d-none d-md-inline">Game</span>
@@ -235,5 +241,11 @@
             </div>
         </div>
     </div>
+
+    {{> confirm_modal id="gameEnd" action="End Game" body=gameEndBody}}
+
+    {{> confirm_modal id="gameAbandon" action="Abandon Game" body="Are you sure you want to abandon the game? All players will be ejected, and the game will be removed."}}
+
+    {{> confirm_modal id="gameLeave" action="Leave Game" body=gameLeaveBody}}
 
 </template>
