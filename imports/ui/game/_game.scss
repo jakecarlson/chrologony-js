@@ -381,6 +381,9 @@
   .game-card .card-title {
     text-align: right;
   }
+  .game-card:hover .card-title {
+    text-align: left;
+  }
   .game-card .card-header .menu {
     float: left;
     margin-right: 1rem;

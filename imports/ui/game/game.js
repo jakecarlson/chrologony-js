@@ -176,7 +176,7 @@ Template.game.helpers({
 
     gameLeaveBody() {
         let str = "Are you sure you want to leave the game? ";
-        if (isOwner(Template)) {
+        if (isOwner(Template) && Template.instance().game.get() && (Template.instance().game.get().players.length > 1)) {
             str += "Since you are the current owner, ownership will be transferred to the next player. ";
         }
         str += "You don't need to leave the game to navigate away temporarily.";
