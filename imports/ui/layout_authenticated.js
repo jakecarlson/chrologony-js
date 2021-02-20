@@ -52,7 +52,7 @@ Template.layout_authenticated.onCreated(function layout_authenticatedOnCreated()
 
             this.routeName.set(FlowRouter.current().route.name);
 
-            LoadingState.stop();
+            // LoadingState.stop();
 
         }
 
