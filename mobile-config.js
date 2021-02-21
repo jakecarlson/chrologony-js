@@ -6,7 +6,7 @@ App.info({
     author: 'Jake Carlson',
     email: 'chrologony@carlsonville.com',
     website: 'https://chrologony.com',
-    version: '2021.02.20'
+    version: '2021.02.21'
 });
 
 // Set general Cordova preferences
