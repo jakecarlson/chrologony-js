@@ -6,6 +6,7 @@ production.json
 private/localhost.cert
 private/localhost.key
 builds/*
+mobile/GoogleService-Info.plist
 
 # Logs
 *.log

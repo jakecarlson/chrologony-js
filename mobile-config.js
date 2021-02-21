@@ -6,7 +6,7 @@ App.info({
     author: 'Jake Carlson',
     email: 'chrologony@carlsonville.com',
     website: 'https://chrologony.com',
-    version: '2021.02.13'
+    version: '2021.02.20'
 });
 
 // Set general Cordova preferences
@@ -34,8 +34,8 @@ App.configurePlugin('com.phonegap.plugins.facebookconnect', {
 
 // Configure Google+ login
 App.configurePlugin('cordova-plugin-googleplus', {
-    REVERSED_CLIENT_ID: 'com.googleusercontent.apps.1005996420969-8tdhfk8s5t7jj8qti4j70509cnphscaq',
-    WEB_APPLICATION_CLIENT_ID: '1005996420969-8tdhfk8s5t7jj8qti4j70509cnphscaq.apps.googleusercontent.com'
+    REVERSED_CLIENT_ID: 'com.googleusercontent.apps.1005996420969-in8dhq9s7ock8gq0tgc4vces6jiqngbb',
+    WEB_APPLICATION_CLIENT_ID: '1005996420969-in8dhq9s7ock8gq0tgc4vces6jiqngbb.apps.googleusercontent.com'
 });
 
 // Add custom tags for a particular PhoneGap/Cordova plugin to the end of the
@@ -53,6 +53,10 @@ App.appendToConfig(`
     <allow-navigation href="https://www.google.com/maps/*" />
     <allow-navigation href="https://c.sharethis.mgr.consensu.org/*" />
     <allow-navigation href="about:*" />
+    
+    <platform name="ios">
+        <resource-file target="GoogleService-Info.plist"/>
+    </platform>
   
 `);
 
