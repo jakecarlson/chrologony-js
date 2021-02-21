@@ -105,7 +105,7 @@ ostrio:flow-router-title@3.2.1
 percolate:migrations@1.0.2
 promise@0.11.2
 quave:accounts-apple@1.1.5
-quave:apple-oauth@1.4.4
+quave:apple-oauth@1.4.6
 quave:reloader@2.0.2
 quave:settings@1.0.0
 raix:eventemitter@1.0.0
