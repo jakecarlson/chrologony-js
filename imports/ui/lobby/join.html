@@ -4,45 +4,53 @@
 
         <header class="card-header bg-primary">
             <h1 class="card-title text-white float-left">Join a Game</h1>
-            {{#if collectionNotEmpty games}}
-                <button class="btn btn-success float-right create" title="Create a New Game" data-toggle="modal" data-target="#gameCreatorModal">
-                    Create a New Game
-                </button>
+            {{#if dataReady}}
+                {{#if collectionNotEmpty games}}
+                    <button class="btn btn-success float-right create" title="Create a New Game" data-toggle="modal" data-target="#gameCreatorModal">
+                        Create a New Game
+                    </button>
+                {{/if}}
             {{/if}}
         </header>
 
-        {{#if collectionNotEmpty games}}
+        {{#if dataReady}}
 
-            <ul id="joinGames" class="list-group list-group-flush">
-                {{#each game in games}}
+            {{#if collectionNotEmpty games}}
 
-                    <li
-                        class="
-                            game
-                            {{#if hasPassword game}}
-                                game-password
-                            {{else}}
-                                game-open
-                            {{/if}}
-                            px-3 pt-3 pb-2
-                        "
-                        data-id="{{game._id}}"
-                        data-toggle="{{#if hasPassword game}}modal{{/if}}"
-                        data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
-                    >
-                        {{> lobby_game game=game}}
-                    </li>
+                <ul id="joinGames" class="list-group list-group-flush">
+                    {{#each game in games}}
 
-                {{/each}}
-            </ul>
+                        <li
+                            class="
+                                game
+                                {{#if hasPassword game}}
+                                    game-password
+                                {{else}}
+                                    game-open
+                                {{/if}}
+                                px-3 pt-3 pb-2
+                            "
+                            data-id="{{game._id}}"
+                            data-toggle="{{#if hasPassword game}}modal{{/if}}"
+                            data-target="{{#if hasPassword game}}#passwordModal{{/if}}"
+                        >
+                            {{> lobby_game game=game}}
+                        </li>
+
+                    {{/each}}
+                </ul>
+
+            {{else}}
+
+                <p class="card-body text-dark text-center">There are currently no public games to join.</p>
+                <div class="text-center mb-4">
+                    <a href="#" class="btn btn-success btn-lg" data-toggle="modal" data-target="#gameCreatorModal">Create a Game Now</a>
+                </div>
+
+            {{/if}}
 
         {{else}}
-
-            <p class="card-body text-dark text-center">There are currently no public games to join.</p>
-            <div class="text-center mb-4">
-                <a href="#" class="btn btn-success btn-lg" data-toggle="modal" data-target="#gameCreatorModal">Create a Game Now</a>
-            </div>
-
+            <div class="spinner-container">{{> loader}}</div>
         {{/if}}
 
     </div>

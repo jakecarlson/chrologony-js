@@ -5,6 +5,7 @@ import './body.html';
 import './layout_authenticated.js';
 import './layout_unauthenticated.js';
 import './embed.js';
+import './loader.js';
 
 Template.body.onCreated(function bodyOnCreated() {
 

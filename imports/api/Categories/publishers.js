@@ -30,18 +30,4 @@ if (Meteor.isServer) {
         }
     });
 
-    Meteor.publish('featuredCategories', function featuredCategoriesPublication() {
-        if (this.userId) {
-            const categories = Categories.find(
-                {featured: true, private: false, active: true},
-                {
-                    fields: Categories.PUBLISH_FIELDS,
-                }
-            );
-            return categories;
-        } else {
-            return this.ready();
-        }
-    });
-
 }

@@ -7,11 +7,15 @@
             <p class="card-instructions d-none d-sm-block text-white float-right">Select one to start a quick game.</p>
         </header>
 
-        <ul class="list-group list-group-flush">
-            {{#each category in categories}}
-                <li class="featured-category px-3 pt-3 pb-2">{{> featured_category category=category}}</li>
-            {{/each}}
-        </ul>
+        {{#if dataReady}}
+            <ul class="list-group list-group-flush">
+                {{#each category in categories}}
+                    <li class="featured-category px-3 pt-3 pb-2">{{> featured_category category=category}}</li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <div class="spinner-container">{{> loader}}</div>
+        {{/if}}
 
     </div>
 

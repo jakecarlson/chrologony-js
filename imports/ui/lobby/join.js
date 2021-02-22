@@ -1,6 +1,7 @@
-import { Template } from 'meteor/templating';
-import { LoadingState } from '../../modules/LoadingState';
 import { Meteor } from "meteor/meteor";
+import { Template } from 'meteor/templating';
+import { ReactiveVar } from "meteor/reactive-var";
+import { LoadingState } from '../../modules/LoadingState';
 
 import { Games } from '../../api/Games';
 
@@ -8,22 +9,27 @@ import './join.html';
 import './lobby_game.js';
 
 Template.join.onCreated(function joinOnCreated() {
+
     this.currentGame = new ReactiveVar(null);
+
+    this.games = new ReactiveVar(getGames());
+    this.autorun(() => {
+        const games = getGames();
+        if (games.count() > 0) {
+            this.games.set(games);
+        }
+    });
+
 });
 
 Template.join.helpers({
 
+    dataReady() {
+        return Template.instance().games.get();
+    },
+
     games() {
-        return Games.find(
-            {
-                endedAt: null,
-            },
-            {
-                sort: {
-                    createdAt: -1,
-                },
-            }
-        );
+        return Template.instance().games.get();
     },
 
     hasPassword(game) {
@@ -73,4 +79,11 @@ function getGame(e) {
     const el = $(e.target).closest('.game');
     const gameId = el.attr('data-id');
     return Games.findOne(gameId);
+}
+
+function getGames() {
+    return Games.find(
+        {endedAt: null},
+        {sort: {createdAt: -1}}
+    );
 }

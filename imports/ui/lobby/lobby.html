@@ -1,34 +1,30 @@
 <template name="lobby">
 
-    {{#if dataReady}}
+    <div id="lobby" class="mx-auto">
 
-        <div id="lobby" class="mx-auto">
+        {{> join}}
 
-            {{> join}}
+        {{> featured}}
 
-            {{> featured categories=featuredCategories}}
+        <div class="modal fade" id="gameCreatorModal" tabindex="-1" role="dialog" aria-labelledby="gameCreatorTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content border-primary">
 
-            <div class="modal fade" id="gameCreatorModal" tabindex="-1" role="dialog" aria-labelledby="gameCreatorTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                    <div class="modal-content border-primary">
-
-                        <div class="modal-header bg-primary text-white">
-                            <h5 class="modal-title" id="gameCreatorTitle">Create a New Game</h5>
-                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true" class="text-white">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body">
-                            {{> game_creator lastGame=lastGame}}
-                        </div>
-
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="gameCreatorTitle">Create a New Game</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="text-white">&times;</span>
+                        </button>
                     </div>
+
+                    <div class="modal-body">
+                        {{> game_creator lastGame=lastGame}}
+                    </div>
+
                 </div>
             </div>
-
         </div>
 
-    {{/if}}
+    </div>
 
 </template>

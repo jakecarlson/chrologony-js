@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from "meteor/reactive-dict";
+import { ReactiveVar } from "meteor/reactive-var";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import { LoadingState } from "../../modules/LoadingState";
 

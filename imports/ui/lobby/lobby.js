@@ -17,8 +17,6 @@ Template.lobby.onCreated(function lobbyOnCreated() {
 
     this.autorun(() => {
 
-        Helpers.subscribe(this, 'featuredCategories');
-
         if (typeof(Session.get('lastOwnedGameId')) == 'undefined') {
             Meteor.call('game.lastOwned',function(err, id) {
                 if (!err) {
@@ -44,24 +42,11 @@ Template.lobby.onCreated(function lobbyOnCreated() {
             });
         });
 
-        if (this.subscriptionsReady()) {
-            LoadingState.stop();
-        }
-
     });
 
 });
 
 Template.lobby.helpers({
-
-    dataReady() {
-        return Template.instance().subscriptionsReady();
-    },
-
-    featuredCategories() {
-        const categories = Categories.find({featured: true, active: true, private: false}, {sort: {name: 1}});
-        return categories;
-    },
 
     lastGame() {
         const lastOwnedGame = Games.findOne(Session.get('lastOwnedGameId'));
