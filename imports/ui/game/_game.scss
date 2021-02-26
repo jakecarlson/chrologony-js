@@ -123,6 +123,12 @@
   padding-left: 1.25rem;
   padding-right: 1.25rem;
 }
+#timeDirection {
+  position: absolute;
+  width: 100%;
+  top: 6.75rem;
+  text-align: center;
+}
 #board > .card-body,
 #playerCards > .card > .card-body
 {
@@ -346,6 +352,14 @@
 /* VERTICAL MODE */
 .portrait {
 //@media screen and (max-width: 575px) and (orientation: portrait) {
+
+  #timeDirection {
+    width: auto;
+    right: -5rem;
+    left: auto;
+    top: 18.5rem;
+    transform: rotate(90deg);
+  }
 
   .player-cards-wrapper {
     height: auto;

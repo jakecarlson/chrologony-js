@@ -26,6 +26,7 @@ Meteor.startup(function() {
     } else {
         window.addEventListener('orientationchange', handleViewportChange, false);
         window.addEventListener('resize', handleViewportChange, false);
+        handleViewportChange();
     }
 
 });

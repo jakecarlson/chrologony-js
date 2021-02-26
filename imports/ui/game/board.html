@@ -67,6 +67,11 @@
                         {{prompt}}
                         <span class="text-monospace card-timer">{{cardTimer}}</span>
                     </h3>
+
+                    {{#if showTimeDirection}}
+                        <p id="timeDirection" class="text-muted"><i class="fa fa-long-arrow-left"></i> Less Recent to More Recent <i class="fa fa-long-arrow-right"></i></p>
+                    {{/if}}
+
                     <div class="player-cards-wrapper clearfix">
                         <ol style="width: {{timelineWidth}}" class="player-cards inactive" id="boardCards">
                             {{#each playerCard in currentPlayerCards}}

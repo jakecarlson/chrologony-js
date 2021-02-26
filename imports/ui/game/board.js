@@ -251,6 +251,10 @@ Template.board.helpers({
         return '';
     },
 
+    showTimeDirection() {
+        return (this.game && this.turn && (getStatus(this.turn) == 'guessing'));
+    },
+
     isAnonymous() {
         return Helpers.isAnonymous();
     },
