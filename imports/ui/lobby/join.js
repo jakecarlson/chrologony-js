@@ -7,6 +7,7 @@ import { Games } from '../../api/Games';
 
 import './join.html';
 import './lobby_game.js';
+import {Session} from "meteor/session";
 
 Template.join.onCreated(function joinOnCreated() {
 
@@ -18,6 +19,7 @@ Template.join.onCreated(function joinOnCreated() {
         if (games.count() > 0) {
             this.games.set(games);
         }
+        LoadingState.stop();
     });
 
 });
@@ -67,7 +69,24 @@ Template.join.events({
         Helpers.joinGame(i.currentGame.get()._id, form.password.value);
     },
 
-    'click #join .create'(e, i) {
+    'click .play'(e, i) {
+
+        LoadingState.start();
+        Meteor.call('game.createQuick', Meteor.userId(), function(err, id) {
+            if (err) {
+                Logger.log(err);
+            } else {
+                Logger.log("Created Game: " + id);
+                Session.set('lastOwnedGameId', id);
+                Helpers.subscribe(i, 'games', Helpers.currentAndPreviousGameIds());
+                Helpers.joinGame(id);
+            }
+            LoadingState.stop();
+        });
+
+    },
+
+    'click .create'(e, i) {
         setTimeout(function() {
             TourGuide.resume();
         }, 250);

@@ -112,6 +112,24 @@ if (Meteor.isServer) {
 
     Meteor.methods({
 
+        // Create quick game
+        'game.createQuick'() {
+
+            const gameName = Meteor.user().name() + "'s Private Game";
+            const category = Categories.findOne(Meteor.settings.categories.default);
+            const attrs = {
+                categoryId: category._id,
+                name: gameName,
+                private: true,
+                comparisonPrecision: category.precision,
+                displayPrecision: category.precision,
+                autoShowMore: true,
+            };
+
+            return Meteor.call('game.create', attrs);
+
+        },
+
         // Insert
         'game.create'(attrs) {
 

@@ -40,7 +40,7 @@ AccountsTemplates.configureRoute('signUp', {
     title: getTitle('Sign Up'),
     redirect: function() {
         if (Meteor.user()) {
-            Meteor.call('user.createFirstGame', Meteor.userId(), function(err, gameId) {
+            Meteor.call('game.createQuick', Meteor.userId(), function(err, gameId) {
                 Flasher.success(
                     'You have successfully registered. We created a game for you below for you to give it a try! ' +
                     'Or <a href="#tour" class="tour-link">take the full tour now.</a>',

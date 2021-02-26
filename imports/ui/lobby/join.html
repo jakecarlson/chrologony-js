@@ -1,16 +1,20 @@
 <template name="join">
 
+    <div class="text-center mb-4 px-3">
+        <button class="btn btn-lg btn-success mr-sm-4 mb-4 mb-sm-0 play" title="Play Now" data-toggle="modal" data-target="#gameCreatorModal">
+            <i class="fa fa-play-circle"></i>
+            Play Quick Game
+        </button>
+        <button class="btn btn-lg btn-secondary create" title="Play Now" data-toggle="modal" data-target="#gameCreatorModal">
+            <i class="fa fa-plus-circle"></i>
+            Create Custom Game
+        </button>
+    </div>
+
     <div id="join" class="full-width card border-primary text-white mx-auto mb-4">
 
         <header class="card-header bg-primary">
-            <h1 class="card-title text-white float-left">Join a Game</h1>
-            {{#if dataReady}}
-                {{#if collectionNotEmpty games}}
-                    <button class="btn btn-success float-right create" title="Create a New Game" data-toggle="modal" data-target="#gameCreatorModal">
-                        Create a New Game
-                    </button>
-                {{/if}}
-            {{/if}}
+            <h2 class="card-title text-white float-left">Join a Game</h2>
         </header>
 
         {{#if dataReady}}
@@ -42,9 +46,9 @@
 
             {{else}}
 
-                <p class="card-body text-dark text-center">There are currently no public games to join.</p>
+                <p class="card-body text-dark text-center">There are currently no existing games to join.</p>
                 <div class="text-center mb-4">
-                    <a href="#" class="btn btn-success btn-lg" data-toggle="modal" data-target="#gameCreatorModal">Create a Game Now</a>
+                    <a href="#" class="btn btn-success" data-toggle="modal" data-target="#gameCreatorModal">Create a Game Now</a>
                 </div>
 
             {{/if}}

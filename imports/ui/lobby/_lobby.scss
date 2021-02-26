@@ -3,6 +3,21 @@
   max-width: 1280px;
 }
 
+.play,
+.create
+{
+  display: block !important;
+  width: 100% !important;
+}
+@media (min-width: 576px) {
+  .play,
+  .create
+  {
+    display: inline-block !important;
+    width: auto !important;
+  }
+}
+
 /* join */
 #joinGames {
   list-style: none inside none;

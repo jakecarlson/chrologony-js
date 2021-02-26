@@ -1,10 +1,8 @@
 import { Template } from 'meteor/templating';
 import { Meteor } from "meteor/meteor";
 import { FlowRouter  } from 'meteor/ostrio:flow-router-extra';
-import { LoadingState } from '../../modules/LoadingState';
 
 import { Games } from '../../api/Games';
-import { Categories } from "../../api/Categories";
 
 import './lobby.html';
 import './join.js';
