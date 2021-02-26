@@ -23,6 +23,17 @@ Meteor.startup(function() {
 
     if (Mobile.is()) {
         document.addEventListener("deviceready", Mobile.init, false);
+    } else {
+        window.addEventListener('orientationchange', handleViewportChange, false);
+        window.addEventListener('resize', handleViewportChange, false);
     }
 
 });
+
+function handleViewportChange(e) {
+    const orientation = (window.innerHeight > window.innerWidth) ? 'portrait' : 'landscape';
+    const body = $(document.body);
+    body.removeClass('portrait');
+    body.removeClass('landscape');
+    body.addClass(orientation);
+}

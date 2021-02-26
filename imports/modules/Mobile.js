@@ -27,9 +27,9 @@ Mobile = {
     },
 
     registerViewportChangeHandlers() {
-        document.addEventListener('orientationchange', Mobile.handleViewportChange, false);
+        window.addEventListener('orientationchange', Mobile.handleViewportChange, false);
         screen.orientation.addEventListener('change', Mobile.handleViewportChange, false);
-        document.addEventListener('resize', Mobile.handleViewportChange, false);
+        window.addEventListener('resize', Mobile.handleViewportChange, false);
     },
 
     setElementReferences() {
