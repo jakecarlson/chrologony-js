@@ -351,71 +351,8 @@
 
 /* VERTICAL MODE */
 .portrait {
-//@media screen and (max-width: 575px) and (orientation: portrait) {
-
-  #timeDirection {
-    width: auto;
-    right: -5rem;
-    left: auto;
-    top: 18.5rem;
-    transform: rotate(90deg);
-  }
-
-  .player-cards-wrapper {
-    height: auto;
-    overflow-x: hidden;
-  }
-  .player-cards {
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 1.25rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .clue-col {
-    float: none;
-    width: auto !important;
-    top: auto;
-    height: 2.75rem;
-    overflow: hidden;
-  }
-  .clue-col.current-col,
-  .inactive .clue-col:hover
-  {
-    height: auto;
-  }
-
-  .game-card {
-    overflow: hidden;
-    transition: left .25s ease-in-out;
-    top: auto;
-    left: -10rem;
-    min-height: auto;
-  }
-  .game-card:not(.current) .card-title {
-    text-align: right;
-  }
-  .clue-col:hover .game-card:not(.current) .card-title {
-    text-align: left;
-  }
-  .game-card .card-header .menu {
-    float: left;
-    margin-right: 1rem;
-    margin-left: 0;
-  }
-
-  .clue-col:hover .game-card,
-  .game-card.current
-  {
-    top: auto;
-    left: 0;
-  }
-
-  .move-back i:before {
-    content: "\f0aa";
-  }
-  .move-forward i:before {
-    content: "\f0ab";
-  }
-
+  @import "./_game_portrait.scss";
+}
+@media screen and (max-width: 575px) and (orientation: portrait) {
+  @import "./_game_portrait.scss";
 }
