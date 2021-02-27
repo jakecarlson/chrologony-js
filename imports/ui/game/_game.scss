@@ -256,10 +256,6 @@
 }
 .game-card .card-title {
   font-size: large;
-  //white-space: nowrap;
-}
-.game-card:not(.current):hover .card-title {
-  //margin-right: 4.5rem;
 }
 .game-card-menu {
   position: absolute;
@@ -308,9 +304,7 @@
   color: $dark;
   mix-blend-mode: soft-light;
 }
-.vote:hover,
-.vote.active
-{
+.vote.active {
   color: $white;
   mix-blend-mode: normal;
 }

@@ -52,3 +52,11 @@
     padding-right: unquote('max(env(safe-area-inset-right), 15px) !important'); // iOS
   }
 }
+
+.mobile-app {
+
+  .vote:hover {
+    color: $dark;
+  }
+
+}
