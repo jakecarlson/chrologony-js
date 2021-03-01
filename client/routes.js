@@ -48,6 +48,7 @@ AccountsTemplates.configureRoute('signUp', {
                 );
                 Logger.audit('signUp');
                 Logger.track('signUp');
+                Logger.conversion('signUp');
                 Helpers.redirectToPrevious('lobby');
             });
         }

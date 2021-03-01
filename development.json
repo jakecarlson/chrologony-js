@@ -63,7 +63,10 @@
       "Vehicles & Transportation"
     ],
     "analyticsSettings": {
-      "Google Analytics" : {"trackingId": false}
+      "Google Analytics" : {"trackingId": false},
+      "Microsoft Ads": {
+        "signUp": "56346166"
+      }
     },
     "reCaptcha": {
       "siteKey": "6LfjB_EUAAAAAEOuqnBkMvmTp0kgkG9Pa8ALRPXJ"
