@@ -65,7 +65,7 @@
     "analyticsSettings": {
       "Google Analytics" : {"trackingId": false},
       "Microsoft Ads": {
-        "signUp": "56346166"
+        "signUp": false
       }
     },
     "reCaptcha": {
